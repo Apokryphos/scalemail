@@ -10,10 +10,13 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/ease.hpp
     include/fake_map.hpp
     include/font.hpp
+    include/game_window.hpp
     include/gl_headers.hpp
     include/gl_util.hpp
     include/light.hpp
+    include/math_util.hpp
     include/mesh.hpp
+    include/render.hpp
     include/screen_capture.hpp
     include/shader.hpp
     include/sprite.hpp
@@ -30,6 +33,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/engine.cpp
     src/light.cpp
     src/mesh.cpp
+    src/render.cpp
     src/screen_capture.cpp
     src/shader.cpp
     src/sprite.cpp

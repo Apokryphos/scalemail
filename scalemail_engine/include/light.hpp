@@ -8,6 +8,7 @@ struct GLFWwindow;
 namespace ScaleMail
 {
 class Camera;
+struct GameWindow;
 
 struct Light {
     glm::vec2 position;
@@ -21,6 +22,6 @@ struct Light {
 void addLight(glm::vec2 position, glm::vec4 color, float size, float pulse,
               float pulseSize);
 void initializeLight();
-void renderLight(GLFWwindow* window, Camera& camera, glm::vec4 ambientColor);
+void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor);
 void simulateLights(float elapsedSeconds);
 }

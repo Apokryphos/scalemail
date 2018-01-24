@@ -6,6 +6,7 @@
 #include "gl_headers.hpp"
 #include "light.hpp"
 #include "mesh.hpp"
+#include "render.hpp"
 #include "screen_capture.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
@@ -265,7 +266,7 @@ int startEngine() {
 
         renderSprites(window, camera);
 
-        renderLight(window, camera, ambientColor);
+        render(window, camera, ambientColor);
 
         renderTransition();
 

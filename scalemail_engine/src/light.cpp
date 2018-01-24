@@ -1,10 +1,13 @@
 #include "blend.hpp"
 #include "camera.hpp"
+#include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "light.hpp"
+#include "math_util.hpp"
 #include "mesh.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
+#include <iostream>
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -79,6 +82,26 @@ static bool initLightMesh(Mesh& mesh) {
 }
 
 //  ============================================================================
+static void createFramebuffer(GLuint& fbo, int size, GLuint& fboTexture) {
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    glGenTextures(1, &fboTexture);
+    glBindTexture(GL_TEXTURE_2D, fboTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fboTexture, 0);
+    glDrawBuffers(1, drawBuffers);
+}
+
+//  ============================================================================
+static void destroyFramebuffer(GLuint& fbo, GLuint& fboTexture) {
+    glDeleteFramebuffers(1, &fbo);
+    glDeleteTextures(1, &fboTexture);
+}
+
+//  ============================================================================
 void initializeLight() {
     initShaderProgram("assets/shaders/sprite.vert", "assets/shaders/sprite.frag", spriteShader);
     spriteShaderMvpLocation = glGetUniformLocation(spriteShader, "MVP");
@@ -90,27 +113,8 @@ void initializeLight() {
     initLightMesh(lightMesh);
     loadPngTexture("assets/textures/light.png", lightTexture);
 
-    glGenFramebuffers(1, &fboA);
-    glBindFramebuffer(GL_FRAMEBUFFER, fboA);
-
-    glGenTextures(1, &fboATexture);
-    glBindTexture(GL_TEXTURE_2D, fboATexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, fboSize, fboSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fboATexture, 0);
-    glDrawBuffers(1, drawBuffers);
-
-    glGenFramebuffers(1, &fboB);
-    glBindFramebuffer(GL_FRAMEBUFFER, fboB);
-
-    glGenTextures(1, &fboBTexture);
-    glBindTexture(GL_TEXTURE_2D, fboBTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, fboSize, fboSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fboBTexture, 0);
-    glDrawBuffers(1, drawBuffers);
+    createFramebuffer(fboA, fboSize, fboATexture);
+    createFramebuffer(fboB, fboSize, fboBTexture);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -212,17 +216,40 @@ void buildLightMeshVertexData(float scale) {
 }
 
 //  ============================================================================
-void renderLight(GLFWwindow* window, Camera& camera, glm::vec4 ambientColor) {
-    buildLightMeshVertexData(0.25f);
+int getMinFramebufferSize(GLFWwindow* window) {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+
+    int max = std::max(width, height);
+
+    return isPowerOfTwo(max) ? max : nextPowerOfTwo(max);
+}
+
+//  ============================================================================
+void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor) {
+    buildLightMeshVertexData(0.25f);
+
+    const int minFrameBufferSize = getMinFramebufferSize(gameWindow.window);
+    if (fboSize != minFrameBufferSize) {
+        fboSize = minFrameBufferSize;
+        destroyFramebuffer(fboA, fboATexture);
+        destroyFramebuffer(fboB, fboBTexture);
+        createFramebuffer(fboA, fboSize, fboATexture);
+        createFramebuffer(fboB, fboSize, fboBTexture);
+        std::cout << "Light framebuffers resized to " << fboSize << std::endl;
+    }
 
     glm::mat4 quadWorld =
         glm::translate(glm::mat4(1.0f), glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 0.0f)) *
         glm::scale(glm::mat4(1.0f), glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 1.0f));
 
     glm::mat4 fboProjection = glm::ortho(0.0f, (float)fboSize, 0.0f, (float)fboSize, 0.0f, 1.0f);
-    glm::mat4 screenProjection = glm::ortho(0.0f, 1024.0f, 1024.0f, 0.0f, 0.0f, 1.0f);
+
+    glm::mat4 screenProjection = glm::ortho(
+        0.0f, (float)gameWindow.width, (float)gameWindow.height, 0.0f,
+        0.0f, 1.0f);
 
     glm::mat4 lightMvp = fboProjection * camera.getView();
 
@@ -257,8 +284,7 @@ void renderLight(GLFWwindow* window, Camera& camera, glm::vec4 ambientColor) {
     //  Draw lights from FBO A to screen
     blendAdditive();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, gameWindow.width, gameWindow.height);
     glUseProgram(quadShader);
     glUniformMatrix4fv(quadShaderMvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
     glBindTexture(GL_TEXTURE_2D, fboATexture);
@@ -268,8 +294,7 @@ void renderLight(GLFWwindow* window, Camera& camera, glm::vec4 ambientColor) {
     //  Draw lights from FBO B to screen
     blendModulate();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, gameWindow.width, gameWindow.height);
     glBindTexture(GL_TEXTURE_2D, fboBTexture);
     glDrawArrays(GL_TRIANGLES, 0, quadMesh.vertexCount);
 

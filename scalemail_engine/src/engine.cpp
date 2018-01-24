@@ -150,6 +150,7 @@ int startEngine() {
     int tileFrame = 0;
 
     float elapsedSeconds = 0;
+    double totalElapsedSeconds = 0;
     double lastSeconds = 0;
     double seconds = glfwGetTime();
 
@@ -160,6 +161,8 @@ int startEngine() {
 
         if (paused) {
             elapsedSeconds = 0;
+        } else {
+            totalElapsedSeconds += seconds - lastSeconds;
         }
 
         tileTicks += elapsedSeconds;
@@ -297,7 +300,7 @@ int startEngine() {
         glDrawArrays(GL_TRIANGLES, 0, animMesh.vertexCount);
 
         const Mesh& scrollMesh = map->mapMesh.scrollMeshes[tileFrame];
-        glUniform1f(shaderTimeLocation, glfwGetTime() * 0.5f);
+        glUniform1f(shaderTimeLocation, totalElapsedSeconds * 0.5f);
         glBindTexture(GL_TEXTURE_2D, horzScrollTexture.id);
         glBindVertexArray(scrollMesh.vao);
         glDrawArrays(GL_TRIANGLES, 0, scrollMesh.vertexCount);

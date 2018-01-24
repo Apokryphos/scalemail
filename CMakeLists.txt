@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.9)
+cmake_minimum_required (VERSION 3.10)
 
 add_subdirectory(assets)
 add_subdirectory(extlibs)

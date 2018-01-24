@@ -1,0 +1,992 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="16" height="64" tilewidth="16" tileheight="16" nextobjectid="86">
+ <properties>
+  <property name="CollisionLayer" type="int" value="0"/>
+ </properties>
+ <tileset firstgid="1" name="world" tilewidth="16" tileheight="16" tilecount="304" columns="16">
+  <image source="../textures/world.png" width="256" height="304"/>
+  <tile id="13">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="29">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="45">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="61">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="140">
+   <animation>
+    <frame tileid="140" duration="300"/>
+    <frame tileid="141" duration="300"/>
+   </animation>
+  </tile>
+  <tile id="141">
+   <animation>
+    <frame tileid="141" duration="300"/>
+    <frame tileid="140" duration="300"/>
+   </animation>
+  </tile>
+  <tile id="142">
+   <animation>
+    <frame tileid="142" duration="300"/>
+    <frame tileid="143" duration="300"/>
+   </animation>
+  </tile>
+  <tile id="143">
+   <animation>
+    <frame tileid="143" duration="300"/>
+    <frame tileid="142" duration="300"/>
+   </animation>
+  </tile>
+  <tile id="160">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="161">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="162">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="163">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="164">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="165">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="166">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="167">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="168">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="169">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="170">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="171">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="174">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="175">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="176">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="177">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="178">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="179">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="180">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="181">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="182">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="183">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="184">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="185">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="186">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="187">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="192">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="193">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="194">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="195">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="196">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="197">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+   <animation>
+    <frame tileid="197" duration="100"/>
+    <frame tileid="198" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="198">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+   <animation>
+    <frame tileid="198" duration="100"/>
+    <frame tileid="197" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="199">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+   <animation>
+    <frame tileid="199" duration="100"/>
+    <frame tileid="200" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="200">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+   <animation>
+    <frame tileid="200" duration="100"/>
+    <frame tileid="199" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="201">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="202">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="203">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="204">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="205">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="206">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="207">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="208">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="209">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="210">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="211">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="212">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="213">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="214">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="215">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="216">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="217">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="218">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="219">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="220">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="221">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="222">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="223">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="224">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="225">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="226">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="227">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="228">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="229">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="230">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="231">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="232">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="233">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="234">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="235">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="236">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="237">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="238">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="239">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="240">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="241">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="242">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="243">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="244">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="245">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="246">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="247">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="248">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="249">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="250">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="251">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="252">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="253">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="254">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="255">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="256">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="257">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="258">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="259">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="260">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="261">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="262">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="267">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="268">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="269">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="270">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="271">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="274">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="280">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="281">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="282">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="283">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="285">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="286">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="287">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="288">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="289">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="290">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="291">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="292">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="293">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="294">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="295">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="296">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="297">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="298">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="299">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="300">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="301">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="302">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="303">
+   <properties>
+    <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="305" name="actors" tilewidth="16" tileheight="16" tilecount="512" columns="16">
+  <image source="../textures/actors.png" width="256" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="64">
+  <data encoding="csv">
+0,0,0,0,23,17,18,17,114,17,17,20,17,23,0,0,
+0,0,0,23,17,114,2147483733,114,116,114,114,114,114,19,23,0,
+0,23,17,23,87,114,114,114,116,114,114,114,114,3221225556,23,17,
+0,23,114,17,23,3221225555,114,84,116,114,114,84,114,23,17,114,
+17,17,114,85,17,23,114,114,3221225590,2147483732,114,114,3221225556,23,114,114,
+114,114,114,114,114,23,114,114,116,85,114,114,23,17,114,114,
+114,2147483732,114,114,1073741908,17,23,114,3221225589,117,114,114,23,85,114,84,
+141,141,2147483733,114,114,86,17,23,114,116,114,1073741908,23,114,2147483731,114,
+143,144,141,142,141,142,141,17,86,2147483766,19,17,17,142,141,142,
+144,143,144,143,144,143,144,143,142,190,142,141,142,143,144,143,
+114,144,143,144,143,144,143,144,143,189,143,144,143,144,143,83,
+114,114,83,114,144,143,144,143,83,126,84,114,17,23,23,23,
+23,23,23,23,23,23,23,23,114,128,1073741950,114,2147483734,23,0,0,
+0,0,0,0,0,0,0,17,23,2147483731,2147483776,126,82,23,0,0,
+0,0,0,0,0,0,0,0,17,24,114,128,114,23,0,0,
+0,0,0,0,0,0,0,0,0,23,2147483733,127,68,7,0,0,
+0,0,0,0,0,0,0,0,0,23,67,100,69,7,0,0,
+0,0,0,0,0,0,0,0,0,7,65,100,65,7,0,0,
+0,0,0,0,0,0,0,0,0,7,65,100,65,7,0,0,
+0,0,0,0,0,0,0,0,0,7,2147483717,100,65,1,7,0,
+0,0,0,0,0,0,0,0,0,1,7,3221225573,101,65,7,0,
+0,0,0,0,0,0,0,0,0,0,7,65,100,65,7,0,
+0,0,0,0,0,0,0,0,0,7,1,2147483749,1073741925,3221225541,7,0,
+0,0,0,0,0,0,0,0,7,1,65,100,65,7,1,0,
+0,0,0,0,0,0,0,0,7,65,65,100,65,7,0,0,
+0,0,0,0,0,0,0,0,7,65,2147483749,1073741925,65,7,0,0,
+0,0,0,0,0,0,0,7,1,2147483749,1073741925,65,7,1,0,0,
+0,0,0,0,0,0,0,7,65,100,65,7,1,0,0,0,
+0,0,0,0,0,0,7,1,2147483749,1073741925,65,7,0,0,0,0,
+0,0,0,0,0,0,7,65,100,65,66,7,0,0,0,0,
+0,0,0,0,0,0,7,65,100,65,7,1,0,0,0,0,
+0,0,0,0,0,0,7,65,100,65,7,0,0,0,0,0,
+0,0,0,0,0,7,1,65,100,65,7,0,0,0,0,0,
+0,0,0,0,7,1,65,65,100,65,7,0,0,0,0,0,
+0,0,0,0,7,70,65,65,100,69,7,0,0,0,0,0,
+0,0,0,0,7,65,65,65,100,7,1,0,0,0,0,0,
+0,0,0,0,1,7,1073741894,65,2147483750,9,0,0,0,0,0,0,
+0,0,0,0,0,1,7,65,102,4,7,0,0,0,0,0,
+0,0,0,0,0,0,1,7,100,65,7,0,0,0,0,0,
+0,0,0,0,0,0,0,7,100,65,8,0,0,0,0,0,
+0,0,0,0,0,7,2,1,100,65,7,0,0,0,0,0,
+0,0,0,0,0,7,2147483714,65,100,65,7,0,0,0,0,0,
+0,0,0,0,0,7,65,2147483749,100,2147483717,7,0,0,0,0,0,
+0,0,0,0,0,7,65,100,65,7,1,0,0,0,0,0,
+0,0,0,0,0,7,65,100,65,7,0,0,0,0,0,0,
+0,0,0,0,0,7,65,102,65,7,0,0,0,0,0,0,
+0,0,0,0,0,7,65,100,65,7,0,0,0,0,0,0,
+0,0,0,0,0,7,65,100,3221225541,7,0,0,0,0,0,0,
+7,1,1,2,1,5,3,100,1,5,1,4,2,6,1,7,
+7,3221225541,65,65,65,65,65,100,65,65,65,65,65,65,1073741892,7,
+7,65,65,65,65,65,65,100,65,65,65,65,65,65,65,7,
+7,65,65,65,65,65,65,100,65,65,65,65,3221225541,65,65,7,
+8,65,71,65,65,65,65,100,65,3221225542,65,65,65,65,65,7,
+7,65,65,65,65,65,65,100,65,65,65,2147483715,65,65,65,9,
+7,65,65,65,65,3221225540,65,3221225573,101,65,65,65,65,65,65,7,
+7,69,65,65,65,65,65,69,100,65,65,65,65,65,3,7,
+10,65,65,67,65,72,65,65,100,65,66,65,65,2147483717,65,7,
+11,65,65,72,72,97,65,65,100,65,65,72,65,65,72,11,
+6,66,72,97,97,97,72,65,2147483750,65,72,97,72,72,97,10,
+72,72,97,97,97,97,97,72,100,72,97,97,97,97,97,3,
+97,97,65,65,97,97,97,65,3221225573,100,100,100,100,100,100,100,
+97,65,65,65,68,65,65,65,65,72,72,72,72,65,65,7,
+7,67,65,65,65,65,65,65,72,97,97,97,97,72,70,7,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="Shadows" width="16" height="64">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,176,176,176,176,176,176,176,176,0,0,0,
+0,0,0,0,176,0,0,0,0,0,0,0,0,176,0,0,
+0,0,176,0,0,0,0,0,0,0,0,0,0,0,0,176,
+0,0,0,176,0,0,0,0,0,0,0,0,0,0,176,0,
+176,176,0,0,176,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,176,0,0,
+0,0,0,0,0,176,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,176,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,176,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,176,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,176,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,176,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,176,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,176,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,176,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,176,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,176,176,176,176,176,176,176,176,176,176,176,176,176,176,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,224,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="Tile Layer 3" width="16" height="64">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,177,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,303,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,304,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,2147483859,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,167,0,0,0,0,0,0,0,0,
+0,0,0,0,290,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,220,0,0,0,0,0,0,0,291,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,164,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,163,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,211,289,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="Torches" width="16" height="64">
+  <data encoding="csv">
+0,0,0,0,0,0,0,198,0,199,0,0,0,0,0,0,
+0,0,0,0,0,0,0,200,0,201,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,198,0,0,198,0,0,0,0,0,
+0,0,0,0,0,0,0,200,0,0,200,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,198,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,201,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,198,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,200,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,198,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,200,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,199,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,200,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,199,0,198,0,0,0,0,0,0,0,
+0,0,0,0,0,0,201,0,200,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,198,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,200,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Villains" visible="0">
+  <object id="66" gid="456" x="149.091" y="924.545" width="16" height="16"/>
+  <object id="67" gid="436" x="136.727" y="942.182" width="16" height="16"/>
+  <object id="68" gid="435" x="114.364" y="938.545" width="16" height="16"/>
+  <object id="69" gid="455" x="134.909" y="919.091" width="16" height="16"/>
+  <object id="70" gid="439" x="120.545" y="912.727" width="16" height="16"/>
+  <object id="71" gid="437" x="105.091" y="920.182" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="Heroes" visible="0">
+  <object id="62" gid="312" x="137.667" y="803.667" width="16" height="16"/>
+  <object id="63" gid="354" x="105" y="810.334" width="16" height="16"/>
+  <object id="64" gid="361" x="87.9997" y="805.667" width="16" height="16"/>
+  <object id="65" gid="330" x="123.334" y="812" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="Actors">
+  <object id="55" gid="230" x="101.333" y="89.3333" width="16" height="16"/>
+  <object id="72" gid="231" x="168.667" y="186.667" width="16" height="16"/>
+ </objectgroup>
+</map>

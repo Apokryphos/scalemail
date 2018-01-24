@@ -1040,18 +1040,18 @@
 </data>
  </layer>
  <objectgroup name="Villains">
-  <object id="66" gid="456" x="149.091" y="924.545" width="16" height="16"/>
-  <object id="67" gid="436" x="136.727" y="942.182" width="16" height="16"/>
-  <object id="68" gid="435" x="114.364" y="938.545" width="16" height="16"/>
-  <object id="69" gid="455" x="134.909" y="919.091" width="16" height="16"/>
-  <object id="70" gid="439" x="120.545" y="912.727" width="16" height="16"/>
-  <object id="71" gid="437" x="105.091" y="920.182" width="16" height="16"/>
+  <object id="66" type="Actor" gid="456" x="149.091" y="924.545" width="16" height="16"/>
+  <object id="67" type="Actor" gid="436" x="136.727" y="942.182" width="16" height="16"/>
+  <object id="68" type="Actor" gid="435" x="114.364" y="938.545" width="16" height="16"/>
+  <object id="69" type="Actor" gid="455" x="134.909" y="919.091" width="16" height="16"/>
+  <object id="70" type="Actor" gid="439" x="120.545" y="912.727" width="16" height="16"/>
+  <object id="71" type="Actor" gid="437" x="105.091" y="920.182" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Heroes">
-  <object id="62" gid="312" x="137.667" y="803.667" width="16" height="16"/>
-  <object id="63" gid="354" x="105" y="810.334" width="16" height="16"/>
-  <object id="64" gid="361" x="87.9997" y="805.667" width="16" height="16"/>
-  <object id="65" gid="330" x="123.334" y="812" width="16" height="16"/>
+  <object id="62" type="Actor" gid="312" x="137.667" y="803.667" width="16" height="16"/>
+  <object id="63" type="Actor" gid="354" x="105" y="810.334" width="16" height="16"/>
+  <object id="64" type="Actor" gid="361" x="87.9997" y="805.667" width="16" height="16"/>
+  <object id="65" type="Actor" gid="330" x="123.334" y="812" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Actors">
   <object id="55" gid="230" x="101.333" y="89.3333" width="16" height="16"/>

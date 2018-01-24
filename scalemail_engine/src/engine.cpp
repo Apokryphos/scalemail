@@ -1,7 +1,6 @@
 #include "blend.hpp"
 #include "camera.hpp"
 #include "ease.hpp"
-#include "fake_map.hpp"
 #include "font.hpp"
 #include "gl_headers.hpp"
 #include "light.hpp"
@@ -106,12 +105,9 @@ int startEngine() {
     initializeLight();
     initializeSprites();
 
-    //  Do this last after all other initialize functions
-    initializeFakeMap();
-
+    //  Load map after all other initialize functions
     World world;
     world.loadMap("map1");
-
     const Map* map = world.getMap();;
 
     glm::vec4 startAmbientColor(0.14f, 0.064f, 0.04f, 1.0f);

@@ -7,10 +7,11 @@ set(CMAKE_BUILD_TYPE Debug)
 set(SCALEMAIL_ENGINE_INCLUDE
     include/blend.hpp
     include/camera.hpp
+    include/direction.hpp
+    include/direction_util.hpp
     include/ease.hpp
     include/entity.hpp
     include/entity_manager.hpp
-    include/fake_map.hpp
     include/font.hpp
     include/game_window.hpp
     include/gl_headers.hpp
@@ -23,6 +24,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/screen_capture.hpp
     include/shader.hpp
     include/sprite.hpp
+    include/string_util.hpp
     include/texture.hpp
     include/tileset.hpp
     include/tiny_font.hpp
@@ -32,9 +34,9 @@ set(SCALEMAIL_ENGINE_INCLUDE
 set(SCALEMAIL_ENGINE_SOURCE
     src/blend.cpp
     src/camera.cpp
+    src/direction_util.cpp
     src/entity.cpp
     src/entity_manager.cpp
-    src/fake_map.cpp
     src/font.cpp
     src/gl_util.cpp
     src/engine.cpp
@@ -46,6 +48,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/screen_capture.cpp
     src/shader.cpp
     src/sprite.cpp
+    src/string_util.cpp
     src/texture.cpp
     src/tileset.cpp
     src/transition.cpp

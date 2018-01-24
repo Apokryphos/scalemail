@@ -1,13 +1,19 @@
+#include "direction_util.hpp"
 #include "gl_headers.hpp"
+#include "light.hpp"
 #include "map.hpp"
 #include "mesh.hpp"
+#include "sprite.hpp"
+#include "string_util.hpp"
 #include "tileset.hpp"
+#include "world.hpp"
 #include "TmxMapLib/Map.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <cstring>
 #include <vector>
 
 namespace ScaleMail
@@ -27,6 +33,25 @@ struct TileLayerData {
 struct MapData {
     std::vector<TileLayerData> tileLayers;
 };
+
+//  ============================================================================
+static glm::vec4 hexToVec4(std::string input) {
+
+    if (input[0] == '#') {
+        input.erase(0, 1);
+    }
+
+    unsigned long value = stoul(input, nullptr, 16);
+
+    glm::vec4 color;
+
+    color.a = (value >> 24) & 0xff;
+    color.r = (value >> 16) & 0xff;
+    color.g = (value >> 8) & 0xff;
+    color.b = (value >> 0) & 0xff;
+
+    return color / 255.0f;
+}
 
 //  ============================================================================
 static void createTileMeshBuffer(Mesh& mesh, std::vector<float>& meshVertexData) {
@@ -151,8 +176,162 @@ static void buildMapMesh(const MapData& mapData, MapMesh& mapMesh) {
 }
 
 //  ============================================================================
-std::shared_ptr<Map> loadMap(const std::string filename) {
+static void processActorObject(World& world,
+                               const TmxMapLib::Object& object,
+                               const TmxMapLib::Map& tmxMap) {
+    auto const tile = object.GetTile();
+
+    const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
+
+    if (tileset == nullptr) {
+        std::cout << "Invalid actor object in TMX map: no matching tileset." << std::endl;
+        return;
+    }
+
+    int gid = tile->GetGid() - tileset->GetFirstGid();
+
+    const TmxMapLib::TilesetTile* tilesetTile = tileset->GetTile(gid);
+
+    if (tilesetTile == nullptr) {
+        std::cout << "Invalid actor object in TMX map: no matching tileset tile." << std::endl;
+        return;
+    }
+
+    const TmxMapLib::Property* actorIndexProperty =
+        tilesetTile->GetPropertySet().GetProperty("ActorIndex");
+
+    if (actorIndexProperty == nullptr) {
+        std::cout << "Invalid actor object in TMX map: no tileset tile with ActorIndex property." << std::endl;
+        return;
+    }
+
+    int actorIndex = actorIndexProperty->GetIntValue(0);
+
+    const TmxMapLib::Property* facingProperty =
+        tilesetTile->GetPropertySet().GetProperty("Facing");
+
+    Direction facing = Direction::SOUTH;
+
+    if (facingProperty != nullptr) {
+        const std::string value = facingProperty->GetValue();
+        facing = stringToDirection(value);
+    }
+
+    world.createActor(object.GetX(), object.GetY(), actorIndex, facing);
+}
+
+//  ============================================================================
+static void processLightObject(World& world,
+                               const TmxMapLib::Object& object,
+                               const TmxMapLib::Map& tmxMap) {
+    //  Scale light size by constant...lights are too small
+    float lightSize = object.GetWidth() * 2.5f;
+
+    const auto& propertySet = object.GetPropertySet();
+
+    std::string hex = propertySet.GetValue("LightColor", "#FFFFFFFF");
+    glm::vec4 lightColor = hexToVec4(hex);
+
+    float lightPulse = propertySet.GetFloatValue("LightPulse", 0);
+
+    float lightPulseSize = propertySet.GetFloatValue("LightPulseSize", 0);
+
+    const float x = object.GetX() + object.GetWidth() * 0.5f;
+    const float y = object.GetY() + object.GetHeight() * 0.5f;
+
+    addLight(
+        glm::vec2(x, y),
+        lightColor,
+        lightSize,
+        lightPulse,
+        lightPulseSize
+    );
+}
+
+//  ============================================================================
+static void processMiscObject(World& world,
+                              const TmxMapLib::Object& object,
+                              const TmxMapLib::Map& tmxMap) {
+    const float x = object.GetX();
+    const float y = object.GetY();
+
+    auto const tile = object.GetTile();
+
+    const int tilesetId = tile->GetGid() - 1;
+
+    addWorldSprite(glm::vec2(x, y), tilesetId);
+}
+
+//  ============================================================================
+static void processTorchObject(World& world,
+                               const TmxMapLib::Object& object,
+                               const TmxMapLib::Map& tmxMap) {
+    const glm::vec4 torchLightColor(1.0f, 0.6f, 0.0f, 0.75f);
+    const float torchLightSize = 64;
+    const float torchLightPulse = 8;
+    const float torchLightPulseSize = 8;
+
+    auto const tile = object.GetTile();
+
+    const int tilesetId = tile->GetGid() - 1;
+
+    const float x = object.GetX();
+    const float y = object.GetY();
+
+    addLight(
+        glm::vec2(x + 8.0f, y - 8.0f),
+        torchLightColor,
+        torchLightSize,
+        torchLightPulse,
+        torchLightPulseSize
+    );
+
+    addWorldSprite(glm::vec2(x, y), tilesetId);
+}
+
+//  ============================================================================
+static void processObject(World& world,
+                          const TmxMapLib::Object& object,
+                          const TmxMapLib::Map& tmxMap) {
+    const std::string type = toLowercase(object.GetType());
+
+    if (object.GetObjectType() == TmxMapLib::ObjectType::Ellipse) {
+        if (type == "light") {
+            processLightObject(world, object, tmxMap);
+        } else {
+            std::cout << "Unrecognized ellipse map object." << std::endl;
+        }
+    }
+
+    if (object.GetObjectType() == TmxMapLib::ObjectType::Tile) {
+        if (object.GetTile() == nullptr) {
+            std::cout << "Map object is not a tile object." << std::endl;
+        }
+
+        if (type == "actor") {
+            processActorObject(world, object, tmxMap);
+        } else if (type == "torch") {
+            processTorchObject(world, object, tmxMap);
+        } else {
+            processMiscObject(world, object, tmxMap);
+        }
+    }
+}
+
+//  ============================================================================
+static void processObjects(const TmxMapLib::Map tmxMap, World& world) {
+    for (const auto& objectGroup : tmxMap.GetObjectGroups()) {
+        for (const auto& object : objectGroup.GetObjects()) {
+            processObject(world, object, tmxMap);
+        }
+    }
+}
+
+//  ============================================================================
+std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
     TmxMapLib::Map tmxMap = TmxMapLib::Map(filename);
+
+    processObjects(tmxMap, world);
 
     std::vector<TileLayerData> tileLayerDatas;
 

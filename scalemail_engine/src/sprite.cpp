@@ -78,10 +78,32 @@ void getWorldSpriteAnimation(const int index, SpriteAnimation& anim) {
             anim.frames[1].tilesetIds[west]  = index + 1;
             break;
 
+        //  Torch
+        case 198:
+        //  Torch cast sprite
+        case 200:
+            anim.frames[0].tilesetIds[east]  = index;
+            anim.frames[0].tilesetIds[south] = index;
+            anim.frames[0].tilesetIds[north] = index;
+            anim.frames[0].tilesetIds[west]  = index;
+            anim.frames[1].tilesetIds[east]  = index - 1;
+            anim.frames[1].tilesetIds[south] = index - 1;
+            anim.frames[1].tilesetIds[north] = index - 1;
+            anim.frames[1].tilesetIds[west]  = index - 1;
+            break;
+
         default:
+            anim.frames[0].tilesetIds[south] = index;
+            anim.frames[0].tilesetIds[north] = index;
+            anim.frames[0].tilesetIds[west]  = index;
+            anim.frames[1].tilesetIds[east]  = index;
+            anim.frames[1].tilesetIds[south] = index;
+            anim.frames[1].tilesetIds[north] = index;
+            anim.frames[1].tilesetIds[west]  = index;
             std::cerr << "getWorldSpriteAnimation case not implemented: "
                       << index << std::endl;
-            throw new std::runtime_error("getWorldSpriteAnimation case not implemented.");
+                         anim.frames[0].tilesetIds[east]  = index;
+            break;
     }
 }
 
@@ -110,7 +132,7 @@ void addWorldSprite(glm::vec2 position, int tilesetId) {
     sprite.facing = Direction::SOUTH;
     sprite.textureId = worldTexture.id;
     sprite.size = 16.0f;
-    sprite.position = position + glm::vec2(8.0f);
+    sprite.position = position + glm::vec2(8.0f, -8.0f);
     sprite.color = glm::vec4(1.0f);
 
     sprite.animation.frameIndex = 0;

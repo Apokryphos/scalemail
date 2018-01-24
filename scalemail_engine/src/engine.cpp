@@ -79,6 +79,9 @@ int startEngine() {
         return -1;
     }
 
+    glfwSetWindowSizeLimits(window, screenWidth, screenHeight,
+                            screenWidth, screenHeight);
+
     capture.initialize(window);
 
     glfwSetKeyCallback(window, keyCallback);

@@ -14,6 +14,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/gl_headers.hpp
     include/gl_util.hpp
     include/light.hpp
+    include/map.hpp
     include/math_util.hpp
     include/mesh.hpp
     include/render.hpp
@@ -21,6 +22,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/shader.hpp
     include/sprite.hpp
     include/texture.hpp
+    include/tileset.hpp
     include/tiny_font.hpp
     include/transition.hpp)
 
@@ -33,17 +35,20 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/engine.cpp
     src/light.cpp
     src/mesh.cpp
+    src/map.cpp
+    src/map_load.cpp
     src/render.cpp
     src/screen_capture.cpp
     src/shader.cpp
     src/sprite.cpp
     src/texture.cpp
+    src/tileset.cpp
     src/transition.cpp
     src/tiny_font.cpp)
 
 add_library(${PROJECT_NAME} ${SCALEMAIL_ENGINE_SOURCE} ${SCALEMAIL_ENGINE_SOURCE})
 include_directories(include)
-target_link_libraries(${PROJECT_NAME} glad glfw glm lodepng)
+target_link_libraries(${PROJECT_NAME} glad glfw glm lodepng TmxMapLib)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLM_ENABLE_EXPERIMENTAL)
 

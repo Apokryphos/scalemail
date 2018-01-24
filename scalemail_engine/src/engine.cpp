@@ -5,6 +5,8 @@
 #include "font.hpp"
 #include "gl_headers.hpp"
 #include "light.hpp"
+#include "load_map.hpp"
+#include "map.hpp"
 #include "mesh.hpp"
 #include "render.hpp"
 #include "screen_capture.hpp"
@@ -104,6 +106,8 @@ int startEngine() {
     //  Do this last after all other initialize functions
     initializeFakeMap();
 
+    std::shared_ptr<Map> map = loadMap("assets/maps/map1.tmx");
+
     glm::vec4 startAmbientColor(0.14f, 0.064f, 0.04f, 1.0f);
     // glm::vec4 endAmbientColor(0.2f, 0.28f, 0.3f, 1.0f);
     glm::vec4 endAmbientColor(0.3f, 0.38f, 0.4f, 1.0f);
@@ -125,20 +129,25 @@ int startEngine() {
     Camera camera(cameraZoom);
     camera.position = glm::vec2(0, introCameraStartY);
 
-    Texture mapTexture;
-    loadPngTexture("assets/textures/map.png", mapTexture);
+    Texture worldTexture;
+    loadPngTexture("assets/textures/world.png", worldTexture);
+
+    Texture horzScrollTexture;
+    loadPngTexture("assets/textures/h_scroll.png", horzScrollTexture);
 
     Mesh mapMesh;
     initQuadMesh(mapMesh);
 
     GLuint shader;
     GLuint shaderMvpLocation;
-    initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag", shader);
+    GLuint shaderTimeLocation;
+    initShaderProgram("assets/shaders/tile.vert", "assets/shaders/tile.frag", shader);
     shaderMvpLocation = glGetUniformLocation(shader, "MVP");
+    shaderTimeLocation = glGetUniformLocation(shader, "time");
 
-    glm::mat4 world =
-        glm::translate(glm::mat4(1.0f), glm::vec3(128.0f, 512.0f, 0.0f)) *
-        glm::scale(glm::mat4(1.0f), glm::vec3(128.0f, 512.0f, 1.0f));
+    const float tileDuration = 0.33f;
+    float tileTicks = 0;
+    int tileFrame = 0;
 
     float elapsedSeconds = 0;
     double lastSeconds = 0;
@@ -151,6 +160,15 @@ int startEngine() {
 
         if (paused) {
             elapsedSeconds = 0;
+        }
+
+        tileTicks += elapsedSeconds;
+        if (tileTicks >= tileDuration) {
+            tileTicks -= tileDuration;
+            ++tileFrame;
+            if (tileFrame > 1) {
+                tileFrame = 0;
+            }
         }
 
         addTransitionTime(elapsedSeconds);
@@ -252,7 +270,7 @@ int startEngine() {
                 }
         }
 
-        glm::mat4 mvp = projection * camera.getView() * world;
+        glm::mat4 mvp = projection * camera.getView();
 
         drawCenterText(
             glm::vec2(
@@ -262,13 +280,27 @@ int startEngine() {
             glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
             8.0f * cameraZoom);
 
-        blendNone();
+        //  Draw map
+        const Mesh& mesh = map->mapMesh.staticMesh;
+
+        blendAlpha();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glUseProgram(shader);
+        glUniform1f(shaderTimeLocation, 0);
         glUniformMatrix4fv(shaderMvpLocation, 1, GL_FALSE, &mvp[0][0]);
-        glBindTexture(GL_TEXTURE_2D, mapTexture.id);
-        glBindVertexArray(mapMesh.vao);
-        glDrawArrays(GL_TRIANGLES, 0, mapMesh.vertexCount);
+        glBindTexture(GL_TEXTURE_2D, worldTexture.id);
+        glBindVertexArray(mesh.vao);
+        glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
+
+        const Mesh& animMesh = map->mapMesh.scrollMeshes[tileFrame];
+        glBindVertexArray(animMesh.vao);
+        glDrawArrays(GL_TRIANGLES, 0, animMesh.vertexCount);
+
+        const Mesh& scrollMesh = map->mapMesh.scrollMeshes[tileFrame];
+        glUniform1f(shaderTimeLocation, glfwGetTime() * 0.5f);
+        glBindTexture(GL_TEXTURE_2D, horzScrollTexture.id);
+        glBindVertexArray(scrollMesh.vao);
+        glDrawArrays(GL_TRIANGLES, 0, scrollMesh.vertexCount);
 
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindVertexArray(0);

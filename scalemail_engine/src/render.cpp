@@ -18,8 +18,8 @@ void render(GLFWwindow* window, Camera& camera, glm::vec4 ambientColor) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glfwGetFramebufferSize(window, &gameWindow.width, &gameWindow.height);
 
-    renderLight(gameWindow, camera, ambientColor);
     renderSprites(gameWindow, camera);
+    renderLight(gameWindow, camera, ambientColor);
     renderTransition();
     renderText(gameWindow);
 }

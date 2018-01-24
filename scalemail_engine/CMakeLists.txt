@@ -26,7 +26,8 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/texture.hpp
     include/tileset.hpp
     include/tiny_font.hpp
-    include/transition.hpp)
+    include/transition.hpp
+    include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
     src/blend.cpp
@@ -48,7 +49,8 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/texture.cpp
     src/tileset.cpp
     src/transition.cpp
-    src/tiny_font.cpp)
+    src/tiny_font.cpp
+    src/world.cpp)
 
 add_library(${PROJECT_NAME} ${SCALEMAIL_ENGINE_SOURCE} ${SCALEMAIL_ENGINE_SOURCE})
 include_directories(include)

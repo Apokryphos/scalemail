@@ -5,7 +5,6 @@
 #include "font.hpp"
 #include "gl_headers.hpp"
 #include "light.hpp"
-#include "load_map.hpp"
 #include "map.hpp"
 #include "mesh.hpp"
 #include "render.hpp"
@@ -14,6 +13,7 @@
 #include "sprite.hpp"
 #include "texture.hpp"
 #include "transition.hpp"
+#include "world.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
@@ -109,7 +109,10 @@ int startEngine() {
     //  Do this last after all other initialize functions
     initializeFakeMap();
 
-    std::shared_ptr<Map> map = loadMap("assets/maps/map1.tmx");
+    World world;
+    world.loadMap("map1");
+
+    const Map* map = world.getMap();;
 
     glm::vec4 startAmbientColor(0.14f, 0.064f, 0.04f, 1.0f);
     // glm::vec4 endAmbientColor(0.2f, 0.28f, 0.3f, 1.0f);

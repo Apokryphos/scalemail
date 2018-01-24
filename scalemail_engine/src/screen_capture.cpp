@@ -63,7 +63,11 @@ void ScreenCapture::startCapture() {
     //     "ffmpeg -r 60 -f rawvideo -pix_fmt rgba -s 1280x720 -i - "
     //     "-threads 0 -preset fast -y -pix_fmt yuv420p -crf 21 -vf vflip output.mp4";
 
+#ifdef __linux__
     mStream = popen(cmd.str().c_str(), "w");
+#elif _WIN32
+    mStream = _popen(cmd.str().c_str(), "w");
+#endif
 
     mIsCapturing = true;
 }

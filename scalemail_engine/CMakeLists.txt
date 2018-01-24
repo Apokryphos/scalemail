@@ -8,6 +8,8 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/blend.hpp
     include/camera.hpp
     include/ease.hpp
+    include/entity.hpp
+    include/entity_manager.hpp
     include/fake_map.hpp
     include/font.hpp
     include/game_window.hpp
@@ -29,6 +31,8 @@ set(SCALEMAIL_ENGINE_INCLUDE
 set(SCALEMAIL_ENGINE_SOURCE
     src/blend.cpp
     src/camera.cpp
+    src/entity.cpp
+    src/entity_manager.cpp
     src/fake_map.cpp
     src/font.cpp
     src/gl_util.cpp

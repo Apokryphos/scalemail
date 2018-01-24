@@ -4,11 +4,10 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
-struct GLFWwindow;
-
 namespace ScaleMail
 {
 class Camera;
+struct GameWindow;
 
 struct SpriteFrame {
     float duration;
@@ -34,6 +33,6 @@ void addActorSprite(glm::vec2 position, int actorIndex,
                     Direction facing = Direction::SOUTH);
 void addWorldSprite(glm::vec2 position, int tilesetId);
 void initializeSprites();
-void renderSprites(GLFWwindow* window, Camera& camera);
+void renderSprites(GameWindow& gameWindow, Camera& camera);
 void simulateSprites(float elapsedSeconds);
 }

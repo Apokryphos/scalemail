@@ -64,7 +64,13 @@ int startEngine() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
-    GLFWwindow* window = glfwCreateWindow(1024, 1024, "ScaleMail", NULL, NULL);
+    const int screenWidth = 1024;
+    const int screenHeight = 1024;
+    const float cameraZoom = 4.0f;
+
+    GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "ScaleMail",
+                                          NULL, NULL);
+
     if (!window) {
         std::cerr << "GLFW failed to create window." << std::endl;
         glfwTerminate();
@@ -103,7 +109,6 @@ int startEngine() {
     glm::vec4 endAmbientColor(0.3f, 0.38f, 0.4f, 1.0f);
     glm::vec4 ambientColor = startAmbientColor;
 
-
     const float STATE1_DURATION = 0.5f;
     const float STATE2_DURATION = 2.0f;
     const float STATE3_DURATION = 3.0f;
@@ -117,7 +122,7 @@ int startEngine() {
     const float introCameraStartY = 0.0f;
     const float introCameraEndY = -768.0f;
 
-    Camera camera;
+    Camera camera(cameraZoom);
     camera.position = glm::vec2(0, introCameraStartY);
 
     Texture mapTexture;
@@ -134,8 +139,6 @@ int startEngine() {
     glm::mat4 world =
         glm::translate(glm::mat4(1.0f), glm::vec3(128.0f, 512.0f, 0.0f)) *
         glm::scale(glm::mat4(1.0f), glm::vec3(128.0f, 512.0f, 1.0f));
-
-    glm::mat4 projection = glm::ortho(0.0f, 1024.0f, 1024.0f, 0.0f, 0.0f, 1.0f);
 
     float elapsedSeconds = 0;
     double lastSeconds = 0;
@@ -158,6 +161,9 @@ int startEngine() {
 
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
+
+        glm::mat4 projection = glm::ortho(0.0f, (float)width, (float)height, 0.0f,
+                                          0.0f, 1.0f);
 
         glViewport(0, 0, width, height);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -254,7 +260,7 @@ int startEngine() {
                 height * 0.5f - 32.0f),
             "- SCALEMAIL -",
             glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
-            32.0f);
+            8.0f * cameraZoom);
 
         blendNone();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -264,13 +270,10 @@ int startEngine() {
         glBindVertexArray(mapMesh.vao);
         glDrawArrays(GL_TRIANGLES, 0, mapMesh.vertexCount);
 
-        renderSprites(window, camera);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindVertexArray(0);
 
         render(window, camera, ambientColor);
-
-        renderTransition();
-
-        renderText();
 
         glfwSwapBuffers(window);
 

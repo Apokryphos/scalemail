@@ -1,4 +1,5 @@
 #include "blend.hpp"
+#include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "mesh.hpp"
 #include "shader.hpp"
@@ -64,14 +65,6 @@ void drawCenterText(const glm::vec2 position, const std::string& text,
         size);
 }
 
-//	============================================================================
-void initializeFont() {
-    initQuadMesh(mesh);
-    loadPngTexture("assets/textures/font.png", fontTexture);
-    initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag", shader);
-    shaderMvpLocation = glGetUniformLocation(shader, "MVP");
-}
-
 //  ============================================================================
 static bool initFontMesh(Mesh& mesh) {
 
@@ -105,7 +98,15 @@ static bool initFontMesh(Mesh& mesh) {
 }
 
 //	============================================================================
-void renderText() {
+void initializeFont() {
+    initFontMesh(mesh);
+    loadPngTexture("assets/textures/font.png", fontTexture);
+    initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag", shader);
+    shaderMvpLocation = glGetUniformLocation(shader, "MVP");
+}
+
+//	============================================================================
+void renderText(const GameWindow& gameWindow) {
     glEnable(GL_BLEND);
     blendAlpha();
 
@@ -197,7 +198,9 @@ void renderText() {
 
     mesh.vertexCount = glyphCount * 6;
 
-    glm::mat4 projection = glm::ortho(0.0f, 1024.0f, 1024.0f, 0.0f, 0.0f, 1.0f);
+    glm::mat4 projection =
+        glm::ortho(0.0f, (float)gameWindow.width, (float)gameWindow.height, 0.0f,
+                   0.0f, 1.0f);
 
     glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 
@@ -212,6 +215,9 @@ void renderText() {
         glBufferSubData(GL_ARRAY_BUFFER, 0, fontVertexBufferSize,
                         &fontVertexData[0]);
     }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, gameWindow.width, gameWindow.height);
 
     glUseProgram(shader);
     glUniformMatrix4fv(shaderMvpLocation, 1, GL_FALSE, &projection[0][0]);

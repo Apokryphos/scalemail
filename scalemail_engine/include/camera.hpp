@@ -8,7 +8,7 @@ namespace ScaleMail
 class Camera
 {
 public:
-    Camera();
+    Camera(float zoom = 2.0f);
     glm::vec2 position;
     glm::mat4 getView();
     float zoom;

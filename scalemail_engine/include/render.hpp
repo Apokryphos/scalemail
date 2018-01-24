@@ -2,7 +2,7 @@
 
 #include <glm/vec4.hpp>
 
-typedef struct GLFWwindow;
+struct GLFWwindow;
 
 namespace ScaleMail
 {

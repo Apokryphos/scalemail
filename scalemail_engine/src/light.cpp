@@ -293,8 +293,6 @@ void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor)
 
     //  Draw lights from FBO B to screen
     blendModulate();
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, gameWindow.width, gameWindow.height);
     glBindTexture(GL_TEXTURE_2D, fboBTexture);
     glDrawArrays(GL_TRIANGLES, 0, quadMesh.vertexCount);
 

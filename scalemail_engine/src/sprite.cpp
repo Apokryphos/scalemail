@@ -1,5 +1,6 @@
 #include "blend.hpp"
 #include "camera.hpp"
+#include "game_window.hpp"
 #include "mesh.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
@@ -292,12 +293,12 @@ void initializeSprites() {
 
 //  ============================================================================
 static void renderSprites(std::vector<Sprite>& sprites, int textureId,
-                          GLFWwindow* window, Camera& camera) {
+                          GameWindow& gameWindow, Camera& camera) {
     buildSpriteVertexData(sprites);
 
-    int width, height;
-
-    glm::mat4 screenProjection = glm::ortho(0.0f, 1024.0f, 1024.0f, 0.0f, 0.0f, 1.0f);
+    glm::mat4 screenProjection =
+        glm::ortho(0.0f, (float)gameWindow.width, (float)gameWindow.height, 0.0f,
+                   0.0f, 1.0f);
 
     glm::mat4 screenMvp = screenProjection * camera.getView();
 
@@ -306,8 +307,7 @@ static void renderSprites(std::vector<Sprite>& sprites, int textureId,
     //  Draw sprites
     blendAlpha();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, gameWindow.width, gameWindow.height);
     glUseProgram(spriteShader);
     glUniformMatrix4fv(spriteShaderMvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
     glBindTexture(GL_TEXTURE_2D, textureId);
@@ -319,9 +319,9 @@ static void renderSprites(std::vector<Sprite>& sprites, int textureId,
 }
 
 //  ============================================================================
-void renderSprites(GLFWwindow* window, Camera& camera) {
-    renderSprites(worldSprites, worldTexture.id, window, camera);
-    renderSprites(actorSprites, actorsTexture.id, window, camera);
+void renderSprites(GameWindow& gameWindow, Camera& camera) {
+    renderSprites(worldSprites, worldTexture.id, gameWindow, camera);
+    renderSprites(actorSprites, actorsTexture.id, gameWindow, camera);
 
 }
 

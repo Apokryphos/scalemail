@@ -4,7 +4,7 @@ namespace ScaleMail
 {
 //  ============================================================================
 Map::Map(const int width, const int height) :
-    width(width),
-    height(height) {
+    height(height),
+    width(width) {
 }
 }

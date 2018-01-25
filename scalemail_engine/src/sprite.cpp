@@ -30,14 +30,13 @@ static Texture worldTexture;
 
 //  ============================================================================
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim) {
-    const int SPRITES_PER_ACTOR = 8;
+    const int ACTORS_PER_ROW = 4;
     const int SPRITES_PER_ROW = 16;
 
-    int spriteX = actorIndex % 4;
-    int spriteY = actorIndex / 4 * 2;
+    int spriteX = actorIndex % ACTORS_PER_ROW;
+    int spriteY = actorIndex / ACTORS_PER_ROW * 2;
 
-    int spriteIndex = spriteX * 4 + spriteY * SPRITES_PER_ROW;
-    // int spriteIndex = actorIndex * SPRITES_PER_ACTOR;
+    int spriteIndex = spriteX * ACTORS_PER_ROW + spriteY * SPRITES_PER_ROW;
 
     const int east = static_cast<int>(Direction::EAST);
     const int south = static_cast<int>(Direction::SOUTH);

@@ -56,12 +56,12 @@ void SpriteBatch::buildQuadVertexData(
 	}
 
 	if (batch.VertexElementCount > batch.VertexData.size()) {
-		std::cout << "SpriteBatch resized vertex data." ;
+		std::cout << "SpriteBatch resized vertex data." << std::endl;
 		batch.VertexData.resize(batch.VertexElementCount * 2);
 	}
 
 	if (batch.IndexElementCount > batch.IndexData.size()) {
-		std::cout << "SpriteBatch resized index data.";
+		std::cout << "SpriteBatch resized index data." << std::endl;
 		batch.IndexData.resize(batch.IndexElementCount * 2);
 	}
 
@@ -165,12 +165,12 @@ void SpriteBatch::buildTileVertexData(
 	}
 
 	if (batch.VertexElementCount > batch.VertexData.size()) {
-		std::cout <<  "SpriteBatch resized vertex data.";
+		std::cout <<  "SpriteBatch resized vertex data." << std::endl;
 		batch.VertexData.resize(batch.VertexElementCount * 2);
 	}
 
 	if (batch.IndexElementCount > batch.IndexData.size()) {
-		std::cout << "SpriteBatch resized index data.";
+		std::cout << "SpriteBatch resized index data." << std::endl;
 		batch.IndexData.resize(batch.IndexElementCount * 2);
 	}
 
@@ -283,12 +283,12 @@ void SpriteBatch::buildSpriteVertexData(
 			}
 
 			if (batch.VertexElementCount > batch.VertexData.size()) {
-				std::cout << "SpriteBatch resized vertex data.";
+				std::cout << "SpriteBatch resized vertex data." << std::endl;
 				batch.VertexData.resize(batch.VertexElementCount * 2);
 			}
 
 			if (batch.IndexElementCount > batch.IndexData.size()) {
-				std::cout << "SpriteBatch resized index data.";
+				std::cout << "SpriteBatch resized index data." << std::endl;
 				batch.IndexData.resize(batch.IndexElementCount * 2);
 			}
 		}

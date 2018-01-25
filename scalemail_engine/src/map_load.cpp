@@ -279,7 +279,7 @@ static void processTorchObject(World& world,
     const float y = object.GetY();
 
     addLight(
-        glm::vec2(x + 8.0f, y - 8.0f),
+        glm::vec2(x + 8.0f, y - 7.0f),
         torchLightColor,
         torchLightSize,
         torchLightPulse,

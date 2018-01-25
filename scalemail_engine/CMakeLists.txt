@@ -12,6 +12,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/ease.hpp
     include/entity.hpp
     include/entity_manager.hpp
+    include/entity_system.hpp
     include/font.hpp
     include/game_window.hpp
     include/gl_headers.hpp
@@ -37,6 +38,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/direction_util.cpp
     src/entity.cpp
     src/entity_manager.cpp
+    src/entity_system.cpp
     src/font.cpp
     src/gl_util.cpp
     src/engine.cpp

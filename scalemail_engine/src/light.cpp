@@ -106,7 +106,8 @@ void initializeLight(AssetManager& assetManager) {
     spriteShader = assetManager.getSpriteShader();
     quadShader = assetManager.getQuadShader();
 
-    initQuadMesh(quadMesh);
+    quadMesh = assetManager.getQuadMesh();
+
     initLightMesh(lightMesh);
 
     lightTexture = assetManager.loadTexture("light");

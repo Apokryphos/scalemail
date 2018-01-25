@@ -15,6 +15,11 @@ FadeShader AssetManager::getFadeShader() {
 }
 
 //  ============================================================================
+Mesh AssetManager::getQuadMesh() {
+    return mQuadMesh;
+}
+
+//  ============================================================================
 QuadShader AssetManager::getQuadShader() {
     return mQuadShader;
 }
@@ -43,6 +48,8 @@ Texture AssetManager::getTextureById(const int textureId) {
 
 //  ============================================================================
 void AssetManager::initialize() {
+    initQuadMesh(mQuadMesh);
+
     initShaderProgram("assets/shaders/fade.vert", "assets/shaders/fade.frag",
                       mFadeShader.id);
     mFadeShader.fadeColorLocation =

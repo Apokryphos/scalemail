@@ -3,6 +3,7 @@
 #include "gl_headers.hpp"
 #include "fade_shader.hpp"
 #include "quad_shader.hpp"
+#include "mesh.hpp"
 #include "sprite_shader.hpp"
 #include "texture.hpp"
 #include "tile_shader.hpp"
@@ -13,6 +14,8 @@ namespace ScaleMail
 {
 class AssetManager
 {
+    Mesh mQuadMesh;
+
     FadeShader mFadeShader;
     QuadShader mQuadShader;
     SpriteShader mSpriteShader;
@@ -23,6 +26,7 @@ class AssetManager
 
 public:
     FadeShader getFadeShader();
+    Mesh getQuadMesh();
     QuadShader getQuadShader();
     SpriteShader getSpriteShader();
     TileShader getTileShader();

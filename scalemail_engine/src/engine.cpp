@@ -137,9 +137,6 @@ int startEngine() {
     Texture worldTexture = assetManager.loadTexture("world");
     Texture horzScrollTexture = assetManager.loadTexture("h_scroll");;
 
-    Mesh mapMesh;
-    initQuadMesh(mapMesh);
-
     TileShader tileShader = assetManager.getTileShader();
 
     const float tileDuration = 0.33f;

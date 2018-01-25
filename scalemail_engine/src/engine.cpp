@@ -121,7 +121,7 @@ int startEngine() {
     const float STATE1_DURATION = 0.5f;
     const float STATE2_DURATION = 2.0f;
     const float STATE3_DURATION = 3.0f;
-    const float STATE4_DURATION = 9.0f;
+    const float STATE4_DURATION = 15.0f;
     const float STATE5_DURATION = 1.0f;
 
     int introState = 0;
@@ -129,7 +129,7 @@ int startEngine() {
     float textAlpha = 0.0f;
 
     const float introCameraStartY = 0.0f;
-    const float introCameraEndY = -768.0f;
+    const float introCameraEndY = -1024.0f;
 
     Camera camera(cameraZoom);
     camera.position = glm::vec2(0, introCameraStartY);
@@ -244,7 +244,7 @@ int startEngine() {
                     endAmbientColor.a - startAmbientColor.a,
                     STATE4_DURATION);
 
-                camera.position.y = easeInOutCubic(
+                camera.position.y = easeInOutSine(
                     introTicks,
                     introCameraStartY,
                     introCameraEndY - introCameraStartY,

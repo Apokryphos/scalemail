@@ -7,8 +7,9 @@ Install the following into extlibs directory:
 + [GLFW](https://github.com/glfw/glfw)
 + [GLM](https://github.com/g-truc/glm)
 + [LodePNG](https://github.com/lvandeve/lodepng)
++ [TmxMapLib](git@github.com:Apokryphos/TmxMapLib.git)
 
-Use lowercase directory names (glad, glfw, glm, lodepng).
+Use directory names that match case of projects (glad, glfw, glm, lodepng, TmxMapLib).
 
 Use the [glad webservice](http://glad.dav1d.de/) to generate source for glad.
 

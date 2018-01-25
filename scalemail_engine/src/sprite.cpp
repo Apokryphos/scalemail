@@ -145,6 +145,10 @@ void buildSpriteVertexData(std::vector<Sprite>& sprites) {
     std::vector<unsigned int> textureId;
     std::vector<float> positionX;
     std::vector<float> positionY;
+    std::vector<float> colorR;
+    std::vector<float> colorG;
+    std::vector<float> colorB;
+    std::vector<float> colorA;
     std::vector<float> sizeX;
     std::vector<float> sizeY;
     std::vector<float> rotate;
@@ -182,6 +186,10 @@ void buildSpriteVertexData(std::vector<Sprite>& sprites) {
 
         positionX.push_back(position.x);
         positionY.push_back(position.y);
+        colorR.push_back(1);
+        colorG.push_back(1);
+        colorB.push_back(1);
+        colorA.push_back(1);
         sizeX.push_back(sprite.size);
         sizeY.push_back(sprite.size);
         texU1.push_back(uv1.x);
@@ -199,6 +207,10 @@ void buildSpriteVertexData(std::vector<Sprite>& sprites) {
         alpha,
         positionX,
         positionY,
+        colorR,
+        colorG,
+        colorB,
+        colorA,
         sizeX,
         sizeY,
         rotate,

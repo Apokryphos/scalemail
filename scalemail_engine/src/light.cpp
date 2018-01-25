@@ -7,7 +7,7 @@
 #include "math_util.hpp"
 #include "mesh.hpp"
 #include "quad_shader.hpp"
-#include "sprite_shader.hpp"
+#include "sprite_batch.hpp"
 #include "texture.hpp"
 #include <iostream>
 #include <vector>
@@ -30,11 +30,8 @@ static std::vector<Light> lights;
 
 static Texture lightTexture;
 
-static size_t lightMeshVertexBufferSize = 0;
-static Mesh lightMesh;
-static std::vector<float> lightMeshVertexData;
-
-static SpriteShader spriteShader;
+static SpriteBatch lightSpriteBatch;
+static SpriteBatch glowSpriteBatch;
 
 static Mesh quadMesh;
 static QuadShader quadShader;
@@ -50,35 +47,6 @@ void addLight(glm::vec2 position, glm::vec4 color, float size, float pulse,
         pulse,
         pulseSize,
     });
-}
-
-//  ============================================================================
-static bool initLightMesh(Mesh& mesh) {
-    glGenVertexArrays(1, &lightMesh.vao);
-    glGenBuffers(1, &lightMesh.vbo);
-
-    mesh.vertexCount = 0;
-
-    glBindVertexArray(lightMesh.vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, lightMesh.vbo);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void*) 0);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void*) (sizeof(float) * 2));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void*) (sizeof(float) * 4));
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    return true;
 }
 
 //  ============================================================================
@@ -103,12 +71,12 @@ static void destroyFramebuffer(GLuint& fbo, GLuint& fboTexture) {
 
 //  ============================================================================
 void initializeLight(AssetManager& assetManager) {
-    spriteShader = assetManager.getSpriteShader();
     quadShader = assetManager.getQuadShader();
 
     quadMesh = assetManager.getQuadMesh();
 
-    initLightMesh(lightMesh);
+    lightSpriteBatch.initialize(assetManager);
+    glowSpriteBatch.initialize(assetManager);
 
     lightTexture = assetManager.loadTexture("light");
 
@@ -120,98 +88,78 @@ void initializeLight(AssetManager& assetManager) {
 }
 
 //  ============================================================================
-void buildLightMeshVertexData(float scale) {
-    int lightCount = 0;
+void buildLightMeshVertexData(SpriteBatch& spriteBatch, float scale) {
+    std::vector<unsigned int> textureId;
+    std::vector<float> positionX;
+    std::vector<float> positionY;
+    std::vector<float> colorR;
+    std::vector<float> colorG;
+    std::vector<float> colorB;
+    std::vector<float> colorA;
+    std::vector<float> sizeX;
+    std::vector<float> sizeY;
+    std::vector<float> rotate;
+    std::vector<float> texU1;
+    std::vector<float> texV1;
+    std::vector<float> texU2;
+    std::vector<float> texV2;
+    std::vector<bool> alpha;
 
-    float u1 = 0;
-    float v1 = 0;
+    const float u1 = 0;
+    const float v1 = 0;
+    const float u2 = 1;
+    const float v2 = 1;
 
-    float u2 = 1;
-    float v2 = 1;
+    std::unordered_map<bool, std::unordered_map<unsigned int, int>> textureIdCounts;
 
     for (const auto& light : lights) {
+        ++textureIdCounts[false][light.textureId];
+
+        textureId.push_back(light.textureId);
+
         float lightSize = (light.pulseSize * sin(ticks * light.pulse)) + light.size;
 
-        glm::vec2 size = glm::vec2(lightSize) * scale;
+        float size = lightSize * scale;
 
-        glm::vec2 position = light.position - size * 0.5f;
+        //  Round position to pixel coordinates to prevent wobbling
+        glm::vec2 position = glm::vec2(
+            (int)light.position.x,
+            (int)light.position.y);
 
-        ++lightCount;
-
-        lightMeshVertexData.push_back(position.x);
-        lightMeshVertexData.push_back(position.y);
-        lightMeshVertexData.push_back(u1);
-        lightMeshVertexData.push_back(v1);
-        lightMeshVertexData.push_back(light.color.r);
-        lightMeshVertexData.push_back(light.color.g);
-        lightMeshVertexData.push_back(light.color.b);
-        lightMeshVertexData.push_back(light.color.a);
-
-        lightMeshVertexData.push_back(position.x);
-        lightMeshVertexData.push_back(position.y + size.y);
-        lightMeshVertexData.push_back(u1);
-        lightMeshVertexData.push_back(v2);
-        lightMeshVertexData.push_back(light.color.r);
-        lightMeshVertexData.push_back(light.color.g);
-        lightMeshVertexData.push_back(light.color.b);
-        lightMeshVertexData.push_back(light.color.a);
-
-        lightMeshVertexData.push_back(position.x + size.x);
-        lightMeshVertexData.push_back(position.y);
-        lightMeshVertexData.push_back(u2);
-        lightMeshVertexData.push_back(v1);
-        lightMeshVertexData.push_back(light.color.r);
-        lightMeshVertexData.push_back(light.color.g);
-        lightMeshVertexData.push_back(light.color.b);
-        lightMeshVertexData.push_back(light.color.a);
-
-        lightMeshVertexData.push_back(position.x);
-        lightMeshVertexData.push_back(position.y + size.y);
-        lightMeshVertexData.push_back(u1);
-        lightMeshVertexData.push_back(v2);
-        lightMeshVertexData.push_back(light.color.r);
-        lightMeshVertexData.push_back(light.color.g);
-        lightMeshVertexData.push_back(light.color.b);
-        lightMeshVertexData.push_back(light.color.a);
-
-        lightMeshVertexData.push_back(position.x + size.x);
-        lightMeshVertexData.push_back(position.y + size.y);
-        lightMeshVertexData.push_back(u2);
-        lightMeshVertexData.push_back(v2);
-        lightMeshVertexData.push_back(light.color.r);
-        lightMeshVertexData.push_back(light.color.g);
-        lightMeshVertexData.push_back(light.color.b);
-        lightMeshVertexData.push_back(light.color.a);
-
-        lightMeshVertexData.push_back(position.x + size.x);
-        lightMeshVertexData.push_back(position.y);
-        lightMeshVertexData.push_back(u2);
-        lightMeshVertexData.push_back(v1);
-        lightMeshVertexData.push_back(light.color.r);
-        lightMeshVertexData.push_back(light.color.g);
-        lightMeshVertexData.push_back(light.color.b);
-        lightMeshVertexData.push_back(light.color.a);
+        positionX.push_back(position.x);
+        positionY.push_back(position.y);
+        colorR.push_back(light.color.r);
+        colorG.push_back(light.color.g);
+        colorB.push_back(light.color.b);
+        colorA.push_back(light.color.a);
+        sizeX.push_back(size);
+        sizeY.push_back(size);
+        texU1.push_back(u1);
+        texV1.push_back(v2);
+        texU2.push_back(u2);
+        texV2.push_back(v1);
+        alpha.push_back(false);
+        rotate.push_back(0);
     }
 
-    lightMesh.vertexCount = lightCount * 6;
-
-    glBindBuffer(GL_ARRAY_BUFFER, lightMesh.vbo);
-
-    size_t vertexDataSize = sizeof(float) * lightMeshVertexData.size();
-
-    if (lightMeshVertexBufferSize < vertexDataSize) {
-        lightMeshVertexBufferSize = vertexDataSize;
-
-        glBufferData(GL_ARRAY_BUFFER, lightMeshVertexBufferSize,
-                     &lightMeshVertexData[0], GL_STATIC_DRAW);
-    } else {
-        glBufferSubData(GL_ARRAY_BUFFER, 0, lightMeshVertexBufferSize,
-                        &lightMeshVertexData[0]);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    lightMeshVertexData.clear();
+    spriteBatch.buildSpriteVertexData(
+        lights.size(),
+        textureIdCounts,
+        textureId,
+        alpha,
+        positionX,
+        positionY,
+        colorR,
+        colorG,
+        colorB,
+        colorA,
+        sizeX,
+        sizeY,
+        rotate,
+        texU1,
+        texV1,
+        texU2,
+        texV2);
 }
 
 //  ============================================================================
@@ -228,8 +176,6 @@ int getMinFramebufferSize(GLFWwindow* window) {
 
 //  ============================================================================
 void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor) {
-    buildLightMeshVertexData(0.25f);
-
     const int minFrameBufferSize = getMinFramebufferSize(gameWindow.window);
     if (fboSize != minFrameBufferSize) {
         fboSize = minFrameBufferSize;
@@ -257,28 +203,27 @@ void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor)
     glEnable(GL_BLEND);
 
     //  Draw lights to FBO A
+    glowSpriteBatch.begin();
+    buildLightMeshVertexData(glowSpriteBatch, 0.25f);
     blendAdditive();
     glBindFramebuffer(GL_FRAMEBUFFER, fboA);
     glViewport(0, 0, fboSize, fboSize);
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(spriteShader.id);
-    glUniformMatrix4fv(spriteShader.mvpLocation, 1, GL_FALSE, &lightMvp[0][0]);
     glBindTexture(GL_TEXTURE_2D, lightTexture.id);
-    glBindVertexArray(lightMesh.vao);
-    glDrawArrays(GL_TRIANGLES, 0, lightMesh.vertexCount);
-
-    buildLightMeshVertexData(1.0f);
+    glowSpriteBatch.render(lightMvp);
+    glowSpriteBatch.end();
 
     //  Draw lights to FBO B
+    lightSpriteBatch.begin();
+    buildLightMeshVertexData(lightSpriteBatch, 1.0f);
     blendAdditive();
     glBindFramebuffer(GL_FRAMEBUFFER, fboB);
     glViewport(0, 0, fboSize, fboSize);
     glClearColor(ambientColor.r, ambientColor.g, ambientColor.b, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glBindTexture(GL_TEXTURE_2D, lightTexture.id);
-    glBindVertexArray(lightMesh.vao);
-    glDrawArrays(GL_TRIANGLES, 0, lightMesh.vertexCount);
+    lightSpriteBatch.render(lightMvp);
+    lightSpriteBatch.end();
 
     //  Draw lights from FBO A to screen
     blendAdditive();

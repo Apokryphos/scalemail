@@ -254,7 +254,9 @@ void SpriteBatch::buildSpriteVertexData(
 									 textureIdCounts,
 	const std::vector<unsigned int>& textureId,
 	const std::vector<bool>& alpha, const std::vector<float>& positionX,
-	const std::vector<float>& positionY, const std::vector<float>& sizeX,
+	const std::vector<float>& positionY, const std::vector<float>& colorR,
+	const std::vector<float>& colorG, const std::vector<float>& colorB,
+	const std::vector<float>& colorA, const std::vector<float>& sizeX,
 	const std::vector<float>& sizeY, const std::vector<float>& rotate,
 	const std::vector<float>& texU1, const std::vector<float>& texV1,
 	const std::vector<float>& texU2, const std::vector<float>& texV2) {
@@ -330,10 +332,10 @@ void SpriteBatch::buildSpriteVertexData(
 		vertexData[v++] = texU1[s];
 		vertexData[v++] = texV2[s];
 		//	Color
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
+		vertexData[v++] = colorR[s];
+		vertexData[v++] = colorG[s];
+		vertexData[v++] = colorB[s];
+		vertexData[v++] = colorA[s];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadB.x;
@@ -342,10 +344,10 @@ void SpriteBatch::buildSpriteVertexData(
 		vertexData[v++] = texU1[s];
 		vertexData[v++] = texV1[s];
 		//	Color
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
+		vertexData[v++] = colorR[s];
+		vertexData[v++] = colorG[s];
+		vertexData[v++] = colorB[s];
+		vertexData[v++] = colorA[s];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadC.x;
@@ -354,10 +356,10 @@ void SpriteBatch::buildSpriteVertexData(
 		vertexData[v++] = texU2[s];
 		vertexData[v++] = texV1[s];
 		//	Color
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
+		vertexData[v++] = colorR[s];
+		vertexData[v++] = colorG[s];
+		vertexData[v++] = colorB[s];
+		vertexData[v++] = colorA[s];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadD.x;
@@ -366,10 +368,10 @@ void SpriteBatch::buildSpriteVertexData(
 		vertexData[v++] = texU2[s];
 		vertexData[v++] = texV2[s];
 		//	Color
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
+		vertexData[v++] = colorR[s];
+		vertexData[v++] = colorG[s];
+		vertexData[v++] = colorB[s];
+		vertexData[v++] = colorA[s];
 
 		indexData[e++] = vertex;
 		indexData[e++] = vertex + 1;

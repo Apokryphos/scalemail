@@ -7,7 +7,7 @@ Install the following into extlibs directory:
 + [GLFW](https://github.com/glfw/glfw)
 + [GLM](https://github.com/g-truc/glm)
 + [LodePNG](https://github.com/lvandeve/lodepng)
-+ [TmxMapLib](git@github.com:Apokryphos/TmxMapLib.git)
++ [TmxMapLib](https://github.com/Apokryphos/TmxMapLib)
 
 Use directory names that match case of projects (glad, glfw, glm, lodepng, TmxMapLib).
 

@@ -1,8 +1,8 @@
+#include "asset_manager.hpp"
 #include "blend.hpp"
 #include "camera.hpp"
 #include "game_window.hpp"
 #include "mesh.hpp"
-#include "shader.hpp"
 #include "sprite.hpp"
 #include "texture.hpp"
 #include "tileset.hpp"
@@ -23,8 +23,7 @@ static size_t spriteMeshVertexBufferSize = 0;
 static Mesh spriteMesh;
 static std::vector<float> spriteMeshVertexData;
 
-static GLuint spriteShader;
-static GLuint spriteShaderMvpLocation;
+static SpriteShader spriteShader;
 
 static Texture actorsTexture;
 static Texture worldTexture;
@@ -282,12 +281,11 @@ void buildSpriteVertexData(std::vector<Sprite>& sprites) {
 }
 
 //  ============================================================================
-void initializeSprites() {
-    initShaderProgram("assets/shaders/sprite.vert", "assets/shaders/sprite.frag", spriteShader);
-    spriteShaderMvpLocation = glGetUniformLocation(spriteShader, "MVP");
+void initializeSprites(AssetManager& assetManager) {
+    spriteShader = assetManager.getSpriteShader();
 
-    loadPngTexture("assets/textures/actors.png", actorsTexture);
-    loadPngTexture("assets/textures/world.png", worldTexture);
+    actorsTexture = assetManager.loadTexture("actors");
+    worldTexture = assetManager.loadTexture("world");
 
     initSpriteMesh(spriteMesh);
 }
@@ -309,8 +307,8 @@ static void renderSprites(std::vector<Sprite>& sprites, int textureId,
     blendAlpha();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, gameWindow.width, gameWindow.height);
-    glUseProgram(spriteShader);
-    glUniformMatrix4fv(spriteShaderMvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
+    glUseProgram(spriteShader.id);
+    glUniformMatrix4fv(spriteShader.mvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
     glBindTexture(GL_TEXTURE_2D, textureId);
     glBindVertexArray(spriteMesh.vao);
     glDrawArrays(GL_TRIANGLES, 0, spriteMesh.vertexCount);

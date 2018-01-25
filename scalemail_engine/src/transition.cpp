@@ -1,8 +1,9 @@
+#include "asset_manager.hpp"
 #include "blend.hpp"
 #include "ease.hpp"
+#include "fade_shader.hpp"
 #include "gl_headers.hpp"
 #include "mesh.hpp"
-#include "shader.hpp"
 #include "transition.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -30,9 +31,7 @@ static glm::vec3 fadeColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
 static Mesh mesh;
 
-static GLuint shader;
-static GLuint shaderFadeColorLocation;
-static GLuint shaderFadeProgressLocation;
+static FadeShader fadeShader;
 
 static const struct
 {
@@ -126,12 +125,10 @@ void addTransitionTime(float elapsedSeconds) {
 }
 
 //	============================================================================
-void initializeTransition() {
+void initializeTransition(AssetManager& assetManager) {
     initFadeQuadMesh(mesh);
 
-    initShaderProgram("assets/shaders/fade.vert", "assets/shaders/fade.frag", shader);
-    shaderFadeProgressLocation = glGetUniformLocation(shader, "fadeProgress");
-    shaderFadeColorLocation = glGetUniformLocation(shader, "fadeColor");
+    fadeShader = assetManager.getFadeShader();
 }
 
 //	============================================================================
@@ -143,9 +140,9 @@ void renderTransition() {
         easeInCubic(fadeTicks, 0, 1, fadeDuration) :
         easeOutCubic(fadeTicks, 0, 1, fadeDuration);
 
-    glUseProgram(shader);
-    glUniform1f(shaderFadeProgressLocation, progress);
-    glUniform3fv(shaderFadeColorLocation, 1, &fadeColor[0]);
+    glUseProgram(fadeShader.id);
+    glUniform1f(fadeShader.fadeProgressLocation, progress);
+    glUniform3fv(fadeShader.fadeColorLocation, 1, &fadeColor[0]);
 
     glBindVertexArray(mesh.vao);
     glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);

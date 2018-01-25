@@ -1,3 +1,4 @@
+#include "asset_manager.hpp"
 #include "blend.hpp"
 #include "camera.hpp"
 #include "ease.hpp"
@@ -8,7 +9,6 @@
 #include "mesh.hpp"
 #include "render.hpp"
 #include "screen_capture.hpp"
-#include "shader.hpp"
 #include "sprite.hpp"
 #include "texture.hpp"
 #include "transition.hpp"
@@ -97,13 +97,16 @@ int startEngine() {
     glfwSwapInterval(1);
     glEnable(GL_FRAMEBUFFER_SRGB);
 
-    initializeFont();
+    AssetManager assetManager;
+    assetManager.initialize();
 
-    initializeTransition();
+    initializeFont(assetManager);
+
+    initializeTransition(assetManager);
     setTransitionState(TransitionState::FADED_OUT);
 
-    initializeLight();
-    initializeSprites();
+    initializeLight(assetManager);
+    initializeSprites(assetManager);
 
     //  Load map after all other initialize functions
     World world;
@@ -131,21 +134,13 @@ int startEngine() {
     Camera camera(cameraZoom);
     camera.position = glm::vec2(0, introCameraStartY);
 
-    Texture worldTexture;
-    loadPngTexture("assets/textures/world.png", worldTexture);
-
-    Texture horzScrollTexture;
-    loadPngTexture("assets/textures/h_scroll.png", horzScrollTexture);
+    Texture worldTexture = assetManager.loadTexture("world");
+    Texture horzScrollTexture = assetManager.loadTexture("h_scroll");;
 
     Mesh mapMesh;
     initQuadMesh(mapMesh);
 
-    GLuint shader;
-    GLuint shaderMvpLocation;
-    GLuint shaderTimeLocation;
-    initShaderProgram("assets/shaders/tile.vert", "assets/shaders/tile.frag", shader);
-    shaderMvpLocation = glGetUniformLocation(shader, "MVP");
-    shaderTimeLocation = glGetUniformLocation(shader, "time");
+    TileShader tileShader = assetManager.getTileShader();
 
     const float tileDuration = 0.33f;
     float tileTicks = 0;
@@ -290,9 +285,9 @@ int startEngine() {
 
         blendAlpha();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glUseProgram(shader);
-        glUniform1f(shaderTimeLocation, 0);
-        glUniformMatrix4fv(shaderMvpLocation, 1, GL_FALSE, &mvp[0][0]);
+        glUseProgram(tileShader.id);
+        glUniform1f(tileShader.timeLocation, 0);
+        glUniformMatrix4fv(tileShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
         glBindTexture(GL_TEXTURE_2D, worldTexture.id);
         glBindVertexArray(mesh.vao);
         glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
@@ -302,7 +297,7 @@ int startEngine() {
         glDrawArrays(GL_TRIANGLES, 0, animMesh.vertexCount);
 
         const Mesh& scrollMesh = map->mapMesh.scrollMeshes[tileFrame];
-        glUniform1f(shaderTimeLocation, totalElapsedSeconds * 0.5f);
+        glUniform1f(tileShader.timeLocation, totalElapsedSeconds * 0.5f);
         glBindTexture(GL_TEXTURE_2D, horzScrollTexture.id);
         glBindVertexArray(scrollMesh.vao);
         glDrawArrays(GL_TRIANGLES, 0, scrollMesh.vertexCount);

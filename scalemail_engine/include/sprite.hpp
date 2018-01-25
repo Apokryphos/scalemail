@@ -6,6 +6,7 @@
 
 namespace ScaleMail
 {
+class AssetManager;
 class Camera;
 struct GameWindow;
 
@@ -32,7 +33,7 @@ struct Sprite {
 void addActorSprite(glm::vec2 position, int actorIndex,
                     Direction facing = Direction::SOUTH);
 void addWorldSprite(glm::vec2 position, int tilesetId);
-void initializeSprites();
+void initializeSprites(AssetManager& assetManager);
 void renderSprites(GameWindow& gameWindow, Camera& camera);
 void simulateSprites(float elapsedSeconds);
 }

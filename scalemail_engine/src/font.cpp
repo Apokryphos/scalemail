@@ -1,8 +1,9 @@
+#include "asset_manager.hpp"
 #include "blend.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "mesh.hpp"
-#include "shader.hpp"
+#include "quad_shader.hpp"
 #include "texture.hpp"
 #include "tiny_font.hpp"
 #include <glm/glm.hpp>
@@ -31,8 +32,7 @@ static std::vector<float> fontVertexData;
 
 static Mesh mesh;
 
-static GLuint shader;
-static GLuint shaderMvpLocation;
+static QuadShader quadShader;
 
 //	============================================================================
 glm::vec2 measureText(const std::string& text, const float size) {
@@ -98,11 +98,12 @@ static bool initFontMesh(Mesh& mesh) {
 }
 
 //	============================================================================
-void initializeFont() {
+void initializeFont(AssetManager& assetManager) {
     initFontMesh(mesh);
-    loadPngTexture("assets/textures/font.png", fontTexture);
-    initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag", shader);
-    shaderMvpLocation = glGetUniformLocation(shader, "MVP");
+
+    fontTexture = assetManager.loadTexture("font");
+
+    quadShader = assetManager.getQuadShader();
 }
 
 //	============================================================================
@@ -219,8 +220,8 @@ void renderText(const GameWindow& gameWindow) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, gameWindow.width, gameWindow.height);
 
-    glUseProgram(shader);
-    glUniformMatrix4fv(shaderMvpLocation, 1, GL_FALSE, &projection[0][0]);
+    glUseProgram(quadShader.id);
+    glUniformMatrix4fv(quadShader.mvpLocation, 1, GL_FALSE, &projection[0][0]);
 
     glBindTexture(GL_TEXTURE_2D, fontTexture.id);
     glBindVertexArray(mesh.vao);

@@ -1,3 +1,4 @@
+#include "asset_manager.hpp"
 #include "blend.hpp"
 #include "camera.hpp"
 #include "game_window.hpp"
@@ -5,7 +6,8 @@
 #include "light.hpp"
 #include "math_util.hpp"
 #include "mesh.hpp"
-#include "shader.hpp"
+#include "quad_shader.hpp"
+#include "sprite_shader.hpp"
 #include "texture.hpp"
 #include <iostream>
 #include <vector>
@@ -32,12 +34,10 @@ static size_t lightMeshVertexBufferSize = 0;
 static Mesh lightMesh;
 static std::vector<float> lightMeshVertexData;
 
-static GLuint spriteShader;
-static GLuint spriteShaderMvpLocation;
+static SpriteShader spriteShader;
 
 static Mesh quadMesh;
-static GLuint quadShader;
-static GLuint quadShaderMvpLocation;
+static QuadShader quadShader;
 
 //  ============================================================================
 void addLight(glm::vec2 position, glm::vec4 color, float size, float pulse,
@@ -102,16 +102,14 @@ static void destroyFramebuffer(GLuint& fbo, GLuint& fboTexture) {
 }
 
 //  ============================================================================
-void initializeLight() {
-    initShaderProgram("assets/shaders/sprite.vert", "assets/shaders/sprite.frag", spriteShader);
-    spriteShaderMvpLocation = glGetUniformLocation(spriteShader, "MVP");
+void initializeLight(AssetManager& assetManager) {
+    spriteShader = assetManager.getSpriteShader();
+    quadShader = assetManager.getQuadShader();
 
     initQuadMesh(quadMesh);
-    initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag", quadShader);
-    quadShaderMvpLocation = glGetUniformLocation(quadShader, "MVP");
-
     initLightMesh(lightMesh);
-    loadPngTexture("assets/textures/light.png", lightTexture);
+
+    lightTexture = assetManager.loadTexture("light");
 
     createFramebuffer(fboA, fboSize, fboATexture);
     createFramebuffer(fboB, fboSize, fboBTexture);
@@ -263,8 +261,8 @@ void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor)
     glViewport(0, 0, fboSize, fboSize);
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(spriteShader);
-    glUniformMatrix4fv(spriteShaderMvpLocation, 1, GL_FALSE, &lightMvp[0][0]);
+    glUseProgram(spriteShader.id);
+    glUniformMatrix4fv(spriteShader.mvpLocation, 1, GL_FALSE, &lightMvp[0][0]);
     glBindTexture(GL_TEXTURE_2D, lightTexture.id);
     glBindVertexArray(lightMesh.vao);
     glDrawArrays(GL_TRIANGLES, 0, lightMesh.vertexCount);
@@ -285,8 +283,8 @@ void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor)
     blendAdditive();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, gameWindow.width, gameWindow.height);
-    glUseProgram(quadShader);
-    glUniformMatrix4fv(quadShaderMvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
+    glUseProgram(quadShader.id);
+    glUniformMatrix4fv(quadShader.mvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
     glBindTexture(GL_TEXTURE_2D, fboATexture);
     glBindVertexArray(quadMesh.vao);
     glDrawArrays(GL_TRIANGLES, 0, quadMesh.vertexCount);

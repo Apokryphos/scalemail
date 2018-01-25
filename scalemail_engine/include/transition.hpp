@@ -2,6 +2,8 @@
 
 namespace ScaleMail
 {
+class AssetManager;
+
 enum class TransitionState {
     NONE,
     FADING_OUT,
@@ -10,7 +12,7 @@ enum class TransitionState {
 };
 
 void addTransitionTime(float elapsedSeconds);
-void initializeTransition();
+void initializeTransition(AssetManager& assetManager);
 void renderTransition();
 void setTransitionState(TransitionState state);
 void setTransitionDuration(float duration);

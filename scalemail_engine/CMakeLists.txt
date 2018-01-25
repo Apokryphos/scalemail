@@ -5,6 +5,7 @@ project(scalemail_engine)
 set(CMAKE_BUILD_TYPE Debug)
 
 set(SCALEMAIL_ENGINE_INCLUDE
+    include/asset_manager.hpp
     include/blend.hpp
     include/camera.hpp
     include/direction.hpp
@@ -13,6 +14,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/entity.hpp
     include/entity_manager.hpp
     include/entity_system.hpp
+    include/fade_shader.hpp
     include/font.hpp
     include/game_window.hpp
     include/gl_headers.hpp
@@ -21,18 +23,22 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/map.hpp
     include/math_util.hpp
     include/mesh.hpp
+    include/quad_shader.hpp
     include/render.hpp
     include/screen_capture.hpp
     include/shader.hpp
     include/sprite.hpp
+    include/sprite_shader.hpp
     include/string_util.hpp
     include/texture.hpp
     include/tileset.hpp
+    include/tile_shader.hpp
     include/tiny_font.hpp
     include/transition.hpp
     include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
+    src/asset_manager.cpp
     src/blend.cpp
     src/camera.cpp
     src/direction_util.cpp

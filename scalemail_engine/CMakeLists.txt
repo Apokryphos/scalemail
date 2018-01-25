@@ -28,6 +28,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/screen_capture.hpp
     include/shader.hpp
     include/sprite.hpp
+    include/sprite_batch.hpp
     include/sprite_shader.hpp
     include/string_util.hpp
     include/texture.hpp
@@ -56,6 +57,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/screen_capture.cpp
     src/shader.cpp
     src/sprite.cpp
+    src/sprite_batch.cpp
     src/string_util.cpp
     src/texture.cpp
     src/tileset.cpp

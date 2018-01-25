@@ -2,8 +2,8 @@
 #include "blend.hpp"
 #include "camera.hpp"
 #include "game_window.hpp"
-#include "mesh.hpp"
 #include "sprite.hpp"
+#include "sprite_batch.hpp"
 #include "texture.hpp"
 #include "tileset.hpp"
 #include <glm/glm.hpp>
@@ -12,6 +12,7 @@
 #include <exception>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace ScaleMail
@@ -19,11 +20,7 @@ namespace ScaleMail
 static std::vector<Sprite> actorSprites;
 static std::vector<Sprite> worldSprites;
 
-static size_t spriteMeshVertexBufferSize = 0;
-static Mesh spriteMesh;
-static std::vector<float> spriteMeshVertexData;
-
-static SpriteShader spriteShader;
+static SpriteBatch spriteBatch;
 
 static Texture actorsTexture;
 static Texture worldTexture;
@@ -144,44 +141,25 @@ void addWorldSprite(glm::vec2 position, int tilesetId) {
 }
 
 //  ============================================================================
-static bool initSpriteMesh(Mesh& mesh) {
-    glGenVertexArrays(1, &spriteMesh.vao);
-    glGenBuffers(1, &spriteMesh.vbo);
-
-    mesh.vertexCount = 0;
-
-    glBindVertexArray(spriteMesh.vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, spriteMesh.vbo);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void*) 0);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void*) (sizeof(float) * 2));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void*) (sizeof(float) * 6));
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    return true;
-}
-
-//  ============================================================================
 void buildSpriteVertexData(std::vector<Sprite>& sprites) {
-    int spriteCount = 0;
+    std::vector<unsigned int> textureId;
+    std::vector<float> positionX;
+    std::vector<float> positionY;
+    std::vector<float> sizeX;
+    std::vector<float> sizeY;
+    std::vector<float> rotate;
+    std::vector<float> texU1;
+    std::vector<float> texV1;
+    std::vector<float> texU2;
+    std::vector<float> texV2;
+    std::vector<bool> alpha;
 
     glm::vec2 uv1, uv2;
 
-    for (const auto& sprite : sprites) {
-        glm::vec2 size = glm::vec2(sprite.size);
+    std::unordered_map<bool, std::unordered_map<unsigned int, int>> textureIdCounts;
 
-        glm::vec2 position = sprite.position - size * 0.5f;
+    for (const auto& sprite : sprites) {
+        ++textureIdCounts[true][sprite.textureId];
 
         const int frameIndex = sprite.animation.frameIndex;
         const int direction = static_cast<int>(sprite.facing);
@@ -195,132 +173,62 @@ void buildSpriteVertexData(std::vector<Sprite>& sprites) {
             getTilesetUv(tilesetId, 256, 304, 16, 16, uv1, uv2);
         }
 
-        float u1 = uv1.x;
-        float v1 = uv1.y;
+        textureId.push_back(sprite.textureId);
 
-        float u2 = uv2.x;
-        float v2 = uv2.y;
+        //  Round position to pixel coordinates to prevent wobbling
+        glm::vec2 position = glm::vec2(
+            (int)sprite.position.x,
+            (int)sprite.position.y);
 
-        ++spriteCount;
-
-        spriteMeshVertexData.push_back(position.x);
-        spriteMeshVertexData.push_back(position.y);
-        spriteMeshVertexData.push_back(sprite.color.r);
-        spriteMeshVertexData.push_back(sprite.color.g);
-        spriteMeshVertexData.push_back(sprite.color.b);
-        spriteMeshVertexData.push_back(sprite.color.a);
-        spriteMeshVertexData.push_back(u1);
-        spriteMeshVertexData.push_back(v1);
-
-        spriteMeshVertexData.push_back(position.x);
-        spriteMeshVertexData.push_back(position.y + size.y);
-        spriteMeshVertexData.push_back(sprite.color.r);
-        spriteMeshVertexData.push_back(sprite.color.g);
-        spriteMeshVertexData.push_back(sprite.color.b);
-        spriteMeshVertexData.push_back(sprite.color.a);
-        spriteMeshVertexData.push_back(u1);
-        spriteMeshVertexData.push_back(v2);
-
-        spriteMeshVertexData.push_back(position.x + size.x);
-        spriteMeshVertexData.push_back(position.y);
-        spriteMeshVertexData.push_back(sprite.color.r);
-        spriteMeshVertexData.push_back(sprite.color.g);
-        spriteMeshVertexData.push_back(sprite.color.b);
-        spriteMeshVertexData.push_back(sprite.color.a);
-        spriteMeshVertexData.push_back(u2);
-        spriteMeshVertexData.push_back(v1);
-
-        spriteMeshVertexData.push_back(position.x);
-        spriteMeshVertexData.push_back(position.y + size.y);
-        spriteMeshVertexData.push_back(sprite.color.r);
-        spriteMeshVertexData.push_back(sprite.color.g);
-        spriteMeshVertexData.push_back(sprite.color.b);
-        spriteMeshVertexData.push_back(sprite.color.a);
-        spriteMeshVertexData.push_back(u1);
-        spriteMeshVertexData.push_back(v2);
-
-        spriteMeshVertexData.push_back(position.x + size.x);
-        spriteMeshVertexData.push_back(position.y + size.y);
-        spriteMeshVertexData.push_back(sprite.color.r);
-        spriteMeshVertexData.push_back(sprite.color.g);
-        spriteMeshVertexData.push_back(sprite.color.b);
-        spriteMeshVertexData.push_back(sprite.color.a);
-        spriteMeshVertexData.push_back(u2);
-        spriteMeshVertexData.push_back(v2);
-
-        spriteMeshVertexData.push_back(position.x + size.x);
-        spriteMeshVertexData.push_back(position.y);
-        spriteMeshVertexData.push_back(sprite.color.r);
-        spriteMeshVertexData.push_back(sprite.color.g);
-        spriteMeshVertexData.push_back(sprite.color.b);
-        spriteMeshVertexData.push_back(sprite.color.a);
-        spriteMeshVertexData.push_back(u2);
-        spriteMeshVertexData.push_back(v1);
+        positionX.push_back(position.x);
+        positionY.push_back(position.y);
+        sizeX.push_back(sprite.size);
+        sizeY.push_back(sprite.size);
+        texU1.push_back(uv1.x);
+        texV1.push_back(uv2.y);
+        texU2.push_back(uv2.x);
+        texV2.push_back(uv1.y);
+        alpha.push_back(true);
+        rotate.push_back(0);
     }
 
-    spriteMesh.vertexCount = spriteCount * 6;
-
-    glBindBuffer(GL_ARRAY_BUFFER, spriteMesh.vbo);
-
-    size_t vertexDataSize = sizeof(float) * spriteMeshVertexData.size();
-
-    if (spriteMeshVertexBufferSize < vertexDataSize) {
-        spriteMeshVertexBufferSize = vertexDataSize;
-
-        glBufferData(GL_ARRAY_BUFFER, spriteMeshVertexBufferSize,
-                     &spriteMeshVertexData[0], GL_STATIC_DRAW);
-    } else {
-        glBufferSubData(GL_ARRAY_BUFFER, 0, spriteMeshVertexBufferSize,
-                        &spriteMeshVertexData[0]);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    spriteMeshVertexData.clear();
+    spriteBatch.buildSpriteVertexData(
+        sprites.size(),
+        textureIdCounts,
+        textureId,
+        alpha,
+        positionX,
+        positionY,
+        sizeX,
+        sizeY,
+        rotate,
+        texU1,
+        texV1,
+        texU2,
+        texV2);
 }
 
 //  ============================================================================
 void initializeSprites(AssetManager& assetManager) {
-    spriteShader = assetManager.getSpriteShader();
+    spriteBatch.initialize(assetManager);
 
     actorsTexture = assetManager.loadTexture("actors");
     worldTexture = assetManager.loadTexture("world");
-
-    initSpriteMesh(spriteMesh);
 }
 
 //  ============================================================================
-static void renderSprites(std::vector<Sprite>& sprites, int textureId,
-                          GameWindow& gameWindow, Camera& camera) {
-    buildSpriteVertexData(sprites);
-
+void renderSprites(GameWindow& gameWindow, Camera& camera) {
     glm::mat4 screenProjection =
         glm::ortho(0.0f, (float)gameWindow.width, (float)gameWindow.height, 0.0f,
                    0.0f, 1.0f);
 
     glm::mat4 screenMvp = screenProjection * camera.getView();
 
-    glEnable(GL_BLEND);
-
-    //  Draw sprites
-    blendAlpha();
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, gameWindow.width, gameWindow.height);
-    glUseProgram(spriteShader.id);
-    glUniformMatrix4fv(spriteShader.mvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
-    glBindTexture(GL_TEXTURE_2D, textureId);
-    glBindVertexArray(spriteMesh.vao);
-    glDrawArrays(GL_TRIANGLES, 0, spriteMesh.vertexCount);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindVertexArray(0);
-}
-
-//  ============================================================================
-void renderSprites(GameWindow& gameWindow, Camera& camera) {
-    renderSprites(worldSprites, worldTexture.id, gameWindow, camera);
-    renderSprites(actorSprites, actorsTexture.id, gameWindow, camera);
-
+    spriteBatch.begin();
+    buildSpriteVertexData(worldSprites);
+    buildSpriteVertexData(actorSprites);
+    spriteBatch.render(screenMvp);
+    spriteBatch.end();
 }
 
 //  ============================================================================

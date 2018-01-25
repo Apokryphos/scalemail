@@ -68,12 +68,12 @@ static bool initLightMesh(Mesh& mesh) {
                           sizeof(float) * 8, (void*) 0);
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 8, (void*) (sizeof(float) * 2));
 
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void*) (sizeof(float) * 6));
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void*) (sizeof(float) * 4));
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -140,57 +140,57 @@ void buildLightMeshVertexData(float scale) {
 
         lightMeshVertexData.push_back(position.x);
         lightMeshVertexData.push_back(position.y);
+        lightMeshVertexData.push_back(u1);
+        lightMeshVertexData.push_back(v1);
         lightMeshVertexData.push_back(light.color.r);
         lightMeshVertexData.push_back(light.color.g);
         lightMeshVertexData.push_back(light.color.b);
         lightMeshVertexData.push_back(light.color.a);
-        lightMeshVertexData.push_back(u1);
-        lightMeshVertexData.push_back(v1);
 
         lightMeshVertexData.push_back(position.x);
         lightMeshVertexData.push_back(position.y + size.y);
+        lightMeshVertexData.push_back(u1);
+        lightMeshVertexData.push_back(v2);
         lightMeshVertexData.push_back(light.color.r);
         lightMeshVertexData.push_back(light.color.g);
         lightMeshVertexData.push_back(light.color.b);
         lightMeshVertexData.push_back(light.color.a);
-        lightMeshVertexData.push_back(u1);
-        lightMeshVertexData.push_back(v2);
 
         lightMeshVertexData.push_back(position.x + size.x);
         lightMeshVertexData.push_back(position.y);
+        lightMeshVertexData.push_back(u2);
+        lightMeshVertexData.push_back(v1);
         lightMeshVertexData.push_back(light.color.r);
         lightMeshVertexData.push_back(light.color.g);
         lightMeshVertexData.push_back(light.color.b);
         lightMeshVertexData.push_back(light.color.a);
-        lightMeshVertexData.push_back(u2);
-        lightMeshVertexData.push_back(v1);
 
         lightMeshVertexData.push_back(position.x);
         lightMeshVertexData.push_back(position.y + size.y);
+        lightMeshVertexData.push_back(u1);
+        lightMeshVertexData.push_back(v2);
         lightMeshVertexData.push_back(light.color.r);
         lightMeshVertexData.push_back(light.color.g);
         lightMeshVertexData.push_back(light.color.b);
         lightMeshVertexData.push_back(light.color.a);
-        lightMeshVertexData.push_back(u1);
-        lightMeshVertexData.push_back(v2);
 
         lightMeshVertexData.push_back(position.x + size.x);
         lightMeshVertexData.push_back(position.y + size.y);
+        lightMeshVertexData.push_back(u2);
+        lightMeshVertexData.push_back(v2);
         lightMeshVertexData.push_back(light.color.r);
         lightMeshVertexData.push_back(light.color.g);
         lightMeshVertexData.push_back(light.color.b);
         lightMeshVertexData.push_back(light.color.a);
-        lightMeshVertexData.push_back(u2);
-        lightMeshVertexData.push_back(v2);
 
         lightMeshVertexData.push_back(position.x + size.x);
         lightMeshVertexData.push_back(position.y);
+        lightMeshVertexData.push_back(u2);
+        lightMeshVertexData.push_back(v1);
         lightMeshVertexData.push_back(light.color.r);
         lightMeshVertexData.push_back(light.color.g);
         lightMeshVertexData.push_back(light.color.b);
         lightMeshVertexData.push_back(light.color.a);
-        lightMeshVertexData.push_back(u2);
-        lightMeshVertexData.push_back(v1);
     }
 
     lightMesh.vertexCount = lightCount * 6;

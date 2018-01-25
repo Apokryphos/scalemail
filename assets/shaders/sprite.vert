@@ -2,9 +2,9 @@
 
 uniform mat4 MVP;
 
-in vec2 vPos;
-in vec4 vCol;
-in vec2 vTex;
+layout (location = 0) in vec2 vPos;
+layout (location = 1) in vec2 vTex;
+layout (location = 2) in vec4 vCol;
 
 out vec4 color;
 out vec2 texCoord;

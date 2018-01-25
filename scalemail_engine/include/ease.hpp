@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 namespace ScaleMail
 {
 //  ============================================================================
@@ -23,6 +25,10 @@ inline float easeInOutCubic(float t, float b, float c, float d) {
 	return c / 2 * (t * t * t + 2) + b;
 };
 
+//  ============================================================================
+inline float easeInOutSine(float t, float b, float c, float d) {
+	return -c / 2 * (cos(M_PI * t / d) - 1) + b;
+};
 
 //  ============================================================================
 inline float easeOutCubic(float t, float b, float c, float d) {

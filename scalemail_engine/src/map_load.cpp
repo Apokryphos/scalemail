@@ -259,7 +259,8 @@ static void processMiscObject(World& world,
 
     const int tilesetId = tile->GetGid() - 1;
 
-    addWorldSprite(glm::vec2(x, y), tilesetId);
+    world.createProp(glm::vec2(x, y), tilesetId);
+    // addWorldSprite(glm::vec2(x, y), tilesetId);
 }
 
 //  ============================================================================
@@ -286,7 +287,8 @@ static void processTorchObject(World& world,
         torchLightPulseSize
     );
 
-    addWorldSprite(glm::vec2(x, y), tilesetId);
+    world.createProp(glm::vec2(x, y), tilesetId);
+    // addWorldSprite(glm::vec2(x, y), tilesetId);
 }
 
 //  ============================================================================

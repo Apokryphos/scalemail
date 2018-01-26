@@ -30,6 +30,12 @@ SpriteShader AssetManager::getSpriteShader() {
 }
 
 //  ============================================================================
+Tileset AssetManager::getTileset(const std::string textureName) {
+    Texture texture = this->loadTexture(textureName);
+    return Tileset(texture, 16, 16);
+}
+
+//  ============================================================================
 TileShader AssetManager::getTileShader() {
     return mTileShader;
 }
@@ -78,7 +84,6 @@ Texture AssetManager::loadTexture(const std::string textureName) {
     auto result = mTexturesByPath.find(texturePath);
 
     if (result != mTexturesByPath.end()) {
-        std::cout << textureName << " texture found in cache." << std::endl;
         return result->second;
     }
 

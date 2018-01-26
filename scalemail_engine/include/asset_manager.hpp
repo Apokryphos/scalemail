@@ -7,6 +7,7 @@
 #include "sprite_shader.hpp"
 #include "texture.hpp"
 #include "tile_shader.hpp"
+#include "tileset.hpp"
 #include <map>
 #include <string>
 
@@ -29,6 +30,7 @@ public:
     Mesh getQuadMesh();
     QuadShader getQuadShader();
     SpriteShader getSpriteShader();
+    Tileset getTileset(const std::string textureName);
     TileShader getTileShader();
     Texture getTextureById(const int textureId);
     void initialize();

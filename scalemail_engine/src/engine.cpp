@@ -110,6 +110,8 @@ int startEngine() {
 
     //  Load map after all other initialize functions
     World world;
+    world.initialize(&assetManager);
+
     world.loadMap("map1");
     const Map* map = world.getMap();;
 
@@ -170,7 +172,7 @@ int startEngine() {
 
         addTransitionTime(elapsedSeconds);
         simulateLights(elapsedSeconds);
-        simulateSprites(elapsedSeconds);
+        // simulateSprites(elapsedSeconds);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -302,7 +304,7 @@ int startEngine() {
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindVertexArray(0);
 
-        render(window, camera, ambientColor);
+        render(window, world, camera, ambientColor);
 
         glfwSwapBuffers(window);
 
@@ -314,6 +316,8 @@ int startEngine() {
         }
 
         glfwPollEvents();
+
+        world.update(elapsedSeconds);
     }
 
     glfwDestroyWindow(window);

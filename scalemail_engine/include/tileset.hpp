@@ -8,11 +8,16 @@ namespace ScaleMail
 class Tileset
 {
 public:
+	Tileset() {
+		tileWidth = 0;
+		tileHeight = 0;
+	}
+
 	Tileset(Texture texture, int tileWidth, int tileHeight);
 	void getTileUv(int index, glm::vec2& uv1, glm::vec2& uv2);
     Texture texture;
-	const int tileHeight;
-	const int tileWidth;
+	int tileHeight;
+	int tileWidth;
 };
 
 void getTilesetUv(const int index, const int width, const int height,

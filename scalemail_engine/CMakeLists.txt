@@ -23,6 +23,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/map.hpp
     include/math_util.hpp
     include/mesh.hpp
+    include/physics_system.hpp
     include/quad_shader.hpp
     include/render.hpp
     include/screen_capture.hpp
@@ -30,6 +31,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/sprite.hpp
     include/sprite_batch.hpp
     include/sprite_shader.hpp
+    include/sprite_system.hpp
     include/string_util.hpp
     include/texture.hpp
     include/tileset.hpp
@@ -53,11 +55,13 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/mesh.cpp
     src/map.cpp
     src/map_load.cpp
+    src/physics_system.cpp
     src/render.cpp
     src/screen_capture.cpp
     src/shader.cpp
     src/sprite.cpp
     src/sprite_batch.cpp
+    src/sprite_system.cpp
     src/string_util.cpp
     src/texture.cpp
     src/tileset.cpp

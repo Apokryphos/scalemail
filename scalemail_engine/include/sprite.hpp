@@ -1,6 +1,7 @@
 #pragma once
 
 #include "direction.hpp"
+#include "sprite_animation.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
@@ -9,17 +10,7 @@ namespace ScaleMail
 class AssetManager;
 class Camera;
 struct GameWindow;
-
-struct SpriteFrame {
-    float duration;
-    int tilesetIds[4];
-};
-
-struct SpriteAnimation {
-    int frameIndex;
-    float ticks;
-    SpriteFrame frames[2];
-};
+class SpriteSystem;
 
 struct Sprite {
     Direction facing;
@@ -30,10 +21,10 @@ struct Sprite {
     SpriteAnimation animation;
 };
 
-void addActorSprite(glm::vec2 position, int actorIndex,
-                    Direction facing = Direction::SOUTH);
-void addWorldSprite(glm::vec2 position, int tilesetId);
+void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
+void getWorldSpriteAnimation(const int index, SpriteAnimation& anim);
 void initializeSprites(AssetManager& assetManager);
-void renderSprites(GameWindow& gameWindow, Camera& camera);
-void simulateSprites(float elapsedSeconds);
+void renderSprites(GameWindow& gameWindow, SpriteSystem& spriteSystem,
+                   Camera& camera);
+void setSpriteAnimationStatic(SpriteAnimation& animation, int tilesetId);
 }

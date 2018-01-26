@@ -1,12 +1,16 @@
 #pragma once
 
 #include "direction.hpp"
+#include "door_system.hpp"
 #include "entity.hpp"
 #include "entity_manager.hpp"
 #include "map.hpp"
+#include "name_system.hpp"
 #include "physics_system.hpp"
 #include "sprite_system.hpp"
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace ScaleMail
 {
@@ -17,14 +21,26 @@ class World
 
     PhysicsSystem mPhysicsSystem;
     SpriteSystem mSpriteSystem;
+    NameSystem mNameSystem;
+    DoorSystem mDoorSystem;
 
 public:
     World();
     Entity createActor(float x, float y, int actorIndex,
                        Direction facing = Direction::SOUTH);
+    Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
+                      bool open, const std::string name = "");
+    Entity createDoor(float x, float y, int openTilesetId,
+                      int closedTilesetId, int childOpenTilesetId,
+                      int childClosedTilesetId, bool open,
+                      const std::string name);
     Entity createEntity();
     Entity createProp(glm::vec2 position, int tilesetId);
+    DoorSystem& getDoorSystem();
+    std::vector<Entity> getEntitiesByName(const std::string name) const;
     Map* getMap();
+    NameSystem& getNameSystem();
+    PhysicsSystem& getPhysicsSystem();
     SpriteSystem& getSpriteSystem();
     void initialize(AssetManager* assetManager);
     void loadMap(const std::string& mapName);

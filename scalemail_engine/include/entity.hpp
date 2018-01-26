@@ -8,10 +8,12 @@ struct Entity
 {
     unsigned id;
 
-    Entity(const unsigned index, const unsigned generation);
+    // Entity(const unsigned index, const unsigned generation);
     unsigned index() const;
     unsigned generation() const;
 };
+
+Entity makeEntity(const unsigned index, const unsigned generation);
 
 inline bool operator==(const Entity& entity1, const Entity& entity2) {
     return entity1.id == entity2.id;

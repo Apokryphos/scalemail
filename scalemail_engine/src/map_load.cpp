@@ -221,6 +221,59 @@ static void processActorObject(World& world,
 }
 
 //  ============================================================================
+static void processDoorObject(World& world,
+                              const TmxMapLib::Object& object,
+                              const TmxMapLib::Map& tmxMap) {
+    const float x = object.GetX();
+    const float y = object.GetY();
+
+    const TmxMapLib::Tile* tile = object.GetTile();
+
+    const int tilesetId = tile->GetGid() - 1;
+
+    bool open = false;
+
+    const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
+
+    const TmxMapLib::TilesetTile* tilesetTile =
+        tileset->GetTile(tilesetId);
+
+    if (tilesetTile != nullptr) {
+        open = tilesetTile->GetPropertySet().GetBoolValue("DoorOpen", false);
+
+        int openTilesetId = tilesetId;
+        int closedTilesetId = tilesetId;
+
+        if (open) {
+            closedTilesetId = tilesetTile->GetPropertySet().GetIntValue(
+                "DoorClosedId", tilesetId);
+        } else {
+            openTilesetId = tilesetTile->GetPropertySet().GetIntValue(
+                "DoorOpenId", tilesetId);
+        }
+
+        if (openTilesetId == closedTilesetId) {
+            std::cout <<
+                "Door object does not have correct " <<
+                (open ? "DoorClosedId" : "DoorOpenId") <<
+                " property." << std::endl;
+            return;
+        }
+
+        if (tilesetTile->GetPropertySet().GetBoolValue("DoorChild", false)) {
+            world.createDoor(x, y, openTilesetId, closedTilesetId,
+                    openTilesetId + 1, closedTilesetId + 1,
+                    open, object.GetName());
+        } else {
+            world.createDoor(x, y, openTilesetId, closedTilesetId, open, object.GetName());
+        }
+
+    } else {
+        std::cout << "Door object missing tileset properties.";
+    }
+}
+
+//  ============================================================================
 static void processLightObject(World& world,
                                const TmxMapLib::Object& object,
                                const TmxMapLib::Map& tmxMap) {
@@ -312,6 +365,8 @@ static void processObject(World& world,
 
         if (type == "actor") {
             processActorObject(world, object, tmxMap);
+        } else if (type == "door") {
+            processDoorObject(world, object, tmxMap);
         } else if (type == "torch") {
             processTorchObject(world, object, tmxMap);
         } else {

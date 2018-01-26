@@ -2,6 +2,7 @@
 #include "blend.hpp"
 #include "camera.hpp"
 #include "ease.hpp"
+#include "door_system.hpp"
 #include "font.hpp"
 #include "gl_headers.hpp"
 #include "light.hpp"
@@ -21,6 +22,7 @@
 namespace ScaleMail {
 bool paused = false;
 
+float timeMult = 1.0f;
 const int CAPTURE_SKIP_FRAMES = 2;
 int captureSkipFrames = 0;
 ScreenCapture capture;
@@ -50,6 +52,14 @@ static void keyCallback(GLFWwindow* window, int key,
 
     if (key == GLFW_KEY_P && action == GLFW_PRESS) {
         paused = !paused;
+    }
+
+    if (key == GLFW_KEY_SPACE) {
+        if  (action == GLFW_PRESS) {
+            timeMult = 10.0f;
+        } else if (action == GLFW_RELEASE) {
+            timeMult = 1.0f;
+        }
     }
 }
 
@@ -161,6 +171,9 @@ int startEngine() {
             totalElapsedSeconds += seconds - lastSeconds;
         }
 
+        elapsedSeconds *= timeMult;
+        totalElapsedSeconds *= timeMult;
+
         tileTicks += elapsedSeconds;
         if (tileTicks >= tileDuration) {
             tileTicks -= tileDuration;
@@ -219,6 +232,7 @@ int startEngine() {
 
             //  Scroll down and fade out title
             case 3:
+            {
                 introTicks += elapsedSeconds;
                 textAlpha = 1 - easeOutCubic(introTicks, 0, 1, STATE2_DURATION);
 
@@ -252,12 +266,21 @@ int startEngine() {
                     introCameraEndY - introCameraStartY,
                     STATE4_DURATION);
 
+                if (camera.position.y < introCameraEndY + 64) {
+                    std::vector<Entity> entities = world.getEntitiesByName("introDoor");
+                    for (auto entity : entities) {
+                        DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
+                        world.getDoorSystem().setOpen(doorCmpnt, false);
+                    }
+                }
+
                 if (introTicks >= STATE4_DURATION) {
                     introTicks = 0;
                     camera.position.y = introCameraEndY;
                     ++introState;
                 }
                 break;
+            }
 
             //  Pause before fading out
             case 4:

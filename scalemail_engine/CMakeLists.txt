@@ -10,6 +10,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/camera.hpp
     include/direction.hpp
     include/direction_util.hpp
+    include/door_system.hpp
     include/ease.hpp
     include/entity.hpp
     include/entity_manager.hpp
@@ -23,6 +24,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/map.hpp
     include/math_util.hpp
     include/mesh.hpp
+    include/name_system.hpp
     include/physics_system.hpp
     include/quad_shader.hpp
     include/render.hpp
@@ -45,6 +47,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/blend.cpp
     src/camera.cpp
     src/direction_util.cpp
+    src/door_system.cpp
     src/entity.cpp
     src/entity_manager.cpp
     src/entity_system.cpp
@@ -55,6 +58,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/mesh.cpp
     src/map.cpp
     src/map_load.cpp
+    src/name_system.cpp
     src/physics_system.cpp
     src/render.cpp
     src/screen_capture.cpp

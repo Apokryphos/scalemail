@@ -19,7 +19,7 @@ Entity EntityManager::createEntity() {
         index = (int)mGenerations.size() - 1;
     }
 
-    return Entity(index, mGenerations[index]);
+    return makeEntity(index, mGenerations[index]);
 }
 
 //  ============================================================================

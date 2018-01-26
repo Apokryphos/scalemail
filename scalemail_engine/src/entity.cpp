@@ -9,9 +9,14 @@ const unsigned ENTITY_GENERATION_BITS = 8;
 const unsigned ENTITY_GENERATION_MASK = (1 << ENTITY_GENERATION_BITS) - 1;
 
 //	============================================================================
-Entity::Entity(const unsigned index, const unsigned generation) {
-    this->id = (generation << ENTITY_INDEX_BITS) | index;
+Entity makeEntity(const unsigned index, const unsigned generation) {
+    return { (generation << ENTITY_INDEX_BITS) | index };
 }
+
+//	============================================================================
+// Entity::Entity(const unsigned index, const unsigned generation) {
+//     this->id = (generation << ENTITY_INDEX_BITS) | index;
+// }
 
 //	============================================================================
 unsigned Entity::index() const {

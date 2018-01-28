@@ -4,6 +4,7 @@
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "light.hpp"
+#include "light_system.hpp"
 #include "math_util.hpp"
 #include "mesh.hpp"
 #include "quad_shader.hpp"
@@ -35,6 +36,22 @@ static SpriteBatch glowSpriteBatch;
 
 static Mesh quadMesh;
 static QuadShader quadShader;
+
+static std::vector<unsigned int> textureId;
+static std::vector<float> positionX;
+static std::vector<float> positionY;
+static std::vector<float> colorR;
+static std::vector<float> colorG;
+static std::vector<float> colorB;
+static std::vector<float> colorA;
+static std::vector<float> sizeX;
+static std::vector<float> sizeY;
+static std::vector<float> rotate;
+static std::vector<float> texU1;
+static std::vector<float> texV1;
+static std::vector<float> texU2;
+static std::vector<float> texV2;
+static std::vector<bool> alpha;
 
 //  ============================================================================
 void addLight(glm::vec2 position, glm::vec4 color, float size, float pulse,
@@ -89,26 +106,26 @@ void initializeLight(AssetManager& assetManager) {
 
 //  ============================================================================
 void buildLightMeshVertexData(SpriteBatch& spriteBatch, float scale) {
-    std::vector<unsigned int> textureId;
-    std::vector<float> positionX;
-    std::vector<float> positionY;
-    std::vector<float> colorR;
-    std::vector<float> colorG;
-    std::vector<float> colorB;
-    std::vector<float> colorA;
-    std::vector<float> sizeX;
-    std::vector<float> sizeY;
-    std::vector<float> rotate;
-    std::vector<float> texU1;
-    std::vector<float> texV1;
-    std::vector<float> texU2;
-    std::vector<float> texV2;
-    std::vector<bool> alpha;
-
     const float u1 = 0;
     const float v1 = 0;
     const float u2 = 1;
     const float v2 = 1;
+
+    textureId.clear();
+    positionX.clear();
+    positionY.clear();
+    colorR.clear();
+    colorG.clear();
+    colorB.clear();
+    colorA.clear();
+    sizeX.clear();
+    sizeY.clear();
+    rotate.clear();
+    texU1.clear();
+    texV1.clear();
+    texU2.clear();
+    texV2.clear();
+    alpha.clear();
 
     std::unordered_map<bool, std::unordered_map<unsigned int, int>> textureIdCounts;
 
@@ -175,7 +192,10 @@ int getMinFramebufferSize(GLFWwindow* window) {
 }
 
 //  ============================================================================
-void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor) {
+void renderLight(GameWindow& gameWindow, Camera& camera,
+                 LightSystem& lightSystem) {
+    const glm::vec4 ambientColor = lightSystem.getAmbientColor();
+
     const int minFrameBufferSize = getMinFramebufferSize(gameWindow.window);
     if (fboSize != minFrameBufferSize) {
         fboSize = minFrameBufferSize;

@@ -100,6 +100,11 @@ std::vector<Entity> World::getEntitiesByName(const std::string name) const {
 }
 
 //  ============================================================================
+LightSystem& World::getLightSystem() {
+    return mLightSystem;
+}
+
+//  ============================================================================
 Map* World::getMap() {
     return mMap.get();
 }

@@ -4,6 +4,7 @@
 #include "door_system.hpp"
 #include "entity.hpp"
 #include "entity_manager.hpp"
+#include "light_system.hpp"
 #include "map.hpp"
 #include "name_system.hpp"
 #include "physics_system.hpp"
@@ -21,6 +22,7 @@ class World
 
     PhysicsSystem mPhysicsSystem;
     SpriteSystem mSpriteSystem;
+    LightSystem mLightSystem;
     NameSystem mNameSystem;
     DoorSystem mDoorSystem;
 
@@ -38,6 +40,7 @@ public:
     Entity createProp(glm::vec2 position, int tilesetId);
     DoorSystem& getDoorSystem();
     std::vector<Entity> getEntitiesByName(const std::string name) const;
+    LightSystem& getLightSystem();
     Map* getMap();
     NameSystem& getNameSystem();
     PhysicsSystem& getPhysicsSystem();

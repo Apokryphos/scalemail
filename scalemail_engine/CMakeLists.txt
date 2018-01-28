@@ -17,11 +17,15 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/entity_system.hpp
     include/fade_shader.hpp
     include/font.hpp
+    include/game_state.hpp
     include/game_window.hpp
     include/gl_headers.hpp
     include/gl_util.hpp
+    include/intro_game_state.hpp
     include/light.hpp
+    include/light_system.hpp
     include/map.hpp
+    include/map_render.hpp
     include/math_util.hpp
     include/mesh.hpp
     include/name_system.hpp
@@ -54,10 +58,13 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/font.cpp
     src/gl_util.cpp
     src/engine.cpp
+    src/intro_game_state.cpp
     src/light.cpp
+    src/light_system.cpp
     src/mesh.cpp
     src/map.cpp
     src/map_load.cpp
+    src/map_render.cpp
     src/name_system.cpp
     src/physics_system.cpp
     src/render.cpp

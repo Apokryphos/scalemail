@@ -1,17 +1,13 @@
 #include "asset_manager.hpp"
-#include "blend.hpp"
 #include "camera.hpp"
-#include "ease.hpp"
-#include "door_system.hpp"
 #include "font.hpp"
 #include "gl_headers.hpp"
+#include "intro_game_state.hpp"
 #include "light.hpp"
-#include "map.hpp"
-#include "mesh.hpp"
+#include "map_render.hpp"
 #include "render.hpp"
 #include "screen_capture.hpp"
 #include "sprite.hpp"
-#include "texture.hpp"
 #include "transition.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
@@ -111,49 +107,21 @@ int startEngine() {
     assetManager.initialize();
 
     initializeFont(assetManager);
-
     initializeTransition(assetManager);
-    setTransitionState(TransitionState::FADED_OUT);
-
     initializeLight(assetManager);
     initializeSprites(assetManager);
+    initializeMapMesh(assetManager);
 
     //  Load map after all other initialize functions
     World world;
     world.initialize(&assetManager);
 
     world.loadMap("map1");
-    const Map* map = world.getMap();;
-
-    glm::vec4 startAmbientColor(0.14f, 0.064f, 0.04f, 1.0f);
-    // glm::vec4 endAmbientColor(0.2f, 0.28f, 0.3f, 1.0f);
-    glm::vec4 endAmbientColor(0.3f, 0.38f, 0.4f, 1.0f);
-    glm::vec4 ambientColor = startAmbientColor;
-
-    const float STATE1_DURATION = 0.5f;
-    const float STATE2_DURATION = 2.0f;
-    const float STATE3_DURATION = 3.0f;
-    const float STATE4_DURATION = 15.0f;
-    const float STATE5_DURATION = 1.0f;
-
-    int introState = 0;
-    float introTicks = 0;
-    float textAlpha = 0.0f;
-
-    const float introCameraStartY = 0.0f;
-    const float introCameraEndY = -1024.0f;
 
     Camera camera(cameraZoom);
-    camera.position = glm::vec2(0, introCameraStartY);
 
-    Texture worldTexture = assetManager.loadTexture("world");
-    Texture horzScrollTexture = assetManager.loadTexture("h_scroll");;
-
-    TileShader tileShader = assetManager.getTileShader();
-
-    const float tileDuration = 0.33f;
-    float tileTicks = 0;
-    int tileFrame = 0;
+    IntroGameState introGameState;
+    introGameState.initialize(world, camera);
 
     float elapsedSeconds = 0;
     double totalElapsedSeconds = 0;
@@ -161,6 +129,8 @@ int startEngine() {
     double seconds = glfwGetTime();
 
     while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+
         lastSeconds = seconds;
         seconds = glfwGetTime();
         elapsedSeconds = (float)(seconds - lastSeconds);
@@ -174,173 +144,21 @@ int startEngine() {
         elapsedSeconds *= timeMult;
         totalElapsedSeconds *= timeMult;
 
-        tileTicks += elapsedSeconds;
-        if (tileTicks >= tileDuration) {
-            tileTicks -= tileDuration;
-            ++tileFrame;
-            if (tileFrame > 1) {
-                tileFrame = 0;
-            }
-        }
-
         addTransitionTime(elapsedSeconds);
         simulateLights(elapsedSeconds);
-        // simulateSprites(elapsedSeconds);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        introGameState.update(world, camera, elapsedSeconds);
+        world.update(elapsedSeconds);
 
-        int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
+        render(window, world, camera, introGameState, totalElapsedSeconds);
 
-        glm::mat4 projection = glm::ortho(0.0f, (float)width, (float)height, 0.0f,
-                                          0.0f, 1.0f);
-
-        glViewport(0, 0, width, height);
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        switch (introState) {
-            //  Pause before fading title in
-            case 0:
-                introTicks += elapsedSeconds;
-                if (introTicks >= STATE1_DURATION) {
-                    introTicks = 0;
-                    ++introState;
-                }
-                break;
-
-            //  Fade title in
-            case 1:
-                introTicks += elapsedSeconds;
-                textAlpha = easeInCubic(introTicks, 0, 1, STATE2_DURATION);
-                if (introTicks >= STATE2_DURATION) {
-                    introTicks = 0;
-                    transitionFadeIn();
-                    ++introState;
-                }
-                break;
-
-            //  Pause after fading in map
-            case 2:
-                introTicks += elapsedSeconds;
-                textAlpha = 1.0f;
-                if (introTicks >= STATE3_DURATION) {
-                    introTicks = 0;
-                    ++introState;
-                }
-                break;
-
-            //  Scroll down and fade out title
-            case 3:
-            {
-                introTicks += elapsedSeconds;
-                textAlpha = 1 - easeOutCubic(introTicks, 0, 1, STATE2_DURATION);
-
-                ambientColor.r = easeInOutCubic(
-                    introTicks,
-                    startAmbientColor.r,
-                    endAmbientColor.r - startAmbientColor.r,
-                    STATE4_DURATION);
-
-                ambientColor.g = easeInOutCubic(
-                    introTicks,
-                    startAmbientColor.g,
-                    endAmbientColor.g - startAmbientColor.g,
-                    STATE4_DURATION);
-
-                ambientColor.b = easeInOutCubic(
-                    introTicks,
-                    startAmbientColor.b,
-                    endAmbientColor.b - startAmbientColor.b,
-                    STATE4_DURATION);
-
-                ambientColor.a = easeInOutCubic(
-                    introTicks,
-                    startAmbientColor.a,
-                    endAmbientColor.a - startAmbientColor.a,
-                    STATE4_DURATION);
-
-                camera.position.y = easeInOutSine(
-                    introTicks,
-                    introCameraStartY,
-                    introCameraEndY - introCameraStartY,
-                    STATE4_DURATION);
-
-                if (camera.position.y < introCameraEndY + 64) {
-                    std::vector<Entity> entities = world.getEntitiesByName("introDoor");
-                    for (auto entity : entities) {
-                        DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
-                        world.getDoorSystem().setOpen(doorCmpnt, false);
-                    }
-                }
-
-                if (introTicks >= STATE4_DURATION) {
-                    introTicks = 0;
-                    camera.position.y = introCameraEndY;
-                    ++introState;
-                }
-                break;
-            }
-
-            //  Pause before fading out
-            case 4:
-                introTicks += elapsedSeconds;
-                if (introTicks >= STATE5_DURATION) {
-                    introTicks = 0;
-                    transitionFadeOut();
-                    ++introState;
-                }
-        }
-
-        glm::mat4 mvp = projection * camera.getView();
-
-        drawCenterText(
-            glm::vec2(
-                width * 0.5f,
-                height * 0.5f - 32.0f),
-            "- SCALEMAIL -",
-            glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
-            8.0f * cameraZoom);
-
-        //  Draw map
-        const Mesh& mesh = map->mapMesh.staticMesh;
-
-        blendAlpha();
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glUseProgram(tileShader.id);
-        glUniform1f(tileShader.timeLocation, 0);
-        glUniformMatrix4fv(tileShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-        glBindTexture(GL_TEXTURE_2D, worldTexture.id);
-        glBindVertexArray(mesh.vao);
-        glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
-
-        const Mesh& animMesh = map->mapMesh.scrollMeshes[tileFrame];
-        glBindVertexArray(animMesh.vao);
-        glDrawArrays(GL_TRIANGLES, 0, animMesh.vertexCount);
-
-        const Mesh& scrollMesh = map->mapMesh.scrollMeshes[tileFrame];
-        glUniform1f(tileShader.timeLocation, totalElapsedSeconds * 0.5f);
-        glBindTexture(GL_TEXTURE_2D, horzScrollTexture.id);
-        glBindVertexArray(scrollMesh.vao);
-        glDrawArrays(GL_TRIANGLES, 0, scrollMesh.vertexCount);
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindVertexArray(0);
-
-        render(window, world, camera, ambientColor);
-
-        glfwSwapBuffers(window);
-
+        //  Screen capture
         if (captureSkipFrames > 0) {
             --captureSkipFrames;
         } else {
             capture.captureFrame();
             captureSkipFrames = CAPTURE_SKIP_FRAMES;
         }
-
-        glfwPollEvents();
-
-        world.update(elapsedSeconds);
     }
 
     glfwDestroyWindow(window);

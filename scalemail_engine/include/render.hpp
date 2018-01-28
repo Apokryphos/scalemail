@@ -7,8 +7,9 @@ struct GLFWwindow;
 namespace ScaleMail
 {
 class Camera;
+class GameState;
 class World;
 
-void render(GLFWwindow* window, World& world, Camera& camera,
-            glm::vec4 ambientColor);
+void render(GLFWwindow* window, World& world, Camera& camera, GameState& gameState,
+            float totalElapsedSeconds);
 }

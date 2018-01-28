@@ -10,6 +10,7 @@ namespace ScaleMail
 class AssetManager;
 class Camera;
 struct GameWindow;
+class LightSystem;
 
 struct Light {
     glm::vec2 position;
@@ -23,6 +24,6 @@ struct Light {
 void addLight(glm::vec2 position, glm::vec4 color, float size, float pulse,
               float pulseSize);
 void initializeLight(AssetManager& assetManager);
-void renderLight(GameWindow& gameWindow, Camera& camera, glm::vec4 ambientColor);
+void renderLight(GameWindow& gameWindow, Camera& camera, LightSystem& lightSystem);
 void simulateLights(float elapsedSeconds);
 }

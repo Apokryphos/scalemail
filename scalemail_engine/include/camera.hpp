@@ -10,7 +10,7 @@ class Camera
 public:
     Camera(float zoom = 2.0f);
     glm::vec2 position;
-    glm::mat4 getView();
+    glm::mat4 getView() const;
     float zoom;
 };
 }

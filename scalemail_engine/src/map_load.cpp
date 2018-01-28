@@ -20,10 +20,14 @@ namespace ScaleMail
 {
 struct TileData {
     bool animated;
+    bool flipHorz;
+    bool flipVert;
+    bool flipDiag;
     int x;
     int y;
     int tilesetId;
     int nextFrame;
+    float rotation;
 };
 
 struct TileLayerData {
@@ -33,6 +37,54 @@ struct TileLayerData {
 struct MapData {
     std::vector<TileLayerData> tileLayers;
 };
+
+static const glm::vec2 gQuadVertices[] =
+{
+    glm::vec2(-0.5f, -0.5f),
+    glm::vec2(-0.5f, 0.5f),
+    glm::vec2(0.5f,	0.5f),
+    glm::vec2(0.5f,	-0.5f),
+};
+
+//  ============================================================================
+static void flipTileUv(TileData& tile, glm::vec2& uv1, glm::vec2& uv2) {
+    const float piOver2 = 3.14159265359f;
+
+    tile.rotation = 0;
+
+    if (tile.flipDiag) {
+        if (tile.flipHorz && tile.flipVert)
+        {
+            tile.rotation = piOver2;
+            tile.flipVert = false;
+        }
+        else if (tile.flipHorz)
+        {
+            tile.rotation = -piOver2;
+            tile.flipVert = !tile.flipVert;
+        }
+        else if (tile.flipVert)
+        {
+            tile.rotation = piOver2;
+            tile.flipHorz = false;
+        }
+        else
+        {
+            tile.rotation = -piOver2;
+            tile.flipHorz = !tile.flipHorz;
+        }
+    }
+
+    if (tile.flipHorz) {
+        std::swap(uv1.x, uv2.x);
+    }
+
+    if (tile.flipVert) {
+        std::swap(uv1.y, uv2.y);
+    }
+
+    tile.rotation = 0;
+}
 
 //  ============================================================================
 static glm::vec4 hexToVec4(std::string input) {
@@ -83,53 +135,67 @@ static void createTileMeshBuffer(Mesh& mesh, std::vector<float>& meshVertexData)
 //  ============================================================================
 static void addTileVertexData(std::vector<float>& meshVertexData,
                               const glm::vec2 position, const glm::vec2 size,
-                              const glm::vec2 uv1, const glm::vec2 uv2) {
+                              const glm::vec2 uv1, const glm::vec2 uv2,
+                              float rotate) {
     float u1 = uv1.x;
     float v1 = uv1.y;
     float u2 = uv2.x;
     float v2 = uv2.y;
 
-    meshVertexData.push_back(position.x);
-    meshVertexData.push_back(position.y);
+    float sinAngle = sin(rotate);
+    float cosAngle = cos(rotate);
+    glm::mat2 rotation = glm::mat2(
+        cosAngle, -sinAngle,
+        sinAngle,  cosAngle);
+
+    glm::vec2 offset = glm::vec2(8.f, 8.0f);
+
+    glm::vec2 quadA = position + offset + rotation * gQuadVertices[0] * size;
+    glm::vec2 quadB = position + offset + rotation * gQuadVertices[1] * size;
+    glm::vec2 quadC = position + offset + rotation * gQuadVertices[2] * size;
+    glm::vec2 quadD = position + offset + rotation * gQuadVertices[3] * size;
+
+    meshVertexData.push_back(quadA.x);
+    meshVertexData.push_back(quadA.y);
     meshVertexData.push_back(u1);
     meshVertexData.push_back(v1);
 
-    meshVertexData.push_back(position.x);
-    meshVertexData.push_back(position.y + size.y);
+    meshVertexData.push_back(quadB.x);
+    meshVertexData.push_back(quadB.y);
     meshVertexData.push_back(u1);
     meshVertexData.push_back(v2);
 
-    meshVertexData.push_back(position.x + size.x);
-    meshVertexData.push_back(position.y);
+    meshVertexData.push_back(quadC.x);
+    meshVertexData.push_back(quadC.y);
     meshVertexData.push_back(u2);
+    meshVertexData.push_back(v2);
+
+    meshVertexData.push_back(quadA.x);
+    meshVertexData.push_back(quadA.y);
+    meshVertexData.push_back(u1);
     meshVertexData.push_back(v1);
 
-    meshVertexData.push_back(position.x);
-    meshVertexData.push_back(position.y + size.y);
-    meshVertexData.push_back(u1);
-    meshVertexData.push_back(v2);
-
-    meshVertexData.push_back(position.x + size.x);
-    meshVertexData.push_back(position.y + size.y);
+    meshVertexData.push_back(quadC.x);
+    meshVertexData.push_back(quadC.y);
     meshVertexData.push_back(u2);
     meshVertexData.push_back(v2);
 
-    meshVertexData.push_back(position.x + size.x);
-    meshVertexData.push_back(position.y);
+    meshVertexData.push_back(quadD.x);
+    meshVertexData.push_back(quadD.y);
     meshVertexData.push_back(u2);
     meshVertexData.push_back(v1);
 }
 
 //  ============================================================================
-static void buildMapMesh(const MapData& mapData, MapMesh& mapMesh) {
+static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
     std::vector<float> staticVertexData;
     std::vector<float> frame1VertexData;
     std::vector<float> frame2VertexData;
     std::vector<float> scrollFrame1VertexData;
     std::vector<float> scrollFrame2VertexData;
 
-    for (const auto& tileLayer : mapData.tileLayers) {
-        for (const auto& tile : tileLayer.tiles) {
+    for (auto& tileLayer : mapData.tileLayers) {
+        for (auto& tile : tileLayer.tiles) {
             glm::vec2 size = glm::vec2(16);
 
             glm::vec2 position = glm::vec2(tile.x, tile.y) * size;
@@ -138,19 +204,23 @@ static void buildMapMesh(const MapData& mapData, MapMesh& mapMesh) {
 
             glm::vec2 uv1, uv2;
             getTilesetUv(tilesetId, 256, 304, 16, 16, uv1, uv2);
+            flipTileUv(tile, uv1, uv2);
 
             if (!tile.animated) {
-                addTileVertexData(staticVertexData, position, size, uv1, uv2);
+                addTileVertexData(staticVertexData, position, size, uv1, uv2, tile.rotation);
             } else {
                 if (tilesetId >= 140 && tilesetId <= 143) {
                     getTilesetUv(tilesetId - 140, 32, 32, 16, 16, uv1, uv2);
-                    addTileVertexData(scrollFrame1VertexData, position, size, uv1, uv2);
+                    flipTileUv(tile, uv1, uv2);
+                    addTileVertexData(scrollFrame1VertexData, position, size, uv1, uv2, tile.rotation);
                     getTilesetUv(tile.nextFrame - 140, 32, 32, 16, 16, uv1, uv2);
-                    addTileVertexData(scrollFrame2VertexData, position, size, uv1, uv2);
+                    flipTileUv(tile, uv1, uv2);
+                    addTileVertexData(scrollFrame2VertexData, position, size, uv1, uv2, tile.rotation);
                 } else {
-                    addTileVertexData(frame1VertexData, position, size, uv1, uv2);
+                    addTileVertexData(frame1VertexData, position, size, uv1, uv2, tile.rotation);
                     getTilesetUv(tile.nextFrame, 256, 304, 16, 16, uv1, uv2);
-                    addTileVertexData(frame2VertexData, position, size, uv1, uv2);
+                    flipTileUv(tile, uv1, uv2);
+                    addTileVertexData(frame2VertexData, position, size, uv1, uv2, tile.rotation);
                 }
             }
         }
@@ -409,6 +479,9 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
                 tileData.x = tileX;
                 tileData.y = tileY;
                 tileData.tilesetId = tile->GetGid() - 1;
+                tileData.flipHorz = tile->GetFlipHorizontally();
+                tileData.flipVert = tile->GetFlipVertically();
+                tileData.flipDiag = tile->GetFlipDiagonally();
 
                 const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
 

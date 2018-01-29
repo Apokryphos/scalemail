@@ -8,6 +8,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/asset_manager.hpp
     include/blend.hpp
     include/camera.hpp
+    include/cursor.hpp
     include/direction.hpp
     include/direction_util.hpp
     include/door_system.hpp
@@ -50,6 +51,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/asset_manager.cpp
     src/blend.cpp
     src/camera.cpp
+    src/cursor.cpp
     src/direction_util.cpp
     src/door_system.cpp
     src/entity.cpp

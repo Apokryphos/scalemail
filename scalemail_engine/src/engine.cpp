@@ -1,5 +1,6 @@
 #include "asset_manager.hpp"
 #include "camera.hpp"
+#include "cursor.hpp"
 #include "font.hpp"
 #include "gl_headers.hpp"
 #include "intro_game_state.hpp"
@@ -94,6 +95,8 @@ int startEngine() {
 
     glfwSwapInterval(0);
     glEnable(GL_FRAMEBUFFER_SRGB);
+
+    loadCursor(window);
 
     AssetManager assetManager;
     assetManager.initialize();

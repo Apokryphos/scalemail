@@ -24,8 +24,8 @@ void render(GLFWwindow* window, World& world, Camera& camera, GameState& gameSta
     glfwGetFramebufferSize(window, &gameWindow.width, &gameWindow.height);
 
     glViewport(0, 0, gameWindow.width, gameWindow.height);
-    // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    // glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     renderMap(gameWindow, *world.getMap(), camera, totalElapsedSeconds);
     renderSprites(gameWindow, world.getSpriteSystem(), camera);

@@ -18,7 +18,6 @@
 namespace ScaleMail {
 bool paused = false;
 
-float timeMult = 1.0f;
 const int CAPTURE_SKIP_FRAMES = 2;
 int captureSkipFrames = 0;
 ScreenCapture capture;
@@ -48,14 +47,6 @@ static void keyCallback(GLFWwindow* window, int key,
 
     if (key == GLFW_KEY_P && action == GLFW_PRESS) {
         paused = !paused;
-    }
-
-    if (key == GLFW_KEY_SPACE) {
-        if  (action == GLFW_PRESS) {
-            timeMult = 10.0f;
-        } else if (action == GLFW_RELEASE) {
-            timeMult = 1.0f;
-        }
     }
 }
 
@@ -100,7 +91,7 @@ int startEngine() {
         return -1;
     }
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     glEnable(GL_FRAMEBUFFER_SRGB);
 
     AssetManager assetManager;
@@ -123,34 +114,41 @@ int startEngine() {
     IntroGameState introGameState;
     introGameState.initialize(world, camera);
 
-    float elapsedSeconds = 0;
     double totalElapsedSeconds = 0;
     double lastSeconds = 0;
     double seconds = glfwGetTime();
+
+    const double timeStep = 1.0 / 60.0;
+    double accumulated = 0;
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
         lastSeconds = seconds;
         seconds = glfwGetTime();
-        elapsedSeconds = (float)(seconds - lastSeconds);
 
         if (paused) {
-            elapsedSeconds = 0;
-        } else {
-            totalElapsedSeconds += seconds - lastSeconds;
+            continue;
         }
 
-        elapsedSeconds *= timeMult;
-        totalElapsedSeconds *= timeMult;
+        accumulated += seconds - lastSeconds;
 
-        addTransitionTime(elapsedSeconds);
-        simulateLights(elapsedSeconds);
+        bool updated = false;
+        while (accumulated >= timeStep) {
+            updated = true;
+            accumulated -= timeStep;
 
-        introGameState.update(world, camera, elapsedSeconds);
-        world.update(elapsedSeconds);
+            //  Update
+            addTransitionTime(timeStep);
+            simulateLights(timeStep);
 
-        render(window, world, camera, introGameState, totalElapsedSeconds);
+            introGameState.update(world, camera, timeStep);
+            world.update(timeStep);
+        }
+
+        if (updated) {
+            render(window, world, camera, introGameState, totalElapsedSeconds);
+        }
 
         //  Screen capture
         if (captureSkipFrames > 0) {

@@ -3,7 +3,6 @@
 #include "camera.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
-#include "light.hpp"
 #include "light_system.hpp"
 #include "math_util.hpp"
 #include "mesh.hpp"
@@ -25,10 +24,6 @@ static GLuint fboATexture;
 static GLuint fboB;
 static GLuint fboBTexture;
 
-static float ticks = 0;
-
-static std::vector<Light> lights;
-
 static Texture lightTexture;
 
 static SpriteBatch lightSpriteBatch;
@@ -36,35 +31,6 @@ static SpriteBatch glowSpriteBatch;
 
 static Mesh quadMesh;
 static QuadShader quadShader;
-
-static std::vector<unsigned int> textureId;
-static std::vector<float> positionX;
-static std::vector<float> positionY;
-static std::vector<float> colorR;
-static std::vector<float> colorG;
-static std::vector<float> colorB;
-static std::vector<float> colorA;
-static std::vector<float> sizeX;
-static std::vector<float> sizeY;
-static std::vector<float> rotate;
-static std::vector<float> texU1;
-static std::vector<float> texV1;
-static std::vector<float> texU2;
-static std::vector<float> texV2;
-static std::vector<bool> alpha;
-
-//  ============================================================================
-void addLight(glm::vec2 position, glm::vec4 color, float size, float pulse,
-              float pulseSize) {
-    lights.push_back({
-        position,
-        color,
-        lightTexture.id,
-        size,
-        pulse,
-        pulseSize,
-    });
-}
 
 //  ============================================================================
 static void createFramebuffer(GLuint& fbo, int size, GLuint& fboTexture) {
@@ -102,81 +68,6 @@ void initializeLight(AssetManager& assetManager) {
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-//  ============================================================================
-void buildLightMeshVertexData(SpriteBatch& spriteBatch, float scale) {
-    const float u1 = 0;
-    const float v1 = 0;
-    const float u2 = 1;
-    const float v2 = 1;
-
-    textureId.clear();
-    positionX.clear();
-    positionY.clear();
-    colorR.clear();
-    colorG.clear();
-    colorB.clear();
-    colorA.clear();
-    sizeX.clear();
-    sizeY.clear();
-    rotate.clear();
-    texU1.clear();
-    texV1.clear();
-    texU2.clear();
-    texV2.clear();
-    alpha.clear();
-
-    std::unordered_map<bool, std::unordered_map<unsigned int, int>> textureIdCounts;
-
-    for (const auto& light : lights) {
-        ++textureIdCounts[false][light.textureId];
-
-        textureId.push_back(light.textureId);
-
-        float lightSize = (light.pulseSize * sin(ticks * light.pulse)) + light.size;
-
-        float size = lightSize * scale;
-
-        //  Round position to pixel coordinates to prevent wobbling
-        glm::vec2 position = glm::vec2(
-            (int)light.position.x,
-            (int)light.position.y);
-
-        positionX.push_back(position.x);
-        positionY.push_back(position.y);
-        colorR.push_back(light.color.r);
-        colorG.push_back(light.color.g);
-        colorB.push_back(light.color.b);
-        colorA.push_back(light.color.a);
-        sizeX.push_back(size);
-        sizeY.push_back(size);
-        texU1.push_back(u1);
-        texV1.push_back(v2);
-        texU2.push_back(u2);
-        texV2.push_back(v1);
-        alpha.push_back(false);
-        rotate.push_back(0);
-    }
-
-    spriteBatch.buildSpriteVertexData(
-        lights.size(),
-        textureIdCounts,
-        textureId,
-        alpha,
-        positionX,
-        positionY,
-        colorR,
-        colorG,
-        colorB,
-        colorA,
-        sizeX,
-        sizeY,
-        rotate,
-        texU1,
-        texV1,
-        texU2,
-        texV2);
 }
 
 //  ============================================================================
@@ -224,7 +115,7 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 
     //  Draw lights to FBO A
     glowSpriteBatch.begin();
-    buildLightMeshVertexData(glowSpriteBatch, 0.25f);
+    lightSystem.buildGlowVertexData(glowSpriteBatch);
     blendAdditive();
     glBindFramebuffer(GL_FRAMEBUFFER, fboA);
     glViewport(0, 0, fboSize, fboSize);
@@ -236,7 +127,7 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 
     //  Draw lights to FBO B
     lightSpriteBatch.begin();
-    buildLightMeshVertexData(lightSpriteBatch, 1.0f);
+    lightSystem.buildVertexData(lightSpriteBatch);
     blendAdditive();
     glBindFramebuffer(GL_FRAMEBUFFER, fboB);
     glViewport(0, 0, fboSize, fboSize);
@@ -262,10 +153,5 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
-}
-
-//  ============================================================================
-void simulateLights(float elapsedSeconds) {
-    ticks += elapsedSeconds;
 }
 }

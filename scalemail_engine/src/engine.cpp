@@ -144,7 +144,6 @@ int startEngine() {
 
             //  Update
             addTransitionTime(timeStep);
-            simulateLights(timeStep);
 
             introGameState.update(world, camera, timeStep);
             world.update(timeStep);

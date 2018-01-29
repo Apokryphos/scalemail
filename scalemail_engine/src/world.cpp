@@ -7,6 +7,7 @@ namespace ScaleMail
 {
 //  ============================================================================
 World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
+                 mLightSystem(mEntityManager),
                  mNameSystem(mEntityManager), mDoorSystem(mEntityManager) {
 }
 
@@ -127,6 +128,7 @@ SpriteSystem& World::getSpriteSystem() {
 //  ============================================================================
 void World::initialize(AssetManager* assetManager) {
     mSpriteSystem.initialize(assetManager);
+    mLightSystem.initialize(*assetManager);
     mDoorSystem.initialize(mPhysicsSystem, mSpriteSystem);
 }
 
@@ -138,5 +140,6 @@ void World::loadMap(const std::string& mapName) {
 //  ============================================================================
 void World::update(float elapsedSeconds) {
     mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
+    mLightSystem.update(elapsedSeconds, mPhysicsSystem);
 }
 }

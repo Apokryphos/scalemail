@@ -362,13 +362,21 @@ static void processLightObject(World& world,
     const float x = object.GetX() + object.GetWidth() * 0.5f;
     const float y = object.GetY() + object.GetHeight() * 0.5f;
 
-    addLight(
-        glm::vec2(x, y),
-        lightColor,
-        lightSize,
-        lightPulse,
-        lightPulseSize
-    );
+    Entity entity = world.createEntity();
+
+    PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+    physicsSystem.addComponent(entity);
+    PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+    physicsSystem.setPosition(physicsCmpnt, glm::vec2(x, y));
+
+    LightSystem& lightSystem = world.getLightSystem();
+    lightSystem.addComponent(entity);
+    LightComponent lightCmpnt = lightSystem.getComponent(entity);
+    lightSystem.setColor(lightCmpnt, lightColor);
+    lightSystem.setGlowSize(lightCmpnt, lightSize * 0.25f);
+    lightSystem.setSize(lightCmpnt, lightSize);
+    lightSystem.setPulse(lightCmpnt, lightPulse);
+    lightSystem.setPulseSize(lightCmpnt, lightPulseSize);
 }
 
 //  ============================================================================
@@ -383,7 +391,6 @@ static void processMiscObject(World& world,
     const int tilesetId = tile->GetGid() - 1;
 
     world.createProp(glm::vec2(x, y), tilesetId);
-    // addWorldSprite(glm::vec2(x, y), tilesetId);
 }
 
 //  ============================================================================
@@ -392,6 +399,7 @@ static void processTorchObject(World& world,
                                const TmxMapLib::Map& tmxMap) {
     const glm::vec4 torchLightColor(1.0f, 0.6f, 0.0f, 0.75f);
     const float torchLightSize = 64;
+    const float torchLightGlowSize = torchLightSize * 0.25f;
     const float torchLightPulse = 8;
     const float torchLightPulseSize = 8;
 
@@ -402,16 +410,19 @@ static void processTorchObject(World& world,
     const float x = object.GetX();
     const float y = object.GetY();
 
-    addLight(
-        glm::vec2(x + 8.0f, y - 7.0f),
-        torchLightColor,
-        torchLightSize,
-        torchLightPulse,
-        torchLightPulseSize
-    );
+    Entity entity = world.createProp(glm::vec2(x, y), tilesetId);
 
-    world.createProp(glm::vec2(x, y), tilesetId);
-    // addWorldSprite(glm::vec2(x, y), tilesetId);
+    LightSystem& lightSystem = world.getLightSystem();
+    lightSystem.addComponent(entity);
+
+    LightComponent lightCmpnt = lightSystem.getComponent(entity);
+
+    lightSystem.setOffset(lightCmpnt, glm::vec2(0, 1));
+    lightSystem.setColor(lightCmpnt, torchLightColor);
+    lightSystem.setGlowSize(lightCmpnt, torchLightGlowSize);
+    lightSystem.setSize(lightCmpnt, torchLightSize);
+    lightSystem.setPulse(lightCmpnt, torchLightPulse);
+    lightSystem.setPulseSize(lightCmpnt, torchLightPulseSize);
 }
 
 //  ============================================================================

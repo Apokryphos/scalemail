@@ -30,6 +30,8 @@ public:
     World();
     Entity createActor(float x, float y, int actorIndex,
                        Direction facing = Direction::SOUTH);
+    Entity createBullet(glm::vec2 position, glm::vec2 direction, float speed,
+                        int tilesetId);
     Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
                       bool open, const std::string name = "");
     Entity createDoor(float x, float y, int openTilesetId,

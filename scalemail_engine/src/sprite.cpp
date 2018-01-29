@@ -95,6 +95,7 @@ void getWorldSpriteAnimation(const int tilesetId, SpriteAnimation& animation) {
 //  ============================================================================
 void initializeSprites(AssetManager& assetManager) {
     assetManager.loadTexture("actors");
+    assetManager.loadTexture("fx");
     assetManager.loadTexture("world");
     spriteBatch.initialize(assetManager);
 }

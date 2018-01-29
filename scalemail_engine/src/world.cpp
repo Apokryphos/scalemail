@@ -28,6 +28,41 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing) {
 }
 
 //  ============================================================================
+Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
+                           int tilesetId) {
+    Entity entity = mEntityManager.createEntity();
+
+    mSpriteSystem.addComponent(entity);
+    SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
+    mSpriteSystem.setDirection(spriteCmpnt, direction);
+    mSpriteSystem.setTileset(spriteCmpnt, "fx");
+    mSpriteSystem.setTilesetId(spriteCmpnt, tilesetId);
+
+    mPhysicsSystem.addComponent(entity);
+    PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
+    mPhysicsSystem.setPosition(physicsCmpnt, position + glm::vec2(8.0f, -8.0f));
+    mPhysicsSystem.setDirection(physicsCmpnt, direction);
+    mPhysicsSystem.setSpeed(physicsCmpnt, speed);
+
+    const glm::vec4 lightColor(0.64f, 0.81f, 0.15f, 0.85f);
+    const float lightSize = 64;
+    const float lightGlowSize = lightSize * 0.25f;
+    const float lightPulse = 8;
+    const float lightPulseSize = 8;
+
+    mLightSystem.addComponent(entity);
+    LightComponent lightCmpnt = mLightSystem.getComponent(entity);
+    mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
+    mLightSystem.setColor(lightCmpnt, lightColor);
+    mLightSystem.setGlowSize(lightCmpnt, lightGlowSize);
+    mLightSystem.setSize(lightCmpnt, lightSize);
+    mLightSystem.setPulse(lightCmpnt, lightPulse);
+    mLightSystem.setPulseSize(lightCmpnt, lightPulseSize);
+
+    return entity;
+}
+
+//  ============================================================================
 Entity World::createDoor(float x, float y, int openTilesetId,
                          int closedTilesetId, bool open, const std::string name) {
     Entity entity = mEntityManager.createEntity();
@@ -139,6 +174,7 @@ void World::loadMap(const std::string& mapName) {
 
 //  ============================================================================
 void World::update(float elapsedSeconds) {
+    mPhysicsSystem.simulate(elapsedSeconds);
     mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
     mLightSystem.update(elapsedSeconds, mPhysicsSystem);
 }

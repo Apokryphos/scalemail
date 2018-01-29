@@ -5,6 +5,7 @@
 #include "gl_headers.hpp"
 #include "intro_game_state.hpp"
 #include "light.hpp"
+#include "main_game_state.hpp"
 #include "map_render.hpp"
 #include "render.hpp"
 #include "screen_capture.hpp"
@@ -52,6 +53,32 @@ static void keyCallback(GLFWwindow* window, int key,
 }
 
 //  ============================================================================
+static void mouseButtonCallback(GLFWwindow* window, int button, int action,
+                                int mods) {
+    World* world = static_cast<World*>(glfwGetWindowUserPointer(window));
+
+    if (world == nullptr) {
+        return;
+    }
+
+    double mouseX, mouseY;
+    glfwGetCursorPos(window, &mouseX, &mouseY);
+
+    const glm::vec2 mousePos = glm::vec2(mouseX, mouseY);
+    const glm::vec2 origin = glm::vec2(512, 512);
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        const glm::vec2 dir = glm::normalize(mousePos - origin);
+
+        world->createBullet(
+            glm::vec2(128, 1024 + 128),
+            dir,
+            128.0f,
+            32);
+    }
+}
+
+//  ============================================================================
 int startEngine() {
     glfwSetErrorCallback(errorCallback);
 
@@ -83,6 +110,7 @@ int startEngine() {
     capture.initialize(window);
 
     glfwSetKeyCallback(window, keyCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
     glfwMakeContextCurrent(window);
 
@@ -113,10 +141,17 @@ int startEngine() {
 
     world.loadMap("map1");
 
+    glfwSetWindowUserPointer(window, &world);
+
     Camera camera(cameraZoom);
 
-    IntroGameState introGameState;
-    introGameState.initialize(world, camera);
+    // IntroGameState introGameState;
+    // introGameState.initialize(world, camera);
+
+    MainGameState mainGameState;
+    mainGameState.initialize(world, camera);
+
+    GameState* gameState = &mainGameState;
 
     double totalElapsedSeconds = 0;
     double lastSeconds = 0;
@@ -145,12 +180,12 @@ int startEngine() {
             //  Update
             addTransitionTime(timeStep);
 
-            introGameState.update(world, camera, timeStep);
+            gameState->update(world, camera, timeStep);
             world.update(timeStep);
         }
 
         if (updated) {
-            render(window, world, camera, introGameState, totalElapsedSeconds);
+            render(window, world, camera, *gameState, totalElapsedSeconds);
         }
 
         //  Screen capture

@@ -309,21 +309,21 @@ void SpriteBatch::buildSpriteVertexData(
 		size_t&         v      = batch.VertexElementOffset;
 
 		//	Rotation code should be moved into shader
-		// float sinAngle = sin(rotate[s]);
-		// float cosAngle = cos(rotate[s]);
+		float sinAngle = sin(rotate[s]);
+		float cosAngle = cos(rotate[s]);
 
-		// glm::mat2 rotation =
-		// 	glm::mat2(cosAngle, sinAngle, -sinAngle, cosAngle);
+		glm::mat2 rotation =
+			glm::mat2(cosAngle, sinAngle, -sinAngle, cosAngle);
 
-		// glm::vec2 quadA = rotation * gQuadVertices[0];
-		// glm::vec2 quadB = rotation * gQuadVertices[1];
-		// glm::vec2 quadC = rotation * gQuadVertices[2];
-		// glm::vec2 quadD = rotation * gQuadVertices[3];
+		glm::vec2 quadA = rotation * gQuadVertices[0];
+		glm::vec2 quadB = rotation * gQuadVertices[1];
+		glm::vec2 quadC = rotation * gQuadVertices[2];
+		glm::vec2 quadD = rotation * gQuadVertices[3];
 
-		glm::vec2 quadA = gQuadVertices[0];
-		glm::vec2 quadB = gQuadVertices[1];
-		glm::vec2 quadC = gQuadVertices[2];
-		glm::vec2 quadD = gQuadVertices[3];
+		// glm::vec2 quadA = gQuadVertices[0];
+		// glm::vec2 quadB = gQuadVertices[1];
+		// glm::vec2 quadC = gQuadVertices[2];
+		// glm::vec2 quadD = gQuadVertices[3];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadA.x;

@@ -25,6 +25,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/intro_game_state.hpp
     include/light.hpp
     include/light_system.hpp
+    include/main_game_state.hpp
     include/map.hpp
     include/map_render.hpp
     include/math_util.hpp
@@ -63,6 +64,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/intro_game_state.cpp
     src/light.cpp
     src/light_system.cpp
+    src/main_game_state.cpp
     src/mesh.cpp
     src/map.cpp
     src/map_load.cpp

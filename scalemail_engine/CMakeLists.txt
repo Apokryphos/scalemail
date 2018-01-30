@@ -20,6 +20,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/font.hpp
     include/game.hpp
     include/game_state.hpp
+    include/game_state_manager.hpp
     include/game_window.hpp
     include/gl_headers.hpp
     include/gl_util.hpp
@@ -64,6 +65,8 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/font.cpp
     src/gl_util.cpp
     src/engine.cpp
+    src/game_state.cpp
+    src/game_state_manager.cpp
     src/intro_game_state.cpp
     src/light.cpp
     src/light_system.cpp

@@ -13,9 +13,10 @@ class IntroGameState : public GameState
     void updateState(World& world, Camera& camera, float elapsedSeconds);
 
 public:
-    IntroGameState();
+    IntroGameState(GameStateManager& gameStateManager);
+    virtual void activate(Game& game) override;
     virtual void draw(const Game& game, Camera& camera) override;
-    virtual void initialize(World& world, Camera& camera);
+    virtual void initialize(Game& game) override;
     virtual void update(World& world, Camera& camera,
                         float elapsedSeconds) override;
 };

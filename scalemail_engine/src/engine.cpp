@@ -3,10 +3,9 @@
 #include "cursor.hpp"
 #include "font.hpp"
 #include "game.hpp"
+#include "game_state_manager.hpp"
 #include "gl_headers.hpp"
-#include "intro_game_state.hpp"
 #include "light.hpp"
-#include "main_game_state.hpp"
 #include "map_render.hpp"
 #include "render.hpp"
 #include "screen_capture.hpp"
@@ -150,19 +149,15 @@ int startEngine() {
 
     Camera camera(cameraZoom);
 
-    IntroGameState introGameState;
-    introGameState.initialize(world, camera);
-
-    // MainGameState mainGameState;
-    // mainGameState.initialize(world, camera);
-
-    GameState* gameState = &introGameState;
-
     Game game = {};
     game.camera = &camera;
     game.gameWindow.window = window;
     game.world = &world;
     glfwSetWindowUserPointer(window, &game);
+
+    GameStateManager gameStateManager;
+    gameStateManager.initialize(game);
+    gameStateManager.activateIntroGameState();
 
     double totalElapsedSeconds = 0;
     double lastSeconds = 0;
@@ -176,6 +171,8 @@ int startEngine() {
 
         lastSeconds = seconds;
         seconds = glfwGetTime();
+
+        GameState* gameState = gameStateManager.getActiveGameState();
 
         if (game.paused) {
             render(game, world, camera, *gameState, totalElapsedSeconds);

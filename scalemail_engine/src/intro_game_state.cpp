@@ -3,6 +3,7 @@
 #include "ease.hpp"
 #include "font.hpp"
 #include "game.hpp"
+#include "game_state_manager.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "intro_game_state.hpp"
@@ -30,10 +31,24 @@ static const glm::vec4 endAmbientColor(0.3f, 0.38f, 0.4f, 1.0f);
 static std::vector<Entity> doorEntities;
 
 //	============================================================================
-IntroGameState::IntroGameState() {
+IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
+    GameState(gameStateManager) {
     introState = 0;
     introTicks = 0;
     textAlpha = 0.0f;
+}
+
+//	============================================================================
+void IntroGameState::activate(Game& game) {
+    setTransitionState(TransitionState::FADED_OUT);
+
+    World& world = *game.world;
+    world.getLightSystem().setAmbientColor(startAmbientColor);
+
+    Camera& camera = *game.camera;
+    camera.position = glm::vec2(0, introCameraStartY);
+
+    doorEntities = world.getEntitiesByName("introDoor");
 }
 
 //	============================================================================
@@ -60,12 +75,7 @@ void IntroGameState::draw(const Game& game, Camera& camera) {
 }
 
 //	============================================================================
-void IntroGameState::initialize(World& world, Camera& camera) {
-    setTransitionState(TransitionState::FADED_OUT);
-    world.getLightSystem().setAmbientColor(startAmbientColor);
-    camera.position = glm::vec2(0, introCameraStartY);
-
-    doorEntities = world.getEntitiesByName("introDoor");
+void IntroGameState::initialize(Game& game) {
 }
 
 //	============================================================================
@@ -167,8 +177,8 @@ void IntroGameState::updateState(World& world, Camera& camera,
         introTicks += elapsedSeconds;
         if (introTicks >= STATE5_DURATION) {
             introTicks = 0;
-            // transitionFadeOut();
             ++introState;
+            this->getGameStateManager().activateMainGameState();
         }
     }
 }

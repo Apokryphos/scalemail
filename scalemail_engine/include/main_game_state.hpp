@@ -7,9 +7,10 @@ namespace ScaleMail
 class MainGameState : public GameState
 {
 public:
-    MainGameState();
+    MainGameState(GameStateManager& gameStateManager);
+    virtual void activate(Game& game);
     virtual void draw(const Game& gameWindow, Camera& camera) override;
-    virtual void initialize(World& world, Camera& camera);
+    virtual void initialize(Game& game);
     virtual void update(World& world, Camera& camera,
                         float elapsedSeconds) override;
 };

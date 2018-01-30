@@ -18,7 +18,17 @@ const float cameraStartPosition = -1024.0f;
 static const glm::vec4 ambientColor(0.3f, 0.38f, 0.4f, 1.0f);
 
 //	============================================================================
-MainGameState::MainGameState() {
+MainGameState::MainGameState(GameStateManager& gameStateManager) :
+    GameState(gameStateManager) {
+}
+
+//	============================================================================
+void MainGameState::activate(Game& game) {
+    World& world = *game.world;
+    world.getLightSystem().setAmbientColor(ambientColor);
+
+    Camera& camera = *game.camera;
+    camera.position = glm::vec2(0, cameraStartPosition);
 }
 
 //	============================================================================
@@ -26,9 +36,7 @@ void MainGameState::draw(const Game& game, Camera& camera) {
 }
 
 //	============================================================================
-void MainGameState::initialize(World& world, Camera& camera) {
-    world.getLightSystem().setAmbientColor(ambientColor);
-    camera.position = glm::vec2(0, cameraStartPosition);
+void MainGameState::initialize(Game& game) {
 }
 
 //	============================================================================

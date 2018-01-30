@@ -4265,10 +4265,10 @@
   <object id="131" type="Actor" gid="435" x="135" y="1175" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Heroes">
-  <object id="62" type="Actor" gid="312" x="138" y="1060" width="16" height="16"/>
-  <object id="63" type="Actor" gid="354" x="105" y="1066" width="16" height="16"/>
-  <object id="64" type="Actor" gid="361" x="88" y="1062" width="16" height="16"/>
-  <object id="65" type="Actor" gid="330" x="123" y="1067" width="16" height="16"/>
+  <object id="62" name="player4" type="Actor" gid="312" x="138" y="1060" width="16" height="16"/>
+  <object id="63" name="player1" type="Actor" gid="354" x="105" y="1066" width="16" height="16"/>
+  <object id="64" name="player3" type="Actor" gid="361" x="88" y="1062" width="16" height="16"/>
+  <object id="65" name="player2" type="Actor" gid="330" x="123" y="1067" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Props">
   <object id="117" gid="232" x="29" y="390" width="16" height="16"/>

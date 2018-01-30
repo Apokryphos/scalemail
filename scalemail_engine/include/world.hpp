@@ -8,6 +8,7 @@
 #include "map.hpp"
 #include "name_system.hpp"
 #include "physics_system.hpp"
+#include "player.hpp"
 #include "sprite_system.hpp"
 #include <memory>
 #include <string>
@@ -26,10 +27,13 @@ class World
     NameSystem mNameSystem;
     DoorSystem mDoorSystem;
 
+    std::vector<Player> mPlayers;
+
 public:
     World();
     Entity createActor(float x, float y, int actorIndex,
-                       Direction facing = Direction::SOUTH);
+                       Direction facing = Direction::SOUTH,
+                       const std::string name = "");
     Entity createBullet(glm::vec2 position, glm::vec2 direction, float speed,
                         int tilesetId);
     Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
@@ -46,6 +50,7 @@ public:
     Map* getMap();
     NameSystem& getNameSystem();
     PhysicsSystem& getPhysicsSystem();
+    const std::vector<Player>& getPlayers();
     SpriteSystem& getSpriteSystem();
     void initialize(AssetManager* assetManager);
     void loadMap(const std::string& mapName);

@@ -1,5 +1,6 @@
 #include "camera.hpp"
 #include "font.hpp"
+#include "game.hpp"
 #include "game_state.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
@@ -15,10 +16,10 @@
 namespace ScaleMail
 {
 //	============================================================================
-void render(GLFWwindow* window, World& world, Camera& camera, GameState& gameState,
+void render(Game& game, World& world, Camera& camera, GameState& gameState,
             float totalElapsedSeconds) {
-    GameWindow gameWindow = {};
-    gameWindow.window = window;
+    GameWindow& gameWindow = game.gameWindow;
+    GLFWwindow* window = gameWindow.window;
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glfwGetFramebufferSize(window, &gameWindow.width, &gameWindow.height);
@@ -31,9 +32,10 @@ void render(GLFWwindow* window, World& world, Camera& camera, GameState& gameSta
     renderSprites(gameWindow, world.getSpriteSystem(), camera);
     renderLight(gameWindow, camera, world.getLightSystem());
     renderTransition();
-    renderText(gameWindow);
 
-    gameState.draw(gameWindow, camera);
+    gameState.draw(game, camera);
+
+    renderText(gameWindow);
 
     glfwSwapBuffers(window);
 }

@@ -287,7 +287,8 @@ static void processActorObject(World& world,
         facing = stringToDirection(value);
     }
 
-    world.createActor(object.GetX(), object.GetY(), actorIndex, facing);
+    world.createActor(object.GetX(), object.GetY(), actorIndex, facing,
+                      object.GetName());
 }
 
 //  ============================================================================

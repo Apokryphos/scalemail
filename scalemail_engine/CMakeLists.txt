@@ -18,10 +18,12 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/entity_system.hpp
     include/fade_shader.hpp
     include/font.hpp
+    include/game.hpp
     include/game_state.hpp
     include/game_window.hpp
     include/gl_headers.hpp
     include/gl_util.hpp
+    include/input_state.hpp
     include/intro_game_state.hpp
     include/light.hpp
     include/light_system.hpp
@@ -32,6 +34,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/mesh.hpp
     include/name_system.hpp
     include/physics_system.hpp
+    include/player.hpp
     include/quad_shader.hpp
     include/render.hpp
     include/screen_capture.hpp

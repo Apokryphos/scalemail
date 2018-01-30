@@ -2,6 +2,7 @@
 #include "door_system.hpp"
 #include "ease.hpp"
 #include "font.hpp"
+#include "game.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "intro_game_state.hpp"
@@ -36,14 +37,26 @@ IntroGameState::IntroGameState() {
 }
 
 //	============================================================================
-void IntroGameState::draw(const GameWindow& gameWindow, Camera& camera) {
-    drawCenterText(
-        glm::vec2(
-            gameWindow.width * 0.5f,
-            gameWindow.height * 0.5f - 32.0f),
-        "- SCALEMAIL -",
-        glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
-        8.0f * camera.zoom);
+void IntroGameState::draw(const Game& game, Camera& camera) {
+    const GameWindow& gameWindow = game.gameWindow;
+
+    const float textSize = 8.0f * camera.zoom;
+    const float centerX = gameWindow.width * 0.5f;
+    const float centerY = gameWindow.height * 0.5f - textSize;
+
+    if (game.paused) {
+        drawCenterText(
+            glm::vec2(centerX, centerY),
+            "PAUSED",
+            glm::vec4(1.0f),
+            textSize);
+    } else {
+        drawCenterText(
+            glm::vec2(centerX, centerY),
+            "- SCALEMAIL -",
+            glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
+            textSize);
+    }
 }
 
 //	============================================================================
@@ -154,7 +167,7 @@ void IntroGameState::updateState(World& world, Camera& camera,
         introTicks += elapsedSeconds;
         if (introTicks >= STATE5_DURATION) {
             introTicks = 0;
-            transitionFadeOut();
+            // transitionFadeOut();
             ++introState;
         }
     }

@@ -2,14 +2,13 @@
 
 #include <glm/vec4.hpp>
 
-struct GLFWwindow;
-
 namespace ScaleMail
 {
 class Camera;
+class Game;
 class GameState;
 class World;
 
-void render(GLFWwindow* window, World& world, Camera& camera, GameState& gameState,
+void render(Game& game, World& world, Camera& camera, GameState& gameState,
             float totalElapsedSeconds);
 }

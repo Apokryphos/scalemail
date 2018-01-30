@@ -2,6 +2,7 @@
 #include "camera.hpp"
 #include "cursor.hpp"
 #include "font.hpp"
+#include "game.hpp"
 #include "gl_headers.hpp"
 #include "intro_game_state.hpp"
 #include "light.hpp"
@@ -18,7 +19,6 @@
 #include <iostream>
 
 namespace ScaleMail {
-bool paused = false;
 
 const int CAPTURE_SKIP_FRAMES = 2;
 int captureSkipFrames = 0;
@@ -33,8 +33,12 @@ static void errorCallback(int error, const char* description) {
 static void keyCallback(GLFWwindow* window, int key,
                         [[maybe_unused]] int scancode, int action,
                         [[maybe_unused]] int mods) {
+    Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
+
+    World* world = game->world;
+
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+        game->quit = true;
     }
 
     if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
@@ -48,14 +52,16 @@ static void keyCallback(GLFWwindow* window, int key,
     }
 
     if (key == GLFW_KEY_P && action == GLFW_PRESS) {
-        paused = !paused;
+        game->paused = !game->paused;
     }
 }
 
 //  ============================================================================
 static void mouseButtonCallback(GLFWwindow* window, int button, int action,
                                 int mods) {
-    World* world = static_cast<World*>(glfwGetWindowUserPointer(window));
+    Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
+
+    World* world = game->world;
 
     if (world == nullptr) {
         return;
@@ -64,7 +70,8 @@ static void mouseButtonCallback(GLFWwindow* window, int button, int action,
     double mouseX, mouseY;
     glfwGetCursorPos(window, &mouseX, &mouseY);
 
-    const glm::vec2 mousePos = glm::vec2(mouseX, mouseY);
+    const glm::vec2 cursorOffset = glm::vec2(-32, 32);
+    const glm::vec2 mousePos = glm::vec2(mouseX, mouseY) + cursorOffset;
     const glm::vec2 origin = glm::vec2(512, 512);
 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -141,17 +148,21 @@ int startEngine() {
 
     world.loadMap("map1");
 
-    glfwSetWindowUserPointer(window, &world);
-
     Camera camera(cameraZoom);
 
-    // IntroGameState introGameState;
-    // introGameState.initialize(world, camera);
+    IntroGameState introGameState;
+    introGameState.initialize(world, camera);
 
-    MainGameState mainGameState;
-    mainGameState.initialize(world, camera);
+    // MainGameState mainGameState;
+    // mainGameState.initialize(world, camera);
 
-    GameState* gameState = &mainGameState;
+    GameState* gameState = &introGameState;
+
+    Game game = {};
+    game.camera = &camera;
+    game.gameWindow.window = window;
+    game.world = &world;
+    glfwSetWindowUserPointer(window, &game);
 
     double totalElapsedSeconds = 0;
     double lastSeconds = 0;
@@ -160,17 +171,19 @@ int startEngine() {
     const double timeStep = 1.0 / 60.0;
     double accumulated = 0;
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!game.quit && !glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
         lastSeconds = seconds;
         seconds = glfwGetTime();
 
-        if (paused) {
+        if (game.paused) {
+            render(game, world, camera, *gameState, totalElapsedSeconds);
             continue;
         }
 
         accumulated += seconds - lastSeconds;
+        totalElapsedSeconds += seconds - lastSeconds;
 
         bool updated = false;
         while (accumulated >= timeStep) {
@@ -185,7 +198,7 @@ int startEngine() {
         }
 
         if (updated) {
-            render(window, world, camera, *gameState, totalElapsedSeconds);
+            render(game, world, camera, *gameState, totalElapsedSeconds);
         }
 
         //  Screen capture

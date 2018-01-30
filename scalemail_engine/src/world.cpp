@@ -9,10 +9,15 @@ namespace ScaleMail
 World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
                  mLightSystem(mEntityManager),
                  mNameSystem(mEntityManager), mDoorSystem(mEntityManager) {
+    mPlayers.emplace_back("player1");
+    mPlayers.emplace_back("player2");
+    mPlayers.emplace_back("player3");
+    mPlayers.emplace_back("player4");
 }
 
 //  ============================================================================
-Entity World::createActor(float x, float y, int actorIndex, Direction facing) {
+Entity World::createActor(float x, float y, int actorIndex, Direction facing,
+                          std::string name) {
     Entity entity = mEntityManager.createEntity();
 
     mSpriteSystem.addComponent(entity);
@@ -24,6 +29,13 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing) {
     mPhysicsSystem.addComponent(entity);
     PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
     mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
+
+    if (name != "") {
+        mNameSystem.addComponent(entity);
+        NameComponent nameCmpnt = mNameSystem.getComponent(entity);
+        mNameSystem.setName(nameCmpnt, name);
+    }
+
     return entity;
 }
 
@@ -44,11 +56,11 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
     mPhysicsSystem.setDirection(physicsCmpnt, direction);
     mPhysicsSystem.setSpeed(physicsCmpnt, speed);
 
-    const glm::vec4 lightColor(0.64f, 0.81f, 0.15f, 0.85f);
-    const float lightSize = 64;
-    const float lightGlowSize = lightSize * 0.25f;
-    const float lightPulse = 8;
-    const float lightPulseSize = 8;
+    const glm::vec4 lightColor(0.60f, 0.85f, 0.10f, 1.0f);
+    const float lightSize = 32;
+    const float lightGlowSize = lightSize * 0.33f;
+    const float lightPulse = 32;
+    const float lightPulseSize = 6;
 
     mLightSystem.addComponent(entity);
     LightComponent lightCmpnt = mLightSystem.getComponent(entity);
@@ -141,6 +153,11 @@ LightSystem& World::getLightSystem() {
 }
 
 //  ============================================================================
+const std::vector<Player>& World::getPlayers() {
+    return mPlayers;
+}
+
+//  ============================================================================
 Map* World::getMap() {
     return mMap.get();
 }
@@ -170,6 +187,15 @@ void World::initialize(AssetManager* assetManager) {
 //  ============================================================================
 void World::loadMap(const std::string& mapName) {
     mMap = ScaleMail::loadMap("assets/maps/" + mapName + ".tmx", *this);
+
+    //  Assign players to map entities
+    for (auto& player : mPlayers) {
+        auto entities = mNameSystem.getEntitiesByName(player.name);
+
+        if (!entities.empty()) {
+            player.entity = entities.front();
+        }
+    }
 }
 
 //  ============================================================================

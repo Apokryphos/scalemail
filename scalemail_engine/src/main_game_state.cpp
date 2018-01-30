@@ -1,6 +1,7 @@
 #include "camera.hpp"
 #include "ease.hpp"
 #include "font.hpp"
+#include "game.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "main_game_state.hpp"
@@ -21,7 +22,7 @@ MainGameState::MainGameState() {
 }
 
 //	============================================================================
-void MainGameState::draw(const GameWindow& gameWindow, Camera& camera) {
+void MainGameState::draw(const Game& game, Camera& camera) {
 }
 
 //	============================================================================

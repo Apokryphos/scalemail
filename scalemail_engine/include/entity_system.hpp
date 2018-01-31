@@ -21,12 +21,12 @@ protected:
 	const Entity& getEntityByComponentIndex(const int index) const;
 
 public:
-	EntitySystem(EntityManager& entityManager, int maxComponents);
+	EntitySystem(EntityManager& entityManager, unsigned int maxComponents);
 	void addComponent(const Entity& entity);
 	void garbageCollect();
 	EntityManager& getEntityManager();
 	bool hasComponent(const Entity& entity) const;
-	const int maxComponents;
+	const size_t maxComponents;
 	void removeComponent(const Entity& entity);
 };
 }

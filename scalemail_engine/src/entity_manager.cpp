@@ -4,33 +4,33 @@ namespace ScaleMail
 {
 //  ============================================================================
 EntityManager::EntityManager() {
-    mGenerations.reserve(MINIMUM_FREE_INDICES);
+	mGenerations.reserve(MINIMUM_FREE_INDICES);
 }
 
 //  ============================================================================
 Entity EntityManager::createEntity() {
-    unsigned index;
+	unsigned index;
 
-    if (mFreeIndices.size() > MINIMUM_FREE_INDICES) {
-        index = mFreeIndices.front();
-        mFreeIndices.pop_front();
-    } else {
-        mGenerations.push_back(0);
-        index = (int)mGenerations.size() - 1;
-    }
+	if (mFreeIndices.size() > MINIMUM_FREE_INDICES) {
+		index = mFreeIndices.front();
+		mFreeIndices.pop_front();
+	} else {
+		mGenerations.push_back(0);
+		index = (int)mGenerations.size() - 1;
+	}
 
-    return makeEntity(index, mGenerations[index]);
+	return makeEntity(index, mGenerations[index]);
 }
 
 //  ============================================================================
 void EntityManager::destroyEntity(const Entity& entity) {
-    const unsigned index = entity.index();
-    ++mGenerations[index];
-    mFreeIndices.push_back(index);
+	const unsigned index = entity.index();
+	++mGenerations[index];
+	mFreeIndices.push_back(index);
 }
 
 //  ============================================================================
 bool EntityManager::isAlive(const Entity& entity) {
-    return mGenerations[entity.index()] == entity.generation();
+	return mGenerations[entity.index()] == entity.generation();
 }
 }

@@ -29,14 +29,14 @@ LightSystem::LightSystem(EntityManager& entityManager, int maxComponents)
 
 //	============================================================================
 void LightSystem::buildGlowVertexData(SpriteBatch& spriteBatch) {
-    spriteBatch.buildQuadVertexData(mLightTexture.id, mPosition, mFinalGlowSize,
-                                    mColor, false);
+	spriteBatch.buildQuadVertexData(mLightTexture.id, mPosition, mFinalGlowSize,
+									mColor, false);
 }
 
 //	============================================================================
 void LightSystem::buildVertexData(SpriteBatch& spriteBatch) {
-    spriteBatch.buildQuadVertexData(mLightTexture.id, mPosition, mFinalSize,
-                                    mColor, false);
+	spriteBatch.buildQuadVertexData(mLightTexture.id, mPosition, mFinalSize,
+									mColor, false);
 }
 
 //	============================================================================
@@ -69,7 +69,7 @@ void LightSystem::destroyComponent(int index) {
 
 //	============================================================================
 glm::vec4 LightSystem::getAmbientColor() const {
-    return mAmbientColor;
+	return mAmbientColor;
 }
 
 //	============================================================================
@@ -79,12 +79,12 @@ LightComponent LightSystem::getComponent(const Entity& entity) const {
 
 //	============================================================================
 void LightSystem::initialize(AssetManager& assetManager) {
-    mLightTexture = assetManager.loadTexture("light");
+	mLightTexture = assetManager.loadTexture("light");
 }
 
 //	============================================================================
 void LightSystem::setAmbientColor(const glm::vec4 ambientColor) {
-    mAmbientColor = ambientColor;
+	mAmbientColor = ambientColor;
 }
 
 //	============================================================================
@@ -119,11 +119,11 @@ void LightSystem::setSize(const LightComponent& cmpnt, const float size) {
 
 //	============================================================================
 void LightSystem::update(float elapsedSeconds,
-                           const PhysicsSystem& physicsSystem) {
-    //	Update light positions from physics system
+						   const PhysicsSystem& physicsSystem) {
+	//	Update light positions from physics system
 	glm::vec2 position;
 	for (auto& p : mEntitiesByComponentIndices) {
-        const int index = p.first;
+		const int index = p.first;
 
 		position =
 			physicsSystem.getPosition(physicsSystem.getComponent(p.second));
@@ -131,16 +131,16 @@ void LightSystem::update(float elapsedSeconds,
 		mPosition[index] = position + mOffset[index];
 	}
 
-    //  Update animated lights
-    for (auto& p : mEntitiesByComponentIndices) {
-        const int index = p.first;
+	//  Update animated lights
+	for (auto& p : mEntitiesByComponentIndices) {
+		const int index = p.first;
 
-        mTicks[index] += elapsedSeconds * 0.25f;
+		mTicks[index] += elapsedSeconds * 0.25f;
 
-        const float size = mPulseSize[index] * sin(mTicks[index] * mPulse[index]);
+		const float size = mPulseSize[index] * sin(mTicks[index] * mPulse[index]);
 
-        mFinalGlowSize[index] = size * 0.25f + mGlowSize[index];
-        mFinalSize[index] = size + mSize[index];
+		mFinalGlowSize[index] = size * 0.25f + mGlowSize[index];
+		mFinalSize[index] = size + mSize[index];
 	}
 }
 }

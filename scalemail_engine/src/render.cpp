@@ -17,26 +17,26 @@ namespace ScaleMail
 {
 //	============================================================================
 void render(Game& game, World& world, Camera& camera, GameState& gameState,
-            float totalElapsedSeconds) {
-    GameWindow& gameWindow = game.gameWindow;
-    GLFWwindow* window = gameWindow.window;
+			float totalElapsedSeconds) {
+	GameWindow& gameWindow = game.gameWindow;
+	GLFWwindow* window = gameWindow.window;
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glfwGetFramebufferSize(window, &gameWindow.width, &gameWindow.height);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glfwGetFramebufferSize(window, &gameWindow.width, &gameWindow.height);
 
-    glViewport(0, 0, gameWindow.width, gameWindow.height);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, gameWindow.width, gameWindow.height);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-    renderMap(gameWindow, *world.getMap(), camera, totalElapsedSeconds);
-    renderSprites(gameWindow, world.getSpriteSystem(), camera);
-    renderLight(gameWindow, camera, world.getLightSystem());
-    renderTransition();
+	renderMap(gameWindow, *world.getMap(), camera, totalElapsedSeconds);
+	renderSprites(gameWindow, world.getSpriteSystem(), camera);
+	renderLight(gameWindow, camera, world.getLightSystem());
+	renderTransition();
 
-    gameState.draw(game, camera);
+	gameState.draw(game, camera);
 
-    renderText(gameWindow);
+	renderText(gameWindow);
 
-    glfwSwapBuffers(window);
+	glfwSwapBuffers(window);
 }
 }

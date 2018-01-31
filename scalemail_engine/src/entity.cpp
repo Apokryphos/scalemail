@@ -10,7 +10,7 @@ const unsigned ENTITY_GENERATION_MASK = (1 << ENTITY_GENERATION_BITS) - 1;
 
 //	============================================================================
 Entity makeEntity(const unsigned index, const unsigned generation) {
-    return { (generation << ENTITY_INDEX_BITS) | index };
+	return { (generation << ENTITY_INDEX_BITS) | index };
 }
 
 //	============================================================================
@@ -20,17 +20,17 @@ Entity makeEntity(const unsigned index, const unsigned generation) {
 
 //	============================================================================
 unsigned Entity::index() const {
-    return this->id & ENTITY_INDEX_MASK;
+	return this->id & ENTITY_INDEX_MASK;
 }
 
 //	============================================================================
 unsigned Entity::generation() const {
-    return (this->id >> ENTITY_INDEX_BITS) & ENTITY_GENERATION_MASK;
+	return (this->id >> ENTITY_INDEX_BITS) & ENTITY_GENERATION_MASK;
 }
 }
 
 //	============================================================================
 std::size_t std::hash<ScaleMail::Entity>::operator()(
-    const ScaleMail::Entity& entity) const {
+	const ScaleMail::Entity& entity) const {
 	return std::hash<unsigned>()(entity.id);
 }

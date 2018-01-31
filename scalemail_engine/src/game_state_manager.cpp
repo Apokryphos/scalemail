@@ -5,33 +5,33 @@ namespace ScaleMail
 {
 //	============================================================================
 GameStateManager::GameStateManager() : mIntroGameState(*this),
-                                       mMainGameState(*this) {
-    mActiveGameState = nullptr;
+									   mMainGameState(*this) {
+	mActiveGameState = nullptr;
 }
 
 //	============================================================================
 void GameStateManager::activateIntroGameState() {
-    mActiveGameState = &mIntroGameState;
-    mIntroGameState.activate(*mGame);
-    std::cout << "Intro game state activated." << std::endl;
+	mActiveGameState = &mIntroGameState;
+	mIntroGameState.activate(*mGame);
+	std::cout << "Intro game state activated." << std::endl;
 }
 
 //	============================================================================
 void GameStateManager::activateMainGameState() {
-    mActiveGameState = &mMainGameState;
-    mMainGameState.activate(*mGame);
-    std::cout << "Main game state activated." << std::endl;
+	mActiveGameState = &mMainGameState;
+	mMainGameState.activate(*mGame);
+	std::cout << "Main game state activated." << std::endl;
 }
 
 //	============================================================================
 GameState* GameStateManager::getActiveGameState() {
-    return mActiveGameState;
+	return mActiveGameState;
 }
 
 //	============================================================================
 void GameStateManager::initialize(Game& game) {
-    mGame = &game;
-    mIntroGameState.initialize(game);
-    mMainGameState.initialize(game);
+	mGame = &game;
+	mIntroGameState.initialize(game);
+	mMainGameState.initialize(game);
 }
 }

@@ -45,7 +45,7 @@ std::vector<Entity> NameSystem::getEntitiesByName(const std::string name) const 
 
 //	============================================================================
 std::string NameSystem::getName(const NameComponent& cmpnt) const {
-    return mName[cmpnt.index];
+	return mName[cmpnt.index];
 }
 
 //	============================================================================

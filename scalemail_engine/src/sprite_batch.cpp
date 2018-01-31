@@ -391,7 +391,7 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 	const GLsizei stride =
 		static_cast<GLsizei>(VertexElementCount * sizeof(GLfloat));
 
-    mShader = assetManager.getSpriteShader();
+	mShader = assetManager.getSpriteShader();
 
 	glGenVertexArrays(1, &mVao);
 	glGenBuffers(1, &mVertexBuffer);
@@ -432,8 +432,8 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 
 //	===========================================================================
 void SpriteBatch::render(const glm::mat4& transform) {
-    glUseProgram(mShader.id);
-    glUniformMatrix4fv(mShader.mvpLocation, 1, GL_FALSE, &transform[0][0]);
+	glUseProgram(mShader.id);
+	glUniformMatrix4fv(mShader.mvpLocation, 1, GL_FALSE, &transform[0][0]);
 
 	glBindVertexArray(mVao);
 

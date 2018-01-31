@@ -10,30 +10,30 @@ namespace ScaleMail
 //  ===========================================================================
 void flipTexture(unsigned char* image, const int width, const int height)
 {
-    unsigned char *imagePtr = &image[0];
-    int halfHeight = height / 2;
+	unsigned char *imagePtr = &image[0];
+	int halfHeight = height / 2;
 
-    // RGBA is 4 components per pixel
-    int numColorComponents = 4;
+	// RGBA is 4 components per pixel
+	int numColorComponents = 4;
 
-    int widthInBytes = width * numColorComponents;
+	int widthInBytes = width * numColorComponents;
 
-    unsigned char *top = NULL;
-    unsigned char *bottom = NULL;
-    unsigned char temp = 0;
-    for (int h = 0; h < halfHeight; ++h)
-    {
-        top = imagePtr + h * widthInBytes;
-        bottom = imagePtr + (height - h - 1) * widthInBytes;
-        for (int w = 0; w < widthInBytes; ++w)
-        {
-            temp = *top;
-            *top = *bottom;
-            *bottom = temp;
-            ++top;
-            ++bottom;
-        }
-    }
+	unsigned char *top = NULL;
+	unsigned char *bottom = NULL;
+	unsigned char temp = 0;
+	for (int h = 0; h < halfHeight; ++h)
+	{
+		top = imagePtr + h * widthInBytes;
+		bottom = imagePtr + (height - h - 1) * widthInBytes;
+		for (int w = 0; w < widthInBytes; ++w)
+		{
+			temp = *top;
+			*top = *bottom;
+			*bottom = temp;
+			++top;
+			++bottom;
+		}
+	}
 }
 
 //  ============================================================================

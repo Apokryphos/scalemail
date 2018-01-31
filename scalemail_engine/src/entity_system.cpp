@@ -7,7 +7,7 @@ namespace ScaleMail
 //	============================================================================
 EntitySystem::EntitySystem(EntityManager& entityManager, int maxComponents)
 	: mEntityManager(entityManager), maxComponents(maxComponents),
-      mComponentCount(0) {
+	  mComponentCount(0) {
 	mComponentIndicesByEntity.reserve(maxComponents);
 	mEntitiesByComponentIndices.reserve(maxComponents);
 }

@@ -32,46 +32,46 @@ static std::vector<Entity> doorEntities;
 
 //	============================================================================
 IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
-    GameState(gameStateManager) {
-    introState = 0;
-    introTicks = 0;
-    textAlpha = 0.0f;
+	GameState(gameStateManager) {
+	introState = 0;
+	introTicks = 0;
+	textAlpha = 0.0f;
 }
 
 //	============================================================================
 void IntroGameState::activate(Game& game) {
-    setTransitionState(TransitionState::FADED_OUT);
+	setTransitionState(TransitionState::FADED_OUT);
 
-    World& world = *game.world;
-    world.getLightSystem().setAmbientColor(startAmbientColor);
+	World& world = *game.world;
+	world.getLightSystem().setAmbientColor(startAmbientColor);
 
-    Camera& camera = *game.camera;
-    camera.position = glm::vec2(0, introCameraStartY);
+	Camera& camera = *game.camera;
+	camera.position = glm::vec2(0, introCameraStartY);
 
-    doorEntities = world.getEntitiesByName("introDoor");
+	doorEntities = world.getEntitiesByName("introDoor");
 }
 
 //	============================================================================
 void IntroGameState::draw(const Game& game, Camera& camera) {
-    const GameWindow& gameWindow = game.gameWindow;
+	const GameWindow& gameWindow = game.gameWindow;
 
-    const float textSize = 8.0f * camera.zoom;
-    const float centerX = gameWindow.width * 0.5f;
-    const float centerY = gameWindow.height * 0.5f - textSize;
+	const float textSize = 8.0f * camera.zoom;
+	const float centerX = gameWindow.width * 0.5f;
+	const float centerY = gameWindow.height * 0.5f - textSize;
 
-    if (game.paused) {
-        drawCenterText(
-            glm::vec2(centerX, centerY),
-            "PAUSED",
-            glm::vec4(1.0f),
-            textSize);
-    } else {
-        drawCenterText(
-            glm::vec2(centerX, centerY),
-            "- SCALEMAIL -",
-            glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
-            textSize);
-    }
+	if (game.paused) {
+		drawCenterText(
+			glm::vec2(centerX, centerY),
+			"PAUSED",
+			glm::vec4(1.0f),
+			textSize);
+	} else {
+		drawCenterText(
+			glm::vec2(centerX, centerY),
+			"- SCALEMAIL -",
+			glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
+			textSize);
+	}
 }
 
 //	============================================================================
@@ -80,106 +80,106 @@ void IntroGameState::initialize(Game& game) {
 
 //	============================================================================
 void IntroGameState::update(World& world, Camera& camera, float elapsedSeconds) {
-    this->updateState(world, camera, elapsedSeconds);
+	this->updateState(world, camera, elapsedSeconds);
 }
 
 //	============================================================================
 void IntroGameState::updateState(World& world, Camera& camera,
-                                 float elapsedSeconds) {
-    switch (introState) {
-    //  Pause before fading title in
-    case 0:
-        introTicks += elapsedSeconds;
-        if (introTicks >= STATE1_DURATION) {
-            introTicks = 0;
-            ++introState;
-        }
-        break;
+								 float elapsedSeconds) {
+	switch (introState) {
+	//  Pause before fading title in
+	case 0:
+		introTicks += elapsedSeconds;
+		if (introTicks >= STATE1_DURATION) {
+			introTicks = 0;
+			++introState;
+		}
+		break;
 
-    //  Fade title in
-    case 1:
-        introTicks += elapsedSeconds;
-        textAlpha = easeInCubic(introTicks, 0, 1, STATE2_DURATION);
-        if (introTicks >= STATE2_DURATION) {
-            introTicks = 0;
-            transitionFadeIn();
-            ++introState;
-        }
-        break;
+	//  Fade title in
+	case 1:
+		introTicks += elapsedSeconds;
+		textAlpha = easeInCubic(introTicks, 0, 1, STATE2_DURATION);
+		if (introTicks >= STATE2_DURATION) {
+			introTicks = 0;
+			transitionFadeIn();
+			++introState;
+		}
+		break;
 
-    //  Pause after fading in map
-    case 2:
-        introTicks += elapsedSeconds;
-        textAlpha = 1.0f;
-        if (introTicks >= STATE3_DURATION) {
-            introTicks = 0;
-            ++introState;
-        }
-        break;
+	//  Pause after fading in map
+	case 2:
+		introTicks += elapsedSeconds;
+		textAlpha = 1.0f;
+		if (introTicks >= STATE3_DURATION) {
+			introTicks = 0;
+			++introState;
+		}
+		break;
 
-    //  Scroll down and fade out title
-    case 3:
-    {
-        introTicks += elapsedSeconds;
-        textAlpha = 1 - easeOutCubic(introTicks, 0, 1, STATE2_DURATION);
+	//  Scroll down and fade out title
+	case 3:
+	{
+		introTicks += elapsedSeconds;
+		textAlpha = 1 - easeOutCubic(introTicks, 0, 1, STATE2_DURATION);
 
-        glm::vec4 ambientColor;
+		glm::vec4 ambientColor;
 
-        ambientColor.r = easeInOutCubic(
-            introTicks,
-            startAmbientColor.r,
-            endAmbientColor.r - startAmbientColor.r,
-            STATE4_DURATION);
+		ambientColor.r = easeInOutCubic(
+			introTicks,
+			startAmbientColor.r,
+			endAmbientColor.r - startAmbientColor.r,
+			STATE4_DURATION);
 
-        ambientColor.g = easeInOutCubic(
-            introTicks,
-            startAmbientColor.g,
-            endAmbientColor.g - startAmbientColor.g,
-            STATE4_DURATION);
+		ambientColor.g = easeInOutCubic(
+			introTicks,
+			startAmbientColor.g,
+			endAmbientColor.g - startAmbientColor.g,
+			STATE4_DURATION);
 
-        ambientColor.b = easeInOutCubic(
-            introTicks,
-            startAmbientColor.b,
-            endAmbientColor.b - startAmbientColor.b,
-            STATE4_DURATION);
+		ambientColor.b = easeInOutCubic(
+			introTicks,
+			startAmbientColor.b,
+			endAmbientColor.b - startAmbientColor.b,
+			STATE4_DURATION);
 
-        ambientColor.a = easeInOutCubic(
-            introTicks,
-            startAmbientColor.a,
-            endAmbientColor.a - startAmbientColor.a,
-            STATE4_DURATION);
+		ambientColor.a = easeInOutCubic(
+			introTicks,
+			startAmbientColor.a,
+			endAmbientColor.a - startAmbientColor.a,
+			STATE4_DURATION);
 
-        world.getLightSystem().setAmbientColor(ambientColor);
+		world.getLightSystem().setAmbientColor(ambientColor);
 
-        camera.position.y = easeInOutSine(
-            introTicks,
-            introCameraStartY,
-            introCameraEndY - introCameraStartY,
-            STATE4_DURATION);
+		camera.position.y = easeInOutSine(
+			introTicks,
+			introCameraStartY,
+			introCameraEndY - introCameraStartY,
+			STATE4_DURATION);
 
-        if (camera.position.y < introCameraEndY + 64) {
-            for (auto entity : doorEntities) {
-                DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
-                world.getDoorSystem().setOpen(doorCmpnt, false);
-            }
-        }
+		if (camera.position.y < introCameraEndY + 64) {
+			for (auto entity : doorEntities) {
+				DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
+				world.getDoorSystem().setOpen(doorCmpnt, false);
+			}
+		}
 
-        if (introTicks >= STATE4_DURATION) {
-            introTicks = 0;
-            camera.position.y = introCameraEndY;
-            ++introState;
-        }
-        break;
-    }
+		if (introTicks >= STATE4_DURATION) {
+			introTicks = 0;
+			camera.position.y = introCameraEndY;
+			++introState;
+		}
+		break;
+	}
 
-    //  Pause before fading out
-    case 4:
-        introTicks += elapsedSeconds;
-        if (introTicks >= STATE5_DURATION) {
-            introTicks = 0;
-            ++introState;
-            this->getGameStateManager().activateMainGameState();
-        }
-    }
+	//  Pause before fading out
+	case 4:
+		introTicks += elapsedSeconds;
+		if (introTicks >= STATE5_DURATION) {
+			introTicks = 0;
+			++introState;
+			this->getGameStateManager().activateMainGameState();
+		}
+	}
 }
 }

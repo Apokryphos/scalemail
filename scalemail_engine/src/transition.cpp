@@ -16,9 +16,9 @@
 namespace ScaleMail
 {
 enum class FadeDirection {
-    NONE,
-    FADE_IN,
-    FADE_OUT,
+	NONE,
+	FADE_IN,
+	FADE_OUT,
 };
 
 static TransitionState transitionState;
@@ -35,117 +35,117 @@ static FadeShader fadeShader;
 
 static const struct
 {
-    float x, y;
+	float x, y;
 } quadVertices[6] = {
-    {  1.0f, -1.0f, },
-    {  1.0f,  1.0f, },
-    { -1.0f, -1.0f, },
-    {  1.0f,  1.0f, },
-    { -1.0f,  1.0f, },
-    { -1.0f, -1.0f, }
+	{  1.0f, -1.0f, },
+	{  1.0f,  1.0f, },
+	{ -1.0f, -1.0f, },
+	{  1.0f,  1.0f, },
+	{ -1.0f,  1.0f, },
+	{ -1.0f, -1.0f, }
 };
 
 //  ============================================================================
 bool initFadeQuadMesh(Mesh& mesh) {
-    glGenVertexArrays(1, &mesh.vao);
-    glGenBuffers(1, &mesh.vbo);
+	glGenVertexArrays(1, &mesh.vao);
+	glGenBuffers(1, &mesh.vbo);
 
-    mesh.vertexCount = 6;
+	mesh.vertexCount = 6;
 
-    glBindVertexArray(mesh.vao);
+	glBindVertexArray(mesh.vao);
 
-    glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices,
-                 GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices,
+				 GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 2, (void*) 0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+						  sizeof(float) * 2, (void*) 0);
 
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    return true;
+	return true;
 }
 
 //	============================================================================
 void transitionFadeIn() {
-    fadeTicks = fadeDuration;
-    fadeDirection = FadeDirection::FADE_IN;
+	fadeTicks = fadeDuration;
+	fadeDirection = FadeDirection::FADE_IN;
 }
 
 //	============================================================================
 void transitionFadeOut() {
-    fadeTicks = 0;
-    fadeDirection = FadeDirection::FADE_OUT;
+	fadeTicks = 0;
+	fadeDirection = FadeDirection::FADE_OUT;
 }
 
 //	============================================================================
 void setTransitionDuration(float duration) {
-    fadeDuration = duration;
+	fadeDuration = duration;
 }
 
 //	============================================================================
 void setTransitionState(TransitionState state)
 {
-    switch (state) {
-        case TransitionState::NONE:
-            fadeTicks = 0;
-            transitionState = state;
-            fadeDirection = FadeDirection::NONE;
-            break;
+	switch (state) {
+		case TransitionState::NONE:
+			fadeTicks = 0;
+			transitionState = state;
+			fadeDirection = FadeDirection::NONE;
+			break;
 
-        case TransitionState::FADING_OUT:
-            fadeTicks = 0;
-            transitionState = state;
-            fadeDirection = FadeDirection::FADE_OUT;
-            break;
+		case TransitionState::FADING_OUT:
+			fadeTicks = 0;
+			transitionState = state;
+			fadeDirection = FadeDirection::FADE_OUT;
+			break;
 
-        case TransitionState::FADED_OUT:
-            fadeTicks = fadeDuration;
-            transitionState = state;
-            fadeDirection = FadeDirection::NONE;
-            break;
+		case TransitionState::FADED_OUT:
+			fadeTicks = fadeDuration;
+			transitionState = state;
+			fadeDirection = FadeDirection::NONE;
+			break;
 
-        case TransitionState::FADING_IN:
-            fadeTicks = fadeDuration;
-            transitionState = state;
-            fadeDirection = FadeDirection::FADE_IN;
-            break;
-    }
+		case TransitionState::FADING_IN:
+			fadeTicks = fadeDuration;
+			transitionState = state;
+			fadeDirection = FadeDirection::FADE_IN;
+			break;
+	}
 }
 
 //	============================================================================
 void addTransitionTime(float elapsedSeconds) {
-    if (fadeDirection == FadeDirection::FADE_IN) {
-        fadeTicks = std::max(fadeTicks - elapsedSeconds, 0.0f);
-    } else if (fadeDirection == FadeDirection::FADE_OUT) {
-        fadeTicks = std::min(fadeTicks + elapsedSeconds, fadeDuration);
-    }
+	if (fadeDirection == FadeDirection::FADE_IN) {
+		fadeTicks = std::max(fadeTicks - elapsedSeconds, 0.0f);
+	} else if (fadeDirection == FadeDirection::FADE_OUT) {
+		fadeTicks = std::min(fadeTicks + elapsedSeconds, fadeDuration);
+	}
 }
 
 //	============================================================================
 void initializeTransition(AssetManager& assetManager) {
-    initFadeQuadMesh(mesh);
+	initFadeQuadMesh(mesh);
 
-    fadeShader = assetManager.getFadeShader();
+	fadeShader = assetManager.getFadeShader();
 }
 
 //	============================================================================
 void renderTransition() {
-    glEnable(GL_BLEND);
-    blendAlpha();
+	glEnable(GL_BLEND);
+	blendAlpha();
 
-    float progress = transitionState == TransitionState::FADING_OUT ?
-        easeInCubic(fadeTicks, 0, 1, fadeDuration) :
-        easeOutCubic(fadeTicks, 0, 1, fadeDuration);
+	float progress = transitionState == TransitionState::FADING_OUT ?
+		easeInCubic(fadeTicks, 0, 1, fadeDuration) :
+		easeOutCubic(fadeTicks, 0, 1, fadeDuration);
 
-    glUseProgram(fadeShader.id);
-    glUniform1f(fadeShader.fadeProgressLocation, progress);
-    glUniform3fv(fadeShader.fadeColorLocation, 1, &fadeColor[0]);
+	glUseProgram(fadeShader.id);
+	glUniform1f(fadeShader.fadeProgressLocation, progress);
+	glUniform3fv(fadeShader.fadeColorLocation, 1, &fadeColor[0]);
 
-    glBindVertexArray(mesh.vao);
-    glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
-    glBindVertexArray(0);
+	glBindVertexArray(mesh.vao);
+	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
+	glBindVertexArray(0);
 }
 }

@@ -5,7 +5,7 @@ namespace ScaleMail
 {
 //  ============================================================================
 std::string toLowercase(std::string value) {
-    std::transform(value.begin(), value.end(), value.begin(), ::tolower);
-    return value;
+	std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+	return value;
 }
 }

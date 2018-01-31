@@ -23,12 +23,12 @@ DoorSystem::DoorSystem(EntityManager& entityManager, int maxComponents)
 //	============================================================================
 void DoorSystem::createComponent(const Entity& entity) {
 	DoorComponentData data;
-    data.open = true;
-    data.childSprite = false;
-    data.openTilesetId = 160;
-    data.closedTilesetId = 161;
-    data.childOpenTilesetId = 163;
-    data.childClosedTilesetId = 165;
+	data.open = true;
+	data.childSprite = false;
+	data.openTilesetId = 160;
+	data.closedTilesetId = 161;
+	data.childOpenTilesetId = 163;
+	data.childClosedTilesetId = 165;
 
 	mData.push_back(data);
 }
@@ -36,7 +36,7 @@ void DoorSystem::createComponent(const Entity& entity) {
 //	============================================================================
 void DoorSystem::destroyComponent(int index) {
 	if (mData[index].childSprite) {
-	    mEntityManager.destroyEntity(mData[index].childEntity);
+		mEntityManager.destroyEntity(mData[index].childEntity);
 	}
 
 	swapWithLastElementAndRemove(mData, index);
@@ -49,7 +49,7 @@ DoorComponent DoorSystem::getComponent(const Entity& entity) {
 
 //	============================================================================
 bool DoorSystem::getOpen(const DoorComponent& cmpnt) const {
-    return mData[cmpnt.index].open;
+	return mData[cmpnt.index].open;
 }
 
 //	============================================================================
@@ -66,14 +66,14 @@ void DoorSystem::setChildTilesetId(const DoorComponent& cmpnt,
 	DoorComponentData& data = mData[cmpnt.index];
 
 	if (!data.childSprite) {
-	    data.childSprite = true;
-    	data.childEntity = mEntityManager.createEntity();
+		data.childSprite = true;
+		data.childEntity = mEntityManager.createEntity();
 		mPhysicsSystem->addComponent(data.childEntity);
 		mSpriteSystem->addComponent(data.childEntity);
 	}
 
-    data.childOpenTilesetId = openTilesetId;
-    data.childClosedTilesetId = closedTileset;
+	data.childOpenTilesetId = openTilesetId;
+	data.childClosedTilesetId = closedTileset;
 
 	int tilesetId = data.open ? openTilesetId : closedTileset;
 
@@ -118,7 +118,7 @@ void DoorSystem::setOpen(const DoorComponent& cmpnt, const bool open) {
 
 //	============================================================================
 void DoorSystem::setTilesetId(const DoorComponent& cmpnt,
-                              const int openTilesetId, const int closedTileset) {
+							  const int openTilesetId, const int closedTileset) {
 	mData[cmpnt.index].openTilesetId = openTilesetId;
 	mData[cmpnt.index].closedTilesetId = closedTileset;
 }

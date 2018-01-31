@@ -4,11 +4,11 @@ namespace ScaleMail
 {
 //	============================================================================
 GameState::GameState(GameStateManager& gameStateManager) :
-    mGameStateManager(gameStateManager) {
+	mGameStateManager(gameStateManager) {
 }
 
 //	============================================================================
 GameStateManager& GameState::getGameStateManager() {
-    return mGameStateManager;
+	return mGameStateManager;
 }
 }

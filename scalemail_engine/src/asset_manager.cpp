@@ -6,95 +6,95 @@ namespace ScaleMail
 {
 //  ============================================================================
 static std::string getTexturePath(std::string textureName) {
-    return "assets/textures/" + textureName + ".png";
+	return "assets/textures/" + textureName + ".png";
 }
 
 //  ============================================================================
 FadeShader AssetManager::getFadeShader() {
-    return mFadeShader;
+	return mFadeShader;
 }
 
 //  ============================================================================
 Mesh AssetManager::getQuadMesh() {
-    return mQuadMesh;
+	return mQuadMesh;
 }
 
 //  ============================================================================
 QuadShader AssetManager::getQuadShader() {
-    return mQuadShader;
+	return mQuadShader;
 }
 
 //  ============================================================================
 SpriteShader AssetManager::getSpriteShader() {
-    return mSpriteShader;
+	return mSpriteShader;
 }
 
 //  ============================================================================
 Tileset AssetManager::getTileset(const std::string textureName) {
-    Texture texture = this->loadTexture(textureName);
-    return Tileset(texture, 16, 16);
+	Texture texture = this->loadTexture(textureName);
+	return Tileset(texture, 16, 16);
 }
 
 //  ============================================================================
 TileShader AssetManager::getTileShader() {
-    return mTileShader;
+	return mTileShader;
 }
 
 //  ============================================================================
 Texture AssetManager::getTextureById(const int textureId) {
-    auto result = mTexturesById.find(textureId);
+	auto result = mTexturesById.find(textureId);
 
-    if (result != mTexturesById.end()) {
-        return result->second;
-    }
+	if (result != mTexturesById.end()) {
+		return result->second;
+	}
 
-    std::cerr << "AssetManager::getTextureById: Texture ID not found." << std::endl;
-    throw std::runtime_error("Texture not found.");
+	std::cerr << "AssetManager::getTextureById: Texture ID not found." << std::endl;
+	throw std::runtime_error("Texture not found.");
 }
 
 //  ============================================================================
 void AssetManager::initialize() {
-    initQuadMesh(mQuadMesh);
+	initQuadMesh(mQuadMesh);
 
-    initShaderProgram("assets/shaders/fade.vert", "assets/shaders/fade.frag",
-                      mFadeShader.id);
-    mFadeShader.fadeColorLocation =
-        glGetUniformLocation(mFadeShader.id, "fadeColor");
-    mFadeShader.fadeProgressLocation =
-        glGetUniformLocation(mFadeShader.id, "fadeProgress");
+	initShaderProgram("assets/shaders/fade.vert", "assets/shaders/fade.frag",
+					  mFadeShader.id);
+	mFadeShader.fadeColorLocation =
+		glGetUniformLocation(mFadeShader.id, "fadeColor");
+	mFadeShader.fadeProgressLocation =
+		glGetUniformLocation(mFadeShader.id, "fadeProgress");
 
-    initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag",
-                      mQuadShader.id);
-    mQuadShader.mvpLocation = glGetUniformLocation(mQuadShader.id, "MVP");
+	initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag",
+					  mQuadShader.id);
+	mQuadShader.mvpLocation = glGetUniformLocation(mQuadShader.id, "MVP");
 
-    initShaderProgram("assets/shaders/sprite.vert", "assets/shaders/sprite.frag",
-                      mSpriteShader.id);
-    mSpriteShader.mvpLocation = glGetUniformLocation(mSpriteShader.id, "MVP");
+	initShaderProgram("assets/shaders/sprite.vert", "assets/shaders/sprite.frag",
+					  mSpriteShader.id);
+	mSpriteShader.mvpLocation = glGetUniformLocation(mSpriteShader.id, "MVP");
 
-    initShaderProgram("assets/shaders/tile.vert", "assets/shaders/tile.frag",
-                      mTileShader.id);
-    mTileShader.mvpLocation = glGetUniformLocation(mTileShader.id, "MVP");
-    mTileShader.timeLocation = glGetUniformLocation(mTileShader.id, "time");
+	initShaderProgram("assets/shaders/tile.vert", "assets/shaders/tile.frag",
+					  mTileShader.id);
+	mTileShader.mvpLocation = glGetUniformLocation(mTileShader.id, "MVP");
+	mTileShader.timeLocation = glGetUniformLocation(mTileShader.id, "time");
 }
 
 //  ============================================================================
 Texture AssetManager::loadTexture(const std::string textureName) {
-    std::string texturePath = getTexturePath(textureName);
+	std::string texturePath = getTexturePath(textureName);
 
-    auto result = mTexturesByPath.find(texturePath);
+	auto result = mTexturesByPath.find(texturePath);
 
-    if (result != mTexturesByPath.end()) {
-        return result->second;
-    }
+	if (result != mTexturesByPath.end()) {
+		return result->second;
+	}
 
-    Texture texture;
-    loadPngTexture(texturePath, texture);
+	Texture texture;
+	loadPngTexture(texturePath, texture);
 
-    mTexturesByPath.emplace(texturePath, texture);
-    mTexturesById.emplace(texture.id, texture);
+	mTexturesByPath.emplace(texturePath, texture);
+	mTexturesById.emplace(texture.id, texture);
 
-    std::cout << textureName << " texture loaded." << std::endl;
+	std::cout << textureName << " texture loaded." << std::endl;
 
-    return texture;
+	return texture;
 }
 }

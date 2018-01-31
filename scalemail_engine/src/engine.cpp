@@ -55,7 +55,7 @@ static void screenCapture() {
 
 //  ============================================================================
 static void mouseButtonCallback(GLFWwindow* window, int button, int action,
-								int mods) {
+								[[maybe_unused]] int mods) {
 	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
 
 	World* world = game->world;

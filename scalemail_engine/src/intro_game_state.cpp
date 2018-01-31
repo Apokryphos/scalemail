@@ -75,7 +75,7 @@ void IntroGameState::draw(const Game& game, Camera& camera) {
 }
 
 //	============================================================================
-void IntroGameState::initialize(Game& game) {
+void IntroGameState::initialize([[maybe_unused]] Game& game) {
 }
 
 //	============================================================================

@@ -33,15 +33,18 @@ void MainGameState::activate(Game& game) {
 }
 
 //	============================================================================
-void MainGameState::draw(const Game& game, Camera& camera) {
+void MainGameState::draw([[maybe_unused]] const Game& game,
+						 [[maybe_unused]] Camera& camera) {
 }
 
 //	============================================================================
-void MainGameState::initialize(Game& game) {
+void MainGameState::initialize([[maybe_unused]] Game& game) {
 }
 
 //	============================================================================
-void MainGameState::update(World& world, Camera& camera, float elapsedSeconds) {
+void MainGameState::update(World& world,
+						   [[maybe_unused]] Camera& camera,
+						   [[maybe_unused]] float elapsedSeconds) {
 	std::vector<Player*> players = world.getPlayers();
 
 	for (auto player : players) {

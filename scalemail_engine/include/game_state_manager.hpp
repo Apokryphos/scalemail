@@ -11,17 +11,17 @@ class GameState;
 
 class GameStateManager
 {
-    Game* mGame;
-    GameState* mActiveGameState;
+	Game* mGame;
+	GameState* mActiveGameState;
 
-    IntroGameState mIntroGameState;
-    MainGameState mMainGameState;
+	IntroGameState mIntroGameState;
+	MainGameState mMainGameState;
 
 public:
-    GameStateManager();
-    void activateIntroGameState();
-    void activateMainGameState();
-    GameState* getActiveGameState();
-    void initialize(Game& game);
+	GameStateManager();
+	void activateIntroGameState();
+	void activateMainGameState();
+	GameState* getActiveGameState();
+	void initialize(Game& game);
 };
 }

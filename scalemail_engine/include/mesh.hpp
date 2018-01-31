@@ -5,9 +5,9 @@
 namespace ScaleMail
 {
 struct Mesh {
-    GLuint vao;
-    GLuint vbo;
-    int vertexCount;
+	GLuint vao;
+	GLuint vbo;
+	int vertexCount;
 };
 
 bool initQuadMesh(Mesh& mesh);

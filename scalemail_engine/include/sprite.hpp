@@ -13,18 +13,18 @@ struct GameWindow;
 class SpriteSystem;
 
 struct Sprite {
-    Direction facing;
-    int textureId;
-    float size;
-    glm::vec2 position;
-    glm::vec4 color;
-    SpriteAnimation animation;
+	Direction facing;
+	int textureId;
+	float size;
+	glm::vec2 position;
+	glm::vec4 color;
+	SpriteAnimation animation;
 };
 
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
 void getWorldSpriteAnimation(const int index, SpriteAnimation& anim);
 void initializeSprites(AssetManager& assetManager);
 void renderSprites(GameWindow& gameWindow, SpriteSystem& spriteSystem,
-                   Camera& camera);
+				   Camera& camera);
 void setSpriteAnimationStatic(SpriteAnimation& animation, int tilesetId);
 }

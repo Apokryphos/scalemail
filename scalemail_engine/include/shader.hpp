@@ -6,7 +6,7 @@
 namespace ScaleMail
 {
 bool initShaderProgram(
-    const std::string& vertexShaderFilename,
-    const std::string& fragShaderFilename,
-    GLuint& program);
+	const std::string& vertexShaderFilename,
+	const std::string& fragShaderFilename,
+	GLuint& program);
 }

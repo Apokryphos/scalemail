@@ -15,25 +15,25 @@ namespace ScaleMail
 {
 class AssetManager
 {
-    Mesh mQuadMesh;
+	Mesh mQuadMesh;
 
-    FadeShader mFadeShader;
-    QuadShader mQuadShader;
-    SpriteShader mSpriteShader;
-    TileShader mTileShader;
+	FadeShader mFadeShader;
+	QuadShader mQuadShader;
+	SpriteShader mSpriteShader;
+	TileShader mTileShader;
 
-    std::map<std::string, Texture> mTexturesByPath;
-    std::map<int, Texture> mTexturesById;
+	std::map<std::string, Texture> mTexturesByPath;
+	std::map<int, Texture> mTexturesById;
 
 public:
-    FadeShader getFadeShader();
-    Mesh getQuadMesh();
-    QuadShader getQuadShader();
-    SpriteShader getSpriteShader();
-    Tileset getTileset(const std::string textureName);
-    TileShader getTileShader();
-    Texture getTextureById(const int textureId);
-    void initialize();
-    Texture loadTexture(const std::string textureName);
+	FadeShader getFadeShader();
+	Mesh getQuadMesh();
+	QuadShader getQuadShader();
+	SpriteShader getSpriteShader();
+	Tileset getTileset(const std::string textureName);
+	TileShader getTileShader();
+	Texture getTextureById(const int textureId);
+	void initialize();
+	Texture loadTexture(const std::string textureName);
 };
 }

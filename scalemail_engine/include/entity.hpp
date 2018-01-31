@@ -6,21 +6,21 @@ namespace ScaleMail
 {
 struct Entity
 {
-    unsigned id;
+	unsigned id;
 
-    // Entity(const unsigned index, const unsigned generation);
-    unsigned index() const;
-    unsigned generation() const;
+	// Entity(const unsigned index, const unsigned generation);
+	unsigned index() const;
+	unsigned generation() const;
 };
 
 Entity makeEntity(const unsigned index, const unsigned generation);
 
 inline bool operator==(const Entity& entity1, const Entity& entity2) {
-    return entity1.id == entity2.id;
+	return entity1.id == entity2.id;
 }
 
 inline bool operator!=(const Entity& entity1, const Entity& entity2) {
-    return entity1.id != entity2.id;
+	return entity1.id != entity2.id;
 }
 }
 
@@ -30,6 +30,6 @@ template <>
 class hash<ScaleMail::Entity>
 {
 public:
-    size_t operator()(const ScaleMail::Entity& entity) const;
+	size_t operator()(const ScaleMail::Entity& entity) const;
 };
 }

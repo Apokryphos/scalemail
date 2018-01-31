@@ -9,12 +9,12 @@ namespace ScaleMail
 class Player
 {
 public:
-    Player(std::string name) : name(name) {
-        inputState = {};
-    }
+	Player(std::string name) : name(name) {
+		inputState = {};
+	}
 
-    Entity entity;
-    InputState inputState;
-    std::string name;
+	Entity entity;
+	InputState inputState;
+	std::string name;
 };
 }

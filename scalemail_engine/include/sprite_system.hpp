@@ -34,8 +34,8 @@ private:
 	std::vector<float> mPositionY;
 	std::vector<float> mColorR;
 	std::vector<float> mColorG;
-    std::vector<float> mColorB;
-    std::vector<float> mColorA;
+	std::vector<float> mColorB;
+	std::vector<float> mColorA;
 	std::vector<float> mSizeX;
 	std::vector<float> mSizeY;
 	std::vector<float> mRotate;

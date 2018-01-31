@@ -9,14 +9,14 @@ class World;
 
 class GameState
 {
-    GameStateManager& mGameStateManager;
+	GameStateManager& mGameStateManager;
 
 public:
-    GameState(GameStateManager& gameStateManager);
-    virtual void activate(Game& game) = 0;
-    virtual void draw(const Game& game, Camera& camera) = 0;
-    GameStateManager& getGameStateManager();
-    virtual void initialize(Game& game) = 0;
-    virtual void update(World& world, Camera& camera, float elapsedSeconds) = 0;
+	GameState(GameStateManager& gameStateManager);
+	virtual void activate(Game& game) = 0;
+	virtual void draw(const Game& game, Camera& camera) = 0;
+	GameStateManager& getGameStateManager();
+	virtual void initialize(Game& game) = 0;
+	virtual void update(World& world, Camera& camera, float elapsedSeconds) = 0;
 };
 }

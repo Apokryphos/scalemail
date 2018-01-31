@@ -5,7 +5,7 @@
 namespace ScaleMail
 {
 struct QuadShader {
-    GLuint id;
-    GLuint mvpLocation;
+	GLuint id;
+	GLuint mvpLocation;
 };
 }

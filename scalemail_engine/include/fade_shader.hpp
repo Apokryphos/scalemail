@@ -5,8 +5,8 @@
 namespace ScaleMail
 {
 struct FadeShader {
-    GLuint id;
-    GLuint fadeColorLocation;
-    GLuint fadeProgressLocation;
+	GLuint id;
+	GLuint fadeColorLocation;
+	GLuint fadeProgressLocation;
 };
 }

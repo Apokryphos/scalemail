@@ -8,10 +8,10 @@ namespace ScaleMail
 {
 struct Game
 {
-    bool paused;
-    bool quit;
-    Camera* camera;
-    GameWindow gameWindow;
-    World* world;
+	bool paused;
+	bool quit;
+	Camera* camera;
+	GameWindow gameWindow;
+	World* world;
 };
 }

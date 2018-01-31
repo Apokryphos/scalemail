@@ -5,10 +5,10 @@ namespace ScaleMail
 class AssetManager;
 
 enum class TransitionState {
-    NONE,
-    FADING_OUT,
-    FADED_OUT,
-    FADING_IN,
+	NONE,
+	FADING_OUT,
+	FADED_OUT,
+	FADING_IN,
 };
 
 void addTransitionTime(float elapsedSeconds);

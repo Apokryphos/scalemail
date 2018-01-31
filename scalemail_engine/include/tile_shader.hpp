@@ -5,8 +5,8 @@
 namespace ScaleMail
 {
 struct TileShader {
-    GLuint id;
-    GLuint mvpLocation;
-    GLuint timeLocation;
+	GLuint id;
+	GLuint mvpLocation;
+	GLuint timeLocation;
 };
 }

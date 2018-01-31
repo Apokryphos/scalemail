@@ -10,5 +10,5 @@ class GameState;
 class World;
 
 void render(Game& game, World& world, Camera& camera, GameState& gameState,
-            float totalElapsedSeconds);
+			float totalElapsedSeconds);
 }

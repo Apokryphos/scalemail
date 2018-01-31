@@ -43,6 +43,5 @@ public:
 						   const int closedTileset);
   	void setTilesetId(const DoorComponent& cmpnt, const int openTilesetId,
 					  const int closedTileset);
-	void simulate(float elapsedSeconds);
 };
 }

@@ -122,8 +122,4 @@ void DoorSystem::setTilesetId(const DoorComponent& cmpnt,
 	mData[cmpnt.index].openTilesetId = openTilesetId;
 	mData[cmpnt.index].closedTilesetId = closedTileset;
 }
-
-//	============================================================================
-void DoorSystem::simulate(float elapsedSeconds) {
-}
 }

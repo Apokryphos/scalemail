@@ -34,7 +34,7 @@ NameComponent NameSystem::getComponent(const Entity& entity) {
 std::vector<Entity> NameSystem::getEntitiesByName(const std::string name) const {
 	std::vector<Entity> entities;
 
-	for (int c = 0; c < mName.size(); ++c) {
+	for (size_t c = 0; c < mName.size(); ++c) {
 		if (mName[c] == name) {
 			entities.push_back(this->getEntityByComponentIndex(c));
 		}

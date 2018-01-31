@@ -27,181 +27,181 @@ ScreenCapture capture;
 
 //  ============================================================================
 static void errorCallback(int error, const char* description) {
-    std::cerr << "GL Error " << error << ": " << description << std::endl;
+	std::cerr << "GL Error " << error << ": " << description << std::endl;
 }
 
 //  ============================================================================
 static void screenCapture() {
-    InputState inputState = getKeyboardInputState();
+	InputState inputState = getKeyboardInputState();
 
-    if (inputState.capture) {
-        capture.startCapture();
-        inputState.capture = false;
-    } else {
-        if (capture.isCapturing()) {
-            capture.stopCapture();
-        }
-    }
+	if (inputState.capture) {
+		capture.startCapture();
+		inputState.capture = false;
+	} else {
+		if (capture.isCapturing()) {
+			capture.stopCapture();
+		}
+	}
 
-    if (capture.isCapturing()) {
-        if (captureSkipFrames > 0) {
-            --captureSkipFrames;
-        } else {
-            capture.captureFrame();
-            captureSkipFrames = CAPTURE_SKIP_FRAMES;
-        }
-    }
+	if (capture.isCapturing()) {
+		if (captureSkipFrames > 0) {
+			--captureSkipFrames;
+		} else {
+			capture.captureFrame();
+			captureSkipFrames = CAPTURE_SKIP_FRAMES;
+		}
+	}
 }
 
 //  ============================================================================
 static void mouseButtonCallback(GLFWwindow* window, int button, int action,
-                                int mods) {
-    Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
+								int mods) {
+	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
 
-    World* world = game->world;
+	World* world = game->world;
 
-    if (world == nullptr) {
-        return;
-    }
+	if (world == nullptr) {
+		return;
+	}
 
-    double mouseX, mouseY;
-    glfwGetCursorPos(window, &mouseX, &mouseY);
+	double mouseX, mouseY;
+	glfwGetCursorPos(window, &mouseX, &mouseY);
 
-    const glm::vec2 cursorOffset = glm::vec2(-32, 32);
-    const glm::vec2 mousePos = glm::vec2(mouseX, mouseY) + cursorOffset;
-    const glm::vec2 origin = glm::vec2(512, 512);
+	const glm::vec2 cursorOffset = glm::vec2(-32, 32);
+	const glm::vec2 mousePos = glm::vec2(mouseX, mouseY) + cursorOffset;
+	const glm::vec2 origin = glm::vec2(512, 512);
 
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        const glm::vec2 dir = glm::normalize(mousePos - origin);
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		const glm::vec2 dir = glm::normalize(mousePos - origin);
 
-        world->createBullet(
-            glm::vec2(128, 1024 + 128),
-            dir,
-            128.0f,
-            32);
-    }
+		world->createBullet(
+			glm::vec2(128, 1024 + 128),
+			dir,
+			128.0f,
+			32);
+	}
 }
 
 //  ============================================================================
 int startEngine() {
-    glfwSetErrorCallback(errorCallback);
+	glfwSetErrorCallback(errorCallback);
 
-    if (!glfwInit()) {
-        std::cerr << "GLFW failed to initialize." << std::endl;
-        return -1;
-    }
+	if (!glfwInit()) {
+		std::cerr << "GLFW failed to initialize." << std::endl;
+		return -1;
+	}
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    const int screenWidth = 1024;
-    const int screenHeight = 1024;
-    const float cameraZoom = 4.0f;
+	const int screenWidth = 1024;
+	const int screenHeight = 1024;
+	const float cameraZoom = 4.0f;
 
-    GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "ScaleMail",
-                                          NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "ScaleMail",
+										  NULL, NULL);
 
-    if (!window) {
-        std::cerr << "GLFW failed to create window." << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+	if (!window) {
+		std::cerr << "GLFW failed to create window." << std::endl;
+		glfwTerminate();
+		return -1;
+	}
 
-    glfwSetWindowSizeLimits(window, screenWidth, screenHeight,
-                            screenWidth, screenHeight);
+	glfwSetWindowSizeLimits(window, screenWidth, screenHeight,
+							screenWidth, screenHeight);
 
-    capture.initialize(window);
+	capture.initialize(window);
 
-    initializeInput(window);
-    glfwSetMouseButtonCallback(window, mouseButtonCallback);
+	initializeInput(window);
+	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
-    glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);
 
-    if (!gladLoadGL()) {
-        std::cerr << "Glad failed to initialize." << std::endl;
-        glfwDestroyWindow(window);
-        glfwTerminate();
-        return -1;
-    }
+	if (!gladLoadGL()) {
+		std::cerr << "Glad failed to initialize." << std::endl;
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		return -1;
+	}
 
-    glfwSwapInterval(0);
-    glEnable(GL_FRAMEBUFFER_SRGB);
+	glfwSwapInterval(0);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 
-    loadCursor(window);
+	loadCursor(window);
 
-    AssetManager assetManager;
-    assetManager.initialize();
+	AssetManager assetManager;
+	assetManager.initialize();
 
-    initializeFont(assetManager);
-    initializeTransition(assetManager);
-    initializeLight(assetManager);
-    initializeSprites(assetManager);
-    initializeMapMesh(assetManager);
+	initializeFont(assetManager);
+	initializeTransition(assetManager);
+	initializeLight(assetManager);
+	initializeSprites(assetManager);
+	initializeMapMesh(assetManager);
 
-    //  Load map after all other initialize functions
-    World world;
-    world.initialize(&assetManager);
+	//  Load map after all other initialize functions
+	World world;
+	world.initialize(&assetManager);
 
-    world.loadMap("map1");
+	world.loadMap("map1");
 
-    Camera camera(cameraZoom);
+	Camera camera(cameraZoom);
 
-    Game game = {};
-    game.camera = &camera;
-    game.gameWindow.window = window;
-    game.world = &world;
-    glfwSetWindowUserPointer(window, &game);
+	Game game = {};
+	game.camera = &camera;
+	game.gameWindow.window = window;
+	game.world = &world;
+	glfwSetWindowUserPointer(window, &game);
 
-    GameStateManager gameStateManager;
-    gameStateManager.initialize(game);
-    gameStateManager.activateMainGameState();
+	GameStateManager gameStateManager;
+	gameStateManager.initialize(game);
+	gameStateManager.activateMainGameState();
 
-    double totalElapsedSeconds = 0;
-    double lastSeconds = 0;
-    double seconds = glfwGetTime();
+	double totalElapsedSeconds = 0;
+	double lastSeconds = 0;
+	double seconds = glfwGetTime();
 
-    const double timeStep = 1.0 / 60.0;
-    double accumulated = 0;
+	const double timeStep = 1.0 / 60.0;
+	double accumulated = 0;
 
-    while (!game.quit && !glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+	while (!game.quit && !glfwWindowShouldClose(window)) {
+		glfwPollEvents();
 
-        lastSeconds = seconds;
-        seconds = glfwGetTime();
+		lastSeconds = seconds;
+		seconds = glfwGetTime();
 
-        GameState* gameState = gameStateManager.getActiveGameState();
+		GameState* gameState = gameStateManager.getActiveGameState();
 
-        if (game.paused) {
-            render(game, world, camera, *gameState, totalElapsedSeconds);
-            continue;
-        }
+		if (game.paused) {
+			render(game, world, camera, *gameState, totalElapsedSeconds);
+			continue;
+		}
 
-        accumulated += seconds - lastSeconds;
-        totalElapsedSeconds += seconds - lastSeconds;
+		accumulated += seconds - lastSeconds;
+		totalElapsedSeconds += seconds - lastSeconds;
 
-        bool updated = false;
-        while (accumulated >= timeStep) {
-            updated = true;
-            accumulated -= timeStep;
+		bool updated = false;
+		while (accumulated >= timeStep) {
+			updated = true;
+			accumulated -= timeStep;
 
-            //  Update
-            addTransitionTime(timeStep);
+			//  Update
+			addTransitionTime(timeStep);
 
-            gameState->update(world, camera, timeStep);
-            world.update(timeStep);
-        }
+			gameState->update(world, camera, timeStep);
+			world.update(timeStep);
+		}
 
-        if (updated) {
-            render(game, world, camera, *gameState, totalElapsedSeconds);
-        }
+		if (updated) {
+			render(game, world, camera, *gameState, totalElapsedSeconds);
+		}
 
-        screenCapture();
-    }
+		screenCapture();
+	}
 
-    glfwDestroyWindow(window);
-    glfwTerminate();
+	glfwDestroyWindow(window);
+	glfwTerminate();
 
-    return 0;
+	return 0;
 }
 }

@@ -246,14 +246,14 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 	for (auto& p : mEntitiesByComponentIndices) {
 		SpriteAnimation& animation = mAnimation[p.first];
 
-    	animation.ticks += elapsedSeconds;
+		animation.ticks += elapsedSeconds;
 
-        const float duration = animation.frames[animation.frameIndex].duration;
+		const float duration = animation.frames[animation.frameIndex].duration;
 
-        if (animation.ticks >= duration) {
-            animation.ticks -= duration;
+		if (animation.ticks >= duration) {
+			animation.ticks -= duration;
 			this->updateAnimationTileset(p.first, animation.frameIndex + 1);
-        }
+		}
 	}
 }
 

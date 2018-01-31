@@ -32,7 +32,7 @@ class LightSystem : public EntitySystem
 	std::vector<float> mPulseSize;
 	std::vector<float> mTicks;
 
-	virtual void createComponent(const Entity& entity) override;
+	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 
 public:

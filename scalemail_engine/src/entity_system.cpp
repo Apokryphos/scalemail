@@ -23,7 +23,7 @@ void EntitySystem::addComponent(const Entity& entity) {
 
 	++mComponentCount;
 
-	this->createComponent(entity);
+	this->createComponent();
 }
 
 //	============================================================================

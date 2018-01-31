@@ -16,7 +16,7 @@ NameSystem::NameSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
-void NameSystem::createComponent(const Entity& entity) {
+void NameSystem::createComponent() {
 	mName.push_back("");
 }
 

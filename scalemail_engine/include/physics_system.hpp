@@ -17,7 +17,7 @@ class PhysicsSystem : public EntitySystem
 	std::vector<glm::vec2> mPosition;
 	std::vector<float> mSpeed;
 
-	virtual void createComponent(const Entity& entity) override;
+	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 
 public:

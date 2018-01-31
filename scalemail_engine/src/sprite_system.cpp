@@ -43,7 +43,7 @@ SpriteSystem::SpriteSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
-void SpriteSystem::createComponent(const Entity& entity) {
+void SpriteSystem::createComponent() {
 	mFacing.emplace_back(Direction::SOUTH);
 	mTilesetId.emplace_back(0);
 	mAlpha.emplace_back(true); //	Enable alpha by default

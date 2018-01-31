@@ -17,7 +17,7 @@ PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
-void PhysicsSystem::createComponent(const Entity& entity) {
+void PhysicsSystem::createComponent() {
 	mDirection.emplace_back(0.0f);
 	mPosition.emplace_back(0.0f);
 	mSpeed.emplace_back(64.0f);

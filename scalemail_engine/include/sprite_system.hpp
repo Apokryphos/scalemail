@@ -60,7 +60,7 @@ private:
 
 protected:
 	void calculateTextureCoords(int componentIndex);
-	virtual void createComponent(const Entity& entity) override;
+	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 	void updateAnimationTileset(const SpriteComponent& cmpnt, int frameIndex);
 

@@ -30,7 +30,7 @@ class DoorSystem : public EntitySystem
 
 	std::vector<DoorComponentData> mData;
 
-	virtual void createComponent(const Entity& entity) override;
+	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 
 public:

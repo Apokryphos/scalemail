@@ -16,7 +16,7 @@ protected:
 	std::unordered_map<Entity, int> mComponentIndicesByEntity;
 	std::unordered_map<int, Entity> mEntitiesByComponentIndices;
 
-	virtual void createComponent(const Entity& entity) = 0;
+	virtual void createComponent() = 0;
 	virtual void destroyComponent(int index) = 0;
 	const Entity& getEntityByComponentIndex(const int index) const;
 

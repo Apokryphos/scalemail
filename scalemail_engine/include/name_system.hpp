@@ -15,7 +15,7 @@ class NameSystem : public EntitySystem
 {
 	std::vector<std::string> mName;
 
-	virtual void createComponent(const Entity& entity) override;
+	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 
 public:

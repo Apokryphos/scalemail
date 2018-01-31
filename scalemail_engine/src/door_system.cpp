@@ -21,7 +21,7 @@ DoorSystem::DoorSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
-void DoorSystem::createComponent(const Entity& entity) {
+void DoorSystem::createComponent() {
 	DoorComponentData data;
 	data.open = true;
 	data.childSprite = false;

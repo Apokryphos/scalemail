@@ -40,7 +40,7 @@ void LightSystem::buildVertexData(SpriteBatch& spriteBatch) {
 }
 
 //	============================================================================
-void LightSystem::createComponent(const Entity& entity) {
+void LightSystem::createComponent() {
 	mOffset.emplace_back(0.0f);
 	mPosition.emplace_back(0.0f);
 	mColor.emplace_back(1.0f);

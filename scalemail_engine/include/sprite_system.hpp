@@ -77,7 +77,10 @@ public:
 	void setActorIndex(const SpriteComponent& cmpnt, const int actorIndex);
 	void setAlpha(const SpriteComponent& cmpnt, const bool alpha);
 	void setFacing(const SpriteComponent& cmpnt, const Direction facing);
-	void setTilesetId(const SpriteComponent& cmpnt, const int assetId);
+	void setTilesetId(const SpriteComponent& cmpnt, const int tilesetId);
+	void setTilesetId(const SpriteComponent& cmpnt,
+					  const int frame1TilesetId,
+					  const int frame2TilesetId);
 	void setDirection(
 		const SpriteComponent& cmpnt, const glm::vec2 direction);
 	void setRotate(const SpriteComponent& cmpnt, float rotate);

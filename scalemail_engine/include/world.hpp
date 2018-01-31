@@ -44,6 +44,8 @@ public:
 					  const std::string name);
 	Entity createEntity();
 	Entity createProp(glm::vec2 position, int tilesetId);
+	Entity createProp(glm::vec2 position, int frame1TilesetId,
+					  int frame2TilesetId);
 	DoorSystem& getDoorSystem();
 	std::vector<Entity> getEntitiesByName(const std::string name) const;
 	LightSystem& getLightSystem();

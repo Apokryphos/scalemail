@@ -124,12 +124,18 @@ Entity World::createEntity() {
 
 //  ============================================================================
 Entity World::createProp(glm::vec2 position, int tilesetId) {
+	return this->createProp(position, tilesetId, tilesetId);
+}
+
+//  ============================================================================
+Entity World::createProp(glm::vec2 position, int frame1TilesetId,
+						 int frame2TilesetId) {
 	Entity entity = mEntityManager.createEntity();
 
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
 	mSpriteSystem.setTileset(spriteCmpnt, "world");
-	mSpriteSystem.setTilesetId(spriteCmpnt, tilesetId);
+	mSpriteSystem.setTilesetId(spriteCmpnt, frame1TilesetId, frame2TilesetId);
 
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);

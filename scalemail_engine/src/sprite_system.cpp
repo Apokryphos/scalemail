@@ -65,7 +65,7 @@ void SpriteSystem::createComponent() {
 	mTilesetName.emplace_back("");
 
 	SpriteAnimation spriteAnimation;
-	setSpriteAnimationStatic(spriteAnimation, 0);
+	setSpriteAnimation(spriteAnimation, 0, 0);
 	mAnimation.push_back(spriteAnimation);
 
 	++mTextureIdCounts[mAlpha.back()][mTextureId.back()];
@@ -224,11 +224,18 @@ void SpriteSystem::setTileset(
 }
 
 //	============================================================================
-void SpriteSystem::setTilesetId(
-	const SpriteComponent& cmpnt, const int assetId) {
-	mTilesetId[cmpnt.index] = assetId;
+void SpriteSystem::setTilesetId(const SpriteComponent& cmpnt,
+								const int tilesetId) {
+	this->setTilesetId(cmpnt, tilesetId, tilesetId);
+}
+
+//	============================================================================
+void SpriteSystem::setTilesetId(const SpriteComponent& cmpnt,
+								const int frame1TilesetId,
+								const int frame2TilesetId) {
+	mTilesetId[cmpnt.index] = frame1TilesetId;
 	this->calculateTextureCoords(cmpnt.index);
-	getWorldSpriteAnimation(assetId, mAnimation[cmpnt.index]);
+	setSpriteAnimation(mAnimation[cmpnt.index], frame1TilesetId, frame2TilesetId);
 }
 
 //	============================================================================

@@ -46,6 +46,33 @@ static const glm::vec2 gQuadVertices[] =
 	glm::vec2(0.5f,	-0.5f),
 };
 
+
+//  ============================================================================
+static bool getTilesetAnimation(const TmxMapLib::Map& tmxMap, const int gid,
+								int& nextFrame) {
+	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
+
+	const TmxMapLib::TilesetTile* tilesetTile =
+		tileset->GetTile(gid - 1);
+
+	if (tilesetTile) {
+		const TmxMapLib::Animation& animation = tilesetTile->GetAnimation();
+
+		if(animation.GetFrameCount() > 0) {
+			int nextFrameId = animation.GetFrame(1).GetTileId();
+
+			const TmxMapLib::TilesetTile* nextFrameTilesetTile =
+				tileset->GetTile(nextFrameId);
+
+			nextFrame = nextFrameTilesetTile->GetId();
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
 //  ============================================================================
 static void flipTileUv(TileData& tile, glm::vec2& uv1, glm::vec2& uv2) {
 	const float piOver2 = 3.14159265359f;
@@ -346,8 +373,7 @@ static void processDoorObject(World& world,
 
 //  ============================================================================
 static void processLightObject(World& world,
-							   const TmxMapLib::Object& object,
-							   const TmxMapLib::Map& tmxMap) {
+							   const TmxMapLib::Object& object) {
 	//  Scale light size by constant...lights are too small
 	float lightSize = object.GetWidth() * 2.5f;
 
@@ -382,8 +408,7 @@ static void processLightObject(World& world,
 
 //  ============================================================================
 static void processMiscObject(World& world,
-							  const TmxMapLib::Object& object,
-							  const TmxMapLib::Map& tmxMap) {
+							  const TmxMapLib::Object& object) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 
@@ -408,10 +433,13 @@ static void processTorchObject(World& world,
 
 	const int tilesetId = tile->GetGid() - 1;
 
+	int nextFrame = tilesetId;
+	getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame);
+
 	const float x = object.GetX();
 	const float y = object.GetY();
 
-	Entity entity = world.createProp(glm::vec2(x, y), tilesetId);
+	Entity entity = world.createProp(glm::vec2(x, y), tilesetId, nextFrame);
 
 	LightSystem& lightSystem = world.getLightSystem();
 	lightSystem.addComponent(entity);
@@ -434,7 +462,7 @@ static void processObject(World& world,
 
 	if (object.GetObjectType() == TmxMapLib::ObjectType::Ellipse) {
 		if (type == "light") {
-			processLightObject(world, object, tmxMap);
+			processLightObject(world, object);
 		} else {
 			std::cout << "Unrecognized ellipse map object." << std::endl;
 		}
@@ -452,7 +480,7 @@ static void processObject(World& world,
 		} else if (type == "torch") {
 			processTorchObject(world, object, tmxMap);
 		} else {
-			processMiscObject(world, object, tmxMap);
+			processMiscObject(world, object);
 		}
 	}
 }
@@ -495,26 +523,10 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 				tileData.flipVert = tile->GetFlipVertically();
 				tileData.flipDiag = tile->GetFlipDiagonally();
 
-				const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
-
-				const TmxMapLib::TilesetTile* tilesetTile =
-					tileset->GetTile(tileData.tilesetId);
-
-				if (tilesetTile) {
-					const TmxMapLib::Animation& animation =
-						tilesetTile->GetAnimation();
-
-					//  Animated tile
-					if(animation.GetFrameCount() > 0) {
-						tileData.animated = true;
-
-						int nextFrameId = animation.GetFrame(1).GetTileId();
-
-						const TmxMapLib::TilesetTile* nextFrameTilesetTile =
-							tileset->GetTile(nextFrameId);
-
-						tileData.nextFrame = nextFrameTilesetTile->GetId();
-					}
+				int nextFrame;
+				if (getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame)) {
+					tileData.animated = true;
+					tileData.nextFrame = nextFrame;
 				}
 
 				tileLayerData.tiles.push_back(tileData);

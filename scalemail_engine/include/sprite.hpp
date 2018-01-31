@@ -22,9 +22,9 @@ struct Sprite {
 };
 
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
-void getWorldSpriteAnimation(const int index, SpriteAnimation& anim);
 void initializeSprites(AssetManager& assetManager);
 void renderSprites(GameWindow& gameWindow, SpriteSystem& spriteSystem,
 				   Camera& camera);
-void setSpriteAnimationStatic(SpriteAnimation& animation, int tilesetId);
+void setSpriteAnimation(SpriteAnimation& animation, int frame1TilesetId,
+	int frame2TilesetId);
 }

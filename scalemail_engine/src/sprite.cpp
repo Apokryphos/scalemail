@@ -63,36 +63,6 @@ void setSpriteAnimation(SpriteAnimation& animation, int frame1TilesetId,
 }
 
 //  ============================================================================
-void setSpriteAnimationStatic(SpriteAnimation& animation, int tilesetId) {
-	setSpriteAnimation(animation, tilesetId, tilesetId);
-}
-
-//  ============================================================================
-void getWorldSpriteAnimation(const int tilesetId, SpriteAnimation& animation) {
-	switch (tilesetId) {
-		//  Torch
-		case 197:
-		//  Torch cast sprite
-		case 199:
-			setSpriteAnimation(animation, tilesetId, tilesetId + 1);
-			break;
-
-		//  Torch
-		case 198:
-		//  Torch cast sprite
-		case 200:
-			setSpriteAnimation(animation, tilesetId, tilesetId - 1);
-			break;
-
-		default:
-			setSpriteAnimationStatic(animation, tilesetId);
-			std::cerr << "getWorldSpriteAnimation case not implemented: "
-					  << tilesetId << std::endl;
-			break;
-	}
-}
-
-//  ============================================================================
 void initializeSprites(AssetManager& assetManager) {
 	assetManager.loadTexture("actors");
 	assetManager.loadTexture("fx");

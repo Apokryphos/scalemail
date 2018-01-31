@@ -62,6 +62,7 @@ protected:
 	void calculateTextureCoords(int componentIndex);
 	virtual void createComponent(const Entity& entity) override;
 	virtual void destroyComponent(int index) override;
+	void updateAnimationTileset(const SpriteComponent& cmpnt, int frameIndex);
 
 public:
 	SpriteSystem(EntityManager& entityManager, int maxComponents = 10000);

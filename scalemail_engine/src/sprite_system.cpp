@@ -182,6 +182,7 @@ void SpriteSystem::setAlpha(const SpriteComponent& cmpnt, const bool alpha) {
 void SpriteSystem::setFacing(const SpriteComponent& cmpnt,
 							 const Direction facing) {
 	mFacing[cmpnt.index] = facing;
+	this->updateAnimationTileset(cmpnt.index, 0);
 }
 
 //	============================================================================
@@ -251,20 +252,27 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 
         if (animation.ticks >= duration) {
             animation.ticks -= duration;
-            ++animation.frameIndex;
-
-            if (animation.frameIndex > 1) {
-                animation.frameIndex = 0;
-            }
-
-        	const int direction = static_cast<int>(mFacing[p.first]);
-
-        	const int tilesetId =
-           		animation.frames[animation.frameIndex].tilesetIds[direction];
-
-			mTilesetId[p.first] = tilesetId;
-			this->calculateTextureCoords(p.first);
+			this->updateAnimationTileset(p.first, animation.frameIndex + 1);
         }
 	}
+}
+
+//	============================================================================
+void SpriteSystem::updateAnimationTileset(const SpriteComponent& cmpnt,
+										  int frameIndex) {
+	SpriteAnimation& animation = mAnimation[cmpnt.index];
+
+	animation.frameIndex = frameIndex;
+
+	if (animation.frameIndex > 1) {
+		animation.frameIndex = 0;
+	}
+
+	const int direction = static_cast<int>(mFacing[cmpnt.index]);
+
+	mTilesetId[cmpnt.index] =
+		animation.frames[animation.frameIndex].tilesetIds[direction];
+
+	this->calculateTextureCoords(cmpnt.index);
 }
 }

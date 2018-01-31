@@ -6,6 +6,7 @@
 #include "gl_headers.hpp"
 #include "main_game_state.hpp"
 #include "light_system.hpp"
+#include "physics_system.hpp"
 #include "transition.hpp"
 #include "world.hpp"
 #include <iostream>
@@ -41,5 +42,27 @@ void MainGameState::initialize(Game& game) {
 
 //	============================================================================
 void MainGameState::update(World& world, Camera& camera, float elapsedSeconds) {
+    std::vector<Player*> players = world.getPlayers();
+
+    for (auto player : players) {
+        PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+        PhysicsComponent physicsCmpnt = physicsSystem.getComponent(player->entity);
+
+        InputState& inputState = player->inputState;
+        float moveX =
+            inputState.moveLeft && inputState.moveRight ? 0 :
+            inputState.moveLeft ? -1 :
+            inputState.moveRight ? 1 :
+            0;
+
+        float moveY =
+            inputState.moveUp && inputState.moveDown ? 0 :
+            inputState.moveUp ? -1 :
+            inputState.moveDown ? 1 :
+            0;
+
+        glm::vec2 direction(moveX, moveY);
+        physicsSystem.setDirection(physicsCmpnt, direction);
+    }
 }
 }

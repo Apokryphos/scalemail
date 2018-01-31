@@ -5,8 +5,11 @@ namespace ScaleMail
 struct InputState
 {
     bool fire;
-    float moveX;
-    float moveY;
+    bool moveLeft;
+    bool moveRight;
+    bool moveUp;
+    bool moveDown;
+    bool capture;
     bool down;
     bool left;
     bool right;

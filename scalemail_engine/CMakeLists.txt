@@ -24,6 +24,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/game_window.hpp
     include/gl_headers.hpp
     include/gl_util.hpp
+    include/input.hpp
     include/input_state.hpp
     include/intro_game_state.hpp
     include/light.hpp
@@ -67,6 +68,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/engine.cpp
     src/game_state.cpp
     src/game_state_manager.cpp
+    src/input.cpp
     src/intro_game_state.cpp
     src/light.cpp
     src/light_system.cpp

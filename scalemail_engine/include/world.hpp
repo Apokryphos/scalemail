@@ -50,7 +50,7 @@ public:
     Map* getMap();
     NameSystem& getNameSystem();
     PhysicsSystem& getPhysicsSystem();
-    const std::vector<Player>& getPlayers();
+    std::vector<Player*> getPlayers();
     SpriteSystem& getSpriteSystem();
     void initialize(AssetManager* assetManager);
     void loadMap(const std::string& mapName);

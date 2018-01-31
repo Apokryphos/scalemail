@@ -5,6 +5,8 @@
 #include "game.hpp"
 #include "game_state_manager.hpp"
 #include "gl_headers.hpp"
+#include "input.hpp"
+#include "input_state.hpp"
 #include "light.hpp"
 #include "map_render.hpp"
 #include "render.hpp"
@@ -29,29 +31,25 @@ static void errorCallback(int error, const char* description) {
 }
 
 //  ============================================================================
-static void keyCallback(GLFWwindow* window, int key,
-                        [[maybe_unused]] int scancode, int action,
-                        [[maybe_unused]] int mods) {
-    Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
+static void screenCapture() {
+    InputState inputState = getKeyboardInputState();
 
-    World* world = game->world;
-
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        game->quit = true;
-    }
-
-    if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
+    if (inputState.capture) {
         capture.startCapture();
-        std::cout << "Capturing started." << std::endl;
+        inputState.capture = false;
+    } else {
+        if (capture.isCapturing()) {
+            capture.stopCapture();
+        }
     }
 
-    if (key == GLFW_KEY_F2 && action == GLFW_PRESS) {
-        capture.stopCapture();
-        std::cout << "Capturing stopped." << std::endl;
-    }
-
-    if (key == GLFW_KEY_P && action == GLFW_PRESS) {
-        game->paused = !game->paused;
+    if (capture.isCapturing()) {
+        if (captureSkipFrames > 0) {
+            --captureSkipFrames;
+        } else {
+            capture.captureFrame();
+            captureSkipFrames = CAPTURE_SKIP_FRAMES;
+        }
     }
 }
 
@@ -115,7 +113,7 @@ int startEngine() {
 
     capture.initialize(window);
 
-    glfwSetKeyCallback(window, keyCallback);
+    initializeInput(window);
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
     glfwMakeContextCurrent(window);
@@ -157,7 +155,7 @@ int startEngine() {
 
     GameStateManager gameStateManager;
     gameStateManager.initialize(game);
-    gameStateManager.activateIntroGameState();
+    gameStateManager.activateMainGameState();
 
     double totalElapsedSeconds = 0;
     double lastSeconds = 0;
@@ -198,13 +196,7 @@ int startEngine() {
             render(game, world, camera, *gameState, totalElapsedSeconds);
         }
 
-        //  Screen capture
-        if (captureSkipFrames > 0) {
-            --captureSkipFrames;
-        } else {
-            capture.captureFrame();
-            captureSkipFrames = CAPTURE_SKIP_FRAMES;
-        }
+        screenCapture();
     }
 
     glfwDestroyWindow(window);

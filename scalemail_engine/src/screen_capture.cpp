@@ -41,6 +41,11 @@ void ScreenCapture::initialize(GLFWwindow* window) {
 }
 
 //	===========================================================================
+bool ScreenCapture::isCapturing() const {
+    return mIsCapturing;
+}
+
+//	===========================================================================
 void ScreenCapture::startCapture() {
     if (mIsCapturing) {
         return;

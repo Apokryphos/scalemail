@@ -16,6 +16,7 @@ public:
     ~ScreenCapture();
     void captureFrame();
     void initialize(GLFWwindow* window);
+    bool isCapturing() const;
     void startCapture();
     void stopCapture();
 };

@@ -153,8 +153,14 @@ LightSystem& World::getLightSystem() {
 }
 
 //  ============================================================================
-const std::vector<Player>& World::getPlayers() {
-    return mPlayers;
+std::vector<Player*> World::getPlayers() {
+    std::vector<Player*> players;
+
+    for (auto& player : mPlayers) {
+        players.push_back(&player);
+    }
+
+    return players;
 }
 
 //  ============================================================================

@@ -182,7 +182,7 @@ void SpriteSystem::setAlpha(const SpriteComponent& cmpnt, const bool alpha) {
 void SpriteSystem::setFacing(const SpriteComponent& cmpnt,
 							 const Direction facing) {
 	mFacing[cmpnt.index] = facing;
-	this->updateAnimationTileset(cmpnt.index, 0);
+	this->updateAnimationTileset(cmpnt.index, mAnimation[cmpnt.index].frameIndex);
 }
 
 //	============================================================================

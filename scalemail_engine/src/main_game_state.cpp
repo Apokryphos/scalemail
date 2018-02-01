@@ -46,10 +46,31 @@ void MainGameState::update(World& world,
 	std::vector<Player*> players = world.getPlayers();
 
 	for (auto player : players) {
+		InputState& inputState = player->inputState;
+
+		SpriteSystem& spriteSystem = world.getSpriteSystem();
+		SpriteComponent spriteCmpnt = spriteSystem.getComponent(player->entity);
+
+		//	Update sprite facing
+		if (inputState.moveLeft || inputState.moveRight) {
+			if (inputState.moveLeft && !inputState.moveRight) {
+				spriteSystem.setFacing(spriteCmpnt, Direction::WEST);
+			} else if (inputState.moveRight && !inputState.moveLeft) {
+				spriteSystem.setFacing(spriteCmpnt, Direction::EAST);
+			}
+		}
+
+		if (inputState.moveUp || inputState.moveDown) {
+			if (inputState.moveUp && !inputState.moveDown) {
+				spriteSystem.setFacing(spriteCmpnt, Direction::NORTH);
+			} else if (inputState.moveDown && !inputState.moveUp) {
+				spriteSystem.setFacing(spriteCmpnt, Direction::SOUTH);
+			}
+		}
+
 		PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(player->entity);
 
-		InputState& inputState = player->inputState;
 		float moveX =
 			inputState.moveLeft && inputState.moveRight ? 0 :
 			inputState.moveLeft ? -1 :

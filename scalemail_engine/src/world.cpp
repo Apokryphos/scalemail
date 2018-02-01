@@ -47,6 +47,7 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
 	mSpriteSystem.setDirection(spriteCmpnt, direction);
+	mSpriteSystem.setSize(spriteCmpnt, glm::vec2(12.0f, 12.0f));
 	mSpriteSystem.setTileset(spriteCmpnt, "fx");
 	mSpriteSystem.setTilesetId(spriteCmpnt, tilesetId);
 
@@ -57,7 +58,7 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 	mPhysicsSystem.setSpeed(physicsCmpnt, speed);
 
 	const glm::vec4 lightColor(0.60f, 0.85f, 0.10f, 1.0f);
-	const float lightSize = 32;
+	const float lightSize = 16;
 	const float lightGlowSize = lightSize * 0.33f;
 	const float lightPulse = 32;
 	const float lightPulseSize = 6;

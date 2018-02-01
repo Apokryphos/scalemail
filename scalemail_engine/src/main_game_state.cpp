@@ -1,21 +1,19 @@
 #include "camera.hpp"
-#include "ease.hpp"
-#include "font.hpp"
 #include "game.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "main_game_state.hpp"
 #include "light_system.hpp"
 #include "physics_system.hpp"
-#include "transition.hpp"
 #include "world.hpp"
 #include <iostream>
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 #include <vector>
 
 namespace ScaleMail
 {
-const float cameraStartPosition = -1024.0f;
+const float cameraStartPosition = 1024.0f;
 static const glm::vec4 ambientColor(0.3f, 0.38f, 0.4f, 1.0f);
 
 //	============================================================================
@@ -66,6 +64,26 @@ void MainGameState::update(World& world,
 
 		glm::vec2 direction(moveX, moveY);
 		physicsSystem.setDirection(physicsCmpnt, direction);
+
+		//	Fire bullets
+		if (inputState.fire) {
+			const int bulletTilesetId = 32;
+			const float bulletSpeed = 128.0f;
+
+			glm::vec2 target = camera.unproject(inputState.aimPosition);
+			glm::vec2 origin = physicsSystem.getPosition(physicsCmpnt);
+			glm::vec2 bulletDirection = target - origin;
+
+			if (glm::length2(bulletDirection) > 1) {
+				bulletDirection = glm::normalize(bulletDirection);
+			}
+
+			world.createBullet(
+				origin,
+				bulletDirection,
+				bulletSpeed,
+				bulletTilesetId);
+		}
 	}
 }
 }

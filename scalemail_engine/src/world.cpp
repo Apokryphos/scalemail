@@ -52,7 +52,7 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	mPhysicsSystem.setPosition(physicsCmpnt, position + glm::vec2(8.0f, -8.0f));
+	mPhysicsSystem.setPosition(physicsCmpnt, position);
 	mPhysicsSystem.setDirection(physicsCmpnt, direction);
 	mPhysicsSystem.setSpeed(physicsCmpnt, speed);
 

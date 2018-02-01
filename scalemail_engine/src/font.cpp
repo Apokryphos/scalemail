@@ -7,7 +7,7 @@
 #include "texture.hpp"
 #include "tiny_font.hpp"
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform2.hpp>
 #include <algorithm>
 #include <iostream>
 #include <string>

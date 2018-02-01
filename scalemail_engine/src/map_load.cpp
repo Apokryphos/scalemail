@@ -9,7 +9,6 @@
 #include "world.hpp"
 #include "TmxMapLib/Map.h"
 #include <glm/glm.hpp>
-#include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <memory>
 #include <string>

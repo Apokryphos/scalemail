@@ -14,8 +14,6 @@
 #include "sprite.hpp"
 #include "transition.hpp"
 #include "world.hpp"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 #include <iostream>
 
@@ -54,35 +52,6 @@ static void screenCapture() {
 }
 
 //  ============================================================================
-static void mouseButtonCallback(GLFWwindow* window, int button, int action,
-								[[maybe_unused]] int mods) {
-	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
-
-	World* world = game->world;
-
-	if (world == nullptr) {
-		return;
-	}
-
-	double mouseX, mouseY;
-	glfwGetCursorPos(window, &mouseX, &mouseY);
-
-	const glm::vec2 cursorOffset = glm::vec2(-32, 32);
-	const glm::vec2 mousePos = glm::vec2(mouseX, mouseY) + cursorOffset;
-	const glm::vec2 origin = glm::vec2(512, 512);
-
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		const glm::vec2 dir = glm::normalize(mousePos - origin);
-
-		world->createBullet(
-			glm::vec2(128, 1024 + 128),
-			dir,
-			128.0f,
-			32);
-	}
-}
-
-//  ============================================================================
 int startEngine() {
 	glfwSetErrorCallback(errorCallback);
 
@@ -114,7 +83,6 @@ int startEngine() {
 	capture.initialize(window);
 
 	initializeInput(window);
-	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
 	glfwMakeContextCurrent(window);
 
@@ -145,7 +113,7 @@ int startEngine() {
 
 	world.loadMap("map1");
 
-	Camera camera(cameraZoom);
+	Camera camera(screenWidth, screenHeight, cameraZoom);
 
 	Game game = {};
 	game.camera = &camera;
@@ -155,7 +123,7 @@ int startEngine() {
 
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
-	gameStateManager.activateMainGameState();
+	gameStateManager.activateIntroGameState();
 
 	double totalElapsedSeconds = 0;
 	double lastSeconds = 0;

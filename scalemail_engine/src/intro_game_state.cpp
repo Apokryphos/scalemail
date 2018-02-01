@@ -23,7 +23,7 @@ const float STATE4_DURATION = 15.0f;
 const float STATE5_DURATION = 1.0f;
 
 const float introCameraStartY = 0.0f;
-const float introCameraEndY = -1024.0f;
+const float introCameraEndY = 1024.0f;
 
 static const glm::vec4 startAmbientColor(0.14f, 0.064f, 0.04f, 1.0f);
 static const glm::vec4 endAmbientColor(0.3f, 0.38f, 0.4f, 1.0f);

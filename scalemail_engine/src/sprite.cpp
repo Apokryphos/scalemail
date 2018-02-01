@@ -5,7 +5,7 @@
 #include "sprite_batch.hpp"
 #include "sprite_system.hpp"
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform2.hpp>
 #include <iostream>
 
 namespace ScaleMail

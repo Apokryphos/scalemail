@@ -6,7 +6,7 @@
 #include "map.hpp"
 #include "texture.hpp"
 #include "tile_shader.hpp"
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform2.hpp>
 
 namespace ScaleMail
 {

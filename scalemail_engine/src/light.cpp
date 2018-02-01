@@ -12,7 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform2.hpp>
 
 namespace ScaleMail
 {
@@ -98,8 +98,8 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 	}
 
 	glm::mat4 quadWorld =
-		glm::translate(glm::mat4(1.0f), glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 0.0f)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 1.0f));
+		glm::translate(glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 0.0f)) *
+		glm::scale(glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 1.0f));
 
 	glm::mat4 fboProjection = glm::ortho(0.0f, (float)fboSize, 0.0f, (float)fboSize, 0.0f, 1.0f);
 

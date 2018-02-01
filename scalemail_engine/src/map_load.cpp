@@ -407,7 +407,8 @@ static void processLightObject(World& world,
 
 //  ============================================================================
 static void processMiscObject(World& world,
-							  const TmxMapLib::Object& object) {
+							  const TmxMapLib::Object& object,
+							  const TmxMapLib::Map& tmxMap) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 
@@ -415,7 +416,10 @@ static void processMiscObject(World& world,
 
 	const int tilesetId = tile->GetGid() - 1;
 
-	world.createProp(glm::vec2(x, y), tilesetId);
+	int nextFrame = tilesetId;
+	getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame);
+
+	world.createProp(glm::vec2(x, y), tilesetId, nextFrame);
 }
 
 //  ============================================================================
@@ -479,7 +483,7 @@ static void processObject(World& world,
 		} else if (type == "torch") {
 			processTorchObject(world, object, tmxMap);
 		} else {
-			processMiscObject(world, object);
+			processMiscObject(world, object, tmxMap);
 		}
 	}
 }

@@ -10,6 +10,7 @@ struct Game
 {
 	bool paused;
 	bool quit;
+	double speed;
 	Camera* camera;
 	GameWindow gameWindow;
 	World* world;

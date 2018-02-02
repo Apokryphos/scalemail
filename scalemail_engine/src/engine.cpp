@@ -118,6 +118,7 @@ int startEngine() {
 	Game game = {};
 	game.camera = &camera;
 	game.gameWindow.window = window;
+	game.speed = 1.0;
 	game.world = &world;
 	glfwSetWindowUserPointer(window, &game);
 
@@ -145,8 +146,10 @@ int startEngine() {
 			continue;
 		}
 
-		accumulated += seconds - lastSeconds;
-		totalElapsedSeconds += seconds - lastSeconds;
+		double elapsedSeconds = (seconds - lastSeconds) * game.speed;
+
+		accumulated += elapsedSeconds;
+		totalElapsedSeconds += elapsedSeconds;
 
 		bool updated = false;
 		while (accumulated >= timeStep) {

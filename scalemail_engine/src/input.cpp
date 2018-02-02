@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "gl_headers.hpp"
 #include "input_state.hpp"
+#include <algorithm>
 #include <iostream>
 
 namespace ScaleMail
@@ -47,6 +48,18 @@ static void keyCallback(GLFWwindow* window, int key,
 
 			case GLFW_KEY_P:
 				game->paused = !game->paused;
+				break;
+
+			case GLFW_KEY_MINUS:
+				game->speed = std::max(game->speed + 0.5, 0.0);
+				std::cout << "Game speed decreased to "
+						  << game->speed << "." << std::endl;
+				break;
+
+			case GLFW_KEY_EQUAL:
+				game->speed += 0.5;
+				std::cout << "Game speed increased to "
+						  << game->speed << "." << std::endl;
 				break;
 		}
 	}

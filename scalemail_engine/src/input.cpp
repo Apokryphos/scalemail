@@ -51,7 +51,7 @@ static void keyCallback(GLFWwindow* window, int key,
 				break;
 
 			case GLFW_KEY_MINUS:
-				game->speed = std::max(game->speed + 0.5, 0.0);
+				game->speed = std::max(game->speed - 0.5, 1.0);
 				std::cout << "Game speed decreased to "
 						  << game->speed << "." << std::endl;
 				break;

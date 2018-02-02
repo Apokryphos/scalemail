@@ -128,7 +128,8 @@ void LightSystem::update(float elapsedSeconds,
 		position =
 			physicsSystem.getPosition(physicsSystem.getComponent(p.second));
 
-		mPosition[index] = position + mOffset[index];
+		const float lightLayer = -0.9f;
+		mPosition[index] = glm::vec3(position + mOffset[index], lightLayer);
 	}
 
 	//  Update animated lights

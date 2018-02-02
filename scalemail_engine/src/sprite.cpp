@@ -64,19 +64,17 @@ void setSpriteAnimation(SpriteAnimation& animation, int frame1TilesetId,
 
 //  ============================================================================
 void initializeSprites(AssetManager& assetManager) {
+	assetManager.loadTexture("world");
 	assetManager.loadTexture("actors");
 	assetManager.loadTexture("fx");
-	assetManager.loadTexture("world");
 	spriteBatch.initialize(assetManager);
 }
 
 //  ============================================================================
 void renderSprites(GameWindow& gameWindow, SpriteSystem& spriteSystem, Camera& camera) {
-	glm::mat4 screenProjection =
-		glm::ortho(0.0f, (float)gameWindow.width, (float)gameWindow.height, 0.0f,
-				   0.0f, 1.0f);
+	glm::mat4 screenMvp = camera.getProjection() * camera.getView();
 
-	glm::mat4 screenMvp = screenProjection * camera.getView();
+	glEnable(GL_DEPTH_TEST);
 
 	spriteBatch.begin();
 	spriteSystem.buildVertexData(spriteBatch);

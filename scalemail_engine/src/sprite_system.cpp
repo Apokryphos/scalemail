@@ -1,6 +1,7 @@
 #include "sprite_system.hpp"
 #include "direction.hpp"
 #include "asset_manager.hpp"
+#include "layer.hpp"
 #include "physics_system.hpp"
 #include "sprite.hpp"
 #include "sprite_animation.hpp"
@@ -13,6 +14,12 @@
 namespace ScaleMail
 {
 //	============================================================================
+bool sortSprite(const SpriteComponentData& data1,
+				const SpriteComponentData& data2) {
+	return data1.position.z < data2.position.z;
+}
+
+//	============================================================================
 static SpriteComponent makeComponent(const int index) {
 	return SpriteComponent(index);
 }
@@ -20,82 +27,83 @@ static SpriteComponent makeComponent(const int index) {
 //	============================================================================
 SpriteSystem::SpriteSystem(EntityManager& entityManager, int maxComponents)
 	: EntitySystem(entityManager, maxComponents) {
-	mFacing.reserve(maxComponents);
-	mTilesetId.reserve(maxComponents);
-	mAlpha.reserve(maxComponents);
-	mTextureId.reserve(maxComponents);
-	mPositionX.reserve(maxComponents);
-	mPositionY.reserve(maxComponents);
-	mColorR.reserve(maxComponents);
-	mColorG.reserve(maxComponents);
-	mColorB.reserve(maxComponents);
-	mColorA.reserve(maxComponents);
-	mSizeX.reserve(maxComponents);
-	mSizeY.reserve(maxComponents);
-	mRotate.reserve(maxComponents);
-	mTexU1.reserve(maxComponents);
-	mTexV1.reserve(maxComponents);
-	mTexU2.reserve(maxComponents);
-	mTexV2.reserve(maxComponents);
-	mTilesets.reserve(maxComponents);
-	mTilesetName.reserve(maxComponents);
-	mAnimation.reserve(maxComponents);
+	mData.reserve(maxComponents);
 }
 
 //	============================================================================
 void SpriteSystem::createComponent() {
-	mFacing.emplace_back(Direction::SOUTH);
-	mTilesetId.emplace_back(0);
-	mAlpha.emplace_back(true); //	Enable alpha by default
-	mTextureId.emplace_back(0);
-	mPositionX.emplace_back(0.0f);
-	mPositionY.emplace_back(0.0f);
-	mColorR.emplace_back(1.0f);
-	mColorG.emplace_back(1.0f);
-	mColorB.emplace_back(1.0f);
-	mColorA.emplace_back(1.0f);
-	mSizeX.emplace_back(16.0f);
-	mSizeY.emplace_back(16.0f);
-	mRotate.emplace_back(0.0f);
-	mTexU1.emplace_back(0.0f);
-	mTexV1.emplace_back(0.0f);
-	mTexU2.emplace_back(0.0f);
-	mTexV2.emplace_back(0.0f);
-	mTilesets.emplace_back();
-	mTilesetName.emplace_back("");
+	SpriteComponentData data = {};
+	data.facing = Direction::SOUTH;
+	data.offsetZ = 16.0f;
+	data.textureId = 0;
+	data.tilesetId = 0;
+	data.rotate = 0;
+	data.size = glm::vec2(16.0f);
+	data.uv1 = glm::vec2(0.0f);
+	data.uv2 = glm::vec2(0.0f);
+	data.position = glm::vec3(0.0f);
+	data.color = glm::vec4(1.0f);
+	data.alpha = true;
+	data.tilesetName = "";
+	setSpriteAnimation(data.animation, 0, 0);
 
-	SpriteAnimation spriteAnimation;
-	setSpriteAnimation(spriteAnimation, 0, 0);
-	mAnimation.push_back(spriteAnimation);
+	mData.emplace_back(data);
 
-	++mTextureIdCounts[mAlpha.back()][mTextureId.back()];
+	++mTextureIdCounts[data.alpha][data.textureId];
 }
 
 //	============================================================================
 void SpriteSystem::destroyComponent(int index) {
-	assert(mTextureIdCounts[mAlpha[index]][mTextureId[index]] > 0);
-	--mTextureIdCounts[mAlpha[index]][mTextureId[index]];
+	assert(mTextureIdCounts[mData[index].alpha][mData[index].textureId] > 0);
+	--mTextureIdCounts[mData[index].alpha][mData[index].textureId];
 
-	swapWithLastElementAndRemove(mTilesetId, index);
-	swapWithLastElementAndRemove(mAlpha, index);
-	swapWithLastElementAndRemove(mTextureId, index);
-	swapWithLastElementAndRemove(mPositionX, index);
-	swapWithLastElementAndRemove(mPositionY, index);
-	swapWithLastElementAndRemove(mSizeX, index);
-	swapWithLastElementAndRemove(mSizeY, index);
-	swapWithLastElementAndRemove(mRotate, index);
-	swapWithLastElementAndRemove(mTexU1, index);
-	swapWithLastElementAndRemove(mTexV1, index);
-	swapWithLastElementAndRemove(mTexU2, index);
-	swapWithLastElementAndRemove(mTexV2, index);
-	swapWithLastElementAndRemove(mTilesets, index);
-	swapWithLastElementAndRemove(mTilesetName, index);
+	swapWithLastElementAndRemove(mData, index);
 }
 
 //	============================================================================
 void SpriteSystem::buildVertexData(SpriteBatch& spriteBatch) {
 	//	Size of component vectors is limited by int EntitySystem.MaxComponents
-	const int spriteCount = static_cast<int>(mTilesetId.size());
+	const int spriteCount = static_cast<int>(mData.size());
+
+	mAlpha.clear();
+	mTextureId.clear();
+	mPositionX.clear();
+	mPositionY.clear();
+	mPositionZ.clear();
+	mColorR.clear();
+	mColorG.clear();
+	mColorB.clear();
+	mColorA.clear();
+	mSizeX.clear();
+	mSizeY.clear();
+	mRotate.clear();
+	mTexU1.clear();
+	mTexV1.clear();
+	mTexU2.clear();
+	mTexV2.clear();
+
+	//	Sort sprites
+	std::vector<SpriteComponentData> sprites(mData);
+	std::sort(sprites.begin(), sprites.end(), sortSprite);
+
+	for (const auto& sprite : sprites) {
+		mTextureId.push_back(sprite.textureId);
+		mAlpha.push_back(sprite.alpha);
+		mPositionX.push_back(sprite.position.x);
+		mPositionY.push_back(sprite.position.y);
+		mPositionZ.push_back(sprite.position.z);
+		mColorR.push_back(sprite.color.r);
+		mColorG.push_back(sprite.color.g);
+		mColorB.push_back(sprite.color.b);
+		mColorA.push_back(sprite.color.a);
+		mSizeX.push_back(sprite.size.x);
+		mSizeY.push_back(sprite.size.y);
+		mRotate.push_back(sprite.rotate);
+		mTexU1.push_back(sprite.uv1.x);
+		mTexV1.push_back(sprite.uv1.y);
+		mTexU2.push_back(sprite.uv2.x);
+		mTexV2.push_back(sprite.uv2.y);
+	}
 
 	spriteBatch.buildSpriteVertexData(
 		spriteCount,
@@ -104,6 +112,7 @@ void SpriteSystem::buildVertexData(SpriteBatch& spriteBatch) {
 		mAlpha,
 		mPositionX,
 		mPositionY,
+		mPositionZ,
 		mColorR,
 		mColorG,
 		mColorB,
@@ -119,12 +128,12 @@ void SpriteSystem::buildVertexData(SpriteBatch& spriteBatch) {
 
 //	============================================================================
 bool SpriteSystem::getAlpha(const SpriteComponent& cmpnt) const {
-	return mAlpha[cmpnt.index];
+	return mData[cmpnt.index].alpha;
 }
 
 //	============================================================================
 int SpriteSystem::getTilesetId(const SpriteComponent& cmpnt) const {
-	return mTilesetId[cmpnt.index];
+	return mData[cmpnt.index].tilesetId;
 }
 
 //	============================================================================
@@ -134,17 +143,17 @@ SpriteComponent SpriteSystem::getComponent(const Entity& entity) const {
 
 //	============================================================================
 float SpriteSystem::getRotate(const SpriteComponent& cmpnt) const {
-	return mRotate[cmpnt.index];
+	return mData[cmpnt.index].rotate;
 }
 
 //	============================================================================
 glm::vec2 SpriteSystem::getSize(const SpriteComponent& cmpnt) const {
-	return glm::vec2(mSizeX[cmpnt.index], mSizeY[cmpnt.index]);
+	return mData[cmpnt.index].size;
 }
 
 //	============================================================================
 int SpriteSystem::getTextureId(const SpriteComponent& cmpnt) const {
-	return mTextureId[cmpnt.index];
+	return mData[cmpnt.index].textureId;
 }
 
 //	============================================================================
@@ -152,12 +161,14 @@ void SpriteSystem::calculateTextureCoords(int componentIndex) {
 	glm::vec2 uv1;
 	glm::vec2 uv2;
 
-	mTilesets[componentIndex].getTileUv(mTilesetId[componentIndex], uv1, uv2);
+	mData[componentIndex].tileset.getTileUv(
+		mData[componentIndex].tilesetId, uv1, uv2);
 
-	mTexU1[componentIndex] = uv1.x;
-	mTexV1[componentIndex] = uv2.y;
-	mTexU2[componentIndex] = uv2.x;
-	mTexV2[componentIndex] = uv1.y;
+	mData[componentIndex].uv1.x = uv1.x;
+	mData[componentIndex].uv1.y = uv2.y;
+
+	mData[componentIndex].uv2.x = uv2.x;
+	mData[componentIndex].uv2.y = uv1.y;
 }
 
 //	============================================================================
@@ -168,21 +179,23 @@ void SpriteSystem::initialize(AssetManager* assetManager) {
 //	============================================================================
 void SpriteSystem::setActorIndex(const SpriteComponent& cmpnt,
 								 const int actorIndex) {
-	getActorSpriteAnimation(actorIndex, mAnimation[cmpnt.index]);
+	getActorSpriteAnimation(actorIndex, mData[cmpnt.index].animation);
 }
 
 //	============================================================================
 void SpriteSystem::setAlpha(const SpriteComponent& cmpnt, const bool alpha) {
-	--mTextureIdCounts[mAlpha[cmpnt.index]][mTextureId[cmpnt.index]];
-	mAlpha[cmpnt.index] = alpha;
-	++mTextureIdCounts[mAlpha[cmpnt.index]][mTextureId[cmpnt.index]];
+	SpriteComponentData& data = mData[cmpnt.index];
+	--mTextureIdCounts[data.alpha][data.textureId];
+	data.alpha = alpha;
+	++mTextureIdCounts[data.alpha][data.textureId];
 }
 
 //	============================================================================
 void SpriteSystem::setFacing(const SpriteComponent& cmpnt,
 							 const Direction facing) {
-	mFacing[cmpnt.index] = facing;
-	this->updateAnimationTileset(cmpnt.index, mAnimation[cmpnt.index].frameIndex);
+	mData[cmpnt.index].facing = facing;
+	this->updateAnimationTileset(cmpnt.index,
+								 mData[cmpnt.index].animation.frameIndex);
 }
 
 //	============================================================================
@@ -191,36 +204,41 @@ void SpriteSystem::setDirection(
 //	Temporary adjustment to rotate sprite until tilesets can
 //	be corrected.
 #define ADJUST 4.712389f
-	mRotate[cmpnt.index] = (float)atan2(direction.x, -direction.y) + ADJUST;
+	mData[cmpnt.index].rotate = (float)atan2(direction.x, -direction.y) + ADJUST;
+}
+
+//	============================================================================
+void SpriteSystem::setOffsetZ(const SpriteComponent& cmpnt, float offsetZ) {
+	mData[cmpnt.index].offsetZ = offsetZ;
 }
 
 //	============================================================================
 void SpriteSystem::setRotate(const SpriteComponent& cmpnt, float rotate) {
-	mRotate[cmpnt.index] = rotate;
+	mData[cmpnt.index].rotate = rotate;
 }
 
 //	============================================================================
 void SpriteSystem::setSize(
 	const SpriteComponent& cmpnt, const glm::vec2& size) {
-	mSizeX[cmpnt.index] = size.x;
-	mSizeY[cmpnt.index] = size.y;
+	mData[cmpnt.index].size = size;
 }
 
 //	============================================================================
 void SpriteSystem::setTileset(
 	const SpriteComponent& cmpnt, const std::string& textureName) {
+	SpriteComponentData& data = mData[cmpnt.index];
 
 	Tileset tileset = mAssetManager->getTileset(textureName);
 
-	--mTextureIdCounts[mAlpha[cmpnt.index]][mTextureId[cmpnt.index]];
-	mTextureId[cmpnt.index] = tileset.texture.id;
-	++mTextureIdCounts[mAlpha[cmpnt.index]][mTextureId[cmpnt.index]];
+	--mTextureIdCounts[data.alpha][data.textureId];
+	data.textureId = tileset.texture.id;
+	++mTextureIdCounts[data.alpha][data.textureId];
 
-	mTilesets[cmpnt.index] = tileset;
+	data.tileset = tileset;
 
 	this->calculateTextureCoords(cmpnt.index);
 
-	mTilesetName[cmpnt.index] = textureName;
+	data.tilesetName = textureName;
 }
 
 //	============================================================================
@@ -233,9 +251,10 @@ void SpriteSystem::setTilesetId(const SpriteComponent& cmpnt,
 void SpriteSystem::setTilesetId(const SpriteComponent& cmpnt,
 								const int frame1TilesetId,
 								const int frame2TilesetId) {
-	mTilesetId[cmpnt.index] = frame1TilesetId;
+	mData[cmpnt.index].tilesetId = frame1TilesetId;
 	this->calculateTextureCoords(cmpnt.index);
-	setSpriteAnimation(mAnimation[cmpnt.index], frame1TilesetId, frame2TilesetId);
+	setSpriteAnimation(mData[cmpnt.index].animation, frame1TilesetId,
+					   frame2TilesetId);
 }
 
 //	============================================================================
@@ -246,12 +265,17 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 		position =
 			physicsSystem.getPosition(physicsSystem.getComponent(p.second));
 
-		mPositionX[p.first] = position.x;
-		mPositionY[p.first] = position.y;
+		size_t index = p.first;
+
+		mData[index].position.x = position.x;
+		mData[index].position.y = position.y;
+
+		mData[index].position.z = getLayerZ(1,
+			(position.y - mData[index].size.y * 0.5f) + mData[index].offsetZ);
 	}
 
 	for (auto& p : mEntitiesByComponentIndices) {
-		SpriteAnimation& animation = mAnimation[p.first];
+		SpriteAnimation& animation = mData[p.first].animation;
 
 		animation.ticks += elapsedSeconds;
 
@@ -267,7 +291,7 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 //	============================================================================
 void SpriteSystem::updateAnimationTileset(const SpriteComponent& cmpnt,
 										  int frameIndex) {
-	SpriteAnimation& animation = mAnimation[cmpnt.index];
+	SpriteAnimation& animation = mData[cmpnt.index].animation;
 
 	animation.frameIndex = frameIndex;
 
@@ -275,9 +299,10 @@ void SpriteSystem::updateAnimationTileset(const SpriteComponent& cmpnt,
 		animation.frameIndex = 0;
 	}
 
-	const int direction = static_cast<int>(mFacing[cmpnt.index]);
+	const int direction = static_cast<int>(mData[cmpnt.index].facing);
 
-	mTilesetId[cmpnt.index] =
+
+	mData[cmpnt.index].tilesetId =
 		animation.frames[animation.frameIndex].tilesetIds[direction];
 
 	this->calculateTextureCoords(cmpnt.index);

@@ -111,6 +111,7 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 
 	glm::mat4 screenMvp = screenProjection * quadWorld;
 
+	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 
 	//  Draw lights to FBO A

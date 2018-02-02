@@ -43,9 +43,9 @@ public:
 					  int childClosedTilesetId, bool open,
 					  const std::string name);
 	Entity createEntity();
-	Entity createProp(glm::vec2 position, int tilesetId);
+	Entity createProp(glm::vec2 position, int tilesetId, float offsetZ);
 	Entity createProp(glm::vec2 position, int frame1TilesetId,
-					  int frame2TilesetId);
+					  int frame2TilesetId, float offsetZ);
 	DoorSystem& getDoorSystem();
 	std::vector<Entity> getEntitiesByName(const std::string name) const;
 	LightSystem& getLightSystem();

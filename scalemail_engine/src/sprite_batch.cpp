@@ -30,7 +30,7 @@ void SpriteBatch::begin() {
 
 //	===========================================================================
 void SpriteBatch::buildQuadVertexData(
-	int textureId, const std::vector<glm::vec2>& position,
+	int textureId, const std::vector<glm::vec3>& position,
 	const std::vector<glm::vec2>& size, const std::vector<glm::vec4>& color,
 	bool alpha) {
 	int quadCount = position.size();
@@ -85,6 +85,7 @@ void SpriteBatch::buildQuadVertexData(
 		//	Position
 		vertexData[v++] = position[s].x + size[s].x * quadA.x;
 		vertexData[v++] = position[s].y + size[s].y * quadA.y;
+		vertexData[v++] = position[s].z;
 		//	UV
 		vertexData[v++] = 0.0f;
 		vertexData[v++] = 1.0f;
@@ -97,6 +98,7 @@ void SpriteBatch::buildQuadVertexData(
 		//	Position
 		vertexData[v++] = position[s].x + size[s].x * quadB.x;
 		vertexData[v++] = position[s].y + size[s].y * quadB.y;
+		vertexData[v++] = position[s].z;
 		//	UV
 		vertexData[v++] = 0.0f;
 		vertexData[v++] = 0.0f;
@@ -109,6 +111,7 @@ void SpriteBatch::buildQuadVertexData(
 		//	Position
 		vertexData[v++] = position[s].x + size[s].x * quadC.x;
 		vertexData[v++] = position[s].y + size[s].y * quadC.y;
+		vertexData[v++] = position[s].z;
 		//	UV
 		vertexData[v++] = 1.0f;
 		vertexData[v++] = 0.0f;
@@ -121,6 +124,7 @@ void SpriteBatch::buildQuadVertexData(
 		//	Position
 		vertexData[v++] = position[s].x + size[s].x * quadD.x;
 		vertexData[v++] = position[s].y + size[s].y * quadD.y;
+		vertexData[v++] = position[s].z;
 		//	UV
 		vertexData[v++] = 1.0f;
 		vertexData[v++] = 1.0f;
@@ -254,7 +258,8 @@ void SpriteBatch::buildSpriteVertexData(
 									 textureIdCounts,
 	const std::vector<unsigned int>& textureId,
 	const std::vector<bool>& alpha, const std::vector<float>& positionX,
-	const std::vector<float>& positionY, const std::vector<float>& colorR,
+	const std::vector<float>& positionY, const std::vector<float>& positionZ,
+	const std::vector<float>& colorR,
 	const std::vector<float>& colorG, const std::vector<float>& colorB,
 	const std::vector<float>& colorA, const std::vector<float>& sizeX,
 	const std::vector<float>& sizeY, const std::vector<float>& rotate,
@@ -328,6 +333,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadA.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadA.y;
+		vertexData[v++] = positionZ[s];
 		//	UV
 		vertexData[v++] = texU1[s];
 		vertexData[v++] = texV2[s];
@@ -340,6 +346,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadB.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadB.y;
+		vertexData[v++] = positionZ[s];
 		//	UV
 		vertexData[v++] = texU1[s];
 		vertexData[v++] = texV1[s];
@@ -352,6 +359,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadC.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadC.y;
+		vertexData[v++] = positionZ[s];
 		//	UV
 		vertexData[v++] = texU2[s];
 		vertexData[v++] = texV1[s];
@@ -364,6 +372,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadD.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadD.y;
+		vertexData[v++] = positionZ[s];
 		//	UV
 		vertexData[v++] = texU2[s];
 		vertexData[v++] = texV2[s];
@@ -417,13 +426,13 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 		NULL,
 		GL_STREAM_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(
-		1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(2 * sizeof(float)));
+		1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(
-		2, 4, GL_FLOAT, GL_FALSE, stride, (void*)(4 * sizeof(float)));
+		2, 4, GL_FLOAT, GL_FALSE, stride, (void*)(5 * sizeof(float)));
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

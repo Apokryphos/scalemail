@@ -27,7 +27,7 @@ class SpriteBatch
 	};
 
 	const int InitialVboSizeInSprites = 500;
-	const int VertexElementCount      = 8;
+	const int VertexElementCount      = 9;
 	const int QuadVertexCount         = 4;
 	const int QuadIndexCount          = 6;
 	const int QuadVertexElementCount  = QuadVertexCount * VertexElementCount;
@@ -61,7 +61,7 @@ public:
 	void begin();
 
 	void buildQuadVertexData(
-		int textureId, const std::vector<glm::vec2>& position,
+		int textureId, const std::vector<glm::vec3>& position,
 		const std::vector<glm::vec2>& size, const std::vector<glm::vec4>& color,
 		bool alpha);
 
@@ -70,7 +70,8 @@ public:
 		const std::unordered_map<bool, std::unordered_map<unsigned int, int>> textureIdCounts,
 		const std::vector<unsigned int>& textureId,
 		const std::vector<bool>& alpha, const std::vector<float>& positionX,
-		const std::vector<float>& positionY, const std::vector<float>& colorR,
+		const std::vector<float>& positionY, const std::vector<float>& positionZ,
+		const std::vector<float>& colorR,
 		const std::vector<float>& colorG, const std::vector<float>& colorB,
 		const std::vector<float>& colorA, const std::vector<float>& sizeX,
 		const std::vector<float>& sizeY, const std::vector<float>& rotate,

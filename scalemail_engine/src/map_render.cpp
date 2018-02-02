@@ -33,13 +33,9 @@ void renderMap(GameWindow& gameWindow, const Map& map, const Camera& camera,
 	//  Draw map
 	const Mesh& mesh = map.mapMesh.staticMesh;
 
-	glm::mat4 projection =
-		glm::ortho(0.0f, (float)gameWindow.width,
-				   (float)gameWindow.height, 0.0f,
-				   0.0f, 1.0f);
+	glm::mat4 mvp = camera.getProjection() * camera.getView();
 
-	glm::mat4 mvp = projection * camera.getView();
-
+	glEnable(GL_DEPTH_TEST);
 	blendAlpha();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glUseProgram(tileShader.id);
@@ -49,6 +45,12 @@ void renderMap(GameWindow& gameWindow, const Map& map, const Camera& camera,
 	glBindVertexArray(mesh.vao);
 	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
 
+	glDisable(GL_DEPTH_TEST);
+	const Mesh& alphaMesh = map.mapMesh.alphaMesh;
+	glBindVertexArray(alphaMesh.vao);
+	glDrawArrays(GL_TRIANGLES, 0, alphaMesh.vertexCount);
+
+	glEnable(GL_DEPTH_TEST);
 	const Mesh& animMesh = map.mapMesh.scrollMeshes[tileFrame];
 	glBindVertexArray(animMesh.vao);
 	glDrawArrays(GL_TRIANGLES, 0, animMesh.vertexCount);

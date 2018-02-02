@@ -10,6 +10,11 @@ Camera::Camera(float width, float height, float zoom) {
 }
 
 //  ============================================================================
+glm::mat4 Camera::getProjection() const {
+	return mProjection;
+}
+
+//  ============================================================================
 glm::mat4 Camera::getView() const {
 	return
 		glm::scale(glm::vec3(this->zoom, this->zoom, 1.0f)) *
@@ -21,7 +26,7 @@ void Camera::setSize(float width, float height) {
 	mWidth = width;
 	mHeight = height;
 
-	mProjection = glm::ortho(0.0f, mWidth, mHeight, 0.0f, 0.0f, 1.0f);
+	mProjection = glm::ortho(0.0f, mWidth, mHeight, 0.0f, -1.0f, 1.0f);
 }
 
 //  ============================================================================

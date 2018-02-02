@@ -6,6 +6,7 @@ namespace ScaleMail
 {
 struct MapMesh {
 	Mesh staticMesh;
+	Mesh alphaMesh;
 	Mesh animatedMeshes[2];
 	Mesh scrollMeshes[2];
 };

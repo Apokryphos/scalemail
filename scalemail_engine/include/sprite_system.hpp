@@ -5,6 +5,8 @@
 #include "sprite_animation.hpp"
 #include "tileset.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -23,15 +25,35 @@ struct SpriteComponent {
 	int index;
 };
 
+struct SpriteComponentData {
+	Direction facing;
+	unsigned int textureId;
+	int tilesetId;
+	float rotate;
+	float offsetZ;
+	glm::vec2 size;
+	glm::vec2 uv1;
+	glm::vec2 uv2;
+	glm::vec3 position;
+	glm::vec4 color;
+	bool alpha;
+	std::string tilesetName;
+	SpriteAnimation animation;
+	Tileset tileset;
+};
+
 class SpriteSystem : public EntitySystem
 {
 private:
 	const int VertexElementCount = 4;
 
-	std::vector<Direction> mFacing;
+	std::vector<SpriteComponentData> mData;
 
+	std::vector<unsigned int> mTextureId;
+	std::vector<bool>  mAlpha;
 	std::vector<float> mPositionX;
 	std::vector<float> mPositionY;
+	std::vector<float> mPositionZ;
 	std::vector<float> mColorR;
 	std::vector<float> mColorG;
 	std::vector<float> mColorB;
@@ -43,15 +65,6 @@ private:
 	std::vector<float> mTexV1;
 	std::vector<float> mTexU2;
 	std::vector<float> mTexV2;
-
-	std::vector<SpriteAnimation> mAnimation;
-
-	std::vector<unsigned int> mTextureId;
-	std::vector<int>          mTilesetId;
-	std::vector<std::string>  mTilesetName;
-	std::vector<bool>         mAlpha;
-
-	std::vector<Tileset> mTilesets;
 
 	std::unordered_map<bool, std::unordered_map<unsigned int, int>>
 		mTextureIdCounts;
@@ -77,6 +90,7 @@ public:
 	void setActorIndex(const SpriteComponent& cmpnt, const int actorIndex);
 	void setAlpha(const SpriteComponent& cmpnt, const bool alpha);
 	void setFacing(const SpriteComponent& cmpnt, const Direction facing);
+	void setOffsetZ(const SpriteComponent& cmpnt, float offsetZ);
 	void setTilesetId(const SpriteComponent& cmpnt, const int tilesetId);
 	void setTilesetId(const SpriteComponent& cmpnt,
 					  const int frame1TilesetId,

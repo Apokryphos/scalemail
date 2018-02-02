@@ -3,6 +3,7 @@
 #include "entity_system.hpp"
 #include "texture.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
 namespace ScaleMail
@@ -22,7 +23,7 @@ class LightSystem : public EntitySystem
 	glm::vec4 mAmbientColor;
 
 	std::vector<glm::vec2> mOffset;
-	std::vector<glm::vec2> mPosition;
+	std::vector<glm::vec3> mPosition;
 	std::vector<glm::vec4> mColor;
 	std::vector<glm::vec2> mGlowSize;
 	std::vector<glm::vec2> mSize;

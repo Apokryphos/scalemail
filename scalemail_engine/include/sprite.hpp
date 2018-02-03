@@ -9,7 +9,6 @@ namespace ScaleMail
 {
 class AssetManager;
 class Camera;
-struct GameWindow;
 class SpriteSystem;
 
 struct Sprite {
@@ -23,8 +22,7 @@ struct Sprite {
 
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
 void initializeSprites(AssetManager& assetManager);
-void renderSprites(GameWindow& gameWindow, SpriteSystem& spriteSystem,
-				   Camera& camera);
+void renderSprites(SpriteSystem& spriteSystem, Camera& camera);
 void setSpriteAnimation(SpriteAnimation& animation, int frame1TilesetId,
 	int frame2TilesetId);
 }

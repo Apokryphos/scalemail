@@ -28,8 +28,8 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	renderMap(gameWindow, *world.getMap(), camera, totalElapsedSeconds);
-	renderSprites(gameWindow, world.getSpriteSystem(), camera);
+	renderMap(*world.getMap(), camera, totalElapsedSeconds);
+	renderSprites(world.getSpriteSystem(), camera);
 	renderLight(gameWindow, camera, world.getLightSystem());
 	renderTransition();
 

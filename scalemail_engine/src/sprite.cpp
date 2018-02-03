@@ -71,7 +71,7 @@ void initializeSprites(AssetManager& assetManager) {
 }
 
 //  ============================================================================
-void renderSprites(GameWindow& gameWindow, SpriteSystem& spriteSystem, Camera& camera) {
+void renderSprites(SpriteSystem& spriteSystem, Camera& camera) {
 	glm::mat4 screenMvp = camera.getProjection() * camera.getView();
 
 	glEnable(GL_DEPTH_TEST);

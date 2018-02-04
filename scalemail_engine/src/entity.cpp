@@ -14,11 +14,6 @@ Entity makeEntity(const unsigned index, const unsigned generation) {
 }
 
 //	============================================================================
-// Entity::Entity(const unsigned index, const unsigned generation) {
-//     this->id = (generation << ENTITY_INDEX_BITS) | index;
-// }
-
-//	============================================================================
 unsigned Entity::index() const {
 	return this->id & ENTITY_INDEX_MASK;
 }

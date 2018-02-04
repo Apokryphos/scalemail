@@ -9,9 +9,9 @@ namespace ScaleMail
 {
 static const glm::vec2 gQuadVertices[] = {
 	glm::vec2(-0.5f, -0.5f),
-	glm::vec2(-0.5f, 0.5f),
-	glm::vec2(0.5f, 0.5f),
-	glm::vec2(0.5f, -0.5f),
+	glm::vec2(-0.5f,  0.5f),
+	glm::vec2( 0.5f,  0.5f),
+	glm::vec2( 0.5f, -0.5f),
 };
 
 //	===========================================================================
@@ -324,11 +324,6 @@ void SpriteBatch::buildSpriteVertexData(
 		glm::vec2 quadB = rotation * gQuadVertices[1];
 		glm::vec2 quadC = rotation * gQuadVertices[2];
 		glm::vec2 quadD = rotation * gQuadVertices[3];
-
-		// glm::vec2 quadA = gQuadVertices[0];
-		// glm::vec2 quadB = gQuadVertices[1];
-		// glm::vec2 quadC = gQuadVertices[2];
-		// glm::vec2 quadD = gQuadVertices[3];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadA.x;

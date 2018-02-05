@@ -15,6 +15,7 @@ class PhysicsSystem : public EntitySystem
 {
 	std::vector<glm::vec2> mDirection;
 	std::vector<glm::vec2> mPosition;
+	std::vector<float> mRadius;
 	std::vector<float> mSpeed;
 
 	virtual void createComponent() override;
@@ -26,6 +27,7 @@ public:
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
 	void setDirection(const PhysicsComponent& cmpnt, const glm::vec2 direction);
   	void setPosition(const PhysicsComponent& cmpnt, const glm::vec2 position);
+	void setRadius(const PhysicsComponent& cmpnt, const float radius);
 	void setSpeed(const PhysicsComponent& cmpnt, const float speed);
 	void simulate(float elapsedSeconds);
 };

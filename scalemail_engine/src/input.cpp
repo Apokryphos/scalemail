@@ -43,6 +43,10 @@ static void keyCallback(GLFWwindow* window, int key,
 				break;
 
 			case GLFW_KEY_F1:
+				game->drawCollision = !game->drawCollision;
+				break;
+
+			case GLFW_KEY_F10:
 				inputState.capture = !inputState.capture;
 				break;
 

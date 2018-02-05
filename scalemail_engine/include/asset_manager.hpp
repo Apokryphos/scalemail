@@ -3,6 +3,7 @@
 #include "gl_headers.hpp"
 #include "fade_shader.hpp"
 #include "quad_shader.hpp"
+#include "line_shader.hpp"
 #include "mesh.hpp"
 #include "sprite_shader.hpp"
 #include "texture.hpp"
@@ -19,6 +20,7 @@ class AssetManager
 
 	FadeShader mFadeShader;
 	QuadShader mQuadShader;
+	LineShader mLineShader;
 	SpriteShader mSpriteShader;
 	TileShader mTileShader;
 
@@ -29,6 +31,7 @@ public:
 	FadeShader getFadeShader();
 	Mesh getQuadMesh();
 	QuadShader getQuadShader();
+	LineShader getLineShader();
 	SpriteShader getSpriteShader();
 	Tileset getTileset(const std::string textureName);
 	TileShader getTileShader();

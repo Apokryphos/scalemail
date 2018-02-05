@@ -33,6 +33,8 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	renderLight(gameWindow, camera, world.getLightSystem());
 	renderTransition();
 
+	world.getPhysicsSystem().drawDebug(camera);
+
 	gameState.draw(game, camera);
 
 	renderText(gameWindow);

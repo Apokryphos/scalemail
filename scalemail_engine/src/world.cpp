@@ -196,6 +196,7 @@ void World::initialize(AssetManager* assetManager) {
 	mSpriteSystem.initialize(assetManager);
 	mLightSystem.initialize(*assetManager);
 	mDoorSystem.initialize(mPhysicsSystem, mSpriteSystem);
+	mPhysicsSystem.initialize(*assetManager);
 }
 
 //  ============================================================================

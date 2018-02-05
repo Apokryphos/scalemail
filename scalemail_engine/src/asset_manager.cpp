@@ -25,6 +25,11 @@ QuadShader AssetManager::getQuadShader() {
 }
 
 //  ============================================================================
+LineShader AssetManager::getLineShader() {
+	return mLineShader;
+}
+
+//  ============================================================================
 SpriteShader AssetManager::getSpriteShader() {
 	return mSpriteShader;
 }
@@ -66,6 +71,10 @@ void AssetManager::initialize() {
 	initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag",
 					  mQuadShader.id);
 	mQuadShader.mvpLocation = glGetUniformLocation(mQuadShader.id, "MVP");
+
+	initShaderProgram("assets/shaders/line.vert", "assets/shaders/line.frag",
+					  mLineShader.id);
+	mLineShader.mvpLocation = glGetUniformLocation(mLineShader.id, "MVP");
 
 	initShaderProgram("assets/shaders/sprite.vert", "assets/shaders/sprite.frag",
 					  mSpriteShader.id);

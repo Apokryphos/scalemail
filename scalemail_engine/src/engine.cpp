@@ -159,7 +159,7 @@ int startEngine() {
 			//  Update
 			addTransitionTime(timeStep);
 
-			gameState->update(world, camera, timeStep);
+			gameState->update(game, timeStep);
 			world.update(timeStep);
 		}
 

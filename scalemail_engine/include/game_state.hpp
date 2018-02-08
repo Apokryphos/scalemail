@@ -17,6 +17,6 @@ public:
 	virtual void draw(const Game& game, Camera& camera) = 0;
 	GameStateManager& getGameStateManager();
 	virtual void initialize(Game& game) = 0;
-	virtual void update(World& world, Camera& camera, float elapsedSeconds) = 0;
+	virtual void update(Game& game, float elapsedSeconds) = 0;
 };
 }

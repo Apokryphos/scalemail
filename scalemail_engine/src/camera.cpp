@@ -16,9 +16,14 @@ glm::mat4 Camera::getProjection() const {
 
 //  ============================================================================
 glm::mat4 Camera::getView() const {
+	glm::vec2 position =
+		this->position -
+		glm::vec2(mWidth / 2, mHeight / 2) *
+		(1 / this->zoom);
+
 	return
 		glm::scale(glm::vec3(this->zoom, this->zoom, 1.0f)) *
-		glm::translate(glm::vec3(-this->position, 0.0f));
+		glm::translate(glm::vec3(-position, 0.0f));
 }
 
 //  ============================================================================

@@ -79,8 +79,8 @@ void IntroGameState::initialize([[maybe_unused]] Game& game) {
 }
 
 //	============================================================================
-void IntroGameState::update(World& world, Camera& camera, float elapsedSeconds) {
-	this->updateState(world, camera, elapsedSeconds);
+void IntroGameState::update(Game& game, float elapsedSeconds) {
+	this->updateState(*game.world, *game.camera, elapsedSeconds);
 }
 
 //	============================================================================

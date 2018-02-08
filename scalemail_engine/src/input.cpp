@@ -50,6 +50,10 @@ static void keyCallback(GLFWwindow* window, int key,
 				inputState.capture = !inputState.capture;
 				break;
 
+			case GLFW_KEY_F:
+				game->cameraFollow = !game->cameraFollow;
+				break;
+
 			case GLFW_KEY_P:
 				game->paused = !game->paused;
 				break;

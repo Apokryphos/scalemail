@@ -13,8 +13,29 @@
 
 namespace ScaleMail
 {
-const float cameraStartPosition = 1024.0f;
 static const glm::vec4 ambientColor(0.3f, 0.38f, 0.4f, 1.0f);
+
+//	============================================================================
+static void updateCameraPosition(Game& game) {
+	World* world = game.world;
+	Map* map = world->getMap();
+	Camera* camera = game.camera;
+
+	if (map != nullptr && camera != nullptr) {
+		std::vector<Player*> players = world->getPlayers();
+
+		if (game.cameraFollow && players.size() > 0) {
+			//	Camera follows first player
+			PhysicsSystem& physicsSystem = world->getPhysicsSystem();
+			PhysicsComponent physicsCmpnt = physicsSystem.getComponent(players[0]->entity);
+			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+			camera->position = position;
+		} else {
+			//	Camera is centered in room
+			camera->position = glm::vec2(128.0f, 1152.0f);
+		}
+	}
+}
 
 //	============================================================================
 MainGameState::MainGameState(GameStateManager& gameStateManager) :
@@ -26,8 +47,7 @@ void MainGameState::activate(Game& game) {
 	World& world = *game.world;
 	world.getLightSystem().setAmbientColor(ambientColor);
 
-	Camera& camera = *game.camera;
-	camera.position = glm::vec2(0, cameraStartPosition);
+	updateCameraPosition(game);
 }
 
 //	============================================================================
@@ -40,9 +60,12 @@ void MainGameState::initialize([[maybe_unused]] Game& game) {
 }
 
 //	============================================================================
-void MainGameState::update(World& world,
-						   [[maybe_unused]] Camera& camera,
-						   [[maybe_unused]] float elapsedSeconds) {
+void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
+	Camera& camera = *game.camera;
+	World& world = *game.world;
+
+	updateCameraPosition(game);
+
 	std::vector<Player*> players = world.getPlayers();
 
 	for (auto player : players) {

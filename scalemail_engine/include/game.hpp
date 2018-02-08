@@ -8,6 +8,7 @@ namespace ScaleMail
 {
 struct Game
 {
+	bool cameraFollow;
 	bool drawCollision;
 	bool paused;
 	bool quit;

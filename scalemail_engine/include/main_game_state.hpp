@@ -11,7 +11,6 @@ public:
 	virtual void activate(Game& game);
 	virtual void draw(const Game& gameWindow, Camera& camera) override;
 	virtual void initialize(Game& game);
-	virtual void update(World& world, Camera& camera,
-						float elapsedSeconds) override;
+	virtual void update(Game& game, float elapsedSeconds) override;
 };
 }

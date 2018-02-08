@@ -9,6 +9,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/blend.hpp
     include/camera.hpp
     include/collision.hpp
+    include/collision_group.hpp
     include/cursor.hpp
     include/direction.hpp
     include/direction_util.hpp

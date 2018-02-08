@@ -7,6 +7,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(SCALEMAIL_ENGINE_INCLUDE
     include/asset_manager.hpp
     include/blend.hpp
+    include/bullet_system.hpp
     include/camera.hpp
     include/collision.hpp
     include/collision_group.hpp
@@ -59,6 +60,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
 set(SCALEMAIL_ENGINE_SOURCE
     src/asset_manager.cpp
     src/blend.cpp
+    src/bullet_system.cpp
     src/camera.cpp
     src/collision.cpp
     src/cursor.cpp

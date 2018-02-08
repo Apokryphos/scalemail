@@ -1,5 +1,6 @@
 #pragma once
 
+#include "bullet_system.hpp"
 #include "direction.hpp"
 #include "door_system.hpp"
 #include "entity.hpp"
@@ -25,6 +26,7 @@ class World
 	SpriteSystem mSpriteSystem;
 	LightSystem mLightSystem;
 	NameSystem mNameSystem;
+	BulletSystem mBulletSystem;
 	DoorSystem mDoorSystem;
 
 	std::vector<Player> mPlayers;

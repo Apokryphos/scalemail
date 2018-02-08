@@ -7,8 +7,8 @@ namespace ScaleMail
 {
 //  ============================================================================
 World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
-				 mLightSystem(mEntityManager),
-				 mNameSystem(mEntityManager), mDoorSystem(mEntityManager) {
+				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
+				 mBulletSystem(mEntityManager),  mDoorSystem(mEntityManager) {
 	mPlayers.emplace_back("player1");
 	mPlayers.emplace_back("player2");
 	mPlayers.emplace_back("player3");
@@ -44,6 +44,8 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 						   int tilesetId) {
 	Entity entity = mEntityManager.createEntity();
+
+	mBulletSystem.addComponent(entity);
 
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
@@ -154,6 +156,7 @@ void World::destroyBullet(Entity entity) {
 	mSpriteSystem.removeComponent(entity);
 	mPhysicsSystem.removeComponent(entity);
 	mLightSystem.removeComponent(entity);
+	mBulletSystem.removeComponent(entity);
 
 	mEntityManager.destroyEntity(entity);
 }
@@ -228,6 +231,8 @@ void World::loadMap(const std::string& mapName) {
 
 //  ============================================================================
 void World::update(float elapsedSeconds) {
+	mBulletSystem.simulate(*this, elapsedSeconds);
+
 	mPhysicsSystem.simulate(elapsedSeconds);
 	mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
 	mLightSystem.update(elapsedSeconds, mPhysicsSystem);

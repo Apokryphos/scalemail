@@ -270,7 +270,7 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 		mData[index].position.x = position.x;
 		mData[index].position.y = position.y;
 
-		mData[index].position.z = getLayerZ(1,
+		mData[index].position.z = getLayerZ(2,
 			(position.y - mData[index].size.y * 0.5f) + mData[index].offsetZ);
 	}
 

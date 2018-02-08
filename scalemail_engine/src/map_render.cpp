@@ -45,7 +45,6 @@ void renderMap(const Map& map, const Camera& camera,
 	glBindVertexArray(mesh.vao);
 	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
 
-	glDisable(GL_DEPTH_TEST);
 	const Mesh& alphaMesh = map.mapMesh.alphaMesh;
 	glBindVertexArray(alphaMesh.vao);
 	glDrawArrays(GL_TRIANGLES, 0, alphaMesh.vertexCount);

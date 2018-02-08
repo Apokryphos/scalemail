@@ -29,6 +29,7 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
+	mPhysicsSystem.setCollisionOffset(physicsCmpnt, glm::vec2(0.0f, 4.0f));
 
 	if (name != "") {
 		mNameSystem.addComponent(entity);

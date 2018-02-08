@@ -19,6 +19,7 @@ PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 	: EntitySystem(entityManager, maxComponents) {
 	mDirection.reserve(maxComponents);
 	mPosition.reserve(maxComponents);
+	mCollisionOffset.reserve(maxComponents);
 	mRadius.reserve(maxComponents);
 	mSpeed.reserve(maxComponents);
 }
@@ -44,7 +45,8 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
-		glm::vec2 position = mPosition[index];
+		glm::vec2 position = mPosition[index] + mCollisionOffset[index];
+
 		float radius = mRadius[index];
 
 		for (int n = 0; n < lineCount; ++n) {
@@ -144,7 +146,8 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 void PhysicsSystem::createComponent() {
 	mDirection.emplace_back(0.0f);
 	mPosition.emplace_back(0.0f);
-	mRadius.emplace_back(6.0f);
+	mCollisionOffset.emplace_back(0.0f);
+	mRadius.emplace_back(4.0f);
 	mSpeed.emplace_back(64.0f);
 }
 
@@ -152,6 +155,7 @@ void PhysicsSystem::createComponent() {
 void PhysicsSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mDirection, index);
 	swapWithLastElementAndRemove(mPosition, index);
+	swapWithLastElementAndRemove(mCollisionOffset, index);
 	swapWithLastElementAndRemove(mRadius, index);
 	swapWithLastElementAndRemove(mSpeed, index);
 }
@@ -170,6 +174,12 @@ glm::vec2 PhysicsSystem::getPosition(const PhysicsComponent& cmpnt) const {
 void PhysicsSystem::initialize(AssetManager& assetManager) {
 	mLineShader = assetManager.getLineShader();
 	initLineMesh(mLineMesh, {});
+}
+
+//	============================================================================
+void PhysicsSystem::setCollisionOffset(const PhysicsComponent& cmpnt,
+								 	   const glm::vec2 offset) {
+	mCollisionOffset[cmpnt.index] = offset;
 }
 
 //	============================================================================
@@ -201,13 +211,15 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
+		glm::vec2 position = mPosition[index] + mCollisionOffset[index];
+
 		glm::vec2 velocity = mDirection[index] * mSpeed[index] * elapsedSeconds;
 
 		glm::vec2 deltaX = glm::vec2(velocity.x, 0);
 		glm::vec2 deltaY = glm::vec2(0, velocity.y);
 
 		for (auto& obstacle : mStaticObstacles) {
-			if (circleIntersectsRectangle(mPosition[index] + deltaX,
+			if (circleIntersectsRectangle(position + deltaX,
 										  mRadius[index], obstacle)) {
 				velocity.x = 0.0f;
 				break;
@@ -215,7 +227,7 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 		}
 
 		for (auto& obstacle : mStaticObstacles) {
-			if (circleIntersectsRectangle(mPosition[index] + deltaY,
+			if (circleIntersectsRectangle(position + deltaY,
 										  mRadius[index], obstacle)) {
 				velocity.y = 0.0f;
 				break;

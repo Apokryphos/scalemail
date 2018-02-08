@@ -20,6 +20,7 @@ class PhysicsSystem : public EntitySystem
 {
 	std::vector<glm::vec2> mDirection;
 	std::vector<glm::vec2> mPosition;
+	std::vector<glm::vec2> mCollisionOffset;
 	std::vector<float> mRadius;
 	std::vector<float> mSpeed;
 
@@ -40,6 +41,7 @@ public:
 	PhysicsComponent getComponent(const Entity& entity) const;
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
 	void initialize(AssetManager& assetManager);
+	void setCollisionOffset(const PhysicsComponent& cmpnt, const glm::vec2 offset);
 	void setDirection(const PhysicsComponent& cmpnt, const glm::vec2 direction);
   	void setPosition(const PhysicsComponent& cmpnt, const glm::vec2 position);
 	void setRadius(const PhysicsComponent& cmpnt, const float radius);

@@ -51,9 +51,11 @@ void renderMap(const Map& map, const Camera& camera,
 	glDrawArrays(GL_TRIANGLES, 0, alphaMesh.vertexCount);
 
 	glEnable(GL_DEPTH_TEST);
-	const Mesh& animMesh = map.mapMesh.scrollMeshes[tileFrame];
-	glBindVertexArray(animMesh.vao);
-	glDrawArrays(GL_TRIANGLES, 0, animMesh.vertexCount);
+	const Mesh& animMesh = map.mapMesh.animatedMeshes[tileFrame];
+	if (animMesh.vertexCount > 0) {
+		glBindVertexArray(animMesh.vao);
+		glDrawArrays(GL_TRIANGLES, 0, animMesh.vertexCount);
+	}
 
 	const Mesh& scrollMesh = map.mapMesh.scrollMeshes[tileFrame];
 	glUniform1f(tileShader.timeLocation, totalElapsedSeconds * 0.5f);

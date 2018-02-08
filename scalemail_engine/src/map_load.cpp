@@ -32,6 +32,7 @@ struct TileData {
 };
 
 struct TileLayerData {
+	int layerZ;
 	std::vector<TileData> tiles;
 };
 
@@ -258,7 +259,6 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 	std::vector<float> scrollFrame1VertexData;
 	std::vector<float> scrollFrame2VertexData;
 
-	int layerIndex = 0;
 	for (auto& tileLayer : mapData.tileLayers) {
 		for (auto& tile : tileLayer.tiles) {
 			glm::vec2 size = glm::vec2(16);
@@ -273,9 +273,7 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 
 			//	Subtract a small offset so that objects like torches are
 			//	not obscured by the walls they are on.
-			float z = layerIndex == 0 ?
-					  0 :
-					  getLayerZ(layerIndex, position.y + size.y - 0.1f);
+			float z = getLayerZ(tileLayer.layerZ, position.y + size.y - 0.1f);
 
 			if (!tile.animated) {
 				addTileVertexData(tile.alpha ? alphaVertexData : staticVertexData,
@@ -301,8 +299,6 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 				}
 			}
 		}
-
-		++layerIndex;
 	}
 
 	Mesh staticMesh;
@@ -587,8 +583,12 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 
 	MapData mapData;
 
+	int layerIndex = 0;
 	for (const auto& tileLayer : tmxMap.GetTileLayers()) {
 		TileLayerData tileLayerData;
+
+		tileLayerData.layerZ =
+			tileLayer.GetPropertySet().GetIntValue("LayerZ", layerIndex);
 
 		for (int tileY = 0; tileY < tileLayer.GetHeight(); ++tileY) {
 			for (int tileX = 0; tileX < tileLayer.GetWidth(); ++tileX) {
@@ -619,6 +619,8 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 		}
 
 		mapData.tileLayers.push_back(tileLayerData);
+
+		++layerIndex;
 	}
 
 	MapMesh mapMesh;

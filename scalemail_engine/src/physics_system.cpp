@@ -23,6 +23,17 @@ PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
+void PhysicsSystem::addStaticObstacle(const float x,     const float y,
+									  const float width, const float height) {
+	mStaticObstacles.emplace_back(x ,y ,width, height);
+}
+
+//	============================================================================
+void PhysicsSystem::clearStaticObstacles() {
+	mStaticObstacles.clear();
+}
+
+//	============================================================================
 void PhysicsSystem::drawDebug(const Camera& camera) {
 	glm::mat4 mvp = camera.getProjection() * camera.getView();
 
@@ -56,6 +67,67 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 			vertexData.push_back(1.0f);
 			vertexData.push_back(1.0f);
 		}
+	}
+
+	for (auto& rect : mStaticObstacles) {
+		glm::vec2 position = glm::vec2(rect.x, rect.y);
+		glm::vec2 size = glm::vec2(rect.z, rect.w);
+
+		vertexData.push_back(position.x);
+		vertexData.push_back(position.y);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+
+		vertexData.push_back(position.x + size.x);
+		vertexData.push_back(position.y);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+
+		vertexData.push_back(position.x + size.x);
+		vertexData.push_back(position.y);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+
+		vertexData.push_back(position.x + size.x);
+		vertexData.push_back(position.y + size.y);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+
+		vertexData.push_back(position.x + size.x);
+		vertexData.push_back(position.y + size.y);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+
+		vertexData.push_back(position.x);
+		vertexData.push_back(position.y + size.y);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+
+		vertexData.push_back(position.x);
+		vertexData.push_back(position.y + size.y);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+
+		vertexData.push_back(position.x);
+		vertexData.push_back(position.y);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
+		vertexData.push_back(1.0f);
 	}
 
 	updateLineMesh(mLineMesh, vertexData);

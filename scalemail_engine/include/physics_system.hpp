@@ -23,6 +23,8 @@ class PhysicsSystem : public EntitySystem
 	std::vector<float> mRadius;
 	std::vector<float> mSpeed;
 
+	std::vector<glm::vec4> mStaticObstacles;
+
 	Mesh mLineMesh;
 	LineShader mLineShader;
 
@@ -31,6 +33,9 @@ class PhysicsSystem : public EntitySystem
 
 public:
 	PhysicsSystem(EntityManager& entityManager, int maxComponents = 1000);
+	void addStaticObstacle(const float x,     const float y,
+						   const float width, const float height);
+	void clearStaticObstacles();
 	void drawDebug(const Camera& camera);
 	PhysicsComponent getComponent(const Entity& entity) const;
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;

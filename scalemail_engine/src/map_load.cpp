@@ -374,6 +374,18 @@ static void processActorObject(World& world,
 }
 
 //  ============================================================================
+static void processCollisionObject(World& world,
+							  	   const TmxMapLib::Object& object,
+							  	   const TmxMapLib::Map& tmxMap) {
+	const float x = object.GetX();
+	const float y = object.GetY();
+	const float width = object.GetWidth();
+	const float height = object.GetHeight();
+
+	world.getPhysicsSystem().addStaticObstacle(x, y, width, height);
+}
+
+//  ============================================================================
 static void processDoorObject(World& world,
 							  const TmxMapLib::Object& object,
 							  const TmxMapLib::Map& tmxMap) {
@@ -546,6 +558,10 @@ static void processObject(World& world,
 		} else {
 			processMiscObject(world, object, tmxMap);
 		}
+	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Basic) {
+		if (type == "collision") {
+			processCollisionObject(world, object, tmxMap);
+		}
 	}
 }
 
@@ -560,6 +576,8 @@ static void processObjects(const TmxMapLib::Map tmxMap, World& world) {
 
 //  ============================================================================
 std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
+	world.getPhysicsSystem().clearStaticObstacles();
+
 	TmxMapLib::Map tmxMap = TmxMapLib::Map(filename);
 
 	initializeLayers(tmxMap.GetHeight() * tmxMap.GetTileHeight());

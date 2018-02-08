@@ -4020,6 +4020,9 @@
 </data>
  </layer>
  <layer name="Walls" width="16" height="80">
+  <properties>
+   <property name="LayerZ" type="int" value="1"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,42,36,2147483685,33,114,33,37,35,41,0,0,0,
 0,0,0,0,40,0,0,0,0,0,0,0,39,0,0,0,

@@ -22,8 +22,8 @@ const float STATE3_DURATION = 3.0f;
 const float STATE4_DURATION = 15.0f;
 const float STATE5_DURATION = 1.0f;
 
-const float introCameraStartY = 0.0f;
-const float introCameraEndY = 1024.0f;
+const float introCameraStartY = 128.0f;
+const float introCameraEndY = 1152.0f;
 
 static const glm::vec4 startAmbientColor(0.14f, 0.064f, 0.04f, 1.0f);
 static const glm::vec4 endAmbientColor(0.3f, 0.38f, 0.4f, 1.0f);
@@ -46,7 +46,7 @@ void IntroGameState::activate(Game& game) {
 	world.getLightSystem().setAmbientColor(startAmbientColor);
 
 	Camera& camera = *game.camera;
-	camera.position = glm::vec2(0, introCameraStartY);
+	camera.position = glm::vec2(128.0f, introCameraStartY);
 
 	doorEntities = world.getEntitiesByName("introDoor");
 }

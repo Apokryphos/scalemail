@@ -150,6 +150,15 @@ Entity World::createProp(glm::vec2 position, int frame1TilesetId,
 }
 
 //  ============================================================================
+void World::destroyBullet(Entity entity) {
+	mSpriteSystem.removeComponent(entity);
+	mPhysicsSystem.removeComponent(entity);
+	mLightSystem.removeComponent(entity);
+
+	mEntityManager.destroyEntity(entity);
+}
+
+//  ============================================================================
 DoorSystem& World::getDoorSystem() {
 	return mDoorSystem;
 }

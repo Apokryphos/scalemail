@@ -1,5 +1,6 @@
 #include "asset_manager.hpp"
 #include "camera.hpp"
+#include "collision.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
 #include <cmath>
@@ -143,7 +144,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 void PhysicsSystem::createComponent() {
 	mDirection.emplace_back(0.0f);
 	mPosition.emplace_back(0.0f);
-	mRadius.emplace_back(8.0f);
+	mRadius.emplace_back(6.0f);
 	mSpeed.emplace_back(64.0f);
 }
 
@@ -173,7 +174,7 @@ void PhysicsSystem::initialize(AssetManager& assetManager) {
 
 //	============================================================================
 void PhysicsSystem::setDirection(const PhysicsComponent& cmpnt,
-								const glm::vec2 direction) {
+								 const glm::vec2 direction) {
 	mDirection[cmpnt.index] = direction;
 }
 
@@ -200,7 +201,28 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
-		mPosition[index] += mDirection[index] * mSpeed[index] * elapsedSeconds;
+		glm::vec2 velocity = mDirection[index] * mSpeed[index] * elapsedSeconds;
+
+		glm::vec2 deltaX = glm::vec2(velocity.x, 0);
+		glm::vec2 deltaY = glm::vec2(0, velocity.y);
+
+		for (auto& obstacle : mStaticObstacles) {
+			if (circleIntersectsRectangle(mPosition[index] + deltaX,
+										  mRadius[index], obstacle)) {
+				velocity.x = 0.0f;
+				break;
+			}
+		}
+
+		for (auto& obstacle : mStaticObstacles) {
+			if (circleIntersectsRectangle(mPosition[index] + deltaY,
+										  mRadius[index], obstacle)) {
+				velocity.y = 0.0f;
+				break;
+			}
+		}
+
+		mPosition[index] += velocity;
 	}
 }
 }

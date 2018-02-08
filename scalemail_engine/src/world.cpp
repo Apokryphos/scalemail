@@ -83,6 +83,7 @@ Entity World::createDoor(float x, float y, int openTilesetId,
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
+	mPhysicsSystem.setRadius(physicsCmpnt, 0);
 
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
@@ -142,6 +143,8 @@ Entity World::createProp(glm::vec2 position, int frame1TilesetId,
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, position + glm::vec2(8.0f, -8.0f));
+	mPhysicsSystem.setRadius(physicsCmpnt, 0);
+
 	return entity;
 }
 

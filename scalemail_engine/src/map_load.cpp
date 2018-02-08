@@ -375,8 +375,7 @@ static void processActorObject(World& world,
 
 //  ============================================================================
 static void processCollisionObject(World& world,
-							  	   const TmxMapLib::Object& object,
-							  	   const TmxMapLib::Map& tmxMap) {
+							  	   const TmxMapLib::Object& object) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 	const float width = object.GetWidth();
@@ -560,7 +559,7 @@ static void processObject(World& world,
 		}
 	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Basic) {
 		if (type == "collision") {
-			processCollisionObject(world, object, tmxMap);
+			processCollisionObject(world, object);
 		}
 	}
 }

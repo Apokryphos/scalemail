@@ -49,6 +49,7 @@ public:
 	Entity createProp(glm::vec2 position, int frame1TilesetId,
 					  int frame2TilesetId, float offsetZ);
 	void destroyBullet(Entity entity);
+	void destroyEntity(Entity entity);
 	DoorSystem& getDoorSystem();
 	std::vector<Entity> getEntitiesByName(const std::string name) const;
 	LightSystem& getLightSystem();

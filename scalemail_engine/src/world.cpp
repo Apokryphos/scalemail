@@ -159,11 +159,7 @@ void World::destroyBullet(Entity entity) {
 	glm::vec2 bulletPosition = mPhysicsSystem.getPosition(physicsCmpnt);
 
 	//	Destroy bullet entity
-	mSpriteSystem.removeComponent(entity);
-	mPhysicsSystem.removeComponent(entity);
-	mLightSystem.removeComponent(entity);
-	mBulletSystem.removeComponent(entity);
-	mEntityManager.destroyEntity(entity);
+	this->destroyEntity(entity);
 
 	//	Create bullet impact effect entity
 	Entity fxEntity = mEntityManager.createEntity();
@@ -177,6 +173,35 @@ void World::destroyBullet(Entity entity) {
 	physicsCmpnt = mPhysicsSystem.getComponent(fxEntity);
 	mPhysicsSystem.setPosition(physicsCmpnt, bulletPosition);
 	mPhysicsSystem.setRadius(physicsCmpnt, 0);
+}
+
+//  ============================================================================
+void World::destroyEntity(Entity entity) {
+	if (mBulletSystem.hasComponent(entity)) {
+		mBulletSystem.removeComponent(entity);
+	}
+
+	if (mDoorSystem.hasComponent(entity)) {
+		mDoorSystem.removeComponent(entity);
+	}
+
+	if (mLightSystem.hasComponent(entity)) {
+		mLightSystem.removeComponent(entity);
+	}
+
+	if (mNameSystem.hasComponent(entity)) {
+		mNameSystem.removeComponent(entity);
+	}
+
+	if (mPhysicsSystem.hasComponent(entity)) {
+		mPhysicsSystem.removeComponent(entity);
+	}
+
+	if (mSpriteSystem.hasComponent(entity)) {
+		mSpriteSystem.removeComponent(entity);
+	}
+
+	mEntityManager.destroyEntity(entity);
 }
 
 //  ============================================================================

@@ -207,6 +207,10 @@ void World::destroyEntity(Entity entity) {
 		mSpriteSystem.removeComponent(entity);
 	}
 
+	if (mExpireSystem.hasComponent(entity)) {
+		mExpireSystem.removeComponent(entity);
+	}
+
 	mEntityManager.destroyEntity(entity);
 }
 

@@ -174,6 +174,10 @@ void World::destroyBullet(Entity entity) {
 	physicsCmpnt = mPhysicsSystem.getComponent(fxEntity);
 	mPhysicsSystem.setPosition(physicsCmpnt, bulletPosition);
 	mPhysicsSystem.setRadius(physicsCmpnt, 0);
+
+	mExpireSystem.addComponent(fxEntity);
+	ExpireComponent expireCmpnt = mExpireSystem.getComponent(fxEntity);
+	mExpireSystem.setDuration(expireCmpnt, 0.89f);
 }
 
 //  ============================================================================

@@ -14,6 +14,10 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 	mPlayers.emplace_back("player2");
 	mPlayers.emplace_back("player3");
 	mPlayers.emplace_back("player4");
+
+	mPhysicsSystem.addStaticCollisionCallback(
+		std::bind(&BulletSystem::onStaticCollision, &mBulletSystem,
+				  std::placeholders::_1));
 }
 
 //  ============================================================================
@@ -31,6 +35,7 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
 	mPhysicsSystem.setCollisionOffset(physicsCmpnt, glm::vec2(0.0f, 4.0f));
+	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
 
 	if (name != "") {
 		mNameSystem.addComponent(entity);
@@ -60,6 +65,7 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 	mPhysicsSystem.setPosition(physicsCmpnt, position);
 	mPhysicsSystem.setDirection(physicsCmpnt, direction);
 	mPhysicsSystem.setSpeed(physicsCmpnt, speed);
+	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::BULLET);
 
 	const glm::vec4 lightColor(0.60f, 0.85f, 0.10f, 1.0f);
 	const float lightSize = 16;

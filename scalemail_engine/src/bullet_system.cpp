@@ -37,6 +37,15 @@ float BulletSystem::getLife(const BulletComponent& cmpnt) const {
 }
 
 //	============================================================================
+void BulletSystem::onStaticCollision(StaticCollision collision) {
+	if (collision.sourceGroup == CollisionGroup::BULLET &&
+		this->hasComponent(collision.sourceEntity)) {
+		BulletComponent cmpnt = this->getComponent(collision.sourceEntity);
+		mLife[cmpnt.index] = 0;
+	}
+}
+
+//	============================================================================
 void BulletSystem::setLife(const BulletComponent& cmpnt, float life) {
 	mLife[cmpnt.index] = life;
 }

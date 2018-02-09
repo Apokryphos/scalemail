@@ -4,6 +4,7 @@
 #include "physics_system.hpp"
 #include "vector_util.hpp"
 #include <cmath>
+#include <functional>
 
 static const float TWO_PI = 6.28318530718f;
 
@@ -17,11 +18,18 @@ static PhysicsComponent makeComponent(const int index) {
 //	============================================================================
 PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 	: EntitySystem(entityManager, maxComponents) {
+	mGroup.reserve(maxComponents);
 	mDirection.reserve(maxComponents);
 	mPosition.reserve(maxComponents);
 	mCollisionOffset.reserve(maxComponents);
 	mRadius.reserve(maxComponents);
 	mSpeed.reserve(maxComponents);
+}
+
+//	============================================================================
+void PhysicsSystem::addStaticCollisionCallback(
+	std::function<void(StaticCollision)> callback) {
+	mStaticCollisionCallbacks.push_back(callback);
 }
 
 //	============================================================================
@@ -144,6 +152,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 
 //	============================================================================
 void PhysicsSystem::createComponent() {
+	mGroup.emplace_back(CollisionGroup::NONE);
 	mDirection.emplace_back(0.0f);
 	mPosition.emplace_back(0.0f);
 	mCollisionOffset.emplace_back(0.0f);
@@ -153,6 +162,7 @@ void PhysicsSystem::createComponent() {
 
 //	============================================================================
 void PhysicsSystem::destroyComponent(int index) {
+	swapWithLastElementAndRemove(mGroup, index);
 	swapWithLastElementAndRemove(mDirection, index);
 	swapWithLastElementAndRemove(mPosition, index);
 	swapWithLastElementAndRemove(mCollisionOffset, index);
@@ -174,6 +184,12 @@ glm::vec2 PhysicsSystem::getPosition(const PhysicsComponent& cmpnt) const {
 void PhysicsSystem::initialize(AssetManager& assetManager) {
 	mLineShader = assetManager.getLineShader();
 	initLineMesh(mLineMesh, {});
+}
+
+//	============================================================================
+void PhysicsSystem::setCollisionGroup(const PhysicsComponent& cmpnt,
+								 	   const CollisionGroup group) {
+	mGroup[cmpnt.index] = group;
 }
 
 //	============================================================================
@@ -208,6 +224,8 @@ void PhysicsSystem::setSpeed(const PhysicsComponent& cmpnt,
 
 //	============================================================================
 void PhysicsSystem::simulate(float elapsedSeconds) {
+	std::vector<StaticCollision> staticCollisions;
+
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
@@ -218,10 +236,13 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 		glm::vec2 deltaX = glm::vec2(velocity.x, 0);
 		glm::vec2 deltaY = glm::vec2(0, velocity.y);
 
+		bool collision = false;
+
 		for (auto& obstacle : mStaticObstacles) {
 			if (circleIntersectsRectangle(position + deltaX,
 										  mRadius[index], obstacle)) {
 				velocity.x = 0.0f;
+				collision = true;
 				break;
 			}
 		}
@@ -230,11 +251,25 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 			if (circleIntersectsRectangle(position + deltaY,
 										  mRadius[index], obstacle)) {
 				velocity.y = 0.0f;
+				collision = true;
 				break;
 			}
 		}
 
+		if (collision) {
+			StaticCollision staticCollision = {};
+			staticCollision.sourceEntity = p.second;
+			staticCollision.sourceGroup = mGroup[index];
+			staticCollisions.push_back(staticCollision);
+		}
+
 		mPosition[index] += velocity;
+	}
+
+	for (auto& collision : staticCollisions) {
+		for (auto& callback : mStaticCollisionCallbacks) {
+			callback(collision);
+		}
 	}
 }
 }

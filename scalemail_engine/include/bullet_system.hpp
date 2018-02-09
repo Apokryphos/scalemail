@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity_system.hpp"
+#include "static_collision.hpp"
 #include <glm/vec2.hpp>
 #include <vector>
 
@@ -24,6 +25,7 @@ public:
 	BulletSystem(EntityManager& entityManager, int maxComponents = 1000);
 	BulletComponent getComponent(const Entity& entity) const;
 	float getLife(const BulletComponent& cmpnt) const;
+	void onStaticCollision(StaticCollision collision);
 	void setLife(const BulletComponent& cmpnt, const float life);
 	void simulate(World& world, float elapsedSeconds);
 };

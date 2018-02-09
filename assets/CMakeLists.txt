@@ -8,6 +8,8 @@ configure_file(maps/actors.tsx ${OUTPUT_DIR}/maps/actors.tsx COPYONLY)
 configure_file(maps/map1.tmx ${OUTPUT_DIR}/maps/map1.tmx COPYONLY)
 configure_file(maps/world.tsx ${OUTPUT_DIR}/maps/world.tsx COPYONLY)
 
+configure_file(shaders/color.frag ${OUTPUT_DIR}/shaders/color.frag COPYONLY)
+configure_file(shaders/color.vert ${OUTPUT_DIR}/shaders/color.vert COPYONLY)
 configure_file(shaders/fade.frag ${OUTPUT_DIR}/shaders/fade.frag COPYONLY)
 configure_file(shaders/fade.vert ${OUTPUT_DIR}/shaders/fade.vert COPYONLY)
 configure_file(shaders/flat.frag ${OUTPUT_DIR}/shaders/flat.frag COPYONLY)

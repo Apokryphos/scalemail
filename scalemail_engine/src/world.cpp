@@ -169,6 +169,7 @@ void World::destroyBullet(Entity entity) {
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(fxEntity);
 	mSpriteSystem.setTileset(spriteCmpnt, "fx");
 	mSpriteSystem.setTilesetId(spriteCmpnt, { 40, 41, 42 });
+	mSpriteSystem.setAnimationDuration(spriteCmpnt, 0.3f);
 
 	mPhysicsSystem.addComponent(fxEntity);
 	physicsCmpnt = mPhysicsSystem.getComponent(fxEntity);
@@ -177,7 +178,7 @@ void World::destroyBullet(Entity entity) {
 
 	mExpireSystem.addComponent(fxEntity);
 	ExpireComponent expireCmpnt = mExpireSystem.getComponent(fxEntity);
-	mExpireSystem.setDuration(expireCmpnt, 0.89f);
+	mExpireSystem.setDuration(expireCmpnt, 0.3f);
 }
 
 //  ============================================================================

@@ -90,6 +90,8 @@ public:
 	void setActorIndex(const SpriteComponent& cmpnt, const int actorIndex);
 	void setAlpha(const SpriteComponent& cmpnt, const bool alpha);
 	void setFacing(const SpriteComponent& cmpnt, const Direction facing);
+	void setAnimationDuration(const SpriteComponent& cmpnt,
+							  const float duration);
 	void setOffsetZ(const SpriteComponent& cmpnt, float offsetZ);
 	void setTilesetId(const SpriteComponent& cmpnt,
 					  std::vector<int> frameTilesetIds);

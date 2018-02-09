@@ -191,6 +191,18 @@ void SpriteSystem::setAlpha(const SpriteComponent& cmpnt, const bool alpha) {
 }
 
 //	============================================================================
+void SpriteSystem::setAnimationDuration(const SpriteComponent& cmpnt,
+										const float duration) {
+	SpriteComponentData& data = mData[cmpnt.index];
+
+	float frameDuration = duration / data.animation.frameCount;
+
+	for (auto& frame : data.animation.frames) {
+		frame.duration = frameDuration;
+	}
+}
+
+//	============================================================================
 void SpriteSystem::setFacing(const SpriteComponent& cmpnt,
 							 const Direction facing) {
 	mData[cmpnt.index].facing = facing;
@@ -293,7 +305,6 @@ void SpriteSystem::updateAnimationTileset(const SpriteComponent& cmpnt,
 	}
 
 	const int direction = static_cast<int>(mData[cmpnt.index].facing);
-
 
 	mData[cmpnt.index].tilesetId =
 		animation.frames[animation.frameIndex].tilesetIds[direction];

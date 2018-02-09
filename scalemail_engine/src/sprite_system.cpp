@@ -45,7 +45,7 @@ void SpriteSystem::createComponent() {
 	data.color = glm::vec4(1.0f);
 	data.alpha = true;
 	data.tilesetName = "";
-	setSpriteAnimation(data.animation, 0, 0);
+	setSpriteAnimation(data.animation, { 0 });
 
 	mData.emplace_back(data);
 
@@ -243,18 +243,11 @@ void SpriteSystem::setTileset(
 
 //	============================================================================
 void SpriteSystem::setTilesetId(const SpriteComponent& cmpnt,
-								const int tilesetId) {
-	this->setTilesetId(cmpnt, tilesetId, tilesetId);
-}
-
-//	============================================================================
-void SpriteSystem::setTilesetId(const SpriteComponent& cmpnt,
-								const int frame1TilesetId,
-								const int frame2TilesetId) {
-	mData[cmpnt.index].tilesetId = frame1TilesetId;
+								std::vector<int> frameTilesetIds) {
+	assert(frameTilesetIds.size() > 0);
+	mData[cmpnt.index].tilesetId = frameTilesetIds[0];
 	this->calculateTextureCoords(cmpnt.index);
-	setSpriteAnimation(mData[cmpnt.index].animation, frame1TilesetId,
-					   frame2TilesetId);
+	setSpriteAnimation(mData[cmpnt.index].animation, frameTilesetIds);
 }
 
 //	============================================================================
@@ -295,7 +288,7 @@ void SpriteSystem::updateAnimationTileset(const SpriteComponent& cmpnt,
 
 	animation.frameIndex = frameIndex;
 
-	if (animation.frameIndex > 1) {
+	if (animation.frameIndex >= animation.frameCount) {
 		animation.frameIndex = 0;
 	}
 

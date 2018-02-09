@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace ScaleMail
 {
 struct SpriteFrame {
@@ -8,8 +10,9 @@ struct SpriteFrame {
 };
 
 struct SpriteAnimation {
+	int frameCount;
 	int frameIndex;
 	float ticks;
-	SpriteFrame frames[2];
+	std::vector<SpriteFrame> frames;
 };
 }

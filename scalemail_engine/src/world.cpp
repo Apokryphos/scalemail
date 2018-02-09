@@ -52,7 +52,7 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 	mSpriteSystem.setDirection(spriteCmpnt, direction);
 	mSpriteSystem.setSize(spriteCmpnt, glm::vec2(12.0f, 12.0f));
 	mSpriteSystem.setTileset(spriteCmpnt, "fx");
-	mSpriteSystem.setTilesetId(spriteCmpnt, tilesetId);
+	mSpriteSystem.setTilesetId(spriteCmpnt, { tilesetId });
 
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
@@ -91,7 +91,8 @@ Entity World::createDoor(float x, float y, int openTilesetId,
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
 	mSpriteSystem.setTileset(spriteCmpnt, "world");
-	mSpriteSystem.setTilesetId(spriteCmpnt, open ? openTilesetId : closedTilesetId);
+	mSpriteSystem.setTilesetId(spriteCmpnt,
+							   { open ? openTilesetId : closedTilesetId });
 
 	mDoorSystem.addComponent(entity);
 	DoorComponent doorCmpnt = mDoorSystem.getComponent(entity);
@@ -141,7 +142,8 @@ Entity World::createProp(glm::vec2 position, int frame1TilesetId,
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
 	mSpriteSystem.setOffsetZ(spriteCmpnt, offsetZ);
 	mSpriteSystem.setTileset(spriteCmpnt, "world");
-	mSpriteSystem.setTilesetId(spriteCmpnt, frame1TilesetId, frame2TilesetId);
+	mSpriteSystem.setTilesetId(spriteCmpnt,
+							   { frame1TilesetId, frame2TilesetId });
 
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
@@ -153,12 +155,28 @@ Entity World::createProp(glm::vec2 position, int frame1TilesetId,
 
 //  ============================================================================
 void World::destroyBullet(Entity entity) {
+	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
+	glm::vec2 bulletPosition = mPhysicsSystem.getPosition(physicsCmpnt);
+
+	//	Destroy bullet entity
 	mSpriteSystem.removeComponent(entity);
 	mPhysicsSystem.removeComponent(entity);
 	mLightSystem.removeComponent(entity);
 	mBulletSystem.removeComponent(entity);
-
 	mEntityManager.destroyEntity(entity);
+
+	//	Create bullet impact effect entity
+	Entity fxEntity = mEntityManager.createEntity();
+
+	mSpriteSystem.addComponent(fxEntity);
+	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(fxEntity);
+	mSpriteSystem.setTileset(spriteCmpnt, "fx");
+	mSpriteSystem.setTilesetId(spriteCmpnt, { 40, 41, 42 });
+
+	mPhysicsSystem.addComponent(fxEntity);
+	physicsCmpnt = mPhysicsSystem.getComponent(fxEntity);
+	mPhysicsSystem.setPosition(physicsCmpnt, bulletPosition);
+	mPhysicsSystem.setRadius(physicsCmpnt, 0);
 }
 
 //  ============================================================================

@@ -4,6 +4,7 @@
 #include "sprite_animation.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
+#include <vector>
 
 namespace ScaleMail
 {
@@ -23,6 +24,6 @@ struct Sprite {
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
 void initializeSprites(AssetManager& assetManager);
 void renderSprites(SpriteSystem& spriteSystem, Camera& camera);
-void setSpriteAnimation(SpriteAnimation& animation, int frame1TilesetId,
-	int frame2TilesetId);
+void setSpriteAnimation(SpriteAnimation& animation,
+						std::vector<int> frameTilesetIds);
 }

@@ -79,7 +79,7 @@ void DoorSystem::setChildTilesetId(const DoorComponent& cmpnt,
 
 	SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(data.childEntity);
 	mSpriteSystem->setTileset(spriteCmpnt, "world");
-	mSpriteSystem->setTilesetId(spriteCmpnt, tilesetId);
+	mSpriteSystem->setTilesetId(spriteCmpnt, { tilesetId });
 
 	Entity entity = getEntityByComponentIndex(cmpnt.index);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
@@ -105,14 +105,14 @@ void DoorSystem::setOpen(const DoorComponent& cmpnt, const bool open) {
 		data.openTilesetId : data.closedTilesetId;
 
 	SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
-	mSpriteSystem->setTilesetId(spriteCmpnt, tilesetId);
+	mSpriteSystem->setTilesetId(spriteCmpnt, { tilesetId });
 
 	if (data.childSprite) {
 		int childTilesetId = data.open ?
 			data.childOpenTilesetId : data.childClosedTilesetId;
 
 		SpriteComponent childSpriteCmpnt = mSpriteSystem->getComponent(data.childEntity);
-		mSpriteSystem->setTilesetId(childSpriteCmpnt, childTilesetId);
+		mSpriteSystem->setTilesetId(childSpriteCmpnt, { childTilesetId });
 	}
 }
 

@@ -27,11 +27,16 @@ void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim) {
 	const int north = static_cast<int>(Direction::NORTH);
 	const int west = static_cast<int>(Direction::WEST);
 
+	anim.frameCount = 2;
+	anim.frames.resize(2);
+
+	anim.frames[0].duration  = 0.3f;
 	anim.frames[0].tilesetIds[east]  = spriteIndex;
 	anim.frames[0].tilesetIds[south] = spriteIndex + 1;
 	anim.frames[0].tilesetIds[north] = spriteIndex + 2;
 	anim.frames[0].tilesetIds[west]  = spriteIndex + 3;
 
+	anim.frames[1].duration  = 0.3f;
 	anim.frames[1].tilesetIds[east]  = spriteIndex + SPRITES_PER_ROW;
 	anim.frames[1].tilesetIds[south] = spriteIndex + 1 + SPRITES_PER_ROW;
 	anim.frames[1].tilesetIds[north] = spriteIndex + 2 + SPRITES_PER_ROW;
@@ -39,27 +44,30 @@ void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim) {
 }
 
 //  ============================================================================
-void setSpriteAnimation(SpriteAnimation& animation, int frame1TilesetId,
-						int frame2TilesetId) {
+void setSpriteAnimation(SpriteAnimation& animation,
+						std::vector<int> frameTilesetIds) {
 	const int east = static_cast<int>(Direction::EAST);
 	const int north = static_cast<int>(Direction::NORTH);
 	const int west = static_cast<int>(Direction::WEST);
 	const int south = static_cast<int>(Direction::SOUTH);
 
+	animation.frameCount = frameTilesetIds.size();
 	animation.frameIndex = 0;
 	animation.ticks = 0;
-	animation.frames[0].duration  = 0.3f;
-	animation.frames[1].duration  = 0.3f;
 
-	animation.frames[0].tilesetIds[east]  = frame1TilesetId;
-	animation.frames[0].tilesetIds[north] = frame1TilesetId;
-	animation.frames[0].tilesetIds[west]  = frame1TilesetId;
-	animation.frames[0].tilesetIds[south] = frame1TilesetId;
+	animation.frames.resize(frameTilesetIds.size());
 
-	animation.frames[1].tilesetIds[east]  = frame1TilesetId;
-	animation.frames[1].tilesetIds[north] = frame2TilesetId;
-	animation.frames[1].tilesetIds[west]  = frame2TilesetId;
-	animation.frames[1].tilesetIds[south] = frame2TilesetId;
+	int f = 0;
+	for (auto frameTilesetId : frameTilesetIds) {
+		animation.frames[f].duration  = 0.3f;
+
+		animation.frames[f].tilesetIds[east]  = frameTilesetId;
+		animation.frames[f].tilesetIds[north] = frameTilesetId;
+		animation.frames[f].tilesetIds[west]  = frameTilesetId;
+		animation.frames[f].tilesetIds[south] = frameTilesetId;
+
+		++f;
+	}
 }
 
 //  ============================================================================

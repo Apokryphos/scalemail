@@ -18,6 +18,7 @@ class AssetManager
 {
 	Mesh mQuadMesh;
 
+	QuadShader mColorQuadShader;
 	FadeShader mFadeShader;
 	QuadShader mQuadShader;
 	LineShader mLineShader;
@@ -28,6 +29,7 @@ class AssetManager
 	std::map<int, Texture> mTexturesById;
 
 public:
+	QuadShader getColorQuadShader();
 	FadeShader getFadeShader();
 	Mesh getQuadMesh();
 	QuadShader getQuadShader();

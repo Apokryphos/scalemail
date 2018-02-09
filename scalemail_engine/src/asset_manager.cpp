@@ -10,6 +10,11 @@ static std::string getTexturePath(std::string textureName) {
 }
 
 //  ============================================================================
+QuadShader AssetManager::getColorQuadShader() {
+	return mColorQuadShader;
+}
+
+//  ============================================================================
 FadeShader AssetManager::getFadeShader() {
 	return mFadeShader;
 }
@@ -71,6 +76,10 @@ void AssetManager::initialize() {
 	initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag",
 					  mQuadShader.id);
 	mQuadShader.mvpLocation = glGetUniformLocation(mQuadShader.id, "MVP");
+
+	initShaderProgram("assets/shaders/color.vert", "assets/shaders/color.frag",
+					  mColorQuadShader.id);
+	mColorQuadShader.mvpLocation = glGetUniformLocation(mColorQuadShader.id, "MVP");
 
 	initShaderProgram("assets/shaders/line.vert", "assets/shaders/line.frag",
 					  mLineShader.id);

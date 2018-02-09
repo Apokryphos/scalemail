@@ -1,17 +1,23 @@
 #include "camera.hpp"
-#include "ease.hpp"
+#include "mesh.hpp"
 #include "world.hpp"
 #include <glm/vec4.hpp>
 #include <vector>
 
 namespace ScaleMail
 {
-static const float transitionDuration = 3.5f;
-static float transitionTicks = 0;
-
-static glm::vec4 currentAmbientLightColor;
-static glm::vec4 lastAmbientLightColor = glm::vec4(1.0f);
-static glm::vec4 targetAmbientLightColor = glm::vec4(1.0f);
+static const struct
+{
+	float x, y;
+	float r, g, b, a;
+} quadVertices[6] = {
+	{  1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f },
+	{  1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f },
+	{ -1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f },
+	{  1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f },
+	{ -1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f },
+	{ -1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f }
+};
 
 struct AmbientLight
 {
@@ -19,7 +25,111 @@ struct AmbientLight
 	glm::vec4 rect;
 };
 
+static const unsigned int LIGHT_MESH_ELEMENT_COUNT = 6;
+
+static Mesh ambientLightMesh;
+static std::vector<float> ambientLightVertexData;
+
 static std::vector<AmbientLight> ambientLights;
+
+//  ============================================================================
+static bool initializeMesh(Mesh& mesh) {
+	glGenVertexArrays(1, &mesh.vao);
+	glGenBuffers(1, &mesh.vbo);
+
+	mesh.vertexCount = 0;
+
+	glBindVertexArray(mesh.vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+						  sizeof(float) * LIGHT_MESH_ELEMENT_COUNT, (void*) 0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
+						  sizeof(float) * LIGHT_MESH_ELEMENT_COUNT,
+						  (void*) (sizeof(float) * 2));
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
+//  ============================================================================
+static bool updateMesh(Mesh& mesh, const std::vector<float>& vertexData) {
+	assert(vertexData.size() > 0);
+
+	mesh.vertexCount = vertexData.size() / LIGHT_MESH_ELEMENT_COUNT;
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+
+	if (vertexData.size() > mesh.vertexCount) {
+		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float),
+					 &vertexData[0], GL_STATIC_DRAW);
+	} else {
+		glBufferSubData(
+			GL_ARRAY_BUFFER,
+			0,
+			vertexData.size() * sizeof(float),
+			&vertexData[0]);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
+//  ============================================================================
+static void addQuadVertexData(const glm::vec4 rect, const glm::vec4 color,
+							  std::vector<float>& vertexData) {
+	glm::vec2 position = glm::vec2(rect.x, rect.y);
+	glm::vec2 size = glm::vec2(rect.z, rect.w);
+
+	vertexData.push_back(position.x);
+	vertexData.push_back(position.y);
+	vertexData.push_back(color.r);
+	vertexData.push_back(color.g);
+	vertexData.push_back(color.b);
+	vertexData.push_back(color.a);
+
+	vertexData.push_back(position.x);
+	vertexData.push_back(position.y + size.y);
+	vertexData.push_back(color.r);
+	vertexData.push_back(color.g);
+	vertexData.push_back(color.b);
+	vertexData.push_back(color.a);
+
+	vertexData.push_back(position.x + size.x);
+	vertexData.push_back(position.y + size.y);
+	vertexData.push_back(color.r);
+	vertexData.push_back(color.g);
+	vertexData.push_back(color.b);
+	vertexData.push_back(color.a);
+
+	vertexData.push_back(position.x);
+	vertexData.push_back(position.y);
+	vertexData.push_back(color.r);
+	vertexData.push_back(color.g);
+	vertexData.push_back(color.b);
+	vertexData.push_back(color.a);
+
+	vertexData.push_back(position.x + size.x);
+	vertexData.push_back(position.y + size.y);
+	vertexData.push_back(color.r);
+	vertexData.push_back(color.g);
+	vertexData.push_back(color.b);
+	vertexData.push_back(color.a);
+
+	vertexData.push_back(position.x + size.x);
+	vertexData.push_back(position.y);
+	vertexData.push_back(color.r);
+	vertexData.push_back(color.g);
+	vertexData.push_back(color.b);
+	vertexData.push_back(color.a);
+}
 
 //  ============================================================================
 void addAmbientLight(glm::vec4 color, glm::vec4 rect) {
@@ -27,65 +137,22 @@ void addAmbientLight(glm::vec4 color, glm::vec4 rect) {
 }
 
 //  ============================================================================
-static bool rectContains(const glm::vec4 rect, const glm::vec2 point) {
-	return
-		point.x >= rect.x &&
-		point.y >= rect.y &&
-		point.x <= rect.x + rect.z &&
-		point.y <= rect.y + rect.w;
+void initializeAmbientLights() {
+	initializeMesh(ambientLightMesh);
 }
 
 //  ============================================================================
-static AmbientLight* getAmbientLight(const Camera& camera) {
-	auto find = std::find_if(ambientLights.begin(), ambientLights.end(),
-		[&camera](const AmbientLight& light) -> bool {
-			return rectContains(light.rect, camera.position);
-		});
-
-	if (find != ambientLights.end()) {
-		return &(*find);
+void buildAmbientLights() {
+	ambientLightVertexData.clear();
+	for (const auto& light : ambientLights) {
+		addQuadVertexData(light.rect, light.color, ambientLightVertexData);
 	}
-
-	return nullptr;
+	updateMesh(ambientLightMesh, ambientLightVertexData);
 }
 
 //  ============================================================================
-void initializeAmbientLight(World& world, Camera& camera) {
-	const AmbientLight* light = getAmbientLight(camera);
-
-	if (light != nullptr) {
-		lastAmbientLightColor = light->color;
-		targetAmbientLightColor = light->color;
-		world.getLightSystem().setAmbientColor(light->color);
-	}
-}
-
-//  ============================================================================
-void updateAmbientLight(World& world, Camera& camera, float elapsedSeconds) {
-	transitionTicks += elapsedSeconds;
-	if (transitionTicks > transitionDuration) {
-		transitionTicks = transitionDuration;
-	}
-
-	const AmbientLight* light = getAmbientLight(camera);
-
-	if (light != nullptr) {
-		if (targetAmbientLightColor != light->color) {
-			lastAmbientLightColor = targetAmbientLightColor;
-			targetAmbientLightColor = light->color;
-			transitionTicks = 0;
-		}
-	}
-
-	if (targetAmbientLightColor != lastAmbientLightColor) {
-		currentAmbientLightColor =
-			easeVec4(transitionTicks, lastAmbientLightColor,
-					targetAmbientLightColor, transitionDuration, easeInOutCubic);
-	}
-	else {
-		currentAmbientLightColor = targetAmbientLightColor;
-	}
-
-	world.getLightSystem().setAmbientColor(currentAmbientLightColor);
+void drawAmbientLights() {
+	glBindVertexArray(ambientLightMesh.vao);
+	glDrawArrays(GL_TRIANGLES, 0, ambientLightMesh.vertexCount);
 }
 }

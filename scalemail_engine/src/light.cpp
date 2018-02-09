@@ -1,3 +1,4 @@
+#include "ambient_light.hpp"
 #include "asset_manager.hpp"
 #include "blend.hpp"
 #include "camera.hpp"
@@ -31,6 +32,7 @@ static SpriteBatch glowSpriteBatch;
 
 static Mesh quadMesh;
 static QuadShader quadShader;
+static QuadShader colorQuadShader;
 
 //  ============================================================================
 static void createFramebuffer(GLuint& fbo, int size, GLuint& fboTexture) {
@@ -55,6 +57,7 @@ static void destroyFramebuffer(GLuint& fbo, GLuint& fboTexture) {
 //  ============================================================================
 void initializeLight(AssetManager& assetManager) {
 	quadShader = assetManager.getQuadShader();
+	colorQuadShader = assetManager.getColorQuadShader();
 
 	quadMesh = assetManager.getQuadMesh();
 
@@ -85,8 +88,6 @@ int getMinFramebufferSize(GLFWwindow* window) {
 //  ============================================================================
 void renderLight(GameWindow& gameWindow, Camera& camera,
 				 LightSystem& lightSystem) {
-	const glm::vec4 ambientColor = lightSystem.getAmbientColor();
-
 	const int minFrameBufferSize = getMinFramebufferSize(gameWindow.window);
 	if (fboSize != minFrameBufferSize) {
 		fboSize = minFrameBufferSize;
@@ -126,14 +127,20 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 	glowSpriteBatch.render(lightMvp);
 	glowSpriteBatch.end();
 
+	//	Draw ambient light color quads to FBO B
+	blendNone();
+	glBindFramebuffer(GL_FRAMEBUFFER, fboB);
+	glViewport(0, 0, fboSize, fboSize);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(colorQuadShader.id);
+	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &lightMvp[0][0]);
+	drawAmbientLights();
+
 	//  Draw lights to FBO B
 	lightSpriteBatch.begin();
 	lightSystem.buildVertexData(lightSpriteBatch);
 	blendAdditive();
-	glBindFramebuffer(GL_FRAMEBUFFER, fboB);
-	glViewport(0, 0, fboSize, fboSize);
-	glClearColor(ambientColor.r, ambientColor.g, ambientColor.b, 1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	lightSpriteBatch.render(lightMvp);
 	lightSpriteBatch.end();
 

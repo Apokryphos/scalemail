@@ -107,15 +107,17 @@ int startEngine() {
 	initializeLight(assetManager);
 	initializeSprites(assetManager);
 	initializeMapMesh(assetManager);
+	initializeAmbientLights();
 
 	//  Load map after all other initialize functions
 	World world;
 	world.initialize(&assetManager);
 
 	world.loadMap("map1");
-	Camera camera(screenWidth, screenHeight, cameraZoom);
 
-	initializeAmbientLight(world, camera);
+	buildAmbientLights();
+
+	Camera camera(screenWidth, screenHeight, cameraZoom);
 
 	Game game = {};
 	game.camera = &camera;
@@ -164,8 +166,6 @@ int startEngine() {
 			gameState->update(game, timeStep);
 			world.update(timeStep);
 		}
-
-		updateAmbientLight(world, camera, elapsedSeconds);
 
 		if (updated) {
 			render(game, world, camera, *gameState, totalElapsedSeconds);

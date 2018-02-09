@@ -68,11 +68,6 @@ void LightSystem::destroyComponent(int index) {
 }
 
 //	============================================================================
-glm::vec4 LightSystem::getAmbientColor() const {
-	return mAmbientColor;
-}
-
-//	============================================================================
 LightComponent LightSystem::getComponent(const Entity& entity) const {
 	return makeComponent(mComponentIndicesByEntity.at(entity));
 }
@@ -80,11 +75,6 @@ LightComponent LightSystem::getComponent(const Entity& entity) const {
 //	============================================================================
 void LightSystem::initialize(AssetManager& assetManager) {
 	mLightTexture = assetManager.loadTexture("light");
-}
-
-//	============================================================================
-void LightSystem::setAmbientColor(const glm::vec4 ambientColor) {
-	mAmbientColor = ambientColor;
 }
 
 //	============================================================================

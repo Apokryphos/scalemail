@@ -20,7 +20,6 @@ struct LightComponent {
 class LightSystem : public EntitySystem
 {
 	Texture mLightTexture;
-	glm::vec4 mAmbientColor;
 
 	std::vector<glm::vec2> mOffset;
 	std::vector<glm::vec3> mPosition;

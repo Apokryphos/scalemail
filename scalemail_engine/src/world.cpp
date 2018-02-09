@@ -179,6 +179,15 @@ void World::destroyBullet(Entity entity) {
 	mExpireSystem.addComponent(fxEntity);
 	ExpireComponent expireCmpnt = mExpireSystem.getComponent(fxEntity);
 	mExpireSystem.setDuration(expireCmpnt, 0.3f);
+
+	const glm::vec4 lightColor(0.60f, 0.85f, 0.10f, 1.0f);
+
+	mLightSystem.addComponent(fxEntity);
+	LightComponent lightCmpnt = mLightSystem.getComponent(fxEntity);
+	mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
+	mLightSystem.setColor(lightCmpnt, lightColor);
+	mLightSystem.setGlowSize(lightCmpnt, 0);
+	mLightSystem.setSize(lightCmpnt, 48);
 }
 
 //  ============================================================================

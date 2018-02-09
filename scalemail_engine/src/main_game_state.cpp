@@ -3,7 +3,6 @@
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "main_game_state.hpp"
-#include "light_system.hpp"
 #include "physics_system.hpp"
 #include "world.hpp"
 #include <iostream>
@@ -13,7 +12,6 @@
 
 namespace ScaleMail
 {
-static const glm::vec4 ambientColor(0.3f, 0.38f, 0.4f, 1.0f);
 
 //	============================================================================
 static void updateCameraPosition(Game& game) {
@@ -44,9 +42,6 @@ MainGameState::MainGameState(GameStateManager& gameStateManager) :
 
 //	============================================================================
 void MainGameState::activate(Game& game) {
-	World& world = *game.world;
-	world.getLightSystem().setAmbientColor(ambientColor);
-
 	updateCameraPosition(game);
 }
 

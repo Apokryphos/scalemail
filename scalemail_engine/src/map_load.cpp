@@ -1,3 +1,4 @@
+#include "ambient_light.hpp"
 #include "direction_util.hpp"
 #include "gl_headers.hpp"
 #include "layer.hpp"
@@ -370,6 +371,19 @@ static void processActorObject(World& world,
 }
 
 //  ============================================================================
+static void processAmbientLightObject(const TmxMapLib::Object& object) {
+	const float x = object.GetX();
+	const float y = object.GetY();
+	const float width = object.GetWidth();
+	const float height = object.GetHeight();
+
+	glm::vec4 color =
+		hexToVec4(object.GetPropertySet().GetValue("Color", "#FFFFFF"));
+
+	addAmbientLight(color, glm::vec4(x, y, width, height));
+}
+
+//  ============================================================================
 static void processCollisionObject(World& world,
 							  	   const TmxMapLib::Object& object) {
 	const float x = object.GetX();
@@ -556,6 +570,8 @@ static void processObject(World& world,
 	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Basic) {
 		if (type == "collision") {
 			processCollisionObject(world, object);
+		} else if (type == "ambientlight") {
+			processAmbientLightObject(object);
 		}
 	}
 }

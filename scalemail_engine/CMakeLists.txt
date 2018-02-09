@@ -5,6 +5,7 @@ project(scalemail_engine)
 set(CMAKE_BUILD_TYPE Debug)
 
 set(SCALEMAIL_ENGINE_INCLUDE
+    include/ambient_light.hpp
     include/asset_manager.hpp
     include/blend.hpp
     include/bullet_system.hpp
@@ -59,6 +60,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
+    src/ambient_light.cpp
     src/asset_manager.cpp
     src/blend.cpp
     src/bullet_system.cpp

@@ -7,7 +7,6 @@
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "intro_game_state.hpp"
-#include "light_system.hpp"
 #include "transition.hpp"
 #include "world.hpp"
 #include <iostream>
@@ -25,9 +24,6 @@ const float STATE5_DURATION = 1.0f;
 const float introCameraStartY = 128.0f;
 const float introCameraEndY = 1152.0f;
 
-static const glm::vec4 startAmbientColor(0.14f, 0.064f, 0.04f, 1.0f);
-static const glm::vec4 endAmbientColor(0.3f, 0.38f, 0.4f, 1.0f);
-
 static std::vector<Entity> doorEntities;
 
 //	============================================================================
@@ -42,12 +38,10 @@ IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
 void IntroGameState::activate(Game& game) {
 	setTransitionState(TransitionState::FADED_OUT);
 
-	World& world = *game.world;
-	world.getLightSystem().setAmbientColor(startAmbientColor);
-
 	Camera& camera = *game.camera;
 	camera.position = glm::vec2(128.0f, introCameraStartY);
 
+	World& world = *game.world;
 	doorEntities = world.getEntitiesByName("introDoor");
 }
 
@@ -122,34 +116,6 @@ void IntroGameState::updateState(World& world, Camera& camera,
 	{
 		introTicks += elapsedSeconds;
 		textAlpha = 1 - easeOutCubic(introTicks, 0, 1, STATE2_DURATION);
-
-		glm::vec4 ambientColor;
-
-		ambientColor.r = easeInOutCubic(
-			introTicks,
-			startAmbientColor.r,
-			endAmbientColor.r - startAmbientColor.r,
-			STATE4_DURATION);
-
-		ambientColor.g = easeInOutCubic(
-			introTicks,
-			startAmbientColor.g,
-			endAmbientColor.g - startAmbientColor.g,
-			STATE4_DURATION);
-
-		ambientColor.b = easeInOutCubic(
-			introTicks,
-			startAmbientColor.b,
-			endAmbientColor.b - startAmbientColor.b,
-			STATE4_DURATION);
-
-		ambientColor.a = easeInOutCubic(
-			introTicks,
-			startAmbientColor.a,
-			endAmbientColor.a - startAmbientColor.a,
-			STATE4_DURATION);
-
-		world.getLightSystem().setAmbientColor(ambientColor);
 
 		camera.position.y = easeInOutSine(
 			introTicks,

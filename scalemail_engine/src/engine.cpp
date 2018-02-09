@@ -1,3 +1,4 @@
+#include "ambient_light.hpp"
 #include "asset_manager.hpp"
 #include "camera.hpp"
 #include "cursor.hpp"
@@ -162,6 +163,8 @@ int startEngine() {
 			gameState->update(game, timeStep);
 			world.update(timeStep);
 		}
+
+		updateAmbientLight(world, camera, elapsedSeconds);
 
 		if (updated) {
 			render(game, world, camera, *gameState, totalElapsedSeconds);

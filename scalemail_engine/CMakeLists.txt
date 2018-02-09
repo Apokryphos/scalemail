@@ -19,6 +19,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/entity.hpp
     include/entity_manager.hpp
     include/entity_system.hpp
+    include/expire_system.hpp
     include/fade_shader.hpp
     include/font.hpp
     include/game.hpp
@@ -69,6 +70,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/entity.cpp
     src/entity_manager.cpp
     src/entity_system.cpp
+    src/expire_system.cpp
     src/font.cpp
     src/gl_util.cpp
     src/engine.cpp

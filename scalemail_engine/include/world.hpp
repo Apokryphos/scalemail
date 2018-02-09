@@ -5,6 +5,7 @@
 #include "door_system.hpp"
 #include "entity.hpp"
 #include "entity_manager.hpp"
+#include "expire_system.hpp"
 #include "light_system.hpp"
 #include "map.hpp"
 #include "name_system.hpp"
@@ -27,6 +28,7 @@ class World
 	LightSystem mLightSystem;
 	NameSystem mNameSystem;
 	BulletSystem mBulletSystem;
+	ExpireSystem mExpireSystem;
 	DoorSystem mDoorSystem;
 
 	std::vector<Player> mPlayers;

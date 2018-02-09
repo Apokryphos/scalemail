@@ -8,7 +8,8 @@ namespace ScaleMail
 //  ============================================================================
 World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
-				 mBulletSystem(mEntityManager),  mDoorSystem(mEntityManager) {
+				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
+				 mDoorSystem(mEntityManager) {
 	mPlayers.emplace_back("player1");
 	mPlayers.emplace_back("player2");
 	mPlayers.emplace_back("player3");
@@ -279,5 +280,7 @@ void World::update(float elapsedSeconds) {
 	mPhysicsSystem.simulate(elapsedSeconds);
 	mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
 	mLightSystem.update(elapsedSeconds, mPhysicsSystem);
+
+	mExpireSystem.update(*this, elapsedSeconds);
 }
 }

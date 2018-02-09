@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="16" height="80" tilewidth="16" tileheight="16" nextobjectid="233">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="16" height="80" tilewidth="16" tileheight="16" nextobjectid="239">
  <properties>
   <property name="CollisionLayer" type="int" value="0"/>
  </properties>
@@ -3880,8 +3880,8 @@
 114,114,83,114,0,0,0,0,83,126,84,114,114,2147483732,114,0,
 114,2147483733,114,114,114,114,114,114,114,128,1073741950,114,2147483734,114,114,114,
 0,0,0,0,0,0,0,0,0,2147483731,2147483776,126,82,0,0,0,
-0,0,0,0,0,0,0,0,0,0,114,128,114,0,0,0,
-0,0,0,0,0,0,0,0,0,0,65,127,68,0,0,0,
+0,0,0,0,0,0,0,0,0,1073741893,65,128,65,0,0,0,
+0,0,0,0,0,0,0,0,0,0,65,2147483748,68,0,0,0,
 0,0,0,0,0,0,0,0,0,0,67,100,69,0,0,0,
 0,0,0,0,0,0,0,0,0,0,65,100,65,0,0,0,
 0,0,0,0,0,0,0,0,0,0,65,100,65,0,0,0,
@@ -4227,9 +4227,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1,1,1,1,1,1,1,1,7,0,0,0,0,7,1,1,
+1,1,1,1,1,1,1,1,7,1,1,0,1,7,1,1,
+0,0,0,0,0,0,0,0,7,0,0,0,0,7,0,0,
 0,0,0,0,0,0,0,0,1,7,0,0,0,7,0,0,
-0,0,0,0,0,0,0,0,0,7,0,0,0,7,0,0,
 0,0,0,0,0,0,0,0,0,7,0,0,0,7,0,0,
 0,0,0,0,0,0,0,0,0,7,0,0,0,7,0,0,
 0,0,0,0,0,0,0,0,0,7,0,0,0,7,0,0,
@@ -4459,6 +4459,7 @@
   <object id="135" type="Door" gid="177" x="128" y="16" width="16" height="16"/>
   <object id="136" name="introDoor" type="Door" gid="168" x="112" y="1040" width="16" height="16"/>
   <object id="139" type="Door" gid="165" x="240" y="1232" width="16" height="16"/>
+  <object id="235" type="Door" gid="177" x="176" y="480" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Torches">
   <object id="86" type="Torch" gid="198" x="112" y="16" width="16" height="16"/>
@@ -4579,11 +4580,11 @@
   <object id="167" type="Collision" x="128" y="624" width="16" height="64"/>
   <object id="168" type="Collision" x="144" y="608" width="16" height="32"/>
   <object id="169" type="Collision" x="160" y="584" width="16" height="40"/>
-  <object id="170" type="Collision" x="144" y="488" width="16" height="104"/>
-  <object id="171" type="Collision" x="128" y="472" width="16" height="24"/>
+  <object id="170" type="Collision" x="144" y="504" width="16" height="88"/>
+  <object id="171" type="Collision" x="128" y="480" width="16" height="32"/>
   <object id="172" type="Collision" x="208" y="480" width="16" height="96"/>
-  <object id="173" type="Collision" x="0" y="472" width="128" height="8"/>
-  <object id="174" type="Collision" x="208" y="472" width="48" height="8"/>
+  <object id="173" type="Collision" x="0" y="472" width="176" height="8"/>
+  <object id="174" type="Collision" x="192" y="472" width="64" height="8"/>
   <object id="175" type="Collision" x="192" y="16" width="16" height="240"/>
   <object id="176" type="Collision" x="64" y="16" width="16" height="240"/>
   <object id="177" type="Collision" x="80" y="248" width="32" height="8"/>
@@ -4635,11 +4636,13 @@
   <object id="226" type="Collision" x="240" y="432" width="16" height="16"/>
   <object id="227" type="Collision" x="160" y="368" width="16" height="16"/>
   <object id="228" type="Collision" x="224" y="368" width="32" height="16"/>
+  <object id="236" type="Collision" x="-16" y="272" width="16" height="208"/>
+  <object id="237" type="Collision" x="256" y="272" width="16" height="208"/>
  </objectgroup>
  <objectgroup name="Ambient Light">
   <object id="229" type="AmbientLight" x="0" y="0" width="256" height="272">
    <properties>
-    <property name="Color" type="color" value="#ff47668e"/>
+    <property name="Color" type="color" value="#ff135165"/>
    </properties>
   </object>
   <object id="230" type="AmbientLight" x="0" y="272" width="256" height="192">
@@ -4647,9 +4650,14 @@
     <property name="Color" type="color" value="#ff24100a"/>
    </properties>
   </object>
-  <object id="231" type="AmbientLight" x="0" y="464" width="256" height="816">
+  <object id="231" type="AmbientLight" x="0" y="1024" width="256" height="256">
    <properties>
     <property name="Color" type="color" value="#ff4d6166"/>
+   </properties>
+  </object>
+  <object id="238" type="AmbientLight" x="0" y="464" width="256" height="560">
+   <properties>
+    <property name="Color" type="color" value="#ff1f2a2e"/>
    </properties>
   </object>
  </objectgroup>

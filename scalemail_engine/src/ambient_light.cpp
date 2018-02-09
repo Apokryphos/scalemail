@@ -36,30 +36,55 @@ static bool rectContains(const glm::vec4 rect, const glm::vec2 point) {
 }
 
 //  ============================================================================
-void updateAmbientLight(World& world, Camera& camera, float elapsedSeconds) {
-	transitionTicks += elapsedSeconds;
-	if (transitionTicks > transitionDuration) {
-		transitionTicks = transitionDuration;
-	}
-
+static AmbientLight* getAmbientLight(const Camera& camera) {
 	auto find = std::find_if(ambientLights.begin(), ambientLights.end(),
 		[&camera](const AmbientLight& light) -> bool {
 			return rectContains(light.rect, camera.position);
 		});
 
 	if (find != ambientLights.end()) {
-		const AmbientLight& light = *find;
+		return &(*find);
+	}
 
-		if (targetAmbientLightColor != light.color) {
+	return nullptr;
+}
+
+//  ============================================================================
+void initializeAmbientLight(World& world, Camera& camera) {
+	const AmbientLight* light = getAmbientLight(camera);
+
+	if (light != nullptr) {
+		lastAmbientLightColor = light->color;
+		targetAmbientLightColor = light->color;
+		world.getLightSystem().setAmbientColor(light->color);
+	}
+}
+
+//  ============================================================================
+void updateAmbientLight(World& world, Camera& camera, float elapsedSeconds) {
+	transitionTicks += elapsedSeconds;
+	if (transitionTicks > transitionDuration) {
+		transitionTicks = transitionDuration;
+	}
+
+	const AmbientLight* light = getAmbientLight(camera);
+
+	if (light != nullptr) {
+		if (targetAmbientLightColor != light->color) {
 			lastAmbientLightColor = targetAmbientLightColor;
-			targetAmbientLightColor = light.color;
+			targetAmbientLightColor = light->color;
 			transitionTicks = 0;
 		}
 	}
 
-	currentAmbientLightColor =
-		easeVec4(transitionTicks, lastAmbientLightColor,
-				 targetAmbientLightColor, transitionDuration, easeInOutCubic);
+	if (targetAmbientLightColor != lastAmbientLightColor) {
+		currentAmbientLightColor =
+			easeVec4(transitionTicks, lastAmbientLightColor,
+					targetAmbientLightColor, transitionDuration, easeInOutCubic);
+	}
+	else {
+		currentAmbientLightColor = targetAmbientLightColor;
+	}
 
 	world.getLightSystem().setAmbientColor(currentAmbientLightColor);
 }

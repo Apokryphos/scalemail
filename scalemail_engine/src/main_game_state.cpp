@@ -1,3 +1,4 @@
+#include "ambient_light.hpp"
 #include "camera.hpp"
 #include "game.hpp"
 #include "game_window.hpp"
@@ -43,6 +44,10 @@ MainGameState::MainGameState(GameStateManager& gameStateManager) :
 //	============================================================================
 void MainGameState::activate(Game& game) {
 	updateCameraPosition(game);
+
+	//	Force ambient light to use current camera position to prevent
+	//	transition from previous camera location
+	initializeAmbientLight(*game.world, *game.camera);
 }
 
 //	============================================================================

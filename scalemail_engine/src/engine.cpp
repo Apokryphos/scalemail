@@ -113,8 +113,9 @@ int startEngine() {
 	world.initialize(&assetManager);
 
 	world.loadMap("map1");
-
 	Camera camera(screenWidth, screenHeight, cameraZoom);
+
+	initializeAmbientLight(world, camera);
 
 	Game game = {};
 	game.camera = &camera;

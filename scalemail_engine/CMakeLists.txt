@@ -38,6 +38,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/light_system.hpp
     include/main_game_state.hpp
     include/map.hpp
+    include/map_load.hpp
     include/map_render.hpp
     include/math_util.hpp
     include/mesh.hpp

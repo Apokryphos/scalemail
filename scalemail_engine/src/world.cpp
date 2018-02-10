@@ -1,5 +1,5 @@
 #include "direction.hpp"
-#include "load_map.hpp"
+#include "map_load.hpp"
 #include "sprite.hpp"
 #include "world.hpp"
 

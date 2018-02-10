@@ -4604,19 +4604,19 @@
   <object id="191" type="Collision" x="128" y="130" width="16" height="14"/>
   <object id="192" type="Collision" x="96" y="256" width="16" height="16"/>
   <object id="193" type="Collision" x="144" y="280" width="16" height="8"/>
-  <object id="195" type="Collision" x="144" y="1234" width="62" height="38"/>
-  <object id="196" type="Collision" x="206" y="1250" width="16" height="22"/>
-  <object id="197" type="Collision" x="130" y="1250" width="14" height="22"/>
-  <object id="198" type="Collision" x="16" y="1186" width="14" height="44"/>
-  <object id="199" type="Collision" x="34" y="1170" width="76" height="44"/>
-  <object id="201" type="Collision" x="50" y="1154" width="44" height="16"/>
-  <object id="202" type="Collision" x="82" y="1138" width="12" height="16"/>
-  <object id="203" type="Collision" x="66" y="1214" width="44" height="16"/>
-  <object id="204" type="Collision" x="110" y="1202" width="16" height="12"/>
-  <object id="205" type="Collision" x="146" y="1202" width="16" height="12"/>
-  <object id="207" type="Collision" x="178" y="1170" width="12" height="16"/>
-  <object id="208" type="Collision" x="162" y="1186" width="78" height="28"/>
-  <object id="209" type="Collision" x="226" y="1170" width="14" height="16"/>
+  <object id="195" type="ActorCollision" x="144" y="1234" width="62" height="38"/>
+  <object id="196" type="ActorCollision" x="206" y="1250" width="16" height="22"/>
+  <object id="197" type="ActorCollision" x="130" y="1250" width="14" height="22"/>
+  <object id="198" type="ActorCollision" x="16" y="1186" width="14" height="44"/>
+  <object id="199" type="ActorCollision" x="34" y="1170" width="76" height="44"/>
+  <object id="201" type="ActorCollision" x="50" y="1154" width="44" height="16"/>
+  <object id="202" type="ActorCollision" x="82" y="1138" width="12" height="16"/>
+  <object id="203" type="ActorCollision" x="66" y="1214" width="44" height="16"/>
+  <object id="204" type="ActorCollision" x="110" y="1202" width="16" height="12"/>
+  <object id="205" type="ActorCollision" x="146" y="1202" width="16" height="12"/>
+  <object id="207" type="ActorCollision" x="178" y="1170" width="12" height="16"/>
+  <object id="208" type="ActorCollision" x="162" y="1186" width="78" height="28"/>
+  <object id="209" type="ActorCollision" x="226" y="1170" width="14" height="16"/>
   <object id="210" type="Collision" x="16" y="343" width="8" height="7"/>
   <object id="211" type="Collision" x="24" y="345" width="8" height="7"/>
   <object id="212" type="Collision" x="224" y="313" width="8" height="7"/>
@@ -4626,20 +4626,20 @@
   <object id="216" type="Collision" x="192" y="455" width="8" height="7"/>
   <object id="217" type="Collision" x="200" y="457" width="8" height="7"/>
   <object id="218" type="Collision" x="130" y="118" width="12" height="9"/>
-  <object id="219" type="Collision" x="30" y="1186" width="4" height="28"/>
-  <object id="220" type="Collision" x="0" y="368" width="32" height="48"/>
-  <object id="221" type="Collision" x="32" y="384" width="112" height="48"/>
-  <object id="222" type="Collision" x="64" y="432" width="64" height="16"/>
-  <object id="223" type="Collision" x="96" y="368" width="48" height="16"/>
-  <object id="224" type="Collision" x="16" y="416" width="16" height="16"/>
-  <object id="225" type="Collision" x="160" y="384" width="96" height="48"/>
-  <object id="226" type="Collision" x="240" y="432" width="16" height="16"/>
-  <object id="227" type="Collision" x="160" y="368" width="16" height="16"/>
-  <object id="228" type="Collision" x="224" y="368" width="32" height="16"/>
+  <object id="219" type="ActorCollision" x="30" y="1186" width="4" height="28"/>
+  <object id="220" type="ActorCollision" x="0" y="368" width="32" height="48"/>
+  <object id="221" type="ActorCollision" x="32" y="384" width="112" height="48"/>
+  <object id="222" type="ActorCollision" x="64" y="432" width="64" height="16"/>
+  <object id="223" type="ActorCollision" x="96" y="368" width="48" height="16"/>
+  <object id="224" type="ActorCollision" x="16" y="416" width="16" height="16"/>
+  <object id="225" type="ActorCollision" x="160" y="384" width="96" height="48"/>
+  <object id="226" type="ActorCollision" x="240" y="432" width="16" height="16"/>
+  <object id="227" type="ActorCollision" x="160" y="368" width="16" height="16"/>
+  <object id="228" type="ActorCollision" x="224" y="368" width="32" height="16"/>
   <object id="236" type="Collision" x="-16" y="272" width="16" height="208"/>
   <object id="237" type="Collision" x="256" y="272" width="16" height="208"/>
  </objectgroup>
- <objectgroup name="Ambient Light">
+ <objectgroup name="Ambient Light" visible="0">
   <object id="229" type="AmbientLight" x="0" y="0" width="256" height="272">
    <properties>
     <property name="Color" type="color" value="#ff135165"/>

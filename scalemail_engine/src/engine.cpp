@@ -169,9 +169,8 @@ int startEngine() {
 
 		if (updated) {
 			render(game, world, camera, *gameState, totalElapsedSeconds);
+			screenCapture();
 		}
-
-		screenCapture();
 	}
 
 	glfwDestroyWindow(window);

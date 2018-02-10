@@ -28,6 +28,7 @@ class PhysicsSystem : public EntitySystem
 	std::vector<float> mSpeed;
 
 	std::vector<glm::vec4> mStaticObstacles;
+	std::vector<glm::vec4> mStaticActorObstacles;
 
 	std::vector<std::function<void(StaticCollision)>> mStaticCollisionCallbacks;
 
@@ -40,6 +41,8 @@ class PhysicsSystem : public EntitySystem
 public:
 	PhysicsSystem(EntityManager& entityManager, int maxComponents = 1000);
 	void addStaticCollisionCallback(std::function<void(StaticCollision)> callback);
+	void addStaticActorObstacle(const float x,     const float y,
+							    const float width, const float height);
 	void addStaticObstacle(const float x,     const float y,
 						   const float width, const float height);
 	void clearStaticObstacles();

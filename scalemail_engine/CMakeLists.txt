@@ -57,6 +57,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/tile_shader.hpp
     include/tiny_font.hpp
     include/transition.hpp
+    include/vertex_data.hpp
     include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
@@ -101,6 +102,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/tileset.cpp
     src/transition.cpp
     src/tiny_font.cpp
+    src/vertex_data.cpp
     src/world.cpp)
 
 add_library(${PROJECT_NAME} ${SCALEMAIL_ENGINE_SOURCE} ${SCALEMAIL_ENGINE_SOURCE})

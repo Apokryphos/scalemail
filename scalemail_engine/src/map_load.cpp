@@ -371,6 +371,17 @@ static void processActorObject(World& world,
 }
 
 //  ============================================================================
+static void processActorCollisionObject(World& world,
+										const TmxMapLib::Object& object) {
+	const float x = object.GetX();
+	const float y = object.GetY();
+	const float width = object.GetWidth();
+	const float height = object.GetHeight();
+
+	world.getPhysicsSystem().addStaticActorObstacle(x, y, width, height);
+}
+
+//  ============================================================================
 static void processAmbientLightObject(const TmxMapLib::Object& object) {
 	const float x = object.GetX();
 	const float y = object.GetY();
@@ -570,6 +581,9 @@ static void processObject(World& world,
 	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Basic) {
 		if (type == "collision") {
 			processCollisionObject(world, object);
+		}
+		if (type == "actorcollision") {
+			processActorCollisionObject(world, object);
 		} else if (type == "ambientlight") {
 			processAmbientLightObject(object);
 		}

@@ -3,6 +3,7 @@
 #include "collision.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
+#include "vertex_data.hpp"
 #include <cmath>
 #include <functional>
 
@@ -33,6 +34,12 @@ void PhysicsSystem::addStaticCollisionCallback(
 }
 
 //	============================================================================
+void PhysicsSystem::addStaticActorObstacle(const float x, const float y,
+									  	   const float width, const float height) {
+	mStaticActorObstacles.emplace_back(x ,y ,width, height);
+}
+
+//	============================================================================
 void PhysicsSystem::addStaticObstacle(const float x,     const float y,
 									  const float width, const float height) {
 	mStaticObstacles.emplace_back(x ,y ,width, height);
@@ -50,6 +57,8 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 	const int lineCount = 16;
 	std::vector<float> vertexData;
 
+	const glm::vec4 circleColor = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
@@ -66,79 +75,36 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 
 			vertexData.push_back(x1);
 			vertexData.push_back(y1);
-			vertexData.push_back(1.0f);
-			vertexData.push_back(1.0f);
-			vertexData.push_back(1.0f);
-			vertexData.push_back(1.0f);
+			vertexData.push_back(circleColor.r);
+			vertexData.push_back(circleColor.g);
+			vertexData.push_back(circleColor.b);
+			vertexData.push_back(circleColor.a);
 
 			vertexData.push_back(x2);
 			vertexData.push_back(y2);
-			vertexData.push_back(1.0f);
-			vertexData.push_back(1.0f);
-			vertexData.push_back(1.0f);
-			vertexData.push_back(1.0f);
+			vertexData.push_back(circleColor.r);
+			vertexData.push_back(circleColor.g);
+			vertexData.push_back(circleColor.b);
+			vertexData.push_back(circleColor.a);
 		}
 	}
+
+	const glm::vec4 staticColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
 	for (auto& rect : mStaticObstacles) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
-		vertexData.push_back(position.x);
-		vertexData.push_back(position.y);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
+		addQuadVertexData(vertexData, position, size, staticColor);
+	}
 
-		vertexData.push_back(position.x + size.x);
-		vertexData.push_back(position.y);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
+	const glm::vec4 staticActorColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 
-		vertexData.push_back(position.x + size.x);
-		vertexData.push_back(position.y);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
+	for (auto& rect : mStaticActorObstacles) {
+		glm::vec2 position = glm::vec2(rect.x, rect.y);
+		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
-		vertexData.push_back(position.x + size.x);
-		vertexData.push_back(position.y + size.y);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-
-		vertexData.push_back(position.x + size.x);
-		vertexData.push_back(position.y + size.y);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-
-		vertexData.push_back(position.x);
-		vertexData.push_back(position.y + size.y);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-
-		vertexData.push_back(position.x);
-		vertexData.push_back(position.y + size.y);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-
-		vertexData.push_back(position.x);
-		vertexData.push_back(position.y);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
-		vertexData.push_back(1.0f);
+		addQuadVertexData(vertexData, position, size, staticActorColor);
 	}
 
 	updateLineMesh(mLineMesh, vertexData);

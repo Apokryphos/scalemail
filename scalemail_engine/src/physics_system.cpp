@@ -222,6 +222,28 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 			}
 		}
 
+		//	Check every collision group except BULLET against static
+		//	actor obstacles.
+		if (!collision && mGroup[index] != CollisionGroup::BULLET) {
+			for (auto& obstacle : mStaticActorObstacles) {
+				if (circleIntersectsRectangle(position + deltaX,
+											mRadius[index], obstacle)) {
+					velocity.x = 0.0f;
+					collision = true;
+					break;
+				}
+			}
+
+			for (auto& obstacle : mStaticActorObstacles) {
+				if (circleIntersectsRectangle(position + deltaY,
+											mRadius[index], obstacle)) {
+					velocity.y = 0.0f;
+					collision = true;
+					break;
+				}
+			}
+		}
+
 		if (collision) {
 			StaticCollision staticCollision = {};
 			staticCollision.sourceEntity = p.second;

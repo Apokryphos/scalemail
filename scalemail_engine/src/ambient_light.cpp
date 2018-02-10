@@ -1,5 +1,6 @@
 #include "camera.hpp"
 #include "mesh.hpp"
+#include "vertex_data.hpp"
 #include "world.hpp"
 #include <glm/vec4.hpp>
 #include <vector>
@@ -83,55 +84,6 @@ static bool updateMesh(Mesh& mesh, const std::vector<float>& vertexData) {
 }
 
 //  ============================================================================
-static void addQuadVertexData(const glm::vec4 rect, const glm::vec4 color,
-							  std::vector<float>& vertexData) {
-	glm::vec2 position = glm::vec2(rect.x, rect.y);
-	glm::vec2 size = glm::vec2(rect.z, rect.w);
-
-	vertexData.push_back(position.x);
-	vertexData.push_back(position.y);
-	vertexData.push_back(color.r);
-	vertexData.push_back(color.g);
-	vertexData.push_back(color.b);
-	vertexData.push_back(color.a);
-
-	vertexData.push_back(position.x);
-	vertexData.push_back(position.y + size.y);
-	vertexData.push_back(color.r);
-	vertexData.push_back(color.g);
-	vertexData.push_back(color.b);
-	vertexData.push_back(color.a);
-
-	vertexData.push_back(position.x + size.x);
-	vertexData.push_back(position.y + size.y);
-	vertexData.push_back(color.r);
-	vertexData.push_back(color.g);
-	vertexData.push_back(color.b);
-	vertexData.push_back(color.a);
-
-	vertexData.push_back(position.x);
-	vertexData.push_back(position.y);
-	vertexData.push_back(color.r);
-	vertexData.push_back(color.g);
-	vertexData.push_back(color.b);
-	vertexData.push_back(color.a);
-
-	vertexData.push_back(position.x + size.x);
-	vertexData.push_back(position.y + size.y);
-	vertexData.push_back(color.r);
-	vertexData.push_back(color.g);
-	vertexData.push_back(color.b);
-	vertexData.push_back(color.a);
-
-	vertexData.push_back(position.x + size.x);
-	vertexData.push_back(position.y);
-	vertexData.push_back(color.r);
-	vertexData.push_back(color.g);
-	vertexData.push_back(color.b);
-	vertexData.push_back(color.a);
-}
-
-//  ============================================================================
 void addAmbientLight(glm::vec4 color, glm::vec4 rect) {
 	ambientLights.push_back({ color, rect });
 }
@@ -145,7 +97,10 @@ void initializeAmbientLights() {
 void buildAmbientLights() {
 	ambientLightVertexData.clear();
 	for (const auto& light : ambientLights) {
-		addQuadVertexData(light.rect, light.color, ambientLightVertexData);
+		glm::vec2 position = glm::vec2(light.rect.x, light.rect.y);
+		glm::vec2 size = glm::vec2(light.rect.z, light.rect.w);
+
+		addQuadVertexData(ambientLightVertexData, position, size, light.color);
 	}
 	updateMesh(ambientLightMesh, ambientLightVertexData);
 }

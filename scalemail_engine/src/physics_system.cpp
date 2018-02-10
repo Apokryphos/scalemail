@@ -95,7 +95,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
-		addQuadVertexData(vertexData, position, size, staticColor);
+		addQuadLineVertexData(vertexData, position, size, staticColor);
 	}
 
 	const glm::vec4 staticActorColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
@@ -104,7 +104,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
-		addQuadVertexData(vertexData, position, size, staticActorColor);
+		addQuadLineVertexData(vertexData, position, size, staticActorColor);
 	}
 
 	updateLineMesh(mLineMesh, vertexData);

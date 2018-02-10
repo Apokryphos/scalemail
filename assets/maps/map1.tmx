@@ -4639,7 +4639,7 @@
   <object id="236" type="Collision" x="-16" y="272" width="16" height="208"/>
   <object id="237" type="Collision" x="256" y="272" width="16" height="208"/>
  </objectgroup>
- <objectgroup name="Ambient Light" visible="0">
+ <objectgroup name="Ambient Light">
   <object id="229" type="AmbientLight" x="0" y="0" width="256" height="272">
    <properties>
     <property name="Color" type="color" value="#ff135165"/>
@@ -4652,7 +4652,7 @@
   </object>
   <object id="231" type="AmbientLight" x="0" y="1024" width="256" height="256">
    <properties>
-    <property name="Color" type="color" value="#ff4d6166"/>
+    <property name="Color" type="color" value="#ff25373b"/>
    </properties>
   </object>
   <object id="238" type="AmbientLight" x="0" y="464" width="256" height="560">

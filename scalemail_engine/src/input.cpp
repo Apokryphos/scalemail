@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "gl_headers.hpp"
 #include "input_state.hpp"
+#include "transition.hpp"
 #include <algorithm>
 #include <iostream>
 
@@ -50,8 +51,16 @@ static void keyCallback(GLFWwindow* window, int key,
 				inputState.capture = !inputState.capture;
 				break;
 
+			case GLFW_KEY_O:
+				transitionFadeOut();
+				break;
+
 			case GLFW_KEY_F:
 				game->cameraFollow = !game->cameraFollow;
+				break;
+
+			case GLFW_KEY_I:
+				transitionFadeIn();
 				break;
 
 			case GLFW_KEY_P:

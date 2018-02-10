@@ -1,6 +1,7 @@
 #include "asset_manager.hpp"
 #include "camera.hpp"
 #include "collision.hpp"
+#include "collision_test.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
 #include "vertex_data.hpp"
@@ -25,11 +26,18 @@ PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 	mCollisionOffset.reserve(maxComponents);
 	mRadius.reserve(maxComponents);
 	mSpeed.reserve(maxComponents);
+	mVelocity.reserve(maxComponents);
+}
+
+//	============================================================================
+void PhysicsSystem::addEntityCollisionCallback(
+	std::function<void(EntityCollision&)> callback) {
+	mEntityCollisionCallbacks.push_back(callback);
 }
 
 //	============================================================================
 void PhysicsSystem::addStaticCollisionCallback(
-	std::function<void(StaticCollision)> callback) {
+	std::function<void(StaticCollision&)> callback) {
 	mStaticCollisionCallbacks.push_back(callback);
 }
 
@@ -124,6 +132,7 @@ void PhysicsSystem::createComponent() {
 	mCollisionOffset.emplace_back(0.0f);
 	mRadius.emplace_back(4.0f);
 	mSpeed.emplace_back(64.0f);
+	mVelocity.emplace_back(0.0f);
 }
 
 //	============================================================================
@@ -134,6 +143,7 @@ void PhysicsSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mCollisionOffset, index);
 	swapWithLastElementAndRemove(mRadius, index);
 	swapWithLastElementAndRemove(mSpeed, index);
+	swapWithLastElementAndRemove(mVelocity, index);
 }
 
 //	============================================================================
@@ -189,75 +199,124 @@ void PhysicsSystem::setSpeed(const PhysicsComponent& cmpnt,
 }
 
 //	============================================================================
-void PhysicsSystem::simulate(float elapsedSeconds) {
-	std::vector<StaticCollision> staticCollisions;
-
-	for (auto& p : mEntitiesByComponentIndices) {
-		const int index = p.first;
-
-		glm::vec2 position = mPosition[index] + mCollisionOffset[index];
-
-		glm::vec2 velocity = mDirection[index] * mSpeed[index] * elapsedSeconds;
-
-		glm::vec2 deltaX = glm::vec2(velocity.x, 0);
-		glm::vec2 deltaY = glm::vec2(0, velocity.y);
-
-		bool collision = false;
-
-		for (auto& obstacle : mStaticObstacles) {
-			if (circleIntersectsRectangle(position + deltaX,
-										  mRadius[index], obstacle)) {
-				velocity.x = 0.0f;
-				collision = true;
-				break;
-			}
-		}
-
-		for (auto& obstacle : mStaticObstacles) {
-			if (circleIntersectsRectangle(position + deltaY,
-										  mRadius[index], obstacle)) {
-				velocity.y = 0.0f;
-				collision = true;
-				break;
-			}
-		}
-
-		//	Check every collision group except BULLET against static
-		//	actor obstacles.
-		if (!collision && mGroup[index] != CollisionGroup::BULLET) {
-			for (auto& obstacle : mStaticActorObstacles) {
-				if (circleIntersectsRectangle(position + deltaX,
-											mRadius[index], obstacle)) {
-					velocity.x = 0.0f;
-					collision = true;
-					break;
-				}
-			}
-
-			for (auto& obstacle : mStaticActorObstacles) {
-				if (circleIntersectsRectangle(position + deltaY,
-											mRadius[index], obstacle)) {
-					velocity.y = 0.0f;
-					collision = true;
-					break;
-				}
-			}
-		}
-
-		if (collision) {
-			StaticCollision staticCollision = {};
-			staticCollision.sourceEntity = p.second;
-			staticCollision.sourceGroup = mGroup[index];
-			staticCollisions.push_back(staticCollision);
-		}
-
-		mPosition[index] += velocity;
+void PhysicsSystem::update() {
+	//	Process entity collisions
+	for (auto& collision : mEntityCollisions) {
+		int index = this->getComponentIndexByEntity(collision.sourceEntity);
+		mVelocity[index] = collision.velocity;
 	}
 
-	for (auto& collision : staticCollisions) {
+	//	Process static collisions
+	for (auto& collision : mStaticCollisions) {
+		int index = this->getComponentIndexByEntity(collision.sourceEntity);
+		mVelocity[index] = collision.velocity;
+	}
+
+	//	Apply velocities
+	size_t count = mPosition.size();
+	for (size_t index = 0; index < count; ++index) {
+		mPosition[index] += mVelocity[index];
+	}
+}
+
+//	============================================================================
+void PhysicsSystem::simulate(float elapsedSeconds) {
+	mEntityCollisions.clear();
+	mStaticCollisions.clear();
+
+	//	Calculate velocities
+	size_t count = mPosition.size();
+	for (size_t index = 0; index < count; ++index) {
+		mVelocity[index] =
+			mDirection[index] * mSpeed[index] * elapsedSeconds;
+	}
+
+	std::vector<CollisionTest> actorTests;
+	std::vector<CollisionTest> bulletTests;
+	std::vector<CollisionTest> allTests;
+
+	//	Separate entities by collision group
+	for (auto& p : mEntitiesByComponentIndices) {
+		switch (mGroup[p.first]) {
+			case CollisionGroup::ACTOR: {
+				CollisionTest test = {};
+				test.entity = p.second;
+				test.group = mGroup[p.first];
+				test.position = mPosition[p.first];
+				test.radius = mRadius[p.first];
+				test.velocity = mVelocity[p.first];
+				actorTests.push_back(test);
+				allTests.push_back(test);
+				break;
+			}
+			case CollisionGroup::BULLET: {
+				CollisionTest test = {};
+				test.entity = p.second;
+				test.group = mGroup[p.first];
+				test.position = mPosition[p.first];
+				test.radius = mRadius[p.first];
+				test.velocity = mVelocity[p.first];
+				bulletTests.push_back(test);
+				allTests.push_back(test);
+				break;
+			}
+			default:
+				break;
+		}
+	}
+
+	std::vector<CollisionTest> actorPassed;
+
+	//	Test actors VS static obstacles
+	processStaticCollisions(actorTests, mStaticObstacles, actorPassed,
+							mStaticCollisions);
+
+	//	Clear and use for output of next pass
+	actorTests.clear();
+
+	//	Test actors VS static actor-only obstacles
+	processStaticCollisions(actorPassed, mStaticActorObstacles, actorTests,
+							mStaticCollisions);
+
+	//	Test bullets VS entities
+	processEntityCollisions(actorTests, actorTests, actorPassed, mEntityCollisions);
+
+	std::vector<CollisionTest> bulletPassed;
+
+	//	Test bullets VS static obstacles
+	processStaticCollisions(bulletTests, mStaticObstacles, bulletPassed,
+							mStaticCollisions);
+
+	bulletTests.clear();
+
+	//	Test bullets VS entities
+	processEntityCollisions(bulletPassed, allTests, bulletTests, mEntityCollisions);
+
+	for (auto& collision : mEntityCollisions) {
+		for (auto& callback : mEntityCollisionCallbacks) {
+			callback(collision);
+		}
+	}
+
+	for (auto& collision : mStaticCollisions) {
 		for (auto& callback : mStaticCollisionCallbacks) {
 			callback(collision);
 		}
 	}
+
+	//	Remove ignored collisions
+	mEntityCollisions.erase(
+		std::remove_if(mEntityCollisions.begin(), mEntityCollisions.end(),
+			[](const EntityCollision& collision) {
+				 return collision.ignore;
+			}),
+		mEntityCollisions.end());
+
+	mStaticCollisions.erase(
+		std::remove_if(mStaticCollisions.begin(), mStaticCollisions.end(),
+			[](const StaticCollision& collision) {
+				 return collision.ignore;
+			}),
+		mStaticCollisions.end());
 }
 }

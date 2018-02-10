@@ -15,6 +15,10 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 	mPlayers.emplace_back("player3");
 	mPlayers.emplace_back("player4");
 
+	mPhysicsSystem.addEntityCollisionCallback(
+		std::bind(&BulletSystem::onEntityCollision, &mBulletSystem,
+				  std::placeholders::_1));
+
 	mPhysicsSystem.addStaticCollisionCallback(
 		std::bind(&BulletSystem::onStaticCollision, &mBulletSystem,
 				  std::placeholders::_1));
@@ -52,6 +56,8 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 	Entity entity = mEntityManager.createEntity();
 
 	mBulletSystem.addComponent(entity);
+	BulletComponent bulletCmpnt = mBulletSystem.getComponent(entity);
+	mBulletSystem.setSourceEntity(bulletCmpnt, mPlayers[0].entity);
 
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
@@ -304,6 +310,8 @@ void World::update(float elapsedSeconds) {
 	mPhysicsSystem.simulate(elapsedSeconds);
 	mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
 	mLightSystem.update(elapsedSeconds, mPhysicsSystem);
+
+	mPhysicsSystem.update();
 
 	mExpireSystem.update(*this, elapsedSeconds);
 }

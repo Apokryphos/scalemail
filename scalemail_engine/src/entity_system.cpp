@@ -51,6 +51,11 @@ void EntitySystem::garbageCollect() {
 }
 
 //	============================================================================
+int EntitySystem::getComponentIndexByEntity(const Entity& entity) const {
+	return mComponentIndicesByEntity.at(entity);
+}
+
+//	============================================================================
 const Entity& EntitySystem::getEntityByComponentIndex(const int index) const {
 	return mEntitiesByComponentIndices.at(index);
 }

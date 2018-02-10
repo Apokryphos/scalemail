@@ -12,6 +12,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/camera.hpp
     include/collision.hpp
     include/collision_group.hpp
+    include/collision_test.hpp
     include/cursor.hpp
     include/direction.hpp
     include/direction_util.hpp
@@ -67,6 +68,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/bullet_system.cpp
     src/camera.cpp
     src/collision.cpp
+    src/collision_test.cpp
     src/cursor.cpp
     src/direction_util.cpp
     src/door_system.cpp

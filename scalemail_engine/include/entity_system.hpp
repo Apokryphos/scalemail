@@ -18,6 +18,7 @@ protected:
 
 	virtual void createComponent() = 0;
 	virtual void destroyComponent(int index) = 0;
+	int getComponentIndexByEntity(const Entity& entity) const;
 	const Entity& getEntityByComponentIndex(const int index) const;
 
 public:

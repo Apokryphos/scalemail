@@ -2,6 +2,7 @@
 #include "vector_util.hpp"
 #include "world.hpp"
 #include <cmath>
+#include <iostream>
 
 namespace ScaleMail
 {
@@ -14,16 +15,19 @@ static BulletComponent makeComponent(const int index) {
 BulletSystem::BulletSystem(EntityManager& entityManager, int maxComponents)
 	: EntitySystem(entityManager, maxComponents) {
 	mLife.reserve(maxComponents);
+	mSourceEntity.reserve(maxComponents);
 }
 
 //	============================================================================
 void BulletSystem::createComponent() {
 	mLife.emplace_back(1.5f);
+	mSourceEntity.emplace_back();
 }
 
 //	============================================================================
 void BulletSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mLife, index);
+	swapWithLastElementAndRemove(mSourceEntity, index);
 }
 
 //	============================================================================
@@ -37,7 +41,29 @@ float BulletSystem::getLife(const BulletComponent& cmpnt) const {
 }
 
 //	============================================================================
-void BulletSystem::onStaticCollision(StaticCollision collision) {
+Entity BulletSystem::getSourceEntity(const BulletComponent& cmpnt) const {
+	return mSourceEntity[cmpnt.index];
+}
+
+//	============================================================================
+void BulletSystem::onEntityCollision(EntityCollision& collision) {
+	if (collision.sourceGroup == CollisionGroup::BULLET &&
+		this->hasComponent(collision.sourceEntity)) {
+		BulletComponent cmpnt = this->getComponent(collision.sourceEntity);
+
+		if (collision.targetGroup == CollisionGroup::BULLET) {
+			collision.ignore = true;
+		} else {
+			//	Ignore source entity (i.e. entity that fired bullet)
+			if (mSourceEntity[cmpnt.index] != collision.targetEntity) {
+				mLife[cmpnt.index] = 0;
+			}
+		}
+	}
+}
+
+//	============================================================================
+void BulletSystem::onStaticCollision(StaticCollision& collision) {
 	if (collision.sourceGroup == CollisionGroup::BULLET &&
 		this->hasComponent(collision.sourceEntity)) {
 		BulletComponent cmpnt = this->getComponent(collision.sourceEntity);
@@ -48,6 +74,11 @@ void BulletSystem::onStaticCollision(StaticCollision collision) {
 //	============================================================================
 void BulletSystem::setLife(const BulletComponent& cmpnt, float life) {
 	mLife[cmpnt.index] = life;
+}
+
+//	============================================================================
+void BulletSystem::setSourceEntity(const BulletComponent& cmpnt, Entity entity) {
+	mSourceEntity[cmpnt.index] = entity;
 }
 
 //	============================================================================

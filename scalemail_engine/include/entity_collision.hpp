@@ -6,11 +6,14 @@
 
 namespace ScaleMail
 {
-struct StaticCollision
+struct EntityCollision
 {
 	bool ignore;
+	float distance;
 	CollisionGroup sourceGroup;
+	CollisionGroup targetGroup;
 	Entity sourceEntity;
+	Entity targetEntity;
 	glm::vec2 velocity;
 };
 }

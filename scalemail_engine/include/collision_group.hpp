@@ -9,9 +9,7 @@ enum class CollisionGroup : uint8_t
 	ACTOR = 		(1 << 2),
 	BULLET = 		(1 << 3),
 	ITEM = 			(1 << 4),
-	PLAYER_ACTOR =  (1 << 5),
-	PLAYER_BULLET = (1 << 6),
-	TRIGGER = 		(1 << 7)
+	TRIGGER = 		(1 << 5)
 };
 
 inline CollisionGroup operator |(const CollisionGroup selfValue, const CollisionGroup inValue)
@@ -32,33 +30,23 @@ inline CollisionGroup getCollisionFilter(CollisionGroup group)
 		return CollisionGroup::NONE;
 
 	case CollisionGroup::STATIC:
-		return CollisionGroup::ACTOR | CollisionGroup::PLAYER_BULLET;
+		return CollisionGroup::ACTOR | CollisionGroup::BULLET;
 
 	case CollisionGroup::ACTOR:
 		return
 			CollisionGroup::STATIC |
-			CollisionGroup::ACTOR |
-			CollisionGroup::PLAYER_ACTOR |
-			CollisionGroup::PLAYER_BULLET;
+			CollisionGroup::ACTOR;
 
 	case CollisionGroup::ITEM:
-		return CollisionGroup::PLAYER_ACTOR;
-
-	case CollisionGroup::PLAYER_ACTOR:
-		return CollisionGroup::STATIC | CollisionGroup::ACTOR | CollisionGroup::BULLET;
+		return CollisionGroup::ACTOR;
 
 	case CollisionGroup::BULLET:
-		return CollisionGroup::STATIC | CollisionGroup::PLAYER_ACTOR;
-
-	case CollisionGroup::PLAYER_BULLET:
 		return CollisionGroup::STATIC | CollisionGroup::ACTOR;
 
 	case CollisionGroup::TRIGGER:
 		return
 			CollisionGroup::ACTOR |
-			CollisionGroup::PLAYER_ACTOR |
-			CollisionGroup::BULLET |
-			CollisionGroup::PLAYER_BULLET;
+			CollisionGroup::BULLET;
 
 	default:
 		throw new std::runtime_error("Filter not implemented.");

@@ -73,7 +73,6 @@ void GunSystem::update(World& world, float elapsedSeconds) {
 		mData[index].direction = direction;
 	}
 
-	size_t count = mData.size();
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 

@@ -4563,10 +4563,10 @@
   <object id="131" type="Actor" gid="435" x="135" y="1175" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Heroes">
-  <object id="62" name="player4" type="Actor" gid="312" x="144" y="1104" width="16" height="16"/>
-  <object id="63" name="player1" type="Actor" gid="354" x="112" y="1104" width="16" height="16"/>
-  <object id="64" name="player3" type="Actor" gid="361" x="96" y="1104" width="16" height="16"/>
-  <object id="65" name="player2" type="Actor" gid="330" x="128" y="1104" width="16" height="16"/>
+  <object id="62" name="PlayerStart" type="PlayerStart" gid="354" x="112" y="1100" width="16" height="16"/>
+  <object id="63" name="PlayerStart" type="PlayerStart" gid="330" x="132" y="1100" width="16" height="16"/>
+  <object id="64" name="PlayerStart" type="PlayerStart" gid="361" x="92" y="1092" width="16" height="16"/>
+  <object id="65" name="PlayerStart" type="PlayerStart" gid="312" x="152" y="1092" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Props">
   <object id="117" gid="232" x="29" y="390" width="16" height="16"/>

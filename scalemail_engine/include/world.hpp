@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ai_system.hpp"
 #include "bullet_system.hpp"
 #include "direction.hpp"
 #include "door_system.hpp"
@@ -34,6 +35,7 @@ class World
 	TriggerSystem mTriggerSystem;
 	GunSystem mGunSystem;
 	DoorSystem mDoorSystem;
+	AiSystem mAiSystem;
 
 	std::vector<Player> mPlayers;
 
@@ -63,6 +65,7 @@ public:
 						 const float height, const std::string targetName);
 	void destroyBullet(Entity entity);
 	void destroyEntity(Entity entity);
+	AiSystem& getAiSystem();
 	DoorSystem& getDoorSystem();
 	std::vector<Entity> getEntitiesByName(const std::string name) const;
 	GunSystem& getGunSystem();

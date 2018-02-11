@@ -10,7 +10,7 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
 				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
 				 mTriggerSystem(mEntityManager), mGunSystem(mEntityManager),
-				 mDoorSystem(mEntityManager) {
+				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -277,6 +277,11 @@ void World::destroyEntity(Entity entity) {
 }
 
 //  ============================================================================
+AiSystem& World::getAiSystem() {
+	return mAiSystem;
+}
+
+//  ============================================================================
 DoorSystem& World::getDoorSystem() {
 	return mDoorSystem;
 }
@@ -366,6 +371,8 @@ void World::loadMap(const std::string& mapName) {
 //  ============================================================================
 void World::update(float elapsedSeconds) {
 	mBulletSystem.simulate(*this, elapsedSeconds);
+
+	mAiSystem.update(*this, elapsedSeconds);
 
 	mPhysicsSystem.simulate(elapsedSeconds);
 	mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);

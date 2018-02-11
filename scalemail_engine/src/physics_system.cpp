@@ -128,7 +128,7 @@ void PhysicsSystem::createComponent() {
 	mGroup.emplace_back(CollisionGroup::NONE);
 	mDirection.emplace_back(0.0f);
 	mPosition.emplace_back(0.0f);
-	mRadius.emplace_back(4.0f);
+	mRadius.emplace_back(0.0f);
 	mSpeed.emplace_back(64.0f);
 	mVelocity.emplace_back(0.0f);
 }

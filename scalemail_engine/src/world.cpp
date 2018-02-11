@@ -41,6 +41,7 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
+	mPhysicsSystem.setRadius(physicsCmpnt, 4.0f);
 
 	mGunSystem.addComponent(entity);
 

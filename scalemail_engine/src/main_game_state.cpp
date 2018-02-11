@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
+#include "gun_system.hpp"
 #include "main_game_state.hpp"
 #include "physics_system.hpp"
 #include "world.hpp"
@@ -105,25 +106,14 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 		glm::vec2 direction(moveX, moveY);
 		physicsSystem.setDirection(physicsCmpnt, direction);
 
-		//	Fire bullets
-		if (inputState.fire) {
-			const int bulletTilesetId = 32;
-			const float bulletSpeed = 128.0f;
+		//	Update gun
+		GunSystem& gunSystem = world.getGunSystem();
+		GunComponent gunCmpnt = gunSystem.getComponent(player->entity);
 
-			glm::vec2 target = camera.unproject(inputState.aimPosition);
-			glm::vec2 origin = physicsSystem.getPosition(physicsCmpnt);
-			glm::vec2 bulletDirection = target - origin;
+		gunSystem.setTarget(
+			gunCmpnt, camera.unproject(inputState.aimPosition));
 
-			if (glm::length2(bulletDirection) > 1) {
-				bulletDirection = glm::normalize(bulletDirection);
-			}
-
-			world.createPlayerBullet(
-				origin,
-				bulletDirection,
-				bulletSpeed,
-				bulletTilesetId);
-		}
+		gunSystem.setFire(gunCmpnt, inputState.fire);
 	}
 }
 }

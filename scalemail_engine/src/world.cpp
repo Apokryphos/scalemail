@@ -9,7 +9,8 @@ namespace ScaleMail
 World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
 				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
-				 mTriggerSystem(mEntityManager), mDoorSystem(mEntityManager) {
+				 mTriggerSystem(mEntityManager), mGunSystem(mEntityManager),
+				 mDoorSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -40,6 +41,8 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
+
+	mGunSystem.addComponent(entity);
 
 	if (name != "") {
 		mNameSystem.addComponent(entity);
@@ -283,6 +286,11 @@ std::vector<Entity> World::getEntitiesByName(const std::string name) const {
 }
 
 //  ============================================================================
+GunSystem& World::getGunSystem() {
+	return mGunSystem;
+}
+
+//  ============================================================================
 LightSystem& World::getLightSystem() {
 	return mLightSystem;
 }
@@ -363,6 +371,8 @@ void World::update(float elapsedSeconds) {
 	mLightSystem.update(elapsedSeconds, mPhysicsSystem);
 
 	mPhysicsSystem.update();
+
+	mGunSystem.update(*this, elapsedSeconds);
 
 	mTriggerSystem.update(
 		mNameSystem,

@@ -6,6 +6,7 @@
 #include "entity.hpp"
 #include "entity_manager.hpp"
 #include "expire_system.hpp"
+#include "gun_system.hpp"
 #include "light_system.hpp"
 #include "map.hpp"
 #include "name_system.hpp"
@@ -31,6 +32,7 @@ class World
 	BulletSystem mBulletSystem;
 	ExpireSystem mExpireSystem;
 	TriggerSystem mTriggerSystem;
+	GunSystem mGunSystem;
 	DoorSystem mDoorSystem;
 
 	std::vector<Player> mPlayers;
@@ -63,6 +65,7 @@ public:
 	void destroyEntity(Entity entity);
 	DoorSystem& getDoorSystem();
 	std::vector<Entity> getEntitiesByName(const std::string name) const;
+	GunSystem& getGunSystem();
 	LightSystem& getLightSystem();
 	Map* getMap();
 	NameSystem& getNameSystem();

@@ -9,7 +9,7 @@ namespace ScaleMail
 World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
 				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
-				 mDoorSystem(mEntityManager) {
+				 mTriggerSystem(mEntityManager), mDoorSystem(mEntityManager) {
 	mPlayers.emplace_back("player1");
 	mPlayers.emplace_back("player2");
 	mPlayers.emplace_back("player3");
@@ -167,6 +167,20 @@ Entity World::createProp(glm::vec2 position, int frame1TilesetId,
 }
 
 //  ============================================================================
+Entity World::createTrigger(const float x, const float y, const float width,
+						  const float height, const std::string targetName) {
+	Entity entity = mEntityManager.createEntity();
+
+	mTriggerSystem.addComponent(entity);
+	TriggerComponent triggerCmpnt = mTriggerSystem.getComponent(entity);
+	mTriggerSystem.setPosition(triggerCmpnt, glm::vec2(x, y));
+	mTriggerSystem.setSize(triggerCmpnt, glm::vec2(width, height));
+	mTriggerSystem.setTargetName(triggerCmpnt, targetName);
+
+	return entity;
+}
+
+//  ============================================================================
 void World::destroyBullet(Entity entity) {
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	glm::vec2 bulletPosition = mPhysicsSystem.getPosition(physicsCmpnt);
@@ -282,6 +296,11 @@ SpriteSystem& World::getSpriteSystem() {
 }
 
 //  ============================================================================
+TriggerSystem& World::getTriggerSystem() {
+	return mTriggerSystem;
+}
+
+//  ============================================================================
 void World::initialize(AssetManager* assetManager) {
 	mSpriteSystem.initialize(assetManager);
 	mLightSystem.initialize(*assetManager);
@@ -312,6 +331,11 @@ void World::update(float elapsedSeconds) {
 	mLightSystem.update(elapsedSeconds, mPhysicsSystem);
 
 	mPhysicsSystem.update();
+
+	mTriggerSystem.update(
+		mNameSystem,
+		mPhysicsSystem,
+		mDoorSystem);
 
 	mExpireSystem.update(*this, elapsedSeconds);
 }

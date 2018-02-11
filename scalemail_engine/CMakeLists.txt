@@ -59,6 +59,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/tile_shader.hpp
     include/tiny_font.hpp
     include/transition.hpp
+    include/trigger_system.hpp
     include/vertex_data.hpp
     include/world.hpp)
 
@@ -104,6 +105,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/texture.cpp
     src/tileset.cpp
     src/transition.cpp
+    src/trigger_system.cpp
     src/tiny_font.cpp
     src/vertex_data.cpp
     src/world.cpp)

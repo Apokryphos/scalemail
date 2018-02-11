@@ -5,7 +5,10 @@
 #include "mesh.hpp"
 #include "entity_collision.hpp"
 #include "static_collision.hpp"
+#include "trigger.hpp"
+#include "trigger_collision.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 #include <functional>
 #include <vector>
 
@@ -55,6 +58,8 @@ public:
 	void clearStaticObstacles();
 	void drawDebug(const Camera& camera);
 	PhysicsComponent getComponent(const Entity& entity) const;
+	std::vector<TriggerCollision> getEntityIntersections(
+		const std::vector<Trigger>& triggers) const;
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
 	void initialize(AssetManager& assetManager);
 	void setCollisionGroup(const PhysicsComponent& cmpnt,

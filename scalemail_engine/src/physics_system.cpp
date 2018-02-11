@@ -152,6 +152,40 @@ PhysicsComponent PhysicsSystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
+std::vector<TriggerCollision> PhysicsSystem::getEntityIntersections(
+	const std::vector<Trigger>& triggers) const {
+
+	std::vector<TriggerCollision> collisions;
+
+	for (auto& p : mEntitiesByComponentIndices) {
+		const int index = p.first;
+
+		if (mGroup[index] != CollisionGroup::ACTOR) {
+			continue;
+		}
+
+		const float radius = mRadius[index];
+		if (radius <= 0) {
+			continue;
+		}
+
+		const Entity& entity = p.second;
+		const glm::vec2 position = mPosition[index];
+
+		for (auto& trigger : triggers) {
+			if (circleIntersectsRectangle(position, radius, trigger.rect)) {
+				TriggerCollision collision = {};
+				collision.sourceEntity = entity;
+				collision.triggerEntity = trigger.entity;
+				collisions.push_back(collision);
+			}
+		}
+	}
+
+	return collisions;
+}
+
+//	============================================================================
 glm::vec2 PhysicsSystem::getPosition(const PhysicsComponent& cmpnt) const {
 	return mPosition[cmpnt.index];
 }

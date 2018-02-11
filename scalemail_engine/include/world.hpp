@@ -12,6 +12,7 @@
 #include "physics_system.hpp"
 #include "player.hpp"
 #include "sprite_system.hpp"
+#include "trigger_system.hpp"
 #include <memory>
 #include <string>
 #include <vector>
@@ -29,6 +30,7 @@ class World
 	NameSystem mNameSystem;
 	BulletSystem mBulletSystem;
 	ExpireSystem mExpireSystem;
+	TriggerSystem mTriggerSystem;
 	DoorSystem mDoorSystem;
 
 	std::vector<Player> mPlayers;
@@ -50,6 +52,8 @@ public:
 	Entity createProp(glm::vec2 position, int tilesetId, float offsetZ);
 	Entity createProp(glm::vec2 position, int frame1TilesetId,
 					  int frame2TilesetId, float offsetZ);
+	Entity createTrigger(const float x, const float y, const float width,
+						 const float height, const std::string targetName);
 	void destroyBullet(Entity entity);
 	void destroyEntity(Entity entity);
 	DoorSystem& getDoorSystem();
@@ -60,6 +64,7 @@ public:
 	PhysicsSystem& getPhysicsSystem();
 	std::vector<Player*> getPlayers();
 	SpriteSystem& getSpriteSystem();
+	TriggerSystem& getTriggerSystem();
 	void initialize(AssetManager* assetManager);
 	void loadMap(const std::string& mapName);
 	void update(float elapsedSeconds);

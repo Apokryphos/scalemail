@@ -551,6 +551,25 @@ static void processTorchObject(World& world,
 }
 
 //  ============================================================================
+static void processTriggerObject(World& world,
+								 const TmxMapLib::Object& object) {
+	if (!object.GetPropertySet().HasProperty("TargetName")) {
+		std::cout << "Trigger object is missing TargetName property." << std::endl;
+		return;
+	}
+
+	const float x = object.GetX();
+	const float y = object.GetY();
+	const float width = object.GetWidth();
+	const float height = object.GetHeight();
+
+	const std::string targetName =
+		object.GetPropertySet().GetValue("TargetName", "");
+
+	world.createTrigger(x, y, width, height, targetName);
+}
+
+//  ============================================================================
 static void processObject(World& world,
 						  const TmxMapLib::Object& object,
 						  const TmxMapLib::Map& tmxMap) {
@@ -581,11 +600,12 @@ static void processObject(World& world,
 	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Basic) {
 		if (type == "collision") {
 			processCollisionObject(world, object);
-		}
-		if (type == "actorcollision") {
+		} else if (type == "actorcollision") {
 			processActorCollisionObject(world, object);
 		} else if (type == "ambientlight") {
 			processAmbientLightObject(object);
+		} else if (type == "trigger") {
+			processTriggerObject(world, object);
 		}
 	}
 }

@@ -37,7 +37,7 @@ public:
 	GunComponent getComponent(const Entity& entity) const;
   	void setFire(const GunComponent& cmpnt, const bool fire);
   	void setPosition(const GunComponent& cmpnt, const glm::vec2 position);
-  	void setTarget(const GunComponent& cmpnt, glm::vec2 target);
+  	void setTarget(const GunComponent& cmpnt, const glm::vec2 target);
 	void update(World& world, float elapsedSeconds);
 };
 }

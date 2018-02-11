@@ -39,10 +39,8 @@ public:
 	LightSystem(EntityManager& entityManager, int maxComponents = 10000);
 	void buildGlowVertexData(SpriteBatch& spriteBatch);
 	void buildVertexData(SpriteBatch& spriteBatch);
-	glm::vec4 getAmbientColor() const;
 	LightComponent getComponent(const Entity& entity) const;
 	void initialize(AssetManager& assetManager);
-	void setAmbientColor(const glm::vec4 ambientColor);
 	void setColor(const LightComponent& cmpnt, const glm::vec4 color);
 	void setGlowSize(const LightComponent& cmpnt, const float glowSize);
 	void setOffset(const LightComponent& cmpnt, const glm::vec2 offset);

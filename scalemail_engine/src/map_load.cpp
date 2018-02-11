@@ -513,6 +513,54 @@ static void processMiscObject(World& world,
 }
 
 //  ============================================================================
+static bool processPlayerStartObject(const TmxMapLib::Object& object,
+									 const TmxMapLib::Map& tmxMap,
+									 PlayerStart& playerStart) {
+	auto const tile = object.GetTile();
+
+	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
+
+	if (tileset == nullptr) {
+		std::cout << "Invalid player start object in TMX map: no matching tileset." << std::endl;
+		return false;
+	}
+
+	int gid = tile->GetGid() - tileset->GetFirstGid();
+
+	const TmxMapLib::TilesetTile* tilesetTile = tileset->GetTile(gid);
+
+	if (tilesetTile == nullptr) {
+		std::cout << "Invalid player start object in TMX map: no matching tileset tile." << std::endl;
+		return false;
+	}
+
+	const TmxMapLib::Property* actorIndexProperty =
+		tilesetTile->GetPropertySet().GetProperty("ActorIndex");
+
+	if (actorIndexProperty == nullptr) {
+		std::cout << "Invalid player start object in TMX map: no tileset tile with ActorIndex property." << std::endl;
+		return false;
+	}
+
+	int actorIndex = actorIndexProperty->GetIntValue(0);
+
+	const TmxMapLib::Property* facingProperty =
+		tilesetTile->GetPropertySet().GetProperty("Facing");
+
+	Direction facing = Direction::SOUTH;
+
+	if (facingProperty != nullptr) {
+		const std::string value = facingProperty->GetValue();
+		facing = stringToDirection(value);
+	}
+
+	playerStart.position = glm::vec2(object.GetX(), object.GetY());
+	playerStart.actorIndex = actorIndex;
+	playerStart.facing = facing;
+	return true;
+}
+
+//  ============================================================================
 static void processTorchObject(World& world,
 							   const TmxMapLib::Object& object,
 							   const TmxMapLib::Map& tmxMap) {
@@ -572,7 +620,8 @@ static void processTriggerObject(World& world,
 //  ============================================================================
 static void processObject(World& world,
 						  const TmxMapLib::Object& object,
-						  const TmxMapLib::Map& tmxMap) {
+						  const TmxMapLib::Map& tmxMap,
+						  std::vector<PlayerStart>& playerStarts) {
 	const std::string type = toLowercase(object.GetType());
 
 	if (object.GetObjectType() == TmxMapLib::ObjectType::Ellipse) {
@@ -592,6 +641,11 @@ static void processObject(World& world,
 			processActorObject(world, object, tmxMap);
 		} else if (type == "door") {
 			processDoorObject(world, object, tmxMap);
+		} else if (type == "playerstart") {
+			PlayerStart playerStart;
+			if (processPlayerStartObject(object, tmxMap, playerStart)) {
+				playerStarts.push_back(playerStart);
+			}
 		} else if (type == "torch") {
 			processTorchObject(world, object, tmxMap);
 		} else {
@@ -611,10 +665,11 @@ static void processObject(World& world,
 }
 
 //  ============================================================================
-static void processObjects(const TmxMapLib::Map tmxMap, World& world) {
+static void processObjects(const TmxMapLib::Map tmxMap, World& world,
+						   std::vector<PlayerStart>& playerStarts) {
 	for (const auto& objectGroup : tmxMap.GetObjectGroups()) {
 		for (const auto& object : objectGroup.GetObjects()) {
-			processObject(world, object, tmxMap);
+			processObject(world, object, tmxMap, playerStarts);
 		}
 	}
 }
@@ -627,7 +682,8 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 
 	initializeLayers(tmxMap.GetHeight() * tmxMap.GetTileHeight());
 
-	processObjects(tmxMap, world);
+	std::vector<PlayerStart> playerStarts;
+	processObjects(tmxMap, world, playerStarts);
 
 	std::vector<TileLayerData> tileLayerDatas;
 
@@ -680,6 +736,8 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 		std::make_shared<Map>(tmxMap.GetWidth(), tmxMap.GetHeight());
 
 	map->mapMesh = mapMesh;
+
+	map->setPlayerStarts(playerStarts);
 
 	return map;
 }

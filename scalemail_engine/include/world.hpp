@@ -49,6 +49,11 @@ public:
 					  int childClosedTilesetId, bool open,
 					  const std::string name);
 	Entity createEntity();
+	Entity createPlayerActor(float x, float y, int actorIndex,
+							 Direction facing = Direction::SOUTH,
+							 const std::string name = "");
+	Entity createPlayerBullet(glm::vec2 position, glm::vec2 direction, float speed,
+							  int tilesetId);
 	Entity createProp(glm::vec2 position, int tilesetId, float offsetZ);
 	Entity createProp(glm::vec2 position, int frame1TilesetId,
 					  int frame2TilesetId, float offsetZ);

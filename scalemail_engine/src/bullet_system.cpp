@@ -47,27 +47,49 @@ Entity BulletSystem::getSourceEntity(const BulletComponent& cmpnt) const {
 
 //	============================================================================
 void BulletSystem::onEntityCollision(EntityCollision& collision) {
+	if (collision.sourceGroup != CollisionGroup::PLAYER_BULLET &&
+		collision.sourceGroup != CollisionGroup::BULLET) {
+		return;
+	}
+
+	if (collision.targetGroup == CollisionGroup::PLAYER_BULLET ||
+		collision.targetGroup == CollisionGroup::BULLET) {
+		collision.ignore = true;
+		return;
+	}
+
+	if (collision.sourceGroup == CollisionGroup::PLAYER_BULLET &&
+		collision.targetGroup == CollisionGroup::PLAYER_ACTOR) {
+		collision.ignore = true;
+		return;
+	}
+
 	if (collision.sourceGroup == CollisionGroup::BULLET &&
-		this->hasComponent(collision.sourceEntity)) {
+		collision.targetGroup == CollisionGroup::ACTOR) {
+		collision.ignore = true;
+		return;
+	}
+
+	if (this->hasComponent(collision.sourceEntity)) {
 		BulletComponent cmpnt = this->getComponent(collision.sourceEntity);
 
-		if (collision.targetGroup == CollisionGroup::BULLET) {
-			collision.ignore = true;
+		if (mSourceEntity[cmpnt.index] != collision.targetEntity) {
+			mLife[cmpnt.index] = 0;
 		} else {
-			if (mSourceEntity[cmpnt.index] != collision.targetEntity) {
-				mLife[cmpnt.index] = 0;
-			} else {
-				//	Ignore source entity (i.e. entity that fired bullet)
-				collision.ignore = true;
-			}
+			//	Ignore source entity (i.e. entity that fired bullet)
+			collision.ignore = true;
 		}
 	}
 }
 
 //	============================================================================
 void BulletSystem::onStaticCollision(StaticCollision& collision) {
-	if (collision.sourceGroup == CollisionGroup::BULLET &&
-		this->hasComponent(collision.sourceEntity)) {
+	if (collision.sourceGroup != CollisionGroup::PLAYER_BULLET &&
+		collision.sourceGroup != CollisionGroup::BULLET) {
+		return;
+	}
+
+	if (this->hasComponent(collision.sourceEntity)) {
 		BulletComponent cmpnt = this->getComponent(collision.sourceEntity);
 		mLife[cmpnt.index] = 0;
 	}

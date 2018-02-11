@@ -9,7 +9,9 @@ enum class CollisionGroup : uint8_t
 	ACTOR = 		(1 << 2),
 	BULLET = 		(1 << 3),
 	ITEM = 			(1 << 4),
-	TRIGGER = 		(1 << 5)
+	PLAYER_ACTOR = 	(1 << 5),
+	PLAYER_BULLET = (1 << 6),
+	TRIGGER = 		(1 << 7)
 };
 
 inline CollisionGroup operator |(const CollisionGroup selfValue, const CollisionGroup inValue)

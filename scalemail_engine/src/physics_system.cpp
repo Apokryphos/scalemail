@@ -157,7 +157,8 @@ std::vector<TriggerCollision> PhysicsSystem::getEntityIntersections(
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
-		if (mGroup[index] != CollisionGroup::ACTOR) {
+		if (mGroup[index] != CollisionGroup::ACTOR &&
+			mGroup[index] != CollisionGroup::PLAYER_ACTOR) {
 			continue;
 		}
 
@@ -262,25 +263,30 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 
 	//	Separate entities by collision group
 	for (auto& p : mEntitiesByComponentIndices) {
+		CollisionTest test = {};
+		test.entity = p.second;
+		test.group = mGroup[p.first];
+		test.position = mPosition[p.first];
+		test.radius = mRadius[p.first];
+		test.velocity = mVelocity[p.first];
+
 		switch (mGroup[p.first]) {
 			case CollisionGroup::ACTOR: {
-				CollisionTest test = {};
-				test.entity = p.second;
-				test.group = mGroup[p.first];
-				test.position = mPosition[p.first];
-				test.radius = mRadius[p.first];
-				test.velocity = mVelocity[p.first];
+				actorTests.push_back(test);
+				allTests.push_back(test);
+				break;
+			}
+			case CollisionGroup::PLAYER_ACTOR: {
 				actorTests.push_back(test);
 				allTests.push_back(test);
 				break;
 			}
 			case CollisionGroup::BULLET: {
-				CollisionTest test = {};
-				test.entity = p.second;
-				test.group = mGroup[p.first];
-				test.position = mPosition[p.first];
-				test.radius = mRadius[p.first];
-				test.velocity = mVelocity[p.first];
+				bulletTests.push_back(test);
+				allTests.push_back(test);
+				break;
+			}
+			case CollisionGroup::PLAYER_BULLET: {
 				bulletTests.push_back(test);
 				allTests.push_back(test);
 				break;

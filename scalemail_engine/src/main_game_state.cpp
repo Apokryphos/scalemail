@@ -118,7 +118,7 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 				bulletDirection = glm::normalize(bulletDirection);
 			}
 
-			world.createBullet(
+			world.createPlayerBullet(
 				origin,
 				bulletDirection,
 				bulletSpeed,

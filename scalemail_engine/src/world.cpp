@@ -10,10 +10,10 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
 				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
 				 mTriggerSystem(mEntityManager), mDoorSystem(mEntityManager) {
-	mPlayers.emplace_back("player1");
-	mPlayers.emplace_back("player2");
-	mPlayers.emplace_back("player3");
-	mPlayers.emplace_back("player4");
+	mPlayers.emplace_back("Player1");
+	mPlayers.emplace_back("Player2");
+	mPlayers.emplace_back("Player3");
+	mPlayers.emplace_back("Player4");
 
 	mPhysicsSystem.addEntityCollisionCallback(
 		std::bind(&BulletSystem::onEntityCollision, &mBulletSystem,
@@ -140,6 +140,28 @@ Entity World::createDoor(float x, float y, int openTilesetId,
 //  ============================================================================
 Entity World::createEntity() {
 	return mEntityManager.createEntity();
+}
+
+//  ============================================================================
+Entity World::createPlayerActor(float x, float y, int actorIndex, Direction facing,
+								std::string name) {
+	Entity entity = this->createActor(x, y, actorIndex, facing, name);
+
+	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
+	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_ACTOR);
+
+	return entity;
+}
+
+//  ============================================================================
+Entity World::createPlayerBullet(glm::vec2 position, glm::vec2 direction,
+								 float speed, int tilesetId) {
+	Entity entity = createBullet(position, direction, speed, tilesetId);
+
+	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
+	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_BULLET);
+
+	return entity;
 }
 
 //  ============================================================================
@@ -313,13 +335,22 @@ void World::initialize(AssetManager* assetManager) {
 void World::loadMap(const std::string& mapName) {
 	mMap = ScaleMail::loadMap("assets/maps/" + mapName + ".tmx", *this);
 
-	//  Assign players to map entities
-	for (auto& player : mPlayers) {
-		auto entities = mNameSystem.getEntitiesByName(player.name);
+	auto playerStarts = mMap->getPlayerStarts();
 
-		if (!entities.empty()) {
-			player.entity = entities.front();
-		}
+	assert(playerStarts.size() == 4);
+	assert(mPlayers.size() == 4);
+
+	for (size_t p = 0; p < mPlayers.size(); ++p) {
+		PlayerStart& playerStart = playerStarts[p];
+
+		Entity entity = this->createPlayerActor(
+			playerStart.position.x,
+			playerStart.position.y,
+			playerStart.actorIndex,
+			playerStart.facing,
+			"Player" + (p + 1));
+
+		mPlayers[p].entity = entity;
 	}
 }
 

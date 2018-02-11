@@ -33,6 +33,7 @@ struct TileData {
 };
 
 struct TileLayerData {
+	bool scroll;
 	int layerZ;
 	std::vector<TileData> tiles;
 };
@@ -48,6 +49,19 @@ static const glm::vec2 gQuadVertices[] =
 	glm::vec2( 0.5f,  0.5f),
 	glm::vec2( 0.5f, -0.5f),
 };
+
+//  ============================================================================
+static int getScrollTilesetIdOffset(int tilesetId) {
+	if (tilesetId >= 140 && tilesetId <= 143) {
+		return 140;
+	}
+
+	if (tilesetId >= 152 && tilesetId <= 155) {
+		return 148;
+	}
+
+	return 0;
+}
 
 //  ============================================================================
 static bool getTilesetAlpha(const TmxMapLib::Map& tmxMap, const int gid) {
@@ -281,12 +295,18 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 								  position, size, uv1, uv2,
 								  tile.rotation, z);
 			} else {
-				if (tilesetId >= 140 && tilesetId <= 143) {
-					getTilesetUv(tilesetId - 140, 32, 32, 16, 16, uv1, uv2);
+				if (tileLayer.scroll) {
+					int scrollTilesetIdOffset =
+						getScrollTilesetIdOffset(tilesetId);
+
+					getTilesetUv(tilesetId - scrollTilesetIdOffset,
+								 32, 64, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame1VertexData, position, size,
 									  uv1, uv2, tile.rotation, z);
-					getTilesetUv(tile.nextFrame - 140, 32, 32, 16, 16, uv1, uv2);
+
+					getTilesetUv(tile.nextFrame - scrollTilesetIdOffset,
+								 32, 64, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame2VertexData, position, size,
 									  uv1, uv2, tile.rotation, z);
@@ -695,6 +715,9 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 
 		tileLayerData.layerZ =
 			tileLayer.GetPropertySet().GetIntValue("LayerZ", layerIndex);
+
+		tileLayerData.scroll =
+			tileLayer.GetPropertySet().GetBoolValue("LayerScroll", false);
 
 		for (int tileY = 0; tileY < tileLayer.GetHeight(); ++tileY) {
 			for (int tileX = 0; tileX < tileLayer.GetWidth(); ++tileX) {

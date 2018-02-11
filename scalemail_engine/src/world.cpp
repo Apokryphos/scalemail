@@ -104,7 +104,7 @@ Entity World::createDoor(float x, float y, int openTilesetId,
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
-	mPhysicsSystem.setRadius(physicsCmpnt, 0);
+	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::STATIC);
 
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);

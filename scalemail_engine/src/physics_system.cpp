@@ -259,10 +259,21 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 
 	std::vector<CollisionTest> actorTests;
 	std::vector<CollisionTest> bulletTests;
-	std::vector<CollisionTest> allTests;
+	std::vector<CollisionTest> playerActorTests;
+	std::vector<CollisionTest> playerBulletTests;
+
+	std::vector<CollisionTest> vsActorTests;
+	std::vector<CollisionTest> vsBulletTests;
+	std::vector<CollisionTest> vsPlayerActorTests;
+	std::vector<CollisionTest> vsPlayerBulletTests;
 
 	//	Separate entities by collision group
 	for (auto& p : mEntitiesByComponentIndices) {
+		//	Skip zero radius entities
+		if (mRadius[p.first] <= 0.0f) {
+			continue;
+		}
+
 		CollisionTest test = {};
 		test.entity = p.second;
 		test.group = mGroup[p.first];
@@ -273,22 +284,32 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 		switch (mGroup[p.first]) {
 			case CollisionGroup::ACTOR: {
 				actorTests.push_back(test);
-				allTests.push_back(test);
+
+				vsActorTests.push_back(test);
+				vsPlayerActorTests.push_back(test);
+				vsPlayerBulletTests.push_back(test);
 				break;
 			}
 			case CollisionGroup::PLAYER_ACTOR: {
-				actorTests.push_back(test);
-				allTests.push_back(test);
+				playerActorTests.push_back(test);
+
+				vsActorTests.push_back(test);
+				vsBulletTests.push_back(test);
 				break;
 			}
 			case CollisionGroup::BULLET: {
 				bulletTests.push_back(test);
-				allTests.push_back(test);
 				break;
 			}
 			case CollisionGroup::PLAYER_BULLET: {
-				bulletTests.push_back(test);
-				allTests.push_back(test);
+				playerBulletTests.push_back(test);
+				break;
+			}
+			case CollisionGroup::STATIC: {
+				vsActorTests.push_back(test);
+				vsPlayerActorTests.push_back(test);
+				vsBulletTests.push_back(test);
+				vsPlayerBulletTests.push_back(test);
 				break;
 			}
 			default:
@@ -298,30 +319,69 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 
 	std::vector<CollisionTest> actorPassed;
 
-	//	Test actors VS static obstacles
+	//	--------------------
+	//	TEST PLAYER ACTORS |
+	//	--------------------
+	//	VS static obstacles
+	processStaticCollisions(playerActorTests, mStaticObstacles, actorPassed,
+							mStaticCollisions);
+
+	//	Clear and reuse for output of next pass
+	playerActorTests.clear();
+
+	//	VS static actor-only obstacles
+	processStaticCollisions(actorPassed, mStaticActorObstacles, playerActorTests,
+							mStaticCollisions);
+
+	actorPassed.clear();
+
+	//	VS entities
+	processEntityCollisions(playerActorTests, vsPlayerActorTests, actorPassed,
+							mEntityCollisions);
+
+	//	-------------
+	//	TEST ACTORS |
+	//	-------------
+	//	VS static obstacles
 	processStaticCollisions(actorTests, mStaticObstacles, actorPassed,
 							mStaticCollisions);
 
-	//	Clear and use for output of next pass
 	actorTests.clear();
 
-	//	Test actors VS static actor-only obstacles
+	//	VS static actor-only obstacles
 	processStaticCollisions(actorPassed, mStaticActorObstacles, actorTests,
 							mStaticCollisions);
 
-	//	Test bullets VS entities
-	processEntityCollisions(actorTests, actorTests, actorPassed, mEntityCollisions);
+	actorPassed.clear();
 
+	//	VS entities
+	processEntityCollisions(actorTests, vsActorTests, actorPassed, mEntityCollisions);
+
+	//	--------------
+	//	TEST BULLETS |
+	//	--------------
 	std::vector<CollisionTest> bulletPassed;
 
-	//	Test bullets VS static obstacles
+	//	VS static obstacles
 	processStaticCollisions(bulletTests, mStaticObstacles, bulletPassed,
 							mStaticCollisions);
 
 	bulletTests.clear();
 
 	//	Test bullets VS entities
-	processEntityCollisions(bulletPassed, allTests, bulletTests, mEntityCollisions);
+	processEntityCollisions(bulletPassed, vsBulletTests, bulletTests, mEntityCollisions);
+
+	//	---------------------
+	//	TEST PLAYER BULLETS |
+	//	---------------------
+	bulletPassed.clear();
+	//	Test player bullets VS static obstacles
+	processStaticCollisions(playerBulletTests, mStaticObstacles, bulletPassed,
+							mStaticCollisions);
+	playerBulletTests.clear();
+	//	Test player bullets VS entities
+	processEntityCollisions(bulletPassed, vsPlayerBulletTests, playerBulletTests,
+							mEntityCollisions);
 
 	for (auto& collision : mEntityCollisions) {
 		for (auto& callback : mEntityCollisionCallbacks) {

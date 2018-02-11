@@ -107,12 +107,21 @@ void DoorSystem::setOpen(const DoorComponent& cmpnt, const bool open) {
 	SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
 	mSpriteSystem->setTilesetId(spriteCmpnt, { tilesetId });
 
+	PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
+	mPhysicsSystem->setRadius(physicsCmpnt, open ? 0.0f : 8.0f);
+
 	if (data.childSprite) {
 		int childTilesetId = data.open ?
 			data.childOpenTilesetId : data.childClosedTilesetId;
 
-		SpriteComponent childSpriteCmpnt = mSpriteSystem->getComponent(data.childEntity);
+		SpriteComponent childSpriteCmpnt =
+			mSpriteSystem->getComponent(data.childEntity);
 		mSpriteSystem->setTilesetId(childSpriteCmpnt, { childTilesetId });
+
+		PhysicsComponent childPhysicsCmpnt =
+			mPhysicsSystem->getComponent(data.childEntity);
+		mPhysicsSystem->setRadius(childPhysicsCmpnt, 0.0f);
+
 	}
 }
 

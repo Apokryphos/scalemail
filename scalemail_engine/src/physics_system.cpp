@@ -149,6 +149,11 @@ PhysicsComponent PhysicsSystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
+CollisionGroup PhysicsSystem::getCollisionGroup(const PhysicsComponent& cmpnt) const {
+	return mGroup[cmpnt.index];
+}
+
+//	============================================================================
 std::vector<TriggerCollision> PhysicsSystem::getEntityIntersections(
 	const std::vector<Trigger>& triggers) const {
 

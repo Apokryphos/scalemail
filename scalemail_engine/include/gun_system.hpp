@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity_system.hpp"
+#include "collision_group.hpp"
 #include <glm/vec2.hpp>
 #include <vector>
 

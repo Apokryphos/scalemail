@@ -56,6 +56,7 @@ public:
 						   const float width, const float height);
 	void clearStaticObstacles();
 	void drawDebug(const Camera& camera);
+	CollisionGroup getCollisionGroup(const PhysicsComponent& cmpnt) const;
 	PhysicsComponent getComponent(const Entity& entity) const;
 	std::vector<TriggerCollision> getEntityIntersections(
 		const std::vector<Trigger>& triggers) const;

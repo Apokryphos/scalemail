@@ -74,13 +74,16 @@ void GunSystem::update(World& world, float elapsedSeconds) {
 	}
 
 	size_t count = mData.size();
-	for (size_t index = 0; index < count; ++index) {
+	for (auto& p : mEntitiesByComponentIndices) {
+		const int index = p.first;
+
 		GunComponentData& data = mData[index];
 
 		data.cooldownTicks = std::max(data.cooldownTicks - elapsedSeconds, 0.0f);
 
 		if (data.fire && data.cooldownTicks <= 0.0f) {
-			world.createPlayerBullet(
+			world.createBullet(
+				p.second,
 				data.position,
 				data.direction,
 				data.bulletSpeed,

@@ -44,8 +44,8 @@ public:
 	Entity createActor(float x, float y, int actorIndex,
 					   Direction facing = Direction::SOUTH,
 					   const std::string name = "");
-	Entity createBullet(glm::vec2 position, glm::vec2 direction, float speed,
-						int tilesetId);
+	Entity createBullet(Entity sourceEntity, glm::vec2 position,
+						glm::vec2 direction, float speed, int tilesetId);
 	Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
 					  bool open, const std::string name = "");
 	Entity createDoor(float x, float y, int openTilesetId,
@@ -56,8 +56,6 @@ public:
 	Entity createPlayerActor(float x, float y, int actorIndex,
 							 Direction facing = Direction::SOUTH,
 							 const std::string name = "");
-	Entity createPlayerBullet(glm::vec2 position, glm::vec2 direction,
-							  float speed, int tilesetId);
 	Entity createProp(glm::vec2 position, int tilesetId, float offsetZ);
 	Entity createProp(glm::vec2 position, int frame1TilesetId,
 					  int frame2TilesetId, float offsetZ);

@@ -45,6 +45,8 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 
 	mGunSystem.addComponent(entity);
 
+	mAiSystem.addComponent(entity);
+
 	if (name != "") {
 		mNameSystem.addComponent(entity);
 		NameComponent nameCmpnt = mNameSystem.getComponent(entity);
@@ -55,13 +57,13 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 }
 
 //  ============================================================================
-Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
-						   int tilesetId) {
+Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
+						   glm::vec2 direction, float speed, int tilesetId) {
 	Entity entity = mEntityManager.createEntity();
 
 	mBulletSystem.addComponent(entity);
 	BulletComponent bulletCmpnt = mBulletSystem.getComponent(entity);
-	mBulletSystem.setSourceEntity(bulletCmpnt, mPlayers[0].entity);
+	mBulletSystem.setSourceEntity(bulletCmpnt, sourceEntity);
 
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
@@ -76,7 +78,18 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 	mPhysicsSystem.setDirection(physicsCmpnt, direction);
 	mPhysicsSystem.setRadius(physicsCmpnt, 3.0f);
 	mPhysicsSystem.setSpeed(physicsCmpnt, speed);
-	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::BULLET);
+
+	PhysicsComponent sourcePhysicsCmpnt =
+		mPhysicsSystem.getComponent(sourceEntity);
+
+	CollisionGroup sourceGroup =
+		mPhysicsSystem.getCollisionGroup(sourcePhysicsCmpnt);
+
+	if (sourceGroup == CollisionGroup::PLAYER_ACTOR) {
+		mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_BULLET);
+	} else {
+		mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::BULLET);
+	}
 
 	const glm::vec4 lightColor(0.60f, 0.85f, 0.10f, 1.0f);
 	const float lightSize = 16;
@@ -154,16 +167,7 @@ Entity World::createPlayerActor(float x, float y, int actorIndex, Direction faci
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_ACTOR);
 
-	return entity;
-}
-
-//  ============================================================================
-Entity World::createPlayerBullet(glm::vec2 position, glm::vec2 direction,
-								 float speed, int tilesetId) {
-	Entity entity = createBullet(position, direction, speed, tilesetId);
-
-	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_BULLET);
+	mAiSystem.removeComponent(entity);
 
 	return entity;
 }

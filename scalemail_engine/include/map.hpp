@@ -2,7 +2,8 @@
 
 #include "direction.hpp"
 #include "mesh.hpp"
-#include <glm/glm.hpp>
+#include "rectangle.hpp"
+#include <glm/vec2.hpp>
 
 namespace ScaleMail
 {
@@ -23,13 +24,16 @@ struct PlayerStart
 
 class Map
 {
+	std::vector<Rectangle> mCameraBounds;
 	std::vector<PlayerStart> mPlayerStarts;
 
 public:
 	Map(const int width, const int height);
+	std::vector<Rectangle> getCameraBounds() const;
 	std::vector<PlayerStart> getPlayerStarts() const;
 	const int height;
 	MapMesh mapMesh;
+	void setCameraBounds(const std::vector<Rectangle> cameraBounds);
 	void setPlayerStarts(const std::vector<PlayerStart> playerStarts);
 	const int width;
 };

@@ -6,6 +6,7 @@
 #include "gun_system.hpp"
 #include "main_game_state.hpp"
 #include "physics_system.hpp"
+#include "rectangle.hpp"
 #include "world.hpp"
 #include <iostream>
 #include <glm/glm.hpp>
@@ -14,7 +15,6 @@
 
 namespace ScaleMail
 {
-
 //	============================================================================
 static void updateCameraPosition(Game& game) {
 	World* world = game.world;
@@ -29,10 +29,20 @@ static void updateCameraPosition(Game& game) {
 			PhysicsSystem& physicsSystem = world->getPhysicsSystem();
 			PhysicsComponent physicsCmpnt = physicsSystem.getComponent(players[0]->entity);
 			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
-			camera->position = position;
-		} else {
-			//	Camera is centered in room
-			camera->position = glm::vec2(128.0f, 1152.0f);
+
+			std::vector<Rectangle> cameraBounds = map->getCameraBounds();
+
+			auto findBounds = std::find_if(cameraBounds.begin(), cameraBounds.end(),
+				[position](const Rectangle& b) -> bool {
+					return b.contains(position);
+				}
+			);
+
+			if (findBounds != cameraBounds.end()) {
+				camera->setBounds(*findBounds);
+			}
+
+			camera->setPosition(position);
 		}
 	}
 }
@@ -44,6 +54,7 @@ MainGameState::MainGameState(GameStateManager& gameStateManager) :
 
 //	============================================================================
 void MainGameState::activate(Game& game) {
+	game.cameraFollow = true;
 	updateCameraPosition(game);
 }
 

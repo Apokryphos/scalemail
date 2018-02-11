@@ -39,7 +39,7 @@ void IntroGameState::activate(Game& game) {
 	setTransitionState(TransitionState::FADED_OUT);
 
 	Camera& camera = *game.camera;
-	camera.position = glm::vec2(128.0f, introCameraStartY);
+	camera.setPosition(glm::vec2(128.0f, introCameraStartY));
 
 	World& world = *game.world;
 	doorEntities = world.getEntitiesByName("introDoor");
@@ -49,7 +49,7 @@ void IntroGameState::activate(Game& game) {
 void IntroGameState::draw(const Game& game, Camera& camera) {
 	const GameWindow& gameWindow = game.gameWindow;
 
-	const float textSize = 8.0f * camera.zoom;
+	const float textSize = 8.0f * camera.getZoom();
 	const float centerX = gameWindow.width * 0.5f;
 	const float centerY = gameWindow.height * 0.5f - textSize;
 
@@ -117,22 +117,26 @@ void IntroGameState::updateState(World& world, Camera& camera,
 		introTicks += elapsedSeconds;
 		textAlpha = 1 - easeOutCubic(introTicks, 0, 1, STATE2_DURATION);
 
-		camera.position.y = easeInOutSine(
+		glm::vec2 position;
+
+		position.y = easeInOutSine(
 			introTicks,
 			introCameraStartY,
 			introCameraEndY - introCameraStartY,
 			STATE4_DURATION);
 
-		if (camera.position.y < introCameraEndY + 64) {
+		if (position.y < introCameraEndY + 64) {
 			for (auto entity : doorEntities) {
 				DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
 				world.getDoorSystem().setOpen(doorCmpnt, false);
 			}
 		}
 
+		camera.setPosition(position);
+
 		if (introTicks >= STATE4_DURATION) {
 			introTicks = 0;
-			camera.position.y = introCameraEndY;
+			camera.setPosition(glm::vec2(0, introCameraEndY));
 			++introState;
 		}
 		break;

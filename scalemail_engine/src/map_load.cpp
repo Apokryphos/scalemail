@@ -415,6 +415,16 @@ static void processAmbientLightObject(const TmxMapLib::Object& object) {
 }
 
 //  ============================================================================
+static Rectangle processCameraBoundsObject(const TmxMapLib::Object& object) {
+	const float x = object.GetX();
+	const float y = object.GetY();
+	const float width = object.GetWidth();
+	const float height = object.GetHeight();
+
+	return Rectangle(x, y, width, height);
+}
+
+//  ============================================================================
 static void processCollisionObject(World& world,
 							  	   const TmxMapLib::Object& object) {
 	const float x = object.GetX();
@@ -641,6 +651,7 @@ static void processTriggerObject(World& world,
 static void processObject(World& world,
 						  const TmxMapLib::Object& object,
 						  const TmxMapLib::Map& tmxMap,
+						  std::vector<Rectangle>& cameraBounds,
 						  std::vector<PlayerStart>& playerStarts) {
 	const std::string type = toLowercase(object.GetType());
 
@@ -678,6 +689,8 @@ static void processObject(World& world,
 			processActorCollisionObject(world, object);
 		} else if (type == "ambientlight") {
 			processAmbientLightObject(object);
+		} else if (type == "camerabounds") {
+			cameraBounds.push_back(processCameraBoundsObject(object));
 		} else if (type == "trigger") {
 			processTriggerObject(world, object);
 		}
@@ -686,10 +699,11 @@ static void processObject(World& world,
 
 //  ============================================================================
 static void processObjects(const TmxMapLib::Map tmxMap, World& world,
+						   std::vector<Rectangle>& cameraBounds,
 						   std::vector<PlayerStart>& playerStarts) {
 	for (const auto& objectGroup : tmxMap.GetObjectGroups()) {
 		for (const auto& object : objectGroup.GetObjects()) {
-			processObject(world, object, tmxMap, playerStarts);
+			processObject(world, object, tmxMap, cameraBounds, playerStarts);
 		}
 	}
 }
@@ -702,8 +716,9 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 
 	initializeLayers(tmxMap.GetHeight() * tmxMap.GetTileHeight());
 
+	std::vector<Rectangle> cameraBounds;
 	std::vector<PlayerStart> playerStarts;
-	processObjects(tmxMap, world, playerStarts);
+	processObjects(tmxMap, world, cameraBounds, playerStarts);
 
 	std::vector<TileLayerData> tileLayerDatas;
 
@@ -760,6 +775,7 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 
 	map->mapMesh = mapMesh;
 
+	map->setCameraBounds(cameraBounds);
 	map->setPlayerStarts(playerStarts);
 
 	return map;

@@ -9,8 +9,18 @@ Map::Map(const int width, const int height) :
 }
 
 //  ============================================================================
+std::vector<Rectangle> Map::getCameraBounds() const {
+	return mCameraBounds;
+}
+
+//  ============================================================================
 std::vector<PlayerStart> Map::getPlayerStarts() const {
 	return mPlayerStarts;
+}
+
+//  ============================================================================
+void Map::setCameraBounds(const std::vector<Rectangle> cameraBounds) {
+	mCameraBounds = cameraBounds;
 }
 
 //  ============================================================================

@@ -54,9 +54,11 @@ void BulletSystem::onEntityCollision(EntityCollision& collision) {
 		if (collision.targetGroup == CollisionGroup::BULLET) {
 			collision.ignore = true;
 		} else {
-			//	Ignore source entity (i.e. entity that fired bullet)
 			if (mSourceEntity[cmpnt.index] != collision.targetEntity) {
 				mLife[cmpnt.index] = 0;
+			} else {
+				//	Ignore source entity (i.e. entity that fired bullet)
+				collision.ignore = true;
 			}
 		}
 	}

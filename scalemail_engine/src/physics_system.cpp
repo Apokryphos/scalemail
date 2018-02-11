@@ -23,7 +23,6 @@ PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 	mGroup.reserve(maxComponents);
 	mDirection.reserve(maxComponents);
 	mPosition.reserve(maxComponents);
-	mCollisionOffset.reserve(maxComponents);
 	mRadius.reserve(maxComponents);
 	mSpeed.reserve(maxComponents);
 	mVelocity.reserve(maxComponents);
@@ -70,7 +69,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
-		glm::vec2 position = mPosition[index] + mCollisionOffset[index];
+		glm::vec2 position = mPosition[index];
 
 		float radius = mRadius[index];
 
@@ -129,7 +128,6 @@ void PhysicsSystem::createComponent() {
 	mGroup.emplace_back(CollisionGroup::NONE);
 	mDirection.emplace_back(0.0f);
 	mPosition.emplace_back(0.0f);
-	mCollisionOffset.emplace_back(0.0f);
 	mRadius.emplace_back(4.0f);
 	mSpeed.emplace_back(64.0f);
 	mVelocity.emplace_back(0.0f);
@@ -140,7 +138,6 @@ void PhysicsSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mGroup, index);
 	swapWithLastElementAndRemove(mDirection, index);
 	swapWithLastElementAndRemove(mPosition, index);
-	swapWithLastElementAndRemove(mCollisionOffset, index);
 	swapWithLastElementAndRemove(mRadius, index);
 	swapWithLastElementAndRemove(mSpeed, index);
 	swapWithLastElementAndRemove(mVelocity, index);
@@ -200,12 +197,6 @@ void PhysicsSystem::initialize(AssetManager& assetManager) {
 void PhysicsSystem::setCollisionGroup(const PhysicsComponent& cmpnt,
 								 	   const CollisionGroup group) {
 	mGroup[cmpnt.index] = group;
-}
-
-//	============================================================================
-void PhysicsSystem::setCollisionOffset(const PhysicsComponent& cmpnt,
-								 	   const glm::vec2 offset) {
-	mCollisionOffset[cmpnt.index] = offset;
 }
 
 //	============================================================================

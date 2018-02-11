@@ -27,7 +27,6 @@ class PhysicsSystem : public EntitySystem
 	std::vector<CollisionGroup> mGroup;
 	std::vector<glm::vec2> mDirection;
 	std::vector<glm::vec2> mPosition;
-	std::vector<glm::vec2> mCollisionOffset;
 	std::vector<glm::vec2> mVelocity;
 	std::vector<float> mRadius;
 	std::vector<float> mSpeed;
@@ -64,7 +63,6 @@ public:
 	void initialize(AssetManager& assetManager);
 	void setCollisionGroup(const PhysicsComponent& cmpnt,
 						   const CollisionGroup group);
-	void setCollisionOffset(const PhysicsComponent& cmpnt, const glm::vec2 offset);
 	void setDirection(const PhysicsComponent& cmpnt, const glm::vec2 direction);
   	void setPosition(const PhysicsComponent& cmpnt, const glm::vec2 position);
 	void setRadius(const PhysicsComponent& cmpnt, const float radius);

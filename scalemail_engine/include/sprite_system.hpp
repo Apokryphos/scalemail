@@ -30,6 +30,7 @@ struct SpriteComponentData {
 	unsigned int textureId;
 	int tilesetId;
 	float rotate;
+	float offsetY;
 	float offsetZ;
 	glm::vec2 size;
 	glm::vec2 uv1;
@@ -92,6 +93,7 @@ public:
 	void setFacing(const SpriteComponent& cmpnt, const Direction facing);
 	void setAnimationDuration(const SpriteComponent& cmpnt,
 							  const float duration);
+	void setOffsetY(const SpriteComponent& cmpnt, float offsetY);
 	void setOffsetZ(const SpriteComponent& cmpnt, float offsetZ);
 	void setTilesetId(const SpriteComponent& cmpnt,
 					  std::vector<int> frameTilesetIds);

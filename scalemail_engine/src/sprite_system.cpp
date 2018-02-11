@@ -34,6 +34,7 @@ SpriteSystem::SpriteSystem(EntityManager& entityManager, int maxComponents)
 void SpriteSystem::createComponent() {
 	SpriteComponentData data = {};
 	data.facing = Direction::SOUTH;
+	data.offsetY = 0.0f;
 	data.offsetZ = 16.0f;
 	data.textureId = 0;
 	data.tilesetId = 0;
@@ -220,6 +221,11 @@ void SpriteSystem::setDirection(
 }
 
 //	============================================================================
+void SpriteSystem::setOffsetY(const SpriteComponent& cmpnt, float offsetY) {
+	mData[cmpnt.index].offsetY = offsetY;
+}
+
+//	============================================================================
 void SpriteSystem::setOffsetZ(const SpriteComponent& cmpnt, float offsetZ) {
 	mData[cmpnt.index].offsetZ = offsetZ;
 }
@@ -273,7 +279,7 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 		size_t index = p.first;
 
 		mData[index].position.x = position.x;
-		mData[index].position.y = position.y;
+		mData[index].position.y = position.y + mData[index].offsetY;
 
 		mData[index].position.z = getLayerZ(2,
 			(position.y - mData[index].size.y * 0.5f) + mData[index].offsetZ);

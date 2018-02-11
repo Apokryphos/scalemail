@@ -34,11 +34,11 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	mSpriteSystem.setTileset(spriteCmpnt, "actors");
 	mSpriteSystem.setActorIndex(spriteCmpnt, actorIndex);
 	mSpriteSystem.setFacing(spriteCmpnt, facing);
+	mSpriteSystem.setOffsetY(spriteCmpnt, -4.0f);
 
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
-	mPhysicsSystem.setCollisionOffset(physicsCmpnt, glm::vec2(0.0f, 4.0f));
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
 
 	if (name != "") {
@@ -70,6 +70,7 @@ Entity World::createBullet(glm::vec2 position, glm::vec2 direction, float speed,
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, position);
 	mPhysicsSystem.setDirection(physicsCmpnt, direction);
+	mPhysicsSystem.setRadius(physicsCmpnt, 3.0f);
 	mPhysicsSystem.setSpeed(physicsCmpnt, speed);
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::BULLET);
 

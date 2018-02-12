@@ -18,6 +18,7 @@ struct BulletComponent {
 class BulletSystem : public EntitySystem
 {
 	std::vector<float> mLife;
+	std::vector<int> mImpactTilesetId;
 	std::vector<Entity> mSourceEntity;
 
 	virtual void createComponent() override;
@@ -26,10 +27,12 @@ class BulletSystem : public EntitySystem
 public:
 	BulletSystem(EntityManager& entityManager, int maxComponents = 1000);
 	BulletComponent getComponent(const Entity& entity) const;
+	int getImpactTilesetId(const BulletComponent& cmpnt) const;
 	float getLife(const BulletComponent& cmpnt) const;
 	Entity getSourceEntity(const BulletComponent& cmpnt) const;
 	void onEntityCollision(EntityCollision& collision);
 	void onStaticCollision(StaticCollision& collision);
+	void setImpactTilesetId(const BulletComponent& cmpnt, const int impactTilesetId);
 	void setLife(const BulletComponent& cmpnt, const float life);
 	void setSourceEntity(const BulletComponent& cmpnt, Entity entity);
 	void simulate(World& world, float elapsedSeconds);

@@ -13,24 +13,32 @@ static BulletComponent makeComponent(const int index) {
 BulletSystem::BulletSystem(EntityManager& entityManager, int maxComponents)
 	: EntitySystem(entityManager, maxComponents) {
 	mLife.reserve(maxComponents);
+	mImpactTilesetId.reserve(maxComponents);
 	mSourceEntity.reserve(maxComponents);
 }
 
 //	============================================================================
 void BulletSystem::createComponent() {
 	mLife.emplace_back(1.5f);
+	mImpactTilesetId.emplace_back(0);
 	mSourceEntity.emplace_back();
 }
 
 //	============================================================================
 void BulletSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mLife, index);
+	swapWithLastElementAndRemove(mImpactTilesetId, index);
 	swapWithLastElementAndRemove(mSourceEntity, index);
 }
 
 //	============================================================================
 BulletComponent BulletSystem::getComponent(const Entity& entity) const {
 	return makeComponent(mComponentIndicesByEntity.at(entity));
+}
+
+//	============================================================================
+int BulletSystem::getImpactTilesetId(const BulletComponent& cmpnt) const {
+	return mImpactTilesetId[cmpnt.index];
 }
 
 //	============================================================================
@@ -91,6 +99,12 @@ void BulletSystem::onStaticCollision(StaticCollision& collision) {
 		BulletComponent cmpnt = this->getComponent(collision.sourceEntity);
 		mLife[cmpnt.index] = 0;
 	}
+}
+
+//	============================================================================
+void BulletSystem::setImpactTilesetId(const BulletComponent& cmpnt,
+									  const int impactTilesetId) {
+	mImpactTilesetId[cmpnt.index] = impactTilesetId;
 }
 
 //	============================================================================

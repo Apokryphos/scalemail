@@ -28,7 +28,7 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 
 //  ============================================================================
 Entity World::createActor(float x, float y, int actorIndex, Direction facing,
-						  std::string name) {
+						  std::string name, std::string ai) {
 	Entity entity = mEntityManager.createEntity();
 
 	mSpriteSystem.addComponent(entity);
@@ -50,7 +50,17 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 
 	mGunSystem.addComponent(entity);
 
-	mAiSystem.addComponent(entity);
+	if (ai != "") {
+		std::shared_ptr<AiBehavior> aiBehavior =
+			mAiBehaviorFactory.createAiBehavior(ai);
+			aiBehavior->setEntity(entity);
+
+		if (aiBehavior != nullptr) {
+			mAiSystem.addComponent(entity);
+			AiComponent aiCmpnt = mAiSystem.getComponent(entity);
+			mAiSystem.addBehavior(aiCmpnt, aiBehavior);
+		}
+	}
 
 	if (name != "") {
 		mNameSystem.addComponent(entity);
@@ -171,8 +181,6 @@ Entity World::createPlayerActor(float x, float y, int actorIndex, Direction faci
 
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_ACTOR);
-
-	mAiSystem.removeComponent(entity);
 
 	return entity;
 }
@@ -344,6 +352,11 @@ NameSystem& World::getNameSystem() {
 //  ============================================================================
 PhysicsSystem& World::getPhysicsSystem() {
 	return mPhysicsSystem;
+}
+
+//  ============================================================================
+Random& World::getRandom() {
+	return mRandom;
 }
 
 //  ============================================================================

@@ -5,6 +5,9 @@ project(scalemail_engine)
 set(CMAKE_BUILD_TYPE Debug)
 
 set(SCALEMAIL_ENGINE_INCLUDE
+    include/ai/vampire_ai.hpp
+    include/ai_behavior.hpp
+    include/ai_behavior_factory.hpp
     include/ai_system.hpp
     include/ambient_light.hpp
     include/asset_manager.hpp
@@ -50,7 +53,9 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/name_system.hpp
     include/physics_system.hpp
     include/player.hpp
+    include/player_util.hpp
     include/quad_shader.hpp
+    include/random.hpp
     include/render.hpp
     include/screen_capture.hpp
     include/shader.hpp
@@ -69,6 +74,8 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
+    src/ai/vampire_ai.cpp
+    src/ai_behavior_factory.cpp
     src/ai_system.cpp
     src/ambient_light.cpp
     src/asset_manager.cpp
@@ -105,6 +112,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/map_render.cpp
     src/name_system.cpp
     src/physics_system.cpp
+    src/player_util.cpp
     src/render.cpp
     src/screen_capture.cpp
     src/shader.cpp

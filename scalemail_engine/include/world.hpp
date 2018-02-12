@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ai_behavior_factory.hpp"
 #include "ai_system.hpp"
 #include "bullet_system.hpp"
 #include "damage_system.hpp"
@@ -15,6 +16,7 @@
 #include "name_system.hpp"
 #include "physics_system.hpp"
 #include "player.hpp"
+#include "random.hpp"
 #include "sprite_system.hpp"
 #include "trigger_system.hpp"
 #include <memory>
@@ -27,6 +29,9 @@ class World
 {
 	EntityManager mEntityManager;
 	std::shared_ptr<Map> mMap;
+
+	Random mRandom;
+	AiBehaviorFactory mAiBehaviorFactory;
 
 	PhysicsSystem mPhysicsSystem;
 	SpriteSystem mSpriteSystem;
@@ -47,7 +52,7 @@ public:
 	World();
 	Entity createActor(float x, float y, int actorIndex,
 					   Direction facing = Direction::SOUTH,
-					   const std::string name = "");
+					   const std::string name = "", const std::string ai = "");
 	Entity createBullet(Entity sourceEntity, glm::vec2 position,
 						glm::vec2 direction, float speed, int tilesetId);
 	Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
@@ -78,6 +83,7 @@ public:
 	NameSystem& getNameSystem();
 	PhysicsSystem& getPhysicsSystem();
 	std::vector<Player*> getPlayers();
+	Random& getRandom();
 	SpriteSystem& getSpriteSystem();
 	TriggerSystem& getTriggerSystem();
 	void initialize(AssetManager* assetManager);

@@ -361,6 +361,8 @@ static void processActorObject(World& world,
 
 	const TmxMapLib::TilesetTile* tilesetTile = tileset->GetTile(gid);
 
+	const TmxMapLib::PropertySet& propertySet = tilesetTile->GetPropertySet();
+
 	if (tilesetTile == nullptr) {
 		std::cout << "Invalid actor object in TMX map: no matching tileset tile." << std::endl;
 		return;
@@ -386,8 +388,10 @@ static void processActorObject(World& world,
 		facing = stringToDirection(value);
 	}
 
+	const std::string aiName = toLowercase(propertySet.GetValue("Ai", ""));
+
 	world.createActor(object.GetX(), object.GetY(), actorIndex, facing,
-					  object.GetName());
+					  object.GetName(), aiName);
 }
 
 //  ============================================================================

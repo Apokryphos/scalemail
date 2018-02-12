@@ -11,7 +11,7 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
 				 mTriggerSystem(mEntityManager), mGunSystem(mEntityManager),
 				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager),
-				 mHealthSystem(mEntityManager) {
+				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -289,6 +289,11 @@ AiSystem& World::getAiSystem() {
 }
 
 //  ============================================================================
+DamageSystem& World::getDamageSystem() {
+	return mDamageSystem;
+}
+
+//  ============================================================================
 DoorSystem& World::getDoorSystem() {
 	return mDoorSystem;
 }
@@ -398,6 +403,8 @@ void World::update(float elapsedSeconds) {
 		mNameSystem,
 		mPhysicsSystem,
 		mDoorSystem);
+
+	mDamageSystem.applyDamage(mHealthSystem);
 
 	mExpireSystem.update(*this, elapsedSeconds);
 }

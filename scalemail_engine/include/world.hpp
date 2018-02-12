@@ -2,6 +2,7 @@
 
 #include "ai_system.hpp"
 #include "bullet_system.hpp"
+#include "damage_system.hpp"
 #include "direction.hpp"
 #include "door_system.hpp"
 #include "entity.hpp"
@@ -38,6 +39,7 @@ class World
 	DoorSystem mDoorSystem;
 	AiSystem mAiSystem;
 	HealthSystem mHealthSystem;
+	DamageSystem mDamageSystem;
 
 	std::vector<Player> mPlayers;
 
@@ -66,6 +68,7 @@ public:
 	void destroyBullet(Entity entity);
 	void destroyEntity(Entity entity);
 	AiSystem& getAiSystem();
+	DamageSystem& getDamageSystem();
 	DoorSystem& getDoorSystem();
 	std::vector<Entity> getEntitiesByName(const std::string name) const;
 	GunSystem& getGunSystem();

@@ -1,7 +1,9 @@
 #pragma once
 
+#include "ai_behavior.hpp"
 #include "entity_system.hpp"
 #include <glm/vec2.hpp>
+#include <memory>
 #include <vector>
 
 namespace ScaleMail
@@ -17,6 +19,7 @@ class AiSystem : public EntitySystem
 {
 	struct AiComponentData
 	{
+		std::vector<std::shared_ptr<AiBehavior>> behaviors;
 	};
 
 	std::vector<AiComponentData> mData;
@@ -26,6 +29,8 @@ class AiSystem : public EntitySystem
 
 public:
 	AiSystem(EntityManager& entityManager, int maxComponents = 1000);
+	void addBehavior(const AiComponent& cmpnt,
+					 std::shared_ptr<AiBehavior> behavior);
 	AiComponent getComponent(const Entity& entity) const;
 	void update(World& world, float elapsedSeconds);
 };

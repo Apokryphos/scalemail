@@ -44,6 +44,8 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
 	mPhysicsSystem.setRadius(physicsCmpnt, 4.0f);
 
+	mHealthSystem.addComponent(entity);
+
 	mGunSystem.addComponent(entity);
 
 	mAiSystem.addComponent(entity);

@@ -44,6 +44,7 @@ public:
 							 const glm::vec4 lightColor);
 	void setBulletSpeed(const GunComponent& cmpnt, float speed);
 	void setBulletTilesetId(const GunComponent& cmpnt, int tilesetId);
+	void setCooldownDuration(const GunComponent& cmpnt, float duration);
   	void setFire(const GunComponent& cmpnt, const bool fire);
   	void setPosition(const GunComponent& cmpnt, const glm::vec2 position);
   	void setTarget(const GunComponent& cmpnt, const glm::vec2 target);

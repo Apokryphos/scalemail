@@ -63,6 +63,11 @@ void GunSystem::setBulletTilesetId(const GunComponent& cmpnt, int tilesetId) {
 }
 
 //	============================================================================
+void GunSystem::setCooldownDuration(const GunComponent& cmpnt, float duration) {
+	mData[cmpnt.index].cooldownDuration = std::max(duration, 0.0f);
+}
+
+//	============================================================================
 void GunSystem::setFire(const GunComponent& cmpnt, const bool fire) {
 	mData[cmpnt.index].fire = fire;
 }

@@ -36,6 +36,8 @@ class GunSystem : public EntitySystem
 public:
 	GunSystem(EntityManager& entityManager, int maxComponents = 1000);
 	GunComponent getComponent(const Entity& entity) const;
+	void setBulletSpeed(const GunComponent& cmpnt, float speed);
+	void setBulletTilesetId(const GunComponent& cmpnt, int tilesetId);
   	void setFire(const GunComponent& cmpnt, const bool fire);
   	void setPosition(const GunComponent& cmpnt, const glm::vec2 position);
   	void setTarget(const GunComponent& cmpnt, const glm::vec2 target);

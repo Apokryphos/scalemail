@@ -38,6 +38,16 @@ GunComponent GunSystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
+void GunSystem::setBulletSpeed(const GunComponent& cmpnt, float speed) {
+	mData[cmpnt.index].bulletSpeed = speed;
+}
+
+//	============================================================================
+void GunSystem::setBulletTilesetId(const GunComponent& cmpnt, int tilesetId) {
+	mData[cmpnt.index].bulletTilesetId = tilesetId;
+}
+
+//	============================================================================
 void GunSystem::setFire(const GunComponent& cmpnt, const bool fire) {
 	mData[cmpnt.index].fire = fire;
 }

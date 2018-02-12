@@ -1,7 +1,9 @@
 #pragma once
 
+#include "bullet_data.hpp"
 #include "entity_system.hpp"
 #include "collision_group.hpp"
+#include "light_data.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 #include <vector>
@@ -20,18 +22,16 @@ class GunSystem : public EntitySystem
 	struct GunComponentData
 	{
 		bool fire;
-		int bulletImpactTilesetId;
-		int bulletTilesetId;
-		float bulletSpeed;
 		float cooldownDuration;
 		float cooldownTicks;
 		glm::vec2 direction;
 		glm::vec2 position;
 		glm::vec2 target;
-		glm::vec4 bulletLightColor;
 	};
 
-	std::vector<GunComponentData> mData;
+	std::vector<GunComponentData> mGunData;
+	std::vector<BulletData> mBulletData;
+	std::vector<LightData> mLightData;
 
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;

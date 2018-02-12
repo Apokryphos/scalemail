@@ -8,7 +8,6 @@
 #include "physics_system.hpp"
 #include "rectangle.hpp"
 #include "world.hpp"
-#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 #include <vector>

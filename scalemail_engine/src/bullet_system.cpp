@@ -1,8 +1,6 @@
 #include "bullet_system.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"
-#include <cmath>
-#include <iostream>
 
 namespace ScaleMail
 {

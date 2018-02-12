@@ -9,7 +9,6 @@
 #include "intro_game_state.hpp"
 #include "transition.hpp"
 #include "world.hpp"
-#include <iostream>
 #include <glm/glm.hpp>
 #include <vector>
 

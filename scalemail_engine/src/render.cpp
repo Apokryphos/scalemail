@@ -11,7 +11,6 @@
 #include "transition.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
-#include <iostream>
 
 namespace ScaleMail
 {

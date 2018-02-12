@@ -4,7 +4,6 @@
 #include "vector_util.hpp"
 #include "world.hpp"
 #include <glm/vec4.hpp>
-#include <iostream>
 
 namespace ScaleMail
 {

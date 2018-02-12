@@ -6,7 +6,6 @@
 #include "trigger_system.hpp"
 #include "vector_util.hpp"
 #include <glm/vec4.hpp>
-#include <iostream>
 
 namespace ScaleMail
 {

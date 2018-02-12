@@ -9,7 +9,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform2.hpp>
 #include <algorithm>
-#include <iostream>
 #include <string>
 #include <vector>
 

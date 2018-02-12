@@ -7,7 +7,6 @@
 #include "transition.hpp"
 #include <glm/glm.hpp>
 #include <algorithm>
-#include <iostream>
 #include <string>
 #include <vector>
 

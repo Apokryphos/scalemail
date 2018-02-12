@@ -12,6 +12,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/ambient_light.hpp
     include/asset_manager.hpp
     include/blend.hpp
+    include/bullet_data.hpp
     include/bullet_system.hpp
     include/bullet_util.hpp
     include/camera.hpp
@@ -44,6 +45,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/intro_game_state.hpp
     include/layer.hpp
     include/light.hpp
+    include/light_data.hpp
     include/light_system.hpp
     include/main_game_state.hpp
     include/map.hpp

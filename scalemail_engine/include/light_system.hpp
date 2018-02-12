@@ -40,6 +40,7 @@ public:
 	void buildGlowVertexData(SpriteBatch& spriteBatch);
 	void buildVertexData(SpriteBatch& spriteBatch);
 	LightComponent getComponent(const Entity& entity) const;
+	glm::vec4 getColor(const LightComponent& cmpnt);
 	void initialize(AssetManager& assetManager);
 	void setColor(const LightComponent& cmpnt, const glm::vec4 color);
 	void setGlowSize(const LightComponent& cmpnt, const float glowSize);

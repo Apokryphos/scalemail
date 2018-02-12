@@ -68,6 +68,11 @@ void LightSystem::destroyComponent(int index) {
 }
 
 //	============================================================================
+glm::vec4 LightSystem::getColor(const LightComponent& cmpnt) {
+	return mColor[cmpnt.index];
+}
+
+//	============================================================================
 LightComponent LightSystem::getComponent(const Entity& entity) const {
 	return makeComponent(mComponentIndicesByEntity.at(entity));
 }

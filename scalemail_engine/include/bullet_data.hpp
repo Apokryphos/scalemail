@@ -11,6 +11,5 @@ struct BulletData
 	float life;
 	float speed;
 	glm::vec2 direction;
-	glm::vec2 target;
 };
 }

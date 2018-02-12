@@ -114,6 +114,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/name_system.cpp
     src/physics_system.cpp
     src/player_util.cpp
+    src/prefab_factory.cpp
     src/render.cpp
     src/screen_capture.cpp
     src/shader.cpp

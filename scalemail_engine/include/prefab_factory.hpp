@@ -10,7 +10,6 @@ class World;
 class PrefabFactory
 {
 public:
-	virtual void buildPrefab(Entity entity, std::string prefabName,
-							 World& world) = 0;
+	void buildPrefab(Entity entity, std::string prefabName, World& world);
 };
 }

@@ -28,7 +28,7 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 
 //  ============================================================================
 Entity World::createActor(float x, float y, int actorIndex, Direction facing,
-						  std::string name, std::string ai) {
+						  std::string name, std::string prefab, std::string ai) {
 	Entity entity = mEntityManager.createEntity();
 
 	mSpriteSystem.addComponent(entity);
@@ -50,6 +50,12 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 
 	mGunSystem.addComponent(entity);
 
+	if (name != "") {
+		mNameSystem.addComponent(entity);
+		NameComponent nameCmpnt = mNameSystem.getComponent(entity);
+		mNameSystem.setName(nameCmpnt, name);
+	}
+
 	if (ai != "") {
 		std::shared_ptr<AiBehavior> aiBehavior =
 			mAiBehaviorFactory.createAiBehavior(ai);
@@ -62,10 +68,8 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 		}
 	}
 
-	if (name != "") {
-		mNameSystem.addComponent(entity);
-		NameComponent nameCmpnt = mNameSystem.getComponent(entity);
-		mNameSystem.setName(nameCmpnt, name);
+	if (prefab != "") {
+		mPrefabFactory.buildPrefab(entity, prefab, *this);
 	}
 
 	return entity;

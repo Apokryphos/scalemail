@@ -389,9 +389,10 @@ static void processActorObject(World& world,
 	}
 
 	const std::string aiName = toLowercase(propertySet.GetValue("Ai", ""));
+	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
 
 	world.createActor(object.GetX(), object.GetY(), actorIndex, facing,
-					  object.GetName(), aiName);
+					  object.GetName(), prefabName, aiName);
 }
 
 //  ============================================================================

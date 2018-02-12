@@ -16,6 +16,7 @@
 #include "name_system.hpp"
 #include "physics_system.hpp"
 #include "player.hpp"
+#include "prefab_factory.hpp"
 #include "random.hpp"
 #include "sprite_system.hpp"
 #include "trigger_system.hpp"
@@ -32,6 +33,7 @@ class World
 
 	Random mRandom;
 	AiBehaviorFactory mAiBehaviorFactory;
+	PrefabFactory mPrefabFactory;
 
 	PhysicsSystem mPhysicsSystem;
 	SpriteSystem mSpriteSystem;
@@ -52,7 +54,9 @@ public:
 	World();
 	Entity createActor(float x, float y, int actorIndex,
 					   Direction facing = Direction::SOUTH,
-					   const std::string name = "", const std::string ai = "");
+					   const std::string name = "",
+					   const std::string prefab = "",
+					   const std::string ai = "");
 	Entity createBullet(Entity sourceEntity, glm::vec2 position,
 						glm::vec2 direction, float speed, int tilesetId);
 	Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,

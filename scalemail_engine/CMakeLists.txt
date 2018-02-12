@@ -15,6 +15,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/collision_group.hpp
     include/collision_test.hpp
     include/cursor.hpp
+    include/damage_system.hpp
     include/direction.hpp
     include/direction_util.hpp
     include/door_system.hpp
@@ -77,6 +78,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/collision.cpp
     src/collision_test.cpp
     src/cursor.cpp
+    src/damage_system.cpp
     src/direction_util.cpp
     src/door_system.cpp
     src/entity.cpp

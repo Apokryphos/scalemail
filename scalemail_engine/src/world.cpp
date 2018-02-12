@@ -10,7 +10,8 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
 				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
 				 mTriggerSystem(mEntityManager), mGunSystem(mEntityManager),
-				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager) {
+				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager),
+				 mHealthSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -298,6 +299,11 @@ std::vector<Entity> World::getEntitiesByName(const std::string name) const {
 //  ============================================================================
 GunSystem& World::getGunSystem() {
 	return mGunSystem;
+}
+
+//  ============================================================================
+HealthSystem& World::getHealthSystem() {
+	return mHealthSystem;
 }
 
 //  ============================================================================

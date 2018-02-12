@@ -46,6 +46,8 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 
 	mHealthSystem.addComponent(entity);
 
+	mDamageSystem.addComponent(entity);
+
 	mGunSystem.addComponent(entity);
 
 	mAiSystem.addComponent(entity);

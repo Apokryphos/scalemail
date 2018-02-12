@@ -20,6 +20,8 @@
 #include "random.hpp"
 #include "sprite_system.hpp"
 #include "trigger_system.hpp"
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -58,7 +60,8 @@ public:
 					   const std::string prefab = "",
 					   const std::string ai = "");
 	Entity createBullet(Entity sourceEntity, glm::vec2 position,
-						glm::vec2 direction, float speed, int tilesetId);
+						glm::vec2 direction, float speed, int tilesetId,
+						int impactTilesetId, glm::vec4 lightColor);
 	Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
 					  bool open, const std::string name = "");
 	Entity createDoor(float x, float y, int openTilesetId,

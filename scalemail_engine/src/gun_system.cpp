@@ -1,3 +1,4 @@
+#include "bullet_util.hpp"
 #include "gun_system.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
@@ -23,7 +24,9 @@ void GunSystem::createComponent() {
 	GunComponentData data = {};
 	data.cooldownDuration = 0.05f;
 	data.bulletSpeed = 128.0f;
-	data.bulletTilesetId = 32;
+	data.bulletImpactTilesetId = getBulletImpactTilesetId(0);
+	data.bulletTilesetId = getBulletTilesetId(0);
+	data.bulletLightColor = getBulletLightColor(0);
 	mData.push_back(data);
 }
 
@@ -35,6 +38,18 @@ void GunSystem::destroyComponent(int index) {
 //	============================================================================
 GunComponent GunSystem::getComponent(const Entity& entity) const {
 	return makeComponent(this->getComponentIndexByEntity(entity));
+}
+
+//	============================================================================
+void GunSystem::setBulletImpactTilesetId(const GunComponent& cmpnt,
+										 int tilesetId) {
+	mData[cmpnt.index].bulletImpactTilesetId = tilesetId;
+}
+
+//	============================================================================
+void GunSystem::setBulletLightColor(const GunComponent& cmpnt,
+							  const glm::vec4 lightColor) {
+	mData[cmpnt.index].bulletLightColor = lightColor;
 }
 
 //	============================================================================
@@ -96,7 +111,9 @@ void GunSystem::update(World& world, float elapsedSeconds) {
 				data.position,
 				data.direction,
 				data.bulletSpeed,
-				data.bulletTilesetId);
+				data.bulletTilesetId,
+				data.bulletImpactTilesetId,
+				data.bulletLightColor);
 
 			data.cooldownTicks = data.cooldownDuration;
 		}

@@ -3,6 +3,7 @@
 #include "entity_system.hpp"
 #include "collision_group.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 #include <vector>
 
 namespace ScaleMail
@@ -19,6 +20,7 @@ class GunSystem : public EntitySystem
 	struct GunComponentData
 	{
 		bool fire;
+		int bulletImpactTilesetId;
 		int bulletTilesetId;
 		float bulletSpeed;
 		float cooldownDuration;
@@ -26,6 +28,7 @@ class GunSystem : public EntitySystem
 		glm::vec2 direction;
 		glm::vec2 position;
 		glm::vec2 target;
+		glm::vec4 bulletLightColor;
 	};
 
 	std::vector<GunComponentData> mData;
@@ -36,6 +39,9 @@ class GunSystem : public EntitySystem
 public:
 	GunSystem(EntityManager& entityManager, int maxComponents = 1000);
 	GunComponent getComponent(const Entity& entity) const;
+	void setBulletImpactTilesetId(const GunComponent& cmpnt, int tilesetId);
+	void setBulletLightColor(const GunComponent& cmpnt,
+							 const glm::vec4 lightColor);
 	void setBulletSpeed(const GunComponent& cmpnt, float speed);
 	void setBulletTilesetId(const GunComponent& cmpnt, int tilesetId);
   	void setFire(const GunComponent& cmpnt, const bool fire);

@@ -1,3 +1,4 @@
+#include "bullet_util.hpp"
 #include "direction.hpp"
 #include "map_load.hpp"
 #include "sprite.hpp"
@@ -77,12 +78,14 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 
 //  ============================================================================
 Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
-						   glm::vec2 direction, float speed, int tilesetId) {
+						   glm::vec2 direction, float speed, int tilesetId,
+						   int impactTilesetId, glm::vec4 lightColor) {
 	Entity entity = mEntityManager.createEntity();
 
 	mBulletSystem.addComponent(entity);
 	BulletComponent bulletCmpnt = mBulletSystem.getComponent(entity);
 	mBulletSystem.setSourceEntity(bulletCmpnt, sourceEntity);
+	mBulletSystem.setImpactTilesetId(bulletCmpnt, impactTilesetId);
 
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
@@ -110,7 +113,6 @@ Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
 		mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::BULLET);
 	}
 
-	const glm::vec4 lightColor(0.60f, 0.85f, 0.10f, 1.0f);
 	const float lightSize = 16;
 	const float lightGlowSize = lightSize * 0.33f;
 	const float lightPulse = 32;
@@ -233,6 +235,12 @@ void World::destroyBullet(Entity entity) {
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	glm::vec2 bulletPosition = mPhysicsSystem.getPosition(physicsCmpnt);
 
+	BulletComponent bulletCmpnt = mBulletSystem.getComponent(entity);
+	int impactTilesetId = mBulletSystem.getImpactTilesetId(bulletCmpnt);
+
+	LightComponent lightCmpnt = mLightSystem.getComponent(entity);
+	glm::vec4 lightColor = mLightSystem.getColor(lightCmpnt);
+
 	//	Destroy bullet entity
 	this->destroyEntity(entity);
 
@@ -242,7 +250,9 @@ void World::destroyBullet(Entity entity) {
 	mSpriteSystem.addComponent(fxEntity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(fxEntity);
 	mSpriteSystem.setTileset(spriteCmpnt, "fx");
-	mSpriteSystem.setTilesetId(spriteCmpnt, { 40, 41, 42 });
+	mSpriteSystem.setTilesetId(
+		spriteCmpnt,
+		{ impactTilesetId, impactTilesetId + 1, impactTilesetId + 2 });
 	mSpriteSystem.setAnimationDuration(spriteCmpnt, 0.3f);
 
 	mPhysicsSystem.addComponent(fxEntity);
@@ -254,10 +264,8 @@ void World::destroyBullet(Entity entity) {
 	ExpireComponent expireCmpnt = mExpireSystem.getComponent(fxEntity);
 	mExpireSystem.setDuration(expireCmpnt, 0.3f);
 
-	const glm::vec4 lightColor(0.60f, 0.85f, 0.10f, 1.0f);
-
 	mLightSystem.addComponent(fxEntity);
-	LightComponent lightCmpnt = mLightSystem.getComponent(fxEntity);
+	lightCmpnt = mLightSystem.getComponent(fxEntity);
 	mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
 	mLightSystem.setColor(lightCmpnt, lightColor);
 	mLightSystem.setGlowSize(lightCmpnt, 0);

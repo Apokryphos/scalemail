@@ -13,6 +13,7 @@ static void buildVampire(Entity entity, World& world) {
 	gunSystem.setBulletImpactTilesetId(gunCmpnt, getBulletImpactTilesetId(3));
 	gunSystem.setBulletTilesetId(gunCmpnt, getBulletTilesetId(3));
 	gunSystem.setBulletLightColor(gunCmpnt, getBulletLightColor(3));
+	gunSystem.setCooldownDuration(gunCmpnt, 0.1f);
 }
 
 //  ============================================================================

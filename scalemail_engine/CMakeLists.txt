@@ -54,6 +54,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/physics_system.hpp
     include/player.hpp
     include/player_util.hpp
+    include/prefab_factory.hpp
     include/quad_shader.hpp
     include/random.hpp
     include/render.hpp

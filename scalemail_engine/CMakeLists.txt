@@ -32,6 +32,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/gl_headers.hpp
     include/gl_util.hpp
     include/gun_system.hpp
+    include/health_gauge.hpp
     include/input.hpp
     include/input_state.hpp
     include/intro_game_state.hpp
@@ -87,6 +88,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/game_state.cpp
     src/game_state_manager.cpp
     src/gun_system.cpp
+    src/health_gauge.cpp
     src/input.cpp
     src/intro_game_state.cpp
     src/layer.cpp

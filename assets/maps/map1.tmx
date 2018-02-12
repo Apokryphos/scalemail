@@ -1761,6 +1761,7 @@
     <property name="ActorIndex" type="int" value="20"/>
     <property name="Ai" value="vampire"/>
     <property name="Facing" value="east"/>
+    <property name="Prefab" value="vampire"/>
    </properties>
   </tile>
   <tile id="161">
@@ -1768,6 +1769,7 @@
     <property name="ActorIndex" type="int" value="20"/>
     <property name="Ai" value="vampire"/>
     <property name="Facing" value="south"/>
+    <property name="Prefab" value="vampire"/>
    </properties>
   </tile>
   <tile id="162">
@@ -1775,6 +1777,7 @@
     <property name="ActorIndex" type="int" value="20"/>
     <property name="Ai" value="vampire"/>
     <property name="Facing" value="north"/>
+    <property name="Prefab" value="vampire"/>
    </properties>
   </tile>
   <tile id="163">
@@ -1782,6 +1785,7 @@
     <property name="ActorIndex" type="int" value="20"/>
     <property name="Ai" value="vampire"/>
     <property name="Facing" value="west"/>
+    <property name="Prefab" value="vampire"/>
    </properties>
   </tile>
   <tile id="164">
@@ -1861,6 +1865,7 @@
     <property name="ActorIndex" type="int" value="20"/>
     <property name="Ai" value="vampire"/>
     <property name="Facing" value="east"/>
+    <property name="Prefab" value="vampire"/>
    </properties>
   </tile>
   <tile id="177">
@@ -1868,6 +1873,7 @@
     <property name="ActorIndex" type="int" value="20"/>
     <property name="Ai" value="vampire"/>
     <property name="Facing" value="south"/>
+    <property name="Prefab" value="vampire"/>
    </properties>
   </tile>
   <tile id="178">
@@ -1875,6 +1881,7 @@
     <property name="ActorIndex" type="int" value="20"/>
     <property name="Ai" value="vampire"/>
     <property name="Facing" value="north"/>
+    <property name="Prefab" value="vampire"/>
    </properties>
   </tile>
   <tile id="179">
@@ -1882,6 +1889,7 @@
     <property name="ActorIndex" type="int" value="20"/>
     <property name="Ai" value="vampire"/>
     <property name="Facing" value="west"/>
+    <property name="Prefab" value="vampire"/>
    </properties>
   </tile>
   <tile id="180">

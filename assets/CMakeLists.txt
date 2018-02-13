@@ -22,6 +22,7 @@ configure_file(shaders/sprite.frag ${OUTPUT_DIR}/shaders/sprite.frag COPYONLY)
 configure_file(shaders/sprite.vert ${OUTPUT_DIR}/shaders/sprite.vert COPYONLY)
 
 configure_file(textures/actors.png ${OUTPUT_DIR}/textures/actors.png COPYONLY)
+configure_file(textures/actors_mask.png ${OUTPUT_DIR}/textures/actors_mask.png COPYONLY)
 configure_file(textures/checker.png ${OUTPUT_DIR}/textures/checker.png COPYONLY)
 configure_file(textures/cursor.png ${OUTPUT_DIR}/textures/cursor.png COPYONLY)
 configure_file(textures/font.png ${OUTPUT_DIR}/textures/font.png COPYONLY)

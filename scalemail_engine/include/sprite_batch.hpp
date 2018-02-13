@@ -44,6 +44,8 @@ class SpriteBatch
 	std::unordered_map<GLuint, Batch> mBatchByTexture;
 	std::unordered_map<GLuint, Batch> mAlphaBatchByTexture;
 
+	std::unordered_map<bool, std::unordered_map<unsigned int, int>>	mTextureIdCounts;
+
 	inline void clearBatch(Batch& batch) {
 		batch.QuadCount           = 0;
 		batch.IndexOffset         = 0;
@@ -67,7 +69,6 @@ public:
 
 	void buildSpriteVertexData(
 		const int spriteCount,
-		const std::unordered_map<bool, std::unordered_map<unsigned int, int>> textureIdCounts,
 		const std::vector<unsigned int>& textureId,
 		const std::vector<bool>& alpha, const std::vector<float>& positionX,
 		const std::vector<float>& positionY, const std::vector<float>& positionZ,

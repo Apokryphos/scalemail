@@ -66,6 +66,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/sprite.hpp
     include/sprite_batch.hpp
     include/sprite_shader.hpp
+    include/sprite_effect_system.hpp
     include/sprite_system.hpp
     include/string_util.hpp
     include/texture.hpp
@@ -124,6 +125,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/shader.cpp
     src/sprite.cpp
     src/sprite_batch.cpp
+    src/sprite_effect_system.cpp
     src/sprite_system.cpp
     src/string_util.cpp
     src/texture.cpp

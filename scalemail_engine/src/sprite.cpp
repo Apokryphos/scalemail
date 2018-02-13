@@ -3,6 +3,7 @@
 #include "game_window.hpp"
 #include "sprite.hpp"
 #include "sprite_batch.hpp"
+#include "sprite_effect_system.hpp"
 #include "sprite_system.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtx/transform2.hpp>
@@ -78,10 +79,18 @@ void initializeSprites(AssetManager& assetManager) {
 }
 
 //  ============================================================================
-void renderSprites(SpriteSystem& spriteSystem, Camera& camera) {
+void renderSprites(
+	SpriteSystem& spriteSystem,
+	SpriteEffectSystem& spriteEffectSystem,
+	Camera& camera) {
 	glm::mat4 screenMvp = camera.getProjection() * camera.getView();
 
 	glEnable(GL_DEPTH_TEST);
+
+	spriteBatch.begin();
+	spriteEffectSystem.buildVertexData(spriteBatch, spriteSystem);
+	spriteBatch.render(screenMvp);
+	spriteBatch.end();
 
 	spriteBatch.begin();
 	spriteSystem.buildVertexData(spriteBatch);

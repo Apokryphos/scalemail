@@ -1,4 +1,5 @@
 #include "bullet_system.hpp"
+#include "damage_system.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"
 
@@ -52,6 +53,11 @@ Entity BulletSystem::getSourceEntity(const BulletComponent& cmpnt) const {
 }
 
 //	============================================================================
+void BulletSystem::initialize(DamageSystem& damageSystem) {
+	mDamageSystem = &damageSystem;
+}
+
+//	============================================================================
 void BulletSystem::onEntityCollision(EntityCollision& collision) {
 	if (collision.sourceGroup != CollisionGroup::PLAYER_BULLET &&
 		collision.sourceGroup != CollisionGroup::BULLET) {
@@ -81,6 +87,14 @@ void BulletSystem::onEntityCollision(EntityCollision& collision) {
 
 		if (mSourceEntity[cmpnt.index] != collision.targetEntity) {
 			mLife[cmpnt.index] = 0;
+
+			//	Damage target entity
+			if (mDamageSystem->hasComponent(collision.targetEntity)) {
+				DamageComponent damageCmpnt =
+					mDamageSystem->getComponent(collision.targetEntity);
+
+				mDamageSystem->setDamage(damageCmpnt, 10.0f);
+			}
 		} else {
 			//	Ignore source entity (i.e. entity that fired bullet)
 			collision.ignore = true;

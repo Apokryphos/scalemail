@@ -19,6 +19,9 @@ SpriteBatch::SpriteBatch() {}
 
 //	===========================================================================
 void SpriteBatch::begin() {
+	//	Reset texture ID counts
+	mTextureIdCounts.clear();
+
 	//	Reset batch counters
 	for (auto& b : mBatchByTexture) {
 		this->clearBatch(b.second);
@@ -254,8 +257,6 @@ void SpriteBatch::buildTileVertexData(
 //	===========================================================================
 void SpriteBatch::buildSpriteVertexData(
 	const int spriteCount,
-	const std::unordered_map<bool, std::unordered_map<unsigned int, int>>
-									 textureIdCounts,
 	const std::vector<unsigned int>& textureId,
 	const std::vector<bool>& alpha, const std::vector<float>& positionX,
 	const std::vector<float>& positionY, const std::vector<float>& positionZ,
@@ -265,8 +266,16 @@ void SpriteBatch::buildSpriteVertexData(
 	const std::vector<float>& sizeY, const std::vector<float>& rotate,
 	const std::vector<float>& texU1, const std::vector<float>& texV1,
 	const std::vector<float>& texU2, const std::vector<float>& texV2) {
+	assert(textureId.size() == alpha.size());
+
+	//	Calculate total quads per texture ID
+	const size_t textureIdCount = textureId.size();
+	for (size_t n = 0; n < textureIdCount; ++n) {
+		++mTextureIdCounts[alpha[n]][textureId[n]];
+	}
+
 	//	Calculate vertex buffer sizes
-	for (auto boolMap : textureIdCounts) {
+	for (auto boolMap : mTextureIdCounts) {
 		bool alpha = boolMap.first;
 
 		for (auto p : boolMap.second) {

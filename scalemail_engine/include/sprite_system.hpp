@@ -9,7 +9,6 @@
 #include <glm/vec4.hpp>
 #include <memory>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace ScaleMail
@@ -28,6 +27,7 @@ struct SpriteComponent {
 struct SpriteComponentData {
 	Direction facing;
 	unsigned int textureId;
+	unsigned int maskTextureId;
 	int tilesetId;
 	float rotate;
 	float offsetY;
@@ -37,6 +37,7 @@ struct SpriteComponentData {
 	glm::vec2 uv2;
 	glm::vec3 position;
 	glm::vec4 color;
+	glm::vec4 maskColor;
 	bool alpha;
 	std::string tilesetName;
 	SpriteAnimation animation;
@@ -67,12 +68,13 @@ private:
 	std::vector<float> mTexU2;
 	std::vector<float> mTexV2;
 
-	std::unordered_map<bool, std::unordered_map<unsigned int, int>>
-		mTextureIdCounts;
-
 	AssetManager* mAssetManager;
 
 protected:
+	void buildVertexData(
+		SpriteBatch& spriteBatch,
+		const std::vector<SpriteComponentData>& spriteData,
+		bool mask);
 	void calculateTextureCoords(int componentIndex);
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
@@ -81,6 +83,9 @@ protected:
 public:
 	SpriteSystem(EntityManager& entityManager, int maxComponents = 10000);
 	void buildVertexData(SpriteBatch& spriteBatch);
+	void buildVertexData(
+		SpriteBatch& spriteBatch,
+		const std::vector<Entity>& entities);
 	bool getAlpha(const SpriteComponent& cmpnt) const;
 	SpriteComponent getComponent(const Entity& entity) const;
 	glm::vec2 getSize(const SpriteComponent& cmpnt) const;
@@ -94,6 +99,7 @@ public:
 							  const float duration);
 	void setColor(const SpriteComponent& cmpnt, const glm::vec4 color);
 	void setFacing(const SpriteComponent& cmpnt, const Direction facing);
+	void setMaskColor(const SpriteComponent& cmpnt, const glm::vec4 color);
 	void setOffsetY(const SpriteComponent& cmpnt, float offsetY);
 	void setOffsetZ(const SpriteComponent& cmpnt, float offsetZ);
 	void setTilesetId(const SpriteComponent& cmpnt,

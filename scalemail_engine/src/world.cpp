@@ -12,7 +12,8 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
 				 mTriggerSystem(mEntityManager), mGunSystem(mEntityManager),
 				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager),
-				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager) {
+				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager),
+				 mSpriteEffectSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -38,6 +39,11 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	mSpriteSystem.setActorIndex(spriteCmpnt, actorIndex);
 	mSpriteSystem.setFacing(spriteCmpnt, facing);
 	mSpriteSystem.setOffsetY(spriteCmpnt, -4.0f);
+
+	mSpriteEffectSystem.addComponent(entity);
+	SpriteEffectComponent spriteEffectCmpnt =
+		mSpriteEffectSystem.getComponent(entity);
+	mSpriteEffectSystem.setBlinkDuration(spriteEffectCmpnt, 0.75f);
 
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
@@ -372,6 +378,11 @@ Random& World::getRandom() {
 }
 
 //  ============================================================================
+SpriteEffectSystem& World::getSpriteEffectSystem() {
+	return mSpriteEffectSystem;
+}
+
+//  ============================================================================
 SpriteSystem& World::getSpriteSystem() {
 	return mSpriteSystem;
 }
@@ -387,6 +398,7 @@ void World::initialize(AssetManager* assetManager) {
 	mLightSystem.initialize(*assetManager);
 	mDoorSystem.initialize(mPhysicsSystem, mSpriteSystem);
 	mPhysicsSystem.initialize(*assetManager);
+	mBulletSystem.initialize(mDamageSystem);
 }
 
 //  ============================================================================
@@ -431,7 +443,9 @@ void World::update(float elapsedSeconds) {
 		mPhysicsSystem,
 		mDoorSystem);
 
-	mDamageSystem.applyDamage(mHealthSystem);
+	mDamageSystem.applyDamage(mHealthSystem, mSpriteEffectSystem);
+
+	mSpriteEffectSystem.update(elapsedSeconds, mSpriteSystem);
 
 	mExpireSystem.update(*this, elapsedSeconds);
 }

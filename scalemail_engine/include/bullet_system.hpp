@@ -8,6 +8,7 @@
 
 namespace ScaleMail
 {
+class DamageSystem;
 class World;
 
 struct BulletComponent {
@@ -20,6 +21,7 @@ class BulletSystem : public EntitySystem
 	std::vector<float> mLife;
 	std::vector<int> mImpactTilesetId;
 	std::vector<Entity> mSourceEntity;
+	DamageSystem* mDamageSystem;
 
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
@@ -30,6 +32,7 @@ public:
 	int getImpactTilesetId(const BulletComponent& cmpnt) const;
 	float getLife(const BulletComponent& cmpnt) const;
 	Entity getSourceEntity(const BulletComponent& cmpnt) const;
+	void initialize(DamageSystem& damageSystem);
 	void onEntityCollision(EntityCollision& collision);
 	void onStaticCollision(StaticCollision& collision);
 	void setImpactTilesetId(const BulletComponent& cmpnt, const int impactTilesetId);

@@ -1,5 +1,6 @@
 #include "damage_system.hpp"
 #include "health_system.hpp"
+#include "sprite_effect_system.hpp"
 #include "vector_util.hpp"
 
 namespace ScaleMail
@@ -16,7 +17,9 @@ DamageSystem::DamageSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
-void DamageSystem::applyDamage(HealthSystem& healthSystem) {
+void DamageSystem::applyDamage(
+	HealthSystem& healthSystem,
+	SpriteEffectSystem& spriteEffectSystem) {
 	for (auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 		const Entity& entity = p.second;
@@ -28,6 +31,14 @@ void DamageSystem::applyDamage(HealthSystem& healthSystem) {
 			HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
 			healthGauge.subtract(damage);
 			mData[index].damage = 0.0f;
+
+			//	Sprite damage blink effect
+			if (spriteEffectSystem.hasComponent(entity)) {
+				SpriteEffectComponent effectCmpnt =
+					spriteEffectSystem.getComponent(entity);
+
+				spriteEffectSystem.blink(effectCmpnt);
+			}
 		}
 	}
 }
@@ -50,5 +61,10 @@ DamageComponent DamageSystem::getComponent(const Entity& entity) const {
 //	============================================================================
 float DamageSystem::getDamage(const DamageComponent& cmpnt) const {
 	return mData[cmpnt.index].damage;
+}
+
+//	============================================================================
+void DamageSystem::setDamage(const DamageComponent& cmpnt, const float damage) {
+	mData[cmpnt.index].damage = damage;
 }
 }

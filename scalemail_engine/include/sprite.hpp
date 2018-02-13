@@ -11,6 +11,7 @@ namespace ScaleMail
 class AssetManager;
 class Camera;
 class SpriteSystem;
+class SpriteEffectSystem;
 
 struct Sprite {
 	Direction facing;
@@ -23,7 +24,10 @@ struct Sprite {
 
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
 void initializeSprites(AssetManager& assetManager);
-void renderSprites(SpriteSystem& spriteSystem, Camera& camera);
+void renderSprites(
+	SpriteSystem& spriteSystem,
+	SpriteEffectSystem& spriteEffectSystem,
+	Camera& camera);
 void setSpriteAnimation(SpriteAnimation& animation,
 						std::vector<int> frameTilesetIds);
 }

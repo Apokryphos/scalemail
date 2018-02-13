@@ -6,6 +6,7 @@
 namespace ScaleMail
 {
 class HealthSystem;
+class SpriteEffectSystem;
 
 struct DamageComponent {
 	DamageComponent(const int index) { this->index = index; }
@@ -26,8 +27,9 @@ class DamageSystem : public EntitySystem
 
 public:
 	DamageSystem(EntityManager& entityManager, int maxComponents = 1000);
-	void applyDamage(HealthSystem& healthSystem);
+	void applyDamage(HealthSystem& healthSystem, SpriteEffectSystem& spriteEffectSystem);
 	DamageComponent getComponent(const Entity& entity) const;
 	float getDamage(const DamageComponent& cmpnt) const;
+	void setDamage(const DamageComponent& cmpnt, const float damage);
 };
 }

@@ -28,7 +28,7 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	renderMap(*world.getMap(), camera, totalElapsedSeconds);
-	renderSprites(world.getSpriteSystem(), camera);
+	renderSprites(world.getSpriteSystem(), world.getSpriteEffectSystem(), camera);
 	renderLight(gameWindow, camera, world.getLightSystem());
 	renderTransition();
 

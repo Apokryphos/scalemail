@@ -19,6 +19,7 @@
 #include "prefab_factory.hpp"
 #include "random.hpp"
 #include "sprite_system.hpp"
+#include "sprite_effect_system.hpp"
 #include "trigger_system.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
@@ -49,6 +50,7 @@ class World
 	AiSystem mAiSystem;
 	HealthSystem mHealthSystem;
 	DamageSystem mDamageSystem;
+	SpriteEffectSystem mSpriteEffectSystem;
 
 	std::vector<Player> mPlayers;
 
@@ -92,6 +94,7 @@ public:
 	std::vector<Player*> getPlayers();
 	Random& getRandom();
 	SpriteSystem& getSpriteSystem();
+	SpriteEffectSystem& getSpriteEffectSystem();
 	TriggerSystem& getTriggerSystem();
 	void initialize(AssetManager* assetManager);
 	void loadMap(const std::string& mapName);

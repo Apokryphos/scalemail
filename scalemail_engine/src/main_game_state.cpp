@@ -76,42 +76,58 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 	std::vector<Player*> players = world.getPlayers();
 
 	for (auto player : players) {
-		InputState& inputState = player->inputState;
+		HealthSystem& healthSystem = world.getHealthSystem();
+		HealthComponent healthCmpnt = healthSystem.getComponent(player->entity);
+		HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
 
-		SpriteSystem& spriteSystem = world.getSpriteSystem();
-		SpriteComponent spriteCmpnt = spriteSystem.getComponent(player->entity);
+		bool fire = false;
+		float moveX = 0.0f;
+		float moveY = 0.0f;
+		glm::vec2 gunTarget;
 
-		//	Update sprite facing
-		if (inputState.moveLeft || inputState.moveRight) {
-			if (inputState.moveLeft && !inputState.moveRight) {
-				spriteSystem.setFacing(spriteCmpnt, Direction::WEST);
-			} else if (inputState.moveRight && !inputState.moveLeft) {
-				spriteSystem.setFacing(spriteCmpnt, Direction::EAST);
+		if (!healthGauge.isEmpty()) {
+			InputState& inputState = player->inputState;
+
+			SpriteSystem& spriteSystem = world.getSpriteSystem();
+			SpriteComponent spriteCmpnt = spriteSystem.getComponent(player->entity);
+
+			//	Update sprite facing
+			if (inputState.moveLeft || inputState.moveRight) {
+				if (inputState.moveLeft && !inputState.moveRight) {
+					spriteSystem.setFacing(spriteCmpnt, Direction::WEST);
+				} else if (inputState.moveRight && !inputState.moveLeft) {
+					spriteSystem.setFacing(spriteCmpnt, Direction::EAST);
+				}
 			}
-		}
 
-		if (inputState.moveUp || inputState.moveDown) {
-			if (inputState.moveUp && !inputState.moveDown) {
-				spriteSystem.setFacing(spriteCmpnt, Direction::NORTH);
-			} else if (inputState.moveDown && !inputState.moveUp) {
-				spriteSystem.setFacing(spriteCmpnt, Direction::SOUTH);
+			if (inputState.moveUp || inputState.moveDown) {
+				if (inputState.moveUp && !inputState.moveDown) {
+					spriteSystem.setFacing(spriteCmpnt, Direction::NORTH);
+				} else if (inputState.moveDown && !inputState.moveUp) {
+					spriteSystem.setFacing(spriteCmpnt, Direction::SOUTH);
+				}
 			}
+
+			//	Update direction
+			moveX =
+				inputState.moveLeft && inputState.moveRight ? 0 :
+				inputState.moveLeft ? -1 :
+				inputState.moveRight ? 1 :
+				0;
+
+			moveY =
+				inputState.moveUp && inputState.moveDown ? 0 :
+				inputState.moveUp ? -1 :
+				inputState.moveDown ? 1 :
+				0;
+
+			//	Gun firing and reticle
+			fire = inputState.fire;
+			gunTarget = camera.unproject(inputState.aimPosition);
 		}
 
 		PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(player->entity);
-
-		float moveX =
-			inputState.moveLeft && inputState.moveRight ? 0 :
-			inputState.moveLeft ? -1 :
-			inputState.moveRight ? 1 :
-			0;
-
-		float moveY =
-			inputState.moveUp && inputState.moveDown ? 0 :
-			inputState.moveUp ? -1 :
-			inputState.moveDown ? 1 :
-			0;
 
 		glm::vec2 direction(moveX, moveY);
 		physicsSystem.setDirection(physicsCmpnt, direction);
@@ -120,10 +136,8 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 		GunSystem& gunSystem = world.getGunSystem();
 		GunComponent gunCmpnt = gunSystem.getComponent(player->entity);
 
-		gunSystem.setTarget(
-			gunCmpnt, camera.unproject(inputState.aimPosition));
-
-		gunSystem.setFire(gunCmpnt, inputState.fire);
+		gunSystem.setTarget(gunCmpnt, gunTarget);
+		gunSystem.setFire(gunCmpnt, fire);
 	}
 }
 }

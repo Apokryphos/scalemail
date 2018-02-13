@@ -200,6 +200,7 @@ void SpriteBatch::buildTileVertexData(
 	//	Position
 	vertexData[v++] = position.x + size.x * quadA.x;
 	vertexData[v++] = position.y + size.y * quadA.y;
+	vertexData[v++] = 0.0f;
 	//	UV
 	vertexData[v++] = uv1.x;
 	vertexData[v++] = uv2.y;
@@ -212,6 +213,7 @@ void SpriteBatch::buildTileVertexData(
 	//	Position
 	vertexData[v++] = position.x + size.x * quadB.x;
 	vertexData[v++] = position.y + size.y * quadB.y;
+	vertexData[v++] = 0.0f;
 	//	UV
 	vertexData[v++] = uv1.x;
 	vertexData[v++] = uv1.y;
@@ -224,6 +226,7 @@ void SpriteBatch::buildTileVertexData(
 	//	Position
 	vertexData[v++] = position.x + size.x * quadC.x;
 	vertexData[v++] = position.y + size.y * quadC.y;
+	vertexData[v++] = 0.0f;
 	//	UV
 	vertexData[v++] = uv2.x;
 	vertexData[v++] = uv1.y;
@@ -236,6 +239,7 @@ void SpriteBatch::buildTileVertexData(
 	//	Position
 	vertexData[v++] = position.x + size.x * quadD.x;
 	vertexData[v++] = position.y + size.y * quadD.y;
+	vertexData[v++] = 0.0f;
 	//	UV
 	vertexData[v++] = uv2.x;
 	vertexData[v++] = uv2.y;

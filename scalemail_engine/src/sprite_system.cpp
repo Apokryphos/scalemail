@@ -204,6 +204,12 @@ void SpriteSystem::setAnimationDuration(const SpriteComponent& cmpnt,
 }
 
 //	============================================================================
+void SpriteSystem::setColor(const SpriteComponent& cmpnt,
+							const glm::vec4 color) {
+	mData[cmpnt.index].color = color;
+}
+
+//	============================================================================
 void SpriteSystem::setFacing(const SpriteComponent& cmpnt,
 							 const Direction facing) {
 	mData[cmpnt.index].facing = facing;

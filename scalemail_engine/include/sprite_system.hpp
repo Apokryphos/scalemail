@@ -92,6 +92,7 @@ public:
 	void setAlpha(const SpriteComponent& cmpnt, const bool alpha);
 	void setAnimationDuration(const SpriteComponent& cmpnt,
 							  const float duration);
+	void setColor(const SpriteComponent& cmpnt, const glm::vec4 color);
 	void setFacing(const SpriteComponent& cmpnt, const Direction facing);
 	void setOffsetY(const SpriteComponent& cmpnt, float offsetY);
 	void setOffsetZ(const SpriteComponent& cmpnt, float offsetZ);

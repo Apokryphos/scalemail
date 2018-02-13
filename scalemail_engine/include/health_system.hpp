@@ -17,6 +17,7 @@ class HealthSystem : public EntitySystem
 {
 	struct HealthComponentData
 	{
+		bool respawn;
 		HealthGauge healthGauge;
 	};
 
@@ -29,5 +30,7 @@ public:
 	HealthSystem(EntityManager& entityManager, int maxComponents = 1000);
 	HealthComponent getComponent(const Entity& entity) const;
 	HealthGauge& getHealthGauge(const HealthComponent& cmpnt);
+	void setRespawn(const HealthComponent& cmpnt, const bool respawn);
+	void update(World& world);
 };
 }

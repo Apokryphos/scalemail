@@ -1,5 +1,6 @@
 #include "health_system.hpp"
 #include "vector_util.hpp"
+#include "world.hpp"
 
 namespace ScaleMail
 {
@@ -32,5 +33,33 @@ HealthComponent HealthSystem::getComponent(const Entity& entity) const {
 //	============================================================================
 HealthGauge& HealthSystem::getHealthGauge(const HealthComponent& cmpnt) {
 	return mData[cmpnt.index].healthGauge;
+}
+
+//	============================================================================
+void HealthSystem::setRespawn(const HealthComponent& cmpnt, const bool respawn) {
+	mData[cmpnt.index].respawn = respawn;
+}
+
+//	============================================================================
+void HealthSystem::update(World& world) {
+	std::vector<Entity> removeEntities;
+
+	for (auto& p : mEntitiesByComponentIndices) {
+		const int index = p.first;
+
+		if (mData[index].healthGauge.isEmpty()) {
+			//	Only destroy entities if they don't respawn
+			if (!mData[index].respawn) {
+				removeEntities.push_back(p.second);
+			} else {
+				//	Fill health gauge for now...
+				mData[index].healthGauge.fill();
+			}
+		}
+	}
+
+	for (auto& entity : removeEntities) {
+		world.destroyEntity(entity);
+	}
 }
 }

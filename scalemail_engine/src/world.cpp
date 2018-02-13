@@ -194,6 +194,9 @@ Entity World::createPlayerActor(float x, float y, int actorIndex, Direction faci
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_ACTOR);
 
+	HealthComponent healthCmpnt = mHealthSystem.getComponent(entity);
+	mHealthSystem.setRespawn(healthCmpnt, true);
+
 	return entity;
 }
 
@@ -280,12 +283,32 @@ void World::destroyBullet(Entity entity) {
 
 //  ============================================================================
 void World::destroyEntity(Entity entity) {
+	if (mAiSystem.hasComponent(entity)) {
+		mAiSystem.removeComponent(entity);
+	}
+
 	if (mBulletSystem.hasComponent(entity)) {
 		mBulletSystem.removeComponent(entity);
 	}
 
+	if (mDamageSystem.hasComponent(entity)) {
+		mDamageSystem.removeComponent(entity);
+	}
+
 	if (mDoorSystem.hasComponent(entity)) {
 		mDoorSystem.removeComponent(entity);
+	}
+
+	if (mExpireSystem.hasComponent(entity)) {
+		mExpireSystem.removeComponent(entity);
+	}
+
+	if (mGunSystem.hasComponent(entity)) {
+		mGunSystem.removeComponent(entity);
+	}
+
+	if (mHealthSystem.hasComponent(entity)) {
+		mHealthSystem.removeComponent(entity);
 	}
 
 	if (mLightSystem.hasComponent(entity)) {
@@ -304,8 +327,12 @@ void World::destroyEntity(Entity entity) {
 		mSpriteSystem.removeComponent(entity);
 	}
 
-	if (mExpireSystem.hasComponent(entity)) {
-		mExpireSystem.removeComponent(entity);
+	if (mSpriteEffectSystem.hasComponent(entity)) {
+		mSpriteEffectSystem.removeComponent(entity);
+	}
+
+	if (mTriggerSystem.hasComponent(entity)) {
+		mTriggerSystem.removeComponent(entity);
 	}
 
 	mEntityManager.destroyEntity(entity);
@@ -446,6 +473,8 @@ void World::update(float elapsedSeconds) {
 	mDamageSystem.applyDamage(mHealthSystem, mSpriteEffectSystem);
 
 	mSpriteEffectSystem.update(elapsedSeconds, mSpriteSystem);
+
+	mHealthSystem.update(*this);
 
 	mExpireSystem.update(*this, elapsedSeconds);
 }

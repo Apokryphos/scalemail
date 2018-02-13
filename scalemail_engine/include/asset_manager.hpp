@@ -16,6 +16,8 @@ namespace ScaleMail
 {
 class AssetManager
 {
+	Texture mMissingTexture;
+
 	Mesh mQuadMesh;
 
 	QuadShader mColorQuadShader;
@@ -40,5 +42,8 @@ public:
 	Texture getTextureById(const int textureId);
 	void initialize();
 	Texture loadTexture(const std::string textureName);
+	Texture loadTexture(
+		const std::string textureName,
+		const std::string filename);
 };
 }

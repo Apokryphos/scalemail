@@ -64,6 +64,11 @@ Texture AssetManager::getTextureById(const int textureId) {
 
 //  ============================================================================
 void AssetManager::initialize() {
+	mMissingTexture = this->loadTexture("checker_16");
+
+	this->loadTexture("fx_mask", "fx");
+	this->loadTexture("world_mask", "world");
+
 	initQuadMesh(mQuadMesh);
 
 	initShaderProgram("assets/shaders/fade.vert", "assets/shaders/fade.frag",
@@ -97,6 +102,32 @@ void AssetManager::initialize() {
 
 //  ============================================================================
 Texture AssetManager::loadTexture(const std::string textureName) {
+	return this->loadTexture(textureName, textureName);
+	// std::string texturePath = getTexturePath(textureName);
+
+	// auto result = mTexturesByPath.find(texturePath);
+
+	// if (result != mTexturesByPath.end()) {
+	// 	return result->second;
+	// }
+
+	// Texture texture;
+	// if (!loadPngTexture(texturePath, texture)) {
+	// 	texture = mMissingTexture;
+	// }
+
+	// mTexturesByPath.emplace(texturePath, texture);
+	// mTexturesById.emplace(texture.id, texture);
+
+	// std::cout << textureName << " texture loaded." << std::endl;
+
+	// return texture;
+}
+
+//  ============================================================================
+Texture AssetManager::loadTexture(
+	const std::string textureName,
+	const std::string filename) {
 	std::string texturePath = getTexturePath(textureName);
 
 	auto result = mTexturesByPath.find(texturePath);
@@ -106,7 +137,10 @@ Texture AssetManager::loadTexture(const std::string textureName) {
 	}
 
 	Texture texture;
-	loadPngTexture(texturePath, texture);
+	std::string filePath = getTexturePath(filename);
+	if (!loadPngTexture(filePath, texture)) {
+		texture = mMissingTexture;
+	}
 
 	mTexturesByPath.emplace(texturePath, texture);
 	mTexturesById.emplace(texture.id, texture);

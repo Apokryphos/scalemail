@@ -12,6 +12,7 @@ class AssetManager;
 class Camera;
 class SpriteSystem;
 class SpriteEffectSystem;
+class World;
 
 struct Sprite {
 	Direction facing;
@@ -24,6 +25,7 @@ struct Sprite {
 
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
 void initializeSprites(AssetManager& assetManager);
+void renderPlayerHud(World& world, Camera& camera);
 void renderSprites(
 	SpriteSystem& spriteSystem,
 	SpriteEffectSystem& spriteEffectSystem,

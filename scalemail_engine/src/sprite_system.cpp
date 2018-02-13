@@ -186,11 +186,8 @@ void SpriteSystem::calculateTextureCoords(int componentIndex) {
 	mData[componentIndex].tileset.getTileUv(
 		mData[componentIndex].tilesetId, uv1, uv2);
 
-	mData[componentIndex].uv1.x = uv1.x;
-	mData[componentIndex].uv1.y = uv2.y;
-
-	mData[componentIndex].uv2.x = uv2.x;
-	mData[componentIndex].uv2.y = uv1.y;
+	mData[componentIndex].uv1 = uv1;
+	mData[componentIndex].uv2 = uv2;
 }
 
 //	============================================================================

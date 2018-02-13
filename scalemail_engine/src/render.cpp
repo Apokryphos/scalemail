@@ -38,6 +38,8 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 
 	gameState.draw(game, camera);
 
+	renderPlayerHud(world, camera);
+
 	renderText(gameWindow);
 
 	glfwSwapBuffers(window);

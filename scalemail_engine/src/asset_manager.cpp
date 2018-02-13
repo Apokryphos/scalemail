@@ -140,6 +140,7 @@ Texture AssetManager::loadTexture(
 	std::string filePath = getTexturePath(filename);
 	if (!loadPngTexture(filePath, texture)) {
 		texture = mMissingTexture;
+		std::cout << textureName << " texture missing." << std::endl;
 	}
 
 	mTexturesByPath.emplace(texturePath, texture);

@@ -14,6 +14,13 @@ static const glm::vec2 gQuadVertices[] = {
 	glm::vec2( 0.5f, -0.5f),
 };
 
+static const glm::vec2 gTileVertices[] = {
+	glm::vec2( 0.0f, 0.0f),
+	glm::vec2( 0.0f, 1.0f),
+	glm::vec2( 1.0f, 1.0f),
+	glm::vec2( 1.0f, 0.0f),
+};
+
 //	===========================================================================
 SpriteBatch::SpriteBatch() {}
 
@@ -152,6 +159,19 @@ void SpriteBatch::buildQuadVertexData(
 void SpriteBatch::buildTileVertexData(
 	Tileset& tileset, int tilesetId, const glm::vec2& position,
 	const glm::vec2& size, bool alpha) {
+	glm::vec2 uv1;
+	glm::vec2 uv2;
+	tileset.getTileUv(tilesetId, uv1, uv2);
+
+	this->buildTileVertexData(
+		tileset, tilesetId, position, size, uv1, uv2, alpha);
+}
+
+//	===========================================================================
+void SpriteBatch::buildTileVertexData(
+	Tileset& tileset, int tilesetId, const glm::vec2& position,
+	const glm::vec2& size, const glm::vec2& uv1, const glm::vec2& uv2,
+	bool alpha) {
 	Batch& batch = alpha ? mAlphaBatchByTexture[tileset.texture.id]
 						 : mBatchByTexture[tileset.texture.id];
 
@@ -188,14 +208,10 @@ void SpriteBatch::buildTileVertexData(
 	size_t&         e      = batch.IndexOffset;
 	size_t&         v      = batch.VertexElementOffset;
 
-	glm::vec2 quadA = gQuadVertices[0];
-	glm::vec2 quadB = gQuadVertices[1];
-	glm::vec2 quadC = gQuadVertices[2];
-	glm::vec2 quadD = gQuadVertices[3];
-
-	glm::vec2 uv1;
-	glm::vec2 uv2;
-	tileset.getTileUv(tilesetId, uv1, uv2);
+	glm::vec2 quadA = gTileVertices[0];
+	glm::vec2 quadB = gTileVertices[1];
+	glm::vec2 quadC = gTileVertices[2];
+	glm::vec2 quadD = gTileVertices[3];
 
 	//	Position
 	vertexData[v++] = position.x + size.x * quadA.x;

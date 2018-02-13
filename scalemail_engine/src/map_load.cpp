@@ -150,7 +150,7 @@ static void flipTileUv(TileData& tile, glm::vec2& uv1, glm::vec2& uv2) {
 		std::swap(uv1.x, uv2.x);
 	}
 
-	if (tile.flipVert) {
+	if (!tile.flipVert) {
 		std::swap(uv1.y, uv2.y);
 	}
 

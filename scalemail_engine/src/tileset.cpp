@@ -24,8 +24,8 @@ void Tileset::getTileUv(int index, glm::vec2& uv1, glm::vec2& uv2) {
 	double u2 = (pixelX + this->tileWidth) / (double)this->texture.width;
 	double v2 = (pixelY + this->tileHeight) / (double)this->texture.height;
 
-	uv1 = glm::vec2(u1, v1);
-	uv2 = glm::vec2(u2, v2);
+	uv1 = glm::vec2(u1, v2);
+	uv2 = glm::vec2(u2, v1);
 }
 
 
@@ -47,7 +47,7 @@ void getTilesetUv(const int index, const int width, const int height,
 	double u2 = (pixelX + tileWidth) / (double)width;
 	double v2 = (pixelY + tileHeight) / (double)height;
 
-	uv1 = glm::vec2(u1, v1);
-	uv2 = glm::vec2(u2, v2);
+	uv1 = glm::vec2(u1, v2);
+	uv2 = glm::vec2(u2, v1);
 }
 }

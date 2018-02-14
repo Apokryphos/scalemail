@@ -17,6 +17,7 @@ class Camera
 
 public:
 	Camera(float width, float height, float zoom = 2.0f);
+	Rectangle getBounds() const;
 	glm::vec2 getPosition() const;
 	glm::mat4 getProjection() const;
 	glm::vec2 getSize() const;

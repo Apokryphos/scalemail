@@ -10,6 +10,11 @@ Camera::Camera(float width, float height, float zoom)
 }
 
 //  ============================================================================
+Rectangle Camera::getBounds() const {
+	return mBounds;
+}
+
+//  ============================================================================
 glm::vec2 Camera::getPosition() const {
 	return mPosition;
 }

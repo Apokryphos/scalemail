@@ -42,17 +42,29 @@ void IntroGameState::activate(Game& game) {
 
 	assert(introCamera != nullptr);
 	assert(introCamera->bounds.size() == 1);
+	assert(introCamera->paths.size() == 1);
 
-	Rectangle bounds = introCamera->bounds[0];
+	const Rectangle& bounds = introCamera->bounds[0];
+
+	//	Camera path should stretch from top to bottom of bounds
+	const MapCameraPath& path = introCamera->paths[0];
+
+	assert(path.points.size() == 2);
 
 	Camera& camera = *game.camera;
 
+	//	Set bounds before position so camera position will be
+	//	adjusted to fit in bounds
 	camera.setBounds(bounds);
 
-	introCameraStartY = bounds.y + 128.0f;
-	introCameraEndY = bounds.y + bounds.height - 128.0f;
+	//	Use bounds adjusted camera position for end position
+	camera.setPosition(glm::vec2(path.points[1].y, path.points[1].y));
+	introCameraEndY = camera.getPosition().y;
 
-	camera.setPosition(glm::vec2(bounds.x + bounds.width / 2, introCameraStartY));
+	//	Use bounds adjusted camera position for start
+	//	This will also set the camera to the correct initial position
+	camera.setPosition(glm::vec2(path.points[0].x, path.points[0].y));
+	introCameraStartY = camera.getPosition().y;
 
 	World& world = *game.world;
 	doorEntities = world.getEntitiesByName("introDoor");
@@ -155,7 +167,7 @@ void IntroGameState::updateState(World& world, Camera& camera,
 		break;
 	}
 
-	//  Pause before fading out
+	//  Pause before activating next game state
 	case 4:
 		introTicks += elapsedSeconds;
 		if (introTicks >= STATE5_DURATION) {

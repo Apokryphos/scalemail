@@ -3,9 +3,8 @@
 namespace ScaleMail
 {
 class AssetManager;
-class Camera;
+class Game;
 class SpriteBatch;
-class World;
 
 class GuiScreen
 {
@@ -13,8 +12,7 @@ class GuiScreen
 
 public:
 	GuiScreen();
-	virtual void draw(World& world, Camera& camera,
-					  SpriteBatch& spriteBatch) = 0;
+	virtual void draw(Game& game, SpriteBatch& spriteBatch) = 0;
 	bool getVisible() const;
 	virtual void initialize(AssetManager& assetManager) = 0;
 	void setVisible(bool visible);

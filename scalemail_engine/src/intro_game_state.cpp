@@ -71,26 +71,8 @@ void IntroGameState::activate(Game& game) {
 }
 
 //	============================================================================
-void IntroGameState::draw(const Game& game, Camera& camera) {
-	const GameWindow& gameWindow = game.gameWindow;
-
-	const float textSize = NORMAL_FONT_SIZE * camera.getZoom();
-	const float centerX = gameWindow.width * 0.5f;
-	const float centerY = gameWindow.height * 0.5f - textSize;
-
-	if (game.paused) {
-		drawCenterText(
-			glm::vec2(centerX, centerY),
-			"PAUSED",
-			glm::vec4(1.0f),
-			textSize);
-	} else {
-		drawCenterText(
-			glm::vec2(centerX, centerY),
-			"- SCALEMAIL -",
-			glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
-			textSize);
-	}
+void IntroGameState::draw([[maybe_unused]] const Game& game,
+						  [[maybe_unused]]Camera& camera) {
 }
 
 //	============================================================================

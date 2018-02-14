@@ -1,6 +1,7 @@
 #include "gui/player_hud_gui_screen.hpp"
 #include "asset_manager.hpp"
 #include "camera.hpp"
+#include "game.hpp"
 #include "sprite_batch.hpp"
 #include "world.hpp"
 #include <glm/mat4x4.hpp>
@@ -67,8 +68,10 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 }
 
 //	============================================================================
-void PlayerHudGuiScreen::draw(World& world, Camera& camera,
-							  SpriteBatch& spriteBatch) {
+void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
+	Camera& camera = *game.camera;
+	World& world = *game.world;
+
 	glm::mat4 projection = camera.getProjection();
 
 	std::vector<Player*> players = world.getPlayers();

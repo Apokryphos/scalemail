@@ -4585,8 +4585,8 @@
  </layer>
  <objectgroup name="IntroCamera">
   <object id="292" name="IntroCameraBounds" type="CameraBounds" x="0" y="0" width="256" height="1280"/>
-  <object id="293" name="IntroCameraPath" type="CameraPath" x="128" y="128">
-   <polyline points="0,8 0,1024"/>
+  <object id="293" name="IntroCameraPath" type="CameraPath" x="128" y="0">
+   <polyline points="0,0 0,1280"/>
   </object>
  </objectgroup>
  <objectgroup name="PlayerCamera">

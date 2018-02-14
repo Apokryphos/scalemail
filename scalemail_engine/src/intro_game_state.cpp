@@ -74,7 +74,7 @@ void IntroGameState::activate(Game& game) {
 void IntroGameState::draw(const Game& game, Camera& camera) {
 	const GameWindow& gameWindow = game.gameWindow;
 
-	const float textSize = 8.0f * camera.getZoom();
+	const float textSize = NORMAL_FONT_SIZE * camera.getZoom();
 	const float centerX = gameWindow.width * 0.5f;
 	const float centerY = gameWindow.height * 0.5f - textSize;
 

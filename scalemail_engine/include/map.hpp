@@ -23,9 +23,14 @@ struct PlayerStart
 	glm::vec2 position;
 };
 
+struct MapCameraPath {
+	std::vector<glm::vec2> points;
+};
+
 struct MapCamera {
 	std::string name;
 	std::vector<Rectangle> bounds;
+	std::vector<MapCameraPath> paths;
 };
 
 class Map

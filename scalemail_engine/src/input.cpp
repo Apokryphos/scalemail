@@ -2,6 +2,7 @@
 #include "gl_headers.hpp"
 #include "input_state.hpp"
 #include "transition.hpp"
+#include "world.hpp"
 #include <algorithm>
 #include <iostream>
 

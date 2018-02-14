@@ -1,3 +1,4 @@
+#include "gui/gui.hpp"
 #include "ambient_light.hpp"
 #include "asset_manager.hpp"
 #include "camera.hpp"
@@ -103,7 +104,9 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 
 	gameState.draw(game, camera);
 
-	renderPlayerHud(world, camera);
+	if (game.gui != nullptr) {
+		game.gui->draw(world, camera);
+	}
 
 	renderText(gameWindow);
 

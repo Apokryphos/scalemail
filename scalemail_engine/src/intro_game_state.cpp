@@ -150,8 +150,13 @@ void IntroGameState::updateState(World& world, Camera& camera,
 			introCameraEndY - introCameraStartY,
 			STATE4_DURATION);
 
-		if (position.y < introCameraEndY + 64) {
-			for (auto entity : doorEntities) {
+		//	Close doors as camera Y position passes them
+		for (auto entity : doorEntities) {
+			PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+			PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+			glm::vec2 doorPosition = physicsSystem.getPosition(physicsCmpnt);
+
+			if (position.y >= doorPosition.y) {
 				DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
 				world.getDoorSystem().setOpen(doorCmpnt, false);
 			}

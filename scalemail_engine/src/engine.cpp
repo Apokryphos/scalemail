@@ -1,3 +1,4 @@
+#include "gui/gui.hpp"
 #include "ambient_light.hpp"
 #include "asset_manager.hpp"
 #include "camera.hpp"
@@ -109,16 +110,21 @@ int startEngine() {
 
 	Camera camera(screenWidth, screenHeight, cameraZoom);
 
+	Gui gui;
+
 	Game game = {};
 	game.camera = &camera;
 	game.gameWindow.window = window;
+	game.gui = &gui;
 	game.speed = 1.0;
 	game.world = &world;
 	glfwSetWindowUserPointer(window, &game);
 
+	gui.initialize(assetManager);
+
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
-	gameStateManager.activateMainGameState();
+	gameStateManager.activateIntroGameState();
 
 	double totalElapsedSeconds = 0;
 	double lastSeconds = 0;

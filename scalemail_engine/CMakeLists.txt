@@ -9,6 +9,9 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/ai_behavior.hpp
     include/ai_behavior_factory.hpp
     include/ai_system.hpp
+    include/gui/gui.hpp
+    include/gui/gui_screen.hpp
+    include/gui/player_hud_gui_screen.hpp
     include/ambient_light.hpp
     include/asset_manager.hpp
     include/blend.hpp
@@ -82,6 +85,9 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/vampire_ai.cpp
     src/ai_behavior_factory.cpp
     src/ai_system.cpp
+    src/gui/gui.cpp
+    src/gui/gui_screen.cpp
+    src/gui/player_hud_gui_screen.cpp
     src/ambient_light.cpp
     src/asset_manager.cpp
     src/blend.cpp

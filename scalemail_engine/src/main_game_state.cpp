@@ -1,3 +1,4 @@
+#include "gui/gui.hpp"
 #include "ambient_light.hpp"
 #include "camera.hpp"
 #include "game.hpp"
@@ -62,6 +63,8 @@ MainGameState::MainGameState(GameStateManager& gameStateManager) :
 void MainGameState::activate(Game& game) {
 	game.cameraFollow = true;
 	updateCameraPosition(game);
+
+	game.gui->showPlayerHud(true);
 }
 
 //	============================================================================

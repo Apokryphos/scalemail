@@ -1,11 +1,13 @@
 #pragma once
 
-#include "camera.hpp"
 #include "game_window.hpp"
-#include "world.hpp"
 
 namespace ScaleMail
 {
+class Camera;
+class Gui;
+class World;
+
 struct Game
 {
 	bool cameraFollow;
@@ -15,6 +17,7 @@ struct Game
 	double speed;
 	Camera* camera;
 	GameWindow gameWindow;
+	Gui* gui;
 	World* world;
 };
 }

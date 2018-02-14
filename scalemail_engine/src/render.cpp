@@ -72,6 +72,7 @@ void updateStencilBuffer(GameWindow& gameWindow, Camera& camera) {
 	glStencilFunc(GL_EQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glDepthMask(GL_TRUE);
 }
 
 //	============================================================================

@@ -63,9 +63,8 @@ public:
 	void begin();
 
 	void buildTileVertexData(
-		Tileset& tileset, int tilesetId, const glm::vec2& position,
-		const glm::vec2& size, const glm::vec2& uv1, const glm::vec2& uv2,
-		bool alpha);
+		int textureId, const glm::vec2& position, const glm::vec2& size,
+		const glm::vec2& uv1, const glm::vec2& uv2, bool alpha);
 
 	void buildQuadVertexData(
 		int textureId, const std::vector<glm::vec3>& position,

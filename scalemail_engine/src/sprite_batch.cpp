@@ -164,21 +164,20 @@ void SpriteBatch::buildTileVertexData(
 	tileset.getTileUv(tilesetId, uv1, uv2);
 
 	this->buildTileVertexData(
-		tileset, tilesetId, position, size, uv1, uv2, alpha);
+		tileset.texture.id, position, size, uv1, uv2, alpha);
 }
 
 //	===========================================================================
 void SpriteBatch::buildTileVertexData(
-	Tileset& tileset, int tilesetId, const glm::vec2& position,
-	const glm::vec2& size, const glm::vec2& uv1, const glm::vec2& uv2,
-	bool alpha) {
-	Batch& batch = alpha ? mAlphaBatchByTexture[tileset.texture.id]
-						 : mBatchByTexture[tileset.texture.id];
+	int textureId, const glm::vec2& position, const glm::vec2& size,
+	const glm::vec2& uv1, const glm::vec2& uv2,	bool alpha) {
+	Batch& batch = alpha ? mAlphaBatchByTexture[textureId]
+						 : mBatchByTexture[textureId];
 
 	++batch.QuadCount;
 
 	//	Assign texture ID in case batch was created
-	batch.TextureId = tileset.texture.id;
+	batch.TextureId = textureId;
 
 	//	Increase vertex and index buffers to size of largest batch
 	batch.VertexElementCount += QuadVertexElementCount;

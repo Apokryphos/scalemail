@@ -133,8 +133,7 @@ static void drawHealthGauge(glm::vec2 position, const float scale,
 
 	//	Draw the filled layer
 	spriteBatch.buildTileVertexData(
-		guiTileset,
-		176,
+		guiTileset.texture.id,
 		position * scale,
 		size * scale,
 		uv1,

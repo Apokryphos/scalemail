@@ -7,57 +7,18 @@
 
 namespace ScaleMail
 {
-static const struct
-{
-	float x, y;
-	float r, g, b, a;
-} quadVertices[6] = {
-	{  1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f },
-	{  1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f },
-	{ -1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f },
-	{  1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f },
-	{ -1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f },
-	{ -1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f }
-};
-
 struct AmbientLight
 {
 	glm::vec4 color;
 	glm::vec4 rect;
 };
 
-static const unsigned int LIGHT_MESH_ELEMENT_COUNT = 6;
+static const unsigned int LIGHT_MESH_ELEMENT_COUNT = COLOR_QUAD_ELEMENT_COUNT;
 
 static Mesh ambientLightMesh;
 static std::vector<float> ambientLightVertexData;
 
 static std::vector<AmbientLight> ambientLights;
-
-//  ============================================================================
-static bool initializeMesh(Mesh& mesh) {
-	glGenVertexArrays(1, &mesh.vao);
-	glGenBuffers(1, &mesh.vbo);
-
-	mesh.vertexCount = 0;
-
-	glBindVertexArray(mesh.vao);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * LIGHT_MESH_ELEMENT_COUNT, (void*) 0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * LIGHT_MESH_ELEMENT_COUNT,
-						  (void*) (sizeof(float) * 2));
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	return true;
-}
 
 //  ============================================================================
 static bool updateMesh(Mesh& mesh, const std::vector<float>& vertexData) {
@@ -90,7 +51,7 @@ void addAmbientLight(glm::vec4 color, glm::vec4 rect) {
 
 //  ============================================================================
 void initializeAmbientLights() {
-	initializeMesh(ambientLightMesh);
+	initColorQuadMesh(ambientLightMesh);
 }
 
 //  ============================================================================

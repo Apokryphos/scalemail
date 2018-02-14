@@ -2,20 +2,15 @@
 #include "asset_manager.hpp"
 #include "camera.hpp"
 #include "cursor.hpp"
-#include "font.hpp"
 #include "game.hpp"
 #include "game_state_manager.hpp"
 #include "gl_headers.hpp"
 #include "input.hpp"
 #include "input_state.hpp"
-#include "light.hpp"
-#include "map_render.hpp"
 #include "render.hpp"
 #include "screen_capture.hpp"
-#include "sprite.hpp"
 #include "transition.hpp"
 #include "world.hpp"
-#include <algorithm>
 #include <iostream>
 
 namespace ScaleMail {
@@ -102,12 +97,7 @@ int startEngine() {
 	AssetManager assetManager;
 	assetManager.initialize();
 
-	initializeFont(assetManager);
-	initializeTransition(assetManager);
-	initializeLight(assetManager);
-	initializeSprites(assetManager);
-	initializeMapMesh(assetManager);
-	initializeAmbientLights();
+	initializeRender(assetManager);
 
 	//  Load map after all other initialize functions
 	World world;
@@ -128,7 +118,7 @@ int startEngine() {
 
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
-	gameStateManager.activateIntroGameState();
+	gameStateManager.activateMainGameState();
 
 	double totalElapsedSeconds = 0;
 	double lastSeconds = 0;

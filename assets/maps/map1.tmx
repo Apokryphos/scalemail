@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="32" height="80" tilewidth="16" tileheight="16" nextobjectid="293">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="32" height="80" tilewidth="16" tileheight="16" nextobjectid="297">
  <properties>
   <property name="CollisionLayer" type="int" value="0"/>
  </properties>
@@ -4584,7 +4584,10 @@
 </data>
  </layer>
  <objectgroup name="IntroCamera">
-  <object id="292" type="CameraBounds" x="0" y="0" width="256" height="1280"/>
+  <object id="292" name="IntroCameraBounds" type="CameraBounds" x="0" y="0" width="256" height="1280"/>
+  <object id="293" name="IntroCameraPath" type="CameraPath" x="128" y="128">
+   <polyline points="0,8 0,1024"/>
+  </object>
  </objectgroup>
  <objectgroup name="PlayerCamera">
   <properties>

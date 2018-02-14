@@ -430,6 +430,20 @@ static Rectangle processCameraBoundsObject(const TmxMapLib::Object& object) {
 }
 
 //  ============================================================================
+static MapCameraPath processCameraPathObject(const TmxMapLib::Object& object) {
+	const float x = object.GetX();
+	const float y = object.GetY();
+
+	MapCameraPath path = {};
+
+	for (auto& point : object.GetPoints()) {
+		path.points.push_back(glm::vec2(x + point.X, y + point.Y));
+	}
+
+	return path;
+}
+
+//  ============================================================================
 static void processCollisionObject(World& world,
 							  	   const TmxMapLib::Object& object) {
 	const float x = object.GetX();
@@ -657,6 +671,7 @@ static void processObject(World& world,
 						  const TmxMapLib::Object& object,
 						  const TmxMapLib::Map& tmxMap,
 						  std::vector<Rectangle>& cameraBounds,
+						  std::vector<MapCameraPath>& cameraPaths,
 						  std::vector<PlayerStart>& playerStarts) {
 	const std::string type = toLowercase(object.GetType());
 
@@ -699,6 +714,10 @@ static void processObject(World& world,
 		} else if (type == "trigger") {
 			processTriggerObject(world, object);
 		}
+	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Polyline) {
+		if (type == "camerapath") {
+			cameraPaths.push_back(processCameraPathObject(object));
+		}
 	}
 }
 
@@ -708,15 +727,18 @@ static void processObjects(const TmxMapLib::Map tmxMap, World& world,
 						   std::vector<PlayerStart>& playerStarts) {
 	for (const auto& objectGroup : tmxMap.GetObjectGroups()) {
 		std::vector<Rectangle> cameraBounds;
+		std::vector<MapCameraPath> cameraPaths;
 
 		for (const auto& object : objectGroup.GetObjects()) {
-			processObject(world, object, tmxMap, cameraBounds, playerStarts);
+			processObject(world, object, tmxMap, cameraBounds, cameraPaths,
+						  playerStarts);
 		}
 
-		if (cameraBounds.size() > 0) {
+		if (cameraBounds.size() > 0 || cameraPaths.size() > 0) {
 			MapCamera mapCamera = {};
 			mapCamera.name = objectGroup.GetName();
 			mapCamera.bounds = cameraBounds;
+			mapCamera.paths = cameraPaths;
 
 			mapCameras.push_back(mapCamera);
 		}

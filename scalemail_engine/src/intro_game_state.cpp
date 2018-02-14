@@ -20,8 +20,8 @@ const float STATE3_DURATION = 3.0f;
 const float STATE4_DURATION = 15.0f;
 const float STATE5_DURATION = 1.0f;
 
-const float introCameraStartY = 128.0f;
-const float introCameraEndY = 1152.0f;
+float introCameraStartY;
+float introCameraEndY;
 
 static std::vector<Entity> doorEntities;
 
@@ -37,8 +37,22 @@ IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
 void IntroGameState::activate(Game& game) {
 	setTransitionState(TransitionState::FADED_OUT);
 
+	const MapCamera* introCamera =
+		game.world->getMap()->getCamera("IntroCamera");
+
+	assert(introCamera != nullptr);
+	assert(introCamera->bounds.size() == 1);
+
+	Rectangle bounds = introCamera->bounds[0];
+
 	Camera& camera = *game.camera;
-	camera.setPosition(glm::vec2(128.0f, introCameraStartY));
+
+	camera.setBounds(bounds);
+
+	introCameraStartY = bounds.y + 128.0f;
+	introCameraEndY = bounds.y + bounds.height - 128.0f;
+
+	camera.setPosition(glm::vec2(bounds.x + bounds.width / 2, introCameraStartY));
 
 	World& world = *game.world;
 	doorEntities = world.getEntitiesByName("introDoor");

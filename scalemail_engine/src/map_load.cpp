@@ -704,11 +704,21 @@ static void processObject(World& world,
 
 //  ============================================================================
 static void processObjects(const TmxMapLib::Map tmxMap, World& world,
-						   std::vector<Rectangle>& cameraBounds,
+						   std::vector<MapCamera>& mapCameras,
 						   std::vector<PlayerStart>& playerStarts) {
 	for (const auto& objectGroup : tmxMap.GetObjectGroups()) {
+		std::vector<Rectangle> cameraBounds;
+
 		for (const auto& object : objectGroup.GetObjects()) {
 			processObject(world, object, tmxMap, cameraBounds, playerStarts);
+		}
+
+		if (cameraBounds.size() > 0) {
+			MapCamera mapCamera = {};
+			mapCamera.name = objectGroup.GetName();
+			mapCamera.bounds = cameraBounds;
+
+			mapCameras.push_back(mapCamera);
 		}
 	}
 }
@@ -721,9 +731,9 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 
 	initializeLayers(tmxMap.GetHeight() * tmxMap.GetTileHeight());
 
-	std::vector<Rectangle> cameraBounds;
+	std::vector<MapCamera> mapCameras;
 	std::vector<PlayerStart> playerStarts;
-	processObjects(tmxMap, world, cameraBounds, playerStarts);
+	processObjects(tmxMap, world, mapCameras, playerStarts);
 
 	std::vector<TileLayerData> tileLayerDatas;
 
@@ -780,8 +790,11 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 
 	map->mapMesh = mapMesh;
 
-	map->setCameraBounds(cameraBounds);
 	map->setPlayerStarts(playerStarts);
+
+	for (const MapCamera& mapCamera : mapCameras) {
+		map->addCamera(mapCamera);
+	}
 
 	return map;
 }

@@ -4,6 +4,7 @@
 #include "mesh.hpp"
 #include "rectangle.hpp"
 #include <glm/vec2.hpp>
+#include <string>
 
 namespace ScaleMail
 {
@@ -22,18 +23,23 @@ struct PlayerStart
 	glm::vec2 position;
 };
 
+struct MapCamera {
+	std::string name;
+	std::vector<Rectangle> bounds;
+};
+
 class Map
 {
-	std::vector<Rectangle> mCameraBounds;
+	std::vector<MapCamera> mCameras;
 	std::vector<PlayerStart> mPlayerStarts;
 
 public:
 	Map(const int width, const int height);
-	std::vector<Rectangle> getCameraBounds() const;
+	void addCamera(const MapCamera& mapCamera);
+	const MapCamera* getCamera(const std::string name) const;
 	std::vector<PlayerStart> getPlayerStarts() const;
 	const int height;
 	MapMesh mapMesh;
-	void setCameraBounds(const std::vector<Rectangle> cameraBounds);
 	void setPlayerStarts(const std::vector<PlayerStart> playerStarts);
 	const int width;
 };

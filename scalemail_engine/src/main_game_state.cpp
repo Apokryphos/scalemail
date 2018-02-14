@@ -29,7 +29,13 @@ static void updateCameraPosition(Game& game) {
 			PhysicsComponent physicsCmpnt = physicsSystem.getComponent(players[0]->entity);
 			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 
-			std::vector<Rectangle> cameraBounds = map->getCameraBounds();
+			std::vector<Rectangle> cameraBounds;
+
+			const MapCamera* mapCamera = map->getCamera("PlayerCamera");
+
+			if (mapCamera != nullptr) {
+				cameraBounds = mapCamera->bounds;
+			}
 
 			auto findBounds = std::find_if(cameraBounds.begin(), cameraBounds.end(),
 				[position](const Rectangle& b) -> bool {
@@ -38,7 +44,8 @@ static void updateCameraPosition(Game& game) {
 			);
 
 			if (findBounds != cameraBounds.end()) {
-				camera->setBounds(*findBounds);
+				Rectangle bounds = *findBounds;
+				camera->setBounds(bounds);
 			}
 
 			camera->setPosition(position);

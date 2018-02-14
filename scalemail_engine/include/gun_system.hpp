@@ -39,6 +39,7 @@ class GunSystem : public EntitySystem
 public:
 	GunSystem(EntityManager& entityManager, int maxComponents = 1000);
 	GunComponent getComponent(const Entity& entity) const;
+	void setBulletDamage(const GunComponent& cmpnt, float damage);
 	void setBulletImpactTilesetId(const GunComponent& cmpnt, int tilesetId);
 	void setBulletLightColor(const GunComponent& cmpnt,
 							 const glm::vec4 lightColor);

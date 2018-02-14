@@ -84,12 +84,14 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 
 //  ============================================================================
 Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
-						   glm::vec2 direction, float speed, int tilesetId,
-						   int impactTilesetId, glm::vec4 lightColor) {
+						   glm::vec2 direction, float damage,
+						   float speed, int tilesetId, int impactTilesetId,
+						   glm::vec4 lightColor) {
 	Entity entity = mEntityManager.createEntity();
 
 	mBulletSystem.addComponent(entity);
 	BulletComponent bulletCmpnt = mBulletSystem.getComponent(entity);
+	mBulletSystem.setDamage(bulletCmpnt, damage);
 	mBulletSystem.setSourceEntity(bulletCmpnt, sourceEntity);
 	mBulletSystem.setImpactTilesetId(bulletCmpnt, impactTilesetId);
 
@@ -196,6 +198,9 @@ Entity World::createPlayerActor(float x, float y, int actorIndex, Direction faci
 
 	HealthComponent healthCmpnt = mHealthSystem.getComponent(entity);
 	mHealthSystem.setRespawn(healthCmpnt, true);
+
+	GunComponent gunCmpnt = mGunSystem.getComponent(entity);
+	mGunSystem.setBulletDamage(gunCmpnt, 10.0f);
 
 	return entity;
 }

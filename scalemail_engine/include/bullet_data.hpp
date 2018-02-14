@@ -8,6 +8,7 @@ struct BulletData
 {
 	int impactTilesetId;
 	int tilesetId;
+	float damage;
 	float life;
 	float speed;
 	glm::vec2 direction;

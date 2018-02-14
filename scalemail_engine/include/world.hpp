@@ -62,8 +62,9 @@ public:
 					   const std::string prefab = "",
 					   const std::string ai = "");
 	Entity createBullet(Entity sourceEntity, glm::vec2 position,
-						glm::vec2 direction, float speed, int tilesetId,
-						int impactTilesetId, glm::vec4 lightColor);
+						glm::vec2 direction, float damage, float speed,
+						int tilesetId, int impactTilesetId,
+						glm::vec4 lightColor);
 	Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
 					  bool open, const std::string name = "");
 	Entity createDoor(float x, float y, int openTilesetId,

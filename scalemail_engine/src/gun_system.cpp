@@ -28,6 +28,7 @@ void GunSystem::createComponent() {
 	mGunData.push_back(data);
 
 	BulletData bulletData = {};
+	bulletData.damage = 1.0f;
 	bulletData.speed = 128.0f;
 	bulletData.impactTilesetId = getBulletImpactTilesetId(0);
 	bulletData.tilesetId = getBulletTilesetId(0);
@@ -48,6 +49,12 @@ void GunSystem::destroyComponent(int index) {
 //	============================================================================
 GunComponent GunSystem::getComponent(const Entity& entity) const {
 	return makeComponent(this->getComponentIndexByEntity(entity));
+}
+
+//	============================================================================
+void GunSystem::setBulletDamage(const GunComponent& cmpnt,
+										 float damage) {
+	mBulletData[cmpnt.index].damage = damage;
 }
 
 //	============================================================================
@@ -131,6 +138,7 @@ void GunSystem::update(World& world, float elapsedSeconds) {
 				p.second,
 				gunData.position,
 				gunData.direction,
+				bulletData.damage,
 				bulletData.speed,
 				bulletData.tilesetId,
 				bulletData.impactTilesetId,

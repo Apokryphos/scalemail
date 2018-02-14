@@ -14,6 +14,7 @@ static BulletComponent makeComponent(const int index) {
 BulletSystem::BulletSystem(EntityManager& entityManager, int maxComponents)
 	: EntitySystem(entityManager, maxComponents) {
 	mLife.reserve(maxComponents);
+	mDamage.reserve(maxComponents);
 	mImpactTilesetId.reserve(maxComponents);
 	mSourceEntity.reserve(maxComponents);
 }
@@ -21,6 +22,7 @@ BulletSystem::BulletSystem(EntityManager& entityManager, int maxComponents)
 //	============================================================================
 void BulletSystem::createComponent() {
 	mLife.emplace_back(1.5f);
+	mDamage.emplace_back(1.0f);
 	mImpactTilesetId.emplace_back(0);
 	mSourceEntity.emplace_back();
 }
@@ -28,6 +30,7 @@ void BulletSystem::createComponent() {
 //	============================================================================
 void BulletSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mLife, index);
+	swapWithLastElementAndRemove(mDamage, index);
 	swapWithLastElementAndRemove(mImpactTilesetId, index);
 	swapWithLastElementAndRemove(mSourceEntity, index);
 }
@@ -93,7 +96,7 @@ void BulletSystem::onEntityCollision(EntityCollision& collision) {
 				DamageComponent damageCmpnt =
 					mDamageSystem->getComponent(collision.targetEntity);
 
-				mDamageSystem->setDamage(damageCmpnt, 10.0f);
+				mDamageSystem->setDamage(damageCmpnt, mDamage[cmpnt.index]);
 			}
 		} else {
 			//	Ignore source entity (i.e. entity that fired bullet)
@@ -113,6 +116,11 @@ void BulletSystem::onStaticCollision(StaticCollision& collision) {
 		BulletComponent cmpnt = this->getComponent(collision.sourceEntity);
 		mLife[cmpnt.index] = 0;
 	}
+}
+
+//	============================================================================
+void BulletSystem::setDamage(const BulletComponent& cmpnt, float damage) {
+	mDamage[cmpnt.index] = damage;
 }
 
 //	============================================================================

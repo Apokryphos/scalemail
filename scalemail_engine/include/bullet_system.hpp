@@ -19,6 +19,7 @@ struct BulletComponent {
 class BulletSystem : public EntitySystem
 {
 	std::vector<float> mLife;
+	std::vector<float> mDamage;
 	std::vector<int> mImpactTilesetId;
 	std::vector<Entity> mSourceEntity;
 	DamageSystem* mDamageSystem;
@@ -35,6 +36,7 @@ public:
 	void initialize(DamageSystem& damageSystem);
 	void onEntityCollision(EntityCollision& collision);
 	void onStaticCollision(StaticCollision& collision);
+	void setDamage(const BulletComponent& cmpnt, const float damage);
 	void setImpactTilesetId(const BulletComponent& cmpnt, const int impactTilesetId);
 	void setLife(const BulletComponent& cmpnt, const float life);
 	void setSourceEntity(const BulletComponent& cmpnt, Entity entity);

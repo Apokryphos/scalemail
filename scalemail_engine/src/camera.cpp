@@ -10,6 +10,11 @@ Camera::Camera(float width, float height, float zoom)
 }
 
 //  ============================================================================
+glm::vec2 Camera::getPosition() const {
+	return mPosition;
+}
+
+//  ============================================================================
 glm::mat4 Camera::getProjection() const {
 	return mProjection;
 }

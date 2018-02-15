@@ -6,6 +6,7 @@
 #include "gl_headers.hpp"
 #include "gun_system.hpp"
 #include "main_game_state.hpp"
+#include "map.hpp"
 #include "physics_system.hpp"
 #include "rectangle.hpp"
 #include "world.hpp"

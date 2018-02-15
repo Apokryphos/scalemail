@@ -4,6 +4,8 @@
 
 namespace ScaleMail
 {
+class World;
+
 class IntroGameState : public GameState
 {
 	int introState;

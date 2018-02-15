@@ -1,3 +1,4 @@
+#include "collision.hpp"
 #include "collision_test.hpp"
 #include <glm/gtx/norm.hpp>
 

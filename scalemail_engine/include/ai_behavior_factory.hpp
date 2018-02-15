@@ -1,10 +1,12 @@
 #pragma once
 
-#include "ai_behavior.hpp"
 #include <memory>
+#include <string>
 
 namespace ScaleMail
 {
+class AiBehavior;
+
 class AiBehaviorFactory
 {
 public:

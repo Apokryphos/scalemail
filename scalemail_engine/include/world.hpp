@@ -12,7 +12,6 @@
 #include "gun_system.hpp"
 #include "health_system.hpp"
 #include "light_system.hpp"
-#include "map.hpp"
 #include "name_system.hpp"
 #include "physics_system.hpp"
 #include "player.hpp"
@@ -29,6 +28,8 @@
 
 namespace ScaleMail
 {
+class Map;
+
 class World
 {
 	EntityManager mEntityManager;

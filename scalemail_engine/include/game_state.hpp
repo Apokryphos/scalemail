@@ -5,7 +5,6 @@ namespace ScaleMail
 class Camera;
 struct Game;
 class GameStateManager;
-class World;
 
 class GameState
 {

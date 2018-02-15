@@ -1,8 +1,9 @@
 #pragma once
 
-#include "gl_headers.hpp"
 #include <stdio.h>
 #include <sstream>
+
+struct GLFWwindow;
 
 namespace ScaleMail {
 class ScreenCapture

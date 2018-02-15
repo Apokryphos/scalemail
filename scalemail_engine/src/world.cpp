@@ -1,5 +1,7 @@
+#include "ai_behavior.hpp"
 #include "bullet_util.hpp"
 #include "direction.hpp"
+#include "map.hpp"
 #include "map_load.hpp"
 #include "sprite.hpp"
 #include "world.hpp"

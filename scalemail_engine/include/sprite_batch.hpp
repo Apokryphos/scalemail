@@ -2,7 +2,6 @@
 
 #include "gl_headers.hpp"
 #include "sprite_shader.hpp"
-#include "tileset.hpp"
 #include <glm/fwd.hpp>
 #include <unordered_map>
 #include <vector>
@@ -10,6 +9,7 @@
 namespace ScaleMail
 {
 class AssetManager;
+class Tileset;
 
 class SpriteBatch
 {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "entity_system.hpp"
-#include <glm/vec2.hpp>
 #include <vector>
 
 namespace ScaleMail

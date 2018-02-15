@@ -7,6 +7,7 @@
 #include "game_window.hpp"
 #include "gl_headers.hpp"
 #include "intro_game_state.hpp"
+#include "map.hpp"
 #include "transition.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>

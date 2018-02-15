@@ -2,10 +2,8 @@
 
 #include "bullet_data.hpp"
 #include "entity_system.hpp"
-#include "collision_group.hpp"
 #include "light_data.hpp"
 #include <glm/vec2.hpp>
-#include <glm/vec4.hpp>
 #include <vector>
 
 namespace ScaleMail

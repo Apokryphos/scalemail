@@ -1,13 +1,12 @@
 #pragma once
 
-#include "ai_behavior.hpp"
 #include "entity_system.hpp"
-#include <glm/vec2.hpp>
 #include <memory>
 #include <vector>
 
 namespace ScaleMail
 {
+class AiBehavior;
 class World;
 
 struct AiComponent {

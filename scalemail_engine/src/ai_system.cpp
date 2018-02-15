@@ -1,3 +1,4 @@
+#include "ai_behavior.hpp"
 #include "ai_system.hpp"
 #include "gun_system.hpp"
 #include "physics_system.hpp"

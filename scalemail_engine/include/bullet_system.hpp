@@ -1,14 +1,14 @@
 #pragma once
 
 #include "entity_system.hpp"
-#include "entity_collision.hpp"
-#include "static_collision.hpp"
 #include <glm/vec2.hpp>
 #include <vector>
 
 namespace ScaleMail
 {
 class DamageSystem;
+struct EntityCollision;
+struct StaticCollision;
 class World;
 
 struct BulletComponent {

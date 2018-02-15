@@ -1,5 +1,7 @@
 #include "bullet_system.hpp"
+#include "entity_collision.hpp"
 #include "damage_system.hpp"
+#include "static_collision.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"
 

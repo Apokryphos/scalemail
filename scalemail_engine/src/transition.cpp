@@ -47,7 +47,9 @@ bool initFadeQuadMesh(Mesh& mesh) {
 	glGenVertexArrays(1, &mesh.vao);
 	glGenBuffers(1, &mesh.vbo);
 
+	mesh.elementCount = 2;
 	mesh.vertexCount = 6;
+	mesh.vertexBufferSize = sizeof(quadVertices);
 
 	glBindVertexArray(mesh.vao);
 

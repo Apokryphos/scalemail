@@ -114,7 +114,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 		addQuadLineVertexData(vertexData, position, size, staticActorColor);
 	}
 
-	updateLineMesh(mLineMesh, vertexData);
+	updateMesh(mLineMesh, vertexData);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glUseProgram(mLineShader.id);

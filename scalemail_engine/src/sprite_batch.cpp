@@ -438,7 +438,7 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 			InitialVboSizeInSprites * QuadIndexCount *
 			sizeof(unsigned short)),
 		NULL,
-		GL_STATIC_DRAW);
+		GL_STREAM_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 	glBufferData(

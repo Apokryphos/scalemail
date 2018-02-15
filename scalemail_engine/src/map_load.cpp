@@ -184,6 +184,7 @@ static void createTileMeshBuffer(Mesh& mesh, std::vector<float>& meshVertexData)
 	const int elementCount = 5;
 
 	mesh.vertexCount = meshVertexData.size() / elementCount;
+	mesh.vertexBufferSize = meshVertexData.size();
 
 	glBindVertexArray(mesh.vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);

@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform2.hpp>
 #include <algorithm>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -20,8 +21,6 @@ struct TextData {
 	float size;
 	std::string text;
 };
-
-size_t fontVertexBufferSize = 0;
 
 static const glm::vec2 fontSize = glm::vec2(0.857142857f, 1);
 
@@ -64,41 +63,9 @@ void drawCenterText(const glm::vec2 position, const std::string& text,
 		size);
 }
 
-//  ============================================================================
-static bool initFontMesh(Mesh& mesh) {
-
-	glGenVertexArrays(1, &mesh.vao);
-	glGenBuffers(1, &mesh.vbo);
-
-	mesh.vertexCount = 6;
-
-	glBindVertexArray(mesh.vao);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	// glBufferData(GL_ARRAY_BUFFER, sizeof([]), [],
-	//              GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * 8, (void*) 0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * 8, (void*) (sizeof(float) * 2));
-
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * 8, (void*) (sizeof(float) * 6));
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	return true;
-}
-
 //	============================================================================
 void initializeFont(AssetManager& assetManager) {
-	initFontMesh(mesh);
+	initQuadMesh(mesh);
 
 	fontTexture = assetManager.loadTexture("font");
 
@@ -204,17 +171,7 @@ void renderText(const GameWindow& gameWindow) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 
-	size_t vertexDataSize = sizeof(float) * fontVertexData.size();
-
-	if (fontVertexBufferSize < vertexDataSize) {
-		fontVertexBufferSize = vertexDataSize;
-
-		glBufferData(GL_ARRAY_BUFFER, fontVertexBufferSize,
-					 &fontVertexData[0], GL_STATIC_DRAW);
-	} else {
-		glBufferSubData(GL_ARRAY_BUFFER, 0, fontVertexBufferSize,
-						&fontVertexData[0]);
-	}
+	updateMesh(mesh, fontVertexData);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, gameWindow.width, gameWindow.height);

@@ -12,6 +12,7 @@
 #include "world.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
+#include <algorithm>
 #include <vector>
 
 namespace ScaleMail

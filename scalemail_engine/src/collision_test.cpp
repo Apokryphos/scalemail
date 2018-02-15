@@ -1,5 +1,6 @@
 #include "collision.hpp"
 #include "collision_test.hpp"
+#include <algorithm>
 #include <glm/gtx/norm.hpp>
 
 namespace ScaleMail

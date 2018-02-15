@@ -18,8 +18,8 @@ bool circleIntersectsRectangle(glm::vec2 center, float radius, glm::vec4 rect) {
 	float w = rect.z / 2;
 	float h = rect.w / 2;
 
-	float x = abs(center.x - (rect.x + w));
-	float y = abs(center.y - (rect.y + h));
+	float x = std::abs(center.x - (rect.x + w));
+	float y = std::abs(center.y - (rect.y + h));
 
 	if (x > w + radius) {
 		return false;

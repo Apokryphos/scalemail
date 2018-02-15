@@ -6,13 +6,13 @@ set(CMAKE_BUILD_TYPE Debug)
 
 set(SCALEMAIL_ENGINE_INCLUDE
     include/ai/vampire_ai.hpp
-    include/ai_behavior.hpp
-    include/ai_behavior_factory.hpp
-    include/ai_system.hpp
     include/gui/gui.hpp
     include/gui/gui_screen.hpp
     include/gui/pause_gui_screen.hpp
     include/gui/player_hud_gui_screen.hpp
+    include/ai_behavior_factory.hpp
+    include/ai_behavior.hpp
+    include/ai_system.hpp
     include/ambient_light.hpp
     include/asset_manager.hpp
     include/blend.hpp
@@ -20,65 +20,73 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/bullet_system.hpp
     include/bullet_util.hpp
     include/camera.hpp
-    include/collision.hpp
     include/collision_group.hpp
     include/collision_test.hpp
+    include/collision.hpp
     include/cursor.hpp
     include/damage_system.hpp
-    include/direction.hpp
     include/direction_util.hpp
+    include/direction.hpp
     include/door_system.hpp
     include/ease.hpp
-    include/entity.hpp
+    include/entity_collision.hpp
     include/entity_manager.hpp
     include/entity_system.hpp
+    include/entity.hpp
     include/expire_system.hpp
     include/fade_shader.hpp
     include/font.hpp
-    include/game.hpp
-    include/game_state.hpp
     include/game_state_manager.hpp
+    include/game_state.hpp
     include/game_window.hpp
+    include/game.hpp
     include/gl_headers.hpp
     include/gl_util.hpp
     include/gun_system.hpp
     include/health_gauge.hpp
     include/health_system.hpp
-    include/input.hpp
     include/input_state.hpp
+    include/input.hpp
     include/intro_game_state.hpp
     include/layer.hpp
-    include/light.hpp
     include/light_data.hpp
     include/light_system.hpp
+    include/light.hpp
+    include/line_shader.hpp
     include/main_game_state.hpp
-    include/map.hpp
     include/map_load.hpp
     include/map_render.hpp
+    include/map.hpp
     include/math_util.hpp
     include/mesh.hpp
     include/name_system.hpp
     include/physics_system.hpp
-    include/player.hpp
     include/player_util.hpp
+    include/player.hpp
     include/prefab_factory.hpp
     include/quad_shader.hpp
     include/random.hpp
+    include/rectangle.hpp
     include/render.hpp
     include/screen_capture.hpp
     include/shader.hpp
-    include/sprite.hpp
+    include/sprite_animation.hpp
     include/sprite_batch.hpp
-    include/sprite_shader.hpp
     include/sprite_effect_system.hpp
+    include/sprite_shader.hpp
     include/sprite_system.hpp
+    include/sprite.hpp
+    include/static_collision.hpp
     include/string_util.hpp
     include/texture.hpp
-    include/tileset.hpp
     include/tile_shader.hpp
+    include/tileset.hpp
     include/tiny_font.hpp
     include/transition.hpp
+    include/trigger_collision.hpp
     include/trigger_system.hpp
+    include/trigger.hpp
+    include/vector_util.hpp
     include/vertex_data.hpp
     include/world.hpp)
 

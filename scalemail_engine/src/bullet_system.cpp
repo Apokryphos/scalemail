@@ -145,7 +145,7 @@ void BulletSystem::setSourceEntity(const BulletComponent& cmpnt, Entity entity) 
 void BulletSystem::simulate(World& world, float elapsedSeconds) {
 	std::vector <Entity> removeEntities;
 
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		mLife[index] -= elapsedSeconds;
@@ -155,7 +155,7 @@ void BulletSystem::simulate(World& world, float elapsedSeconds) {
 		}
 	}
 
-	for (auto& entity : removeEntities) {
+	for (const auto& entity : removeEntities) {
 		world.destroyBullet(entity);
 	}
 }

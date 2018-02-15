@@ -60,7 +60,7 @@ void TriggerSystem::update(
 	DoorSystem& doorSystem) {
 	std::vector<Trigger> triggers;
 
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 		const Entity& entity = p.second;
 
@@ -80,7 +80,7 @@ void TriggerSystem::update(
 	std::vector<TriggerCollision> collisions;
 	collisions = physicsSystem.getEntityIntersections(triggers);
 
-	for (auto& collision : collisions) {
+	for (const auto& collision : collisions) {
 		TriggerComponent cmpnt =
 			this->getComponent(collision.triggerEntity);
 
@@ -96,7 +96,7 @@ void TriggerSystem::update(
 			std::vector<Entity> entities =
 				nameSystem.getEntitiesByName(data.targetName);
 
-			for (auto& entity : entities) {
+			for (const auto& entity : entities) {
 				if (doorSystem.hasComponent(entity)) {
 					const DoorComponent doorCmpnt = doorSystem.getComponent(entity);
 					doorSystem.setOpen(doorCmpnt, true);

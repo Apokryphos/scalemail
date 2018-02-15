@@ -138,7 +138,7 @@ void SpriteSystem::buildVertexData(
 	const std::vector<Entity>& entities) {
 	std::vector<SpriteComponentData> spriteData;
 
-	for (auto& entity : entities) {
+	for (const auto& entity : entities) {
 		if (this->hasComponent(entity)) {
 			const int index = this->getComponentIndexByEntity(entity);
 			spriteData.push_back(mData[index]);
@@ -299,11 +299,11 @@ void SpriteSystem::setTilesetId(const SpriteComponent& cmpnt,
 void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 	//	Update sprite positions from position system
 	glm::vec2 position;
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		position =
 			physicsSystem.getPosition(physicsSystem.getComponent(p.second));
 
-		size_t index = p.first;
+		const size_t index = p.first;
 
 		mData[index].position.x = position.x;
 		mData[index].position.y = position.y + mData[index].offsetY;
@@ -312,7 +312,7 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 			(position.y - mData[index].size.y * 0.5f) + mData[index].offsetZ);
 	}
 
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		SpriteAnimation& animation = mData[p.first].animation;
 
 		animation.ticks += elapsedSeconds;

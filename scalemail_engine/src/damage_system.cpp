@@ -20,7 +20,7 @@ DamageSystem::DamageSystem(EntityManager& entityManager, int maxComponents)
 void DamageSystem::applyDamage(
 	HealthSystem& healthSystem,
 	SpriteEffectSystem& spriteEffectSystem) {
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 		const Entity& entity = p.second;
 

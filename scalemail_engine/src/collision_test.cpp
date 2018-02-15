@@ -27,11 +27,11 @@ void processEntityCollisions(
 	//	Separate results so they can be sorted by distance
 	std::vector<EntityCollision> results;
 
-	for (auto& test : tests) {
+	for (const auto& test : tests) {
 		glm::vec2 deltaX = glm::vec2(test.velocity.x, 0);
 		glm::vec2 deltaY = glm::vec2(0, test.velocity.y);
 
-		for (auto& other : otherTests) {
+		for (const auto& other : otherTests) {
 			//	Don't test entity against itself
 			if (other.entity.id == test.entity.id) {
 				continue;
@@ -97,7 +97,7 @@ void processStaticCollisions(
 
 		bool collision = false;
 
-		for (auto& obstacle : obstacles) {
+		for (const auto& obstacle : obstacles) {
 			if (circleIntersectsRectangle(
 				test.position + deltaX, test.radius, obstacle)) {
 				test.velocity.x = 0.0f;
@@ -106,7 +106,7 @@ void processStaticCollisions(
 			}
 		}
 
-		for (auto& obstacle : obstacles) {
+		for (const auto& obstacle : obstacles) {
 			if (circleIntersectsRectangle(
 				test.position + deltaY, test.radius, obstacle)) {
 				test.velocity.y = 0.0f;

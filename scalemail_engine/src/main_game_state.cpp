@@ -87,7 +87,7 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 
 	std::vector<Player*> players = world.getPlayers();
 
-	for (auto player : players) {
+	for (const auto player : players) {
 		HealthSystem& healthSystem = world.getHealthSystem();
 		HealthComponent healthCmpnt = healthSystem.getComponent(player->entity);
 		HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);

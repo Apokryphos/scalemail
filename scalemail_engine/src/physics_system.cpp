@@ -66,7 +66,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 
 	const glm::vec4 circleColor = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
 
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		glm::vec2 position = mPosition[index];
@@ -98,7 +98,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 
 	const glm::vec4 staticColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	for (auto& rect : mStaticObstacles) {
+	for (const auto& rect : mStaticObstacles) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
@@ -107,7 +107,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 
 	const glm::vec4 staticActorColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 
-	for (auto& rect : mStaticActorObstacles) {
+	for (const auto& rect : mStaticActorObstacles) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
@@ -159,7 +159,7 @@ std::vector<TriggerCollision> PhysicsSystem::getEntityIntersections(
 
 	std::vector<TriggerCollision> collisions;
 
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		if (mGroup[index] != CollisionGroup::ACTOR &&
@@ -175,7 +175,7 @@ std::vector<TriggerCollision> PhysicsSystem::getEntityIntersections(
 		const Entity& entity = p.second;
 		const glm::vec2 position = mPosition[index];
 
-		for (auto& trigger : triggers) {
+		for (const auto& trigger : triggers) {
 			if (circleIntersectsRectangle(position, radius, trigger.rect)) {
 				TriggerCollision collision = {};
 				collision.sourceEntity = entity;
@@ -232,14 +232,14 @@ void PhysicsSystem::setSpeed(const PhysicsComponent& cmpnt,
 //	============================================================================
 void PhysicsSystem::update() {
 	//	Process entity collisions
-	for (auto& collision : mEntityCollisions) {
-		int index = this->getComponentIndexByEntity(collision.sourceEntity);
+	for (const auto& collision : mEntityCollisions) {
+		const int index = this->getComponentIndexByEntity(collision.sourceEntity);
 		mVelocity[index] = collision.velocity;
 	}
 
 	//	Process static collisions
-	for (auto& collision : mStaticCollisions) {
-		int index = this->getComponentIndexByEntity(collision.sourceEntity);
+	for (const auto& collision : mStaticCollisions) {
+		const int index = this->getComponentIndexByEntity(collision.sourceEntity);
 		mVelocity[index] = collision.velocity;
 	}
 
@@ -273,7 +273,7 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	std::vector<CollisionTest> vsPlayerBulletTests;
 
 	//	Separate entities by collision group
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		//	Skip zero radius entities
 		if (mRadius[p.first] <= 0.0f) {
 			continue;
@@ -389,13 +389,13 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 							mEntityCollisions);
 
 	for (auto& collision : mEntityCollisions) {
-		for (auto& callback : mEntityCollisionCallbacks) {
+		for (const auto& callback : mEntityCollisionCallbacks) {
 			callback(collision);
 		}
 	}
 
 	for (auto& collision : mStaticCollisions) {
-		for (auto& callback : mStaticCollisionCallbacks) {
+		for (const auto& callback : mStaticCollisionCallbacks) {
 			callback(collision);
 		}
 	}

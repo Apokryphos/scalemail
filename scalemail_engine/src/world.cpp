@@ -384,7 +384,7 @@ LightSystem& World::getLightSystem() {
 std::vector<Player*> World::getPlayers() {
 	std::vector<Player*> players;
 
-	for (auto& player : mPlayers) {
+	for (Player& player : mPlayers) {
 		players.push_back(&player);
 	}
 
@@ -439,7 +439,7 @@ void World::initialize(AssetManager* assetManager) {
 void World::loadMap(const std::string& mapName) {
 	mMap = ScaleMail::loadMap("assets/maps/" + mapName + ".tmx", *this);
 
-	auto playerStarts = mMap->getPlayerStarts();
+	std::vector<PlayerStart> playerStarts = mMap->getPlayerStarts();
 
 	assert(playerStarts.size() == 4);
 	assert(mPlayers.size() == 4);

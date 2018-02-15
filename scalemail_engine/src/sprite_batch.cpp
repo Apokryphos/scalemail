@@ -294,10 +294,10 @@ void SpriteBatch::buildSpriteVertexData(
 	}
 
 	//	Calculate vertex buffer sizes
-	for (auto boolMap : mTextureIdCounts) {
+	for (const auto& boolMap : mTextureIdCounts) {
 		bool alpha = boolMap.first;
 
-		for (auto p : boolMap.second) {
+		for (const auto& p : boolMap.second) {
 			Batch& batch = alpha ? mAlphaBatchByTexture[p.first]
 								 : mBatchByTexture[p.first];
 
@@ -503,8 +503,8 @@ void SpriteBatch::renderBatches(
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	for (auto b : batches) {
-		Batch& batch = b.second;
+	for (const auto& b : batches) {
+		const Batch& batch = b.second;
 
 		if (batch.QuadCount == 0) {
 			continue;

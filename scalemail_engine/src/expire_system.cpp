@@ -45,7 +45,7 @@ void ExpireSystem::setDuration(const ExpireComponent& cmpnt, float duration) {
 void ExpireSystem::update(World& world, float elapsedSeconds) {
 	std::vector <Entity> removeEntities;
 
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		mDuration[index] -= elapsedSeconds;
@@ -55,7 +55,7 @@ void ExpireSystem::update(World& world, float elapsedSeconds) {
 		}
 	}
 
-	for (auto& entity : removeEntities) {
+	for (const auto& entity : removeEntities) {
 		world.destroyEntity(entity);
 	}
 }

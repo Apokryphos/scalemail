@@ -44,7 +44,7 @@ void HealthSystem::setRespawn(const HealthComponent& cmpnt, const bool respawn) 
 void HealthSystem::update(World& world) {
 	std::vector<Entity> removeEntities;
 
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		if (mData[index].healthGauge.isEmpty()) {
@@ -58,7 +58,7 @@ void HealthSystem::update(World& world) {
 		}
 	}
 
-	for (auto& entity : removeEntities) {
+	for (const auto& entity : removeEntities) {
 		world.destroyEntity(entity);
 	}
 }

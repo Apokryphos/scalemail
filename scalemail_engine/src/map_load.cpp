@@ -437,7 +437,7 @@ static MapCameraPath processCameraPathObject(const TmxMapLib::Object& object) {
 
 	MapCameraPath path = {};
 
-	for (auto& point : object.GetPoints()) {
+	for (const auto& point : object.GetPoints()) {
 		path.points.push_back(glm::vec2(x + point.X, y + point.Y));
 	}
 

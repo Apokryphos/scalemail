@@ -36,11 +36,11 @@ void SpriteEffectSystem::buildVertexData(
 	SpriteSystem& spriteSystem) {
 	std::vector<Entity> entities;
 
-	for (auto& p : mEntitiesByComponentIndices) {
-		size_t index = p.first;
+	for (const auto& p : mEntitiesByComponentIndices) {
+		const size_t index = p.first;
 
 		if (mData[index].blinkTicks > 0.0f) {
-			Entity& entity = p.second;
+			const Entity& entity = p.second;
 			entities.push_back(entity);
 		}
 	}
@@ -71,17 +71,17 @@ void SpriteEffectSystem::setBlinkDuration(const SpriteEffectComponent& cmpnt,
 
 //	============================================================================
 void SpriteEffectSystem::update(float elapsedSeconds, SpriteSystem& spriteSystem) {
-	for (auto& p : mEntitiesByComponentIndices) {
-		size_t index = p.first;
+	for (const auto& p : mEntitiesByComponentIndices) {
+		const size_t index = p.first;
 
 		mData[index].blinkTicks = std::max(
 			mData[index].blinkTicks - elapsedSeconds,
 			0.0f);
 	}
 
-	for (auto& p : mEntitiesByComponentIndices) {
-		size_t index = p.first;
-		Entity& entity = p.second;
+	for (const auto& p : mEntitiesByComponentIndices) {
+		const size_t index = p.first;
+		const Entity& entity = p.second;
 
 		SpriteComponent spriteCmpnt = spriteSystem.getComponent(entity);
 

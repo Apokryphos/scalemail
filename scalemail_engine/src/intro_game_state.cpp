@@ -146,7 +146,7 @@ void IntroGameState::updateState(World& world, Camera& camera,
 			STATE4_DURATION);
 
 		//	Close doors as camera Y position passes them
-		for (auto entity : doorEntities) {
+		for (const auto entity : doorEntities) {
 			PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 			PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 			glm::vec2 doorPosition = physicsSystem.getPosition(physicsCmpnt);

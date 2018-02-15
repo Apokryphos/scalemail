@@ -117,7 +117,7 @@ void LightSystem::update(float elapsedSeconds,
 						   const PhysicsSystem& physicsSystem) {
 	//	Update light positions from physics system
 	glm::vec2 position;
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		position =
@@ -128,7 +128,7 @@ void LightSystem::update(float elapsedSeconds,
 	}
 
 	//  Update animated lights
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		mTicks[index] += elapsedSeconds * 0.25f;

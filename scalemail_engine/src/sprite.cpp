@@ -58,7 +58,7 @@ void setSpriteAnimation(SpriteAnimation& animation,
 	animation.frames.resize(frameTilesetIds.size());
 
 	int f = 0;
-	for (auto frameTilesetId : frameTilesetIds) {
+	for (const auto frameTilesetId : frameTilesetIds) {
 		animation.frames[f].duration  = 0.3f;
 
 		animation.frames[f].tilesetIds[east]  = frameTilesetId;

@@ -103,7 +103,7 @@ void GunSystem::setTarget(const GunComponent& cmpnt, const glm::vec2 target) {
 //	============================================================================
 void GunSystem::update(World& world, float elapsedSeconds) {
 	//	Update position
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		PhysicsSystem& physicsSystem = world.getPhysicsSystem();
@@ -120,7 +120,7 @@ void GunSystem::update(World& world, float elapsedSeconds) {
 		mGunData[index].direction = direction;
 	}
 
-	for (auto& p : mEntitiesByComponentIndices) {
+	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
 
 		GunComponentData& gunData = mGunData[index];

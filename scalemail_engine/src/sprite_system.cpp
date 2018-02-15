@@ -14,7 +14,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-bool sortSprite(const SpriteComponentData& data1,
+static inline bool sortSprite(const SpriteComponentData& data1,
 				const SpriteComponentData& data2) {
 	return data1.position.z < data2.position.z;
 }
@@ -66,49 +66,48 @@ void SpriteSystem::buildVertexData(
 	//	Size of component vectors is limited by int EntitySystem.MaxComponents
 	const int spriteCount = static_cast<int>(spriteData.size());
 
-	mAlpha.clear();
-	mTextureId.clear();
-	mPositionX.clear();
-	mPositionY.clear();
-	mPositionZ.clear();
-	mColorR.clear();
-	mColorG.clear();
-	mColorB.clear();
-	mColorA.clear();
-	mSizeX.clear();
-	mSizeY.clear();
-	mRotate.clear();
-	mTexU1.clear();
-	mTexV1.clear();
-	mTexU2.clear();
-	mTexV2.clear();
+	mAlpha.resize(0);
+	mTextureId.resize(0);
+	mPositionX.resize(0);
+	mPositionY.resize(0);
+	mPositionZ.resize(0);
+	mColorR.resize(0);
+	mColorG.resize(0);
+	mColorB.resize(0);
+	mColorA.resize(0);
+	mSizeX.resize(0);
+	mSizeY.resize(0);
+	mRotate.resize(0);
+	mTexU1.resize(0);
+	mTexV1.resize(0);
+	mTexU2.resize(0);
+	mTexV2.resize(0);
 
 	//	Sort sprites
 	std::vector<SpriteComponentData> sprites(spriteData);
 	std::sort(sprites.begin(), sprites.end(), sortSprite);
 
 	for (const auto& sprite : sprites) {
-		mTextureId.push_back(mask ? sprite.maskTextureId : sprite.textureId);
-		mAlpha.push_back(sprite.alpha);
-		mPositionX.push_back(sprite.position.x);
-		mPositionY.push_back(sprite.position.y);
-		mPositionZ.push_back(sprite.position.z);
-		mColorR.push_back(mask ? sprite.maskColor.r : sprite.color.r);
-		mColorG.push_back(mask ? sprite.maskColor.g : sprite.color.g);
-		mColorB.push_back(mask ? sprite.maskColor.b : sprite.color.b);
-		mColorA.push_back(mask ? sprite.maskColor.a : sprite.color.a);
-		mSizeX.push_back(sprite.size.x);
-		mSizeY.push_back(sprite.size.y);
-		mRotate.push_back(sprite.rotate);
-		mTexU1.push_back(sprite.uv1.x);
-		mTexV1.push_back(sprite.uv1.y);
-		mTexU2.push_back(sprite.uv2.x);
-		mTexV2.push_back(sprite.uv2.y);
+		mTextureId.emplace_back(mask ? sprite.maskTextureId : sprite.textureId);
+		mAlpha.emplace_back(sprite.alpha);
+		mPositionX.emplace_back(sprite.position.x);
+		mPositionY.emplace_back(sprite.position.y);
+		mPositionZ.emplace_back(sprite.position.z);
+		mColorR.emplace_back(mask ? sprite.maskColor.r : sprite.color.r);
+		mColorG.emplace_back(mask ? sprite.maskColor.g : sprite.color.g);
+		mColorB.emplace_back(mask ? sprite.maskColor.b : sprite.color.b);
+		mColorA.emplace_back(mask ? sprite.maskColor.a : sprite.color.a);
+		mSizeX.emplace_back(sprite.size.x);
+		mSizeY.emplace_back(sprite.size.y);
+		mRotate.emplace_back(sprite.rotate);
+		mTexU1.emplace_back(sprite.uv1.x);
+		mTexV1.emplace_back(sprite.uv1.y);
+		mTexU2.emplace_back(sprite.uv2.x);
+		mTexV2.emplace_back(sprite.uv2.y);
 	}
 
 	spriteBatch.buildSpriteVertexData(
 		spriteCount,
-		// mTextureIdCounts,
 		mTextureId,
 		mAlpha,
 		mPositionX,
@@ -141,7 +140,7 @@ void SpriteSystem::buildVertexData(
 	for (const auto& entity : entities) {
 		if (this->hasComponent(entity)) {
 			const int index = this->getComponentIndexByEntity(entity);
-			spriteData.push_back(mData[index]);
+			spriteData.emplace_back(mData[index]);
 		}
 	}
 

@@ -105,59 +105,59 @@ void renderText(const GameWindow& gameWindow) {
 			float u2 = u1 + xStep;
 			float v2 = v1 + yStep;
 
-			fontVertexData.push_back(position.x);
-			fontVertexData.push_back(position.y);
-			fontVertexData.push_back(textData.color.r);
-			fontVertexData.push_back(textData.color.g);
-			fontVertexData.push_back(textData.color.b);
-			fontVertexData.push_back(textData.color.a);
-			fontVertexData.push_back(u1);
-			fontVertexData.push_back(v1);
+			fontVertexData.emplace_back(position.x);
+			fontVertexData.emplace_back(position.y);
+			fontVertexData.emplace_back(textData.color.r);
+			fontVertexData.emplace_back(textData.color.g);
+			fontVertexData.emplace_back(textData.color.b);
+			fontVertexData.emplace_back(textData.color.a);
+			fontVertexData.emplace_back(u1);
+			fontVertexData.emplace_back(v1);
 
-			fontVertexData.push_back(position.x);
-			fontVertexData.push_back(position.y + size.y);
-			fontVertexData.push_back(textData.color.r);
-			fontVertexData.push_back(textData.color.g);
-			fontVertexData.push_back(textData.color.b);
-			fontVertexData.push_back(textData.color.a);
-			fontVertexData.push_back(u1);
-			fontVertexData.push_back(v2);
+			fontVertexData.emplace_back(position.x);
+			fontVertexData.emplace_back(position.y + size.y);
+			fontVertexData.emplace_back(textData.color.r);
+			fontVertexData.emplace_back(textData.color.g);
+			fontVertexData.emplace_back(textData.color.b);
+			fontVertexData.emplace_back(textData.color.a);
+			fontVertexData.emplace_back(u1);
+			fontVertexData.emplace_back(v2);
 
-			fontVertexData.push_back(position.x + size.x);
-			fontVertexData.push_back(position.y);
-			fontVertexData.push_back(textData.color.r);
-			fontVertexData.push_back(textData.color.g);
-			fontVertexData.push_back(textData.color.b);
-			fontVertexData.push_back(textData.color.a);
-			fontVertexData.push_back(u2);
-			fontVertexData.push_back(v1);
+			fontVertexData.emplace_back(position.x + size.x);
+			fontVertexData.emplace_back(position.y);
+			fontVertexData.emplace_back(textData.color.r);
+			fontVertexData.emplace_back(textData.color.g);
+			fontVertexData.emplace_back(textData.color.b);
+			fontVertexData.emplace_back(textData.color.a);
+			fontVertexData.emplace_back(u2);
+			fontVertexData.emplace_back(v1);
 
-			fontVertexData.push_back(position.x);
-			fontVertexData.push_back(position.y + size.y);
-			fontVertexData.push_back(textData.color.r);
-			fontVertexData.push_back(textData.color.g);
-			fontVertexData.push_back(textData.color.b);
-			fontVertexData.push_back(textData.color.a);
-			fontVertexData.push_back(u1);
-			fontVertexData.push_back(v2);
+			fontVertexData.emplace_back(position.x);
+			fontVertexData.emplace_back(position.y + size.y);
+			fontVertexData.emplace_back(textData.color.r);
+			fontVertexData.emplace_back(textData.color.g);
+			fontVertexData.emplace_back(textData.color.b);
+			fontVertexData.emplace_back(textData.color.a);
+			fontVertexData.emplace_back(u1);
+			fontVertexData.emplace_back(v2);
 
-			fontVertexData.push_back(position.x + size.x);
-			fontVertexData.push_back(position.y + size.y);
-			fontVertexData.push_back(textData.color.r);
-			fontVertexData.push_back(textData.color.g);
-			fontVertexData.push_back(textData.color.b);
-			fontVertexData.push_back(textData.color.a);
-			fontVertexData.push_back(u2);
-			fontVertexData.push_back(v2);
+			fontVertexData.emplace_back(position.x + size.x);
+			fontVertexData.emplace_back(position.y + size.y);
+			fontVertexData.emplace_back(textData.color.r);
+			fontVertexData.emplace_back(textData.color.g);
+			fontVertexData.emplace_back(textData.color.b);
+			fontVertexData.emplace_back(textData.color.a);
+			fontVertexData.emplace_back(u2);
+			fontVertexData.emplace_back(v2);
 
-			fontVertexData.push_back(position.x + size.x);
-			fontVertexData.push_back(position.y);
-			fontVertexData.push_back(textData.color.r);
-			fontVertexData.push_back(textData.color.g);
-			fontVertexData.push_back(textData.color.b);
-			fontVertexData.push_back(textData.color.a);
-			fontVertexData.push_back(u2);
-			fontVertexData.push_back(v1);
+			fontVertexData.emplace_back(position.x + size.x);
+			fontVertexData.emplace_back(position.y);
+			fontVertexData.emplace_back(textData.color.r);
+			fontVertexData.emplace_back(textData.color.g);
+			fontVertexData.emplace_back(textData.color.b);
+			fontVertexData.emplace_back(textData.color.a);
+			fontVertexData.emplace_back(u2);
+			fontVertexData.emplace_back(v1);
 
 			position.x += size.x;
 		}
@@ -184,7 +184,7 @@ void renderText(const GameWindow& gameWindow) {
 	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
 	glBindVertexArray(0);
 
-	drawTextData.clear();
-	fontVertexData.clear();
+	drawTextData.resize(0);
+	fontVertexData.resize(0);
 }
 }

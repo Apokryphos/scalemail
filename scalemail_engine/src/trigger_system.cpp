@@ -67,7 +67,7 @@ void TriggerSystem::update(
 		TriggerComponentData& data = mData[index];
 
 		data.lastEntities = data.entities;
-		data.entities.clear();
+		data.entities.resize(0);
 
 		Trigger trigger = {};
 		trigger.entity = entity;

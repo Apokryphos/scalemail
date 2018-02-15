@@ -42,6 +42,7 @@ class PhysicsSystem : public EntitySystem
 
 	Mesh mLineMesh;
 	LineShader mLineShader;
+	std::vector<float> mLineVertexData;
 
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;

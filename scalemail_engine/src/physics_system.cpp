@@ -62,7 +62,8 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 	glm::mat4 mvp = camera.getProjection() * camera.getView();
 
 	const int lineCount = 16;
-	std::vector<float> vertexData;
+
+	mLineVertexData.resize(0);
 
 	const glm::vec4 circleColor = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
 
@@ -80,19 +81,19 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 			float y1 = position.y + radius * sin(n * TWO_PI / lineCount);
 			float y2 = position.y + radius * sin((n + 1) * TWO_PI / lineCount);
 
-			vertexData.push_back(x1);
-			vertexData.push_back(y1);
-			vertexData.push_back(circleColor.r);
-			vertexData.push_back(circleColor.g);
-			vertexData.push_back(circleColor.b);
-			vertexData.push_back(circleColor.a);
+			mLineVertexData.emplace_back(x1);
+			mLineVertexData.emplace_back(y1);
+			mLineVertexData.emplace_back(circleColor.r);
+			mLineVertexData.emplace_back(circleColor.g);
+			mLineVertexData.emplace_back(circleColor.b);
+			mLineVertexData.emplace_back(circleColor.a);
 
-			vertexData.push_back(x2);
-			vertexData.push_back(y2);
-			vertexData.push_back(circleColor.r);
-			vertexData.push_back(circleColor.g);
-			vertexData.push_back(circleColor.b);
-			vertexData.push_back(circleColor.a);
+			mLineVertexData.emplace_back(x2);
+			mLineVertexData.emplace_back(y2);
+			mLineVertexData.emplace_back(circleColor.r);
+			mLineVertexData.emplace_back(circleColor.g);
+			mLineVertexData.emplace_back(circleColor.b);
+			mLineVertexData.emplace_back(circleColor.a);
 		}
 	}
 
@@ -102,7 +103,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
-		addQuadLineVertexData(vertexData, position, size, staticColor);
+		addQuadLineVertexData(mLineVertexData, position, size, staticColor);
 	}
 
 	const glm::vec4 staticActorColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
@@ -111,10 +112,10 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
-		addQuadLineVertexData(vertexData, position, size, staticActorColor);
+		addQuadLineVertexData(mLineVertexData, position, size, staticActorColor);
 	}
 
-	updateMesh(mLineMesh, vertexData);
+	updateMesh(mLineMesh, mLineVertexData);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glUseProgram(mLineShader.id);
@@ -252,8 +253,8 @@ void PhysicsSystem::update() {
 
 //	============================================================================
 void PhysicsSystem::simulate(float elapsedSeconds) {
-	mEntityCollisions.clear();
-	mStaticCollisions.clear();
+	mEntityCollisions.resize(0);
+	mStaticCollisions.resize(0);
 
 	//	Calculate velocities
 	size_t count = mPosition.size();
@@ -332,13 +333,13 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 							mStaticCollisions);
 
 	//	Clear and reuse for output of next pass
-	playerActorTests.clear();
+	playerActorTests.resize(0);
 
 	//	VS static actor-only obstacles
 	processStaticCollisions(actorPassed, mStaticActorObstacles, playerActorTests,
 							mStaticCollisions);
 
-	actorPassed.clear();
+	actorPassed.resize(0);
 
 	//	VS entities
 	processEntityCollisions(playerActorTests, vsPlayerActorTests, actorPassed,
@@ -351,13 +352,13 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	processStaticCollisions(actorTests, mStaticObstacles, actorPassed,
 							mStaticCollisions);
 
-	actorTests.clear();
+	actorTests.resize(0);
 
 	//	VS static actor-only obstacles
 	processStaticCollisions(actorPassed, mStaticActorObstacles, actorTests,
 							mStaticCollisions);
 
-	actorPassed.clear();
+	actorPassed.resize(0);
 
 	//	VS entities
 	processEntityCollisions(actorTests, vsActorTests, actorPassed, mEntityCollisions);
@@ -371,7 +372,7 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	processStaticCollisions(bulletTests, mStaticObstacles, bulletPassed,
 							mStaticCollisions);
 
-	bulletTests.clear();
+	bulletTests.resize(0);
 
 	//	Test bullets VS entities
 	processEntityCollisions(bulletPassed, vsBulletTests, bulletTests, mEntityCollisions);
@@ -379,11 +380,11 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	//	---------------------
 	//	TEST PLAYER BULLETS |
 	//	---------------------
-	bulletPassed.clear();
+	bulletPassed.resize(0);
 	//	Test player bullets VS static obstacles
 	processStaticCollisions(playerBulletTests, mStaticObstacles, bulletPassed,
 							mStaticCollisions);
-	playerBulletTests.clear();
+	playerBulletTests.resize(0);
 	//	Test player bullets VS entities
 	processEntityCollisions(bulletPassed, vsPlayerBulletTests, playerBulletTests,
 							mEntityCollisions);

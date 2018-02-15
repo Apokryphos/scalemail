@@ -33,7 +33,7 @@ void initializeAmbientLights() {
 
 //  ============================================================================
 void buildAmbientLights() {
-	ambientLightVertexData.clear();
+	ambientLightVertexData.resize(0);
 	for (const auto& light : ambientLights) {
 		glm::vec2 position = glm::vec2(light.rect.x, light.rect.y);
 		glm::vec2 size = glm::vec2(light.rect.z, light.rect.w);

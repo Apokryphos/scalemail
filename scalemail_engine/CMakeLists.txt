@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(scalemail_engine)
 
-set(CMAKE_BUILD_TYPE Debug)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 
 set(SCALEMAIL_ENGINE_INCLUDE
     include/ai/vampire_ai.hpp
@@ -161,6 +163,10 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE _USE_MATH_DEFINES)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
+
+target_compile_options(${PROJECT_NAME} PUBLIC
+    "$<$<CONFIG:DEBUG>:-g3>"
+    "$<$<CONFIG:RELEASE>:-O3>")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     target_compile_options(${PROJECT_NAME} PRIVATE "-Wall")

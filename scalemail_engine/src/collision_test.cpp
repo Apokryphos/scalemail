@@ -13,7 +13,7 @@ struct EntityCollisionResult
 };
 
 //	============================================================================
-static bool sortEntityCollision(const EntityCollision& result1,
+inline static bool sortEntityCollision(const EntityCollision& result1,
 					   			const EntityCollision& result2) {
 	return result1.distance > result2.distance;
 }
@@ -81,7 +81,7 @@ void processEntityCollisions(
 			passed.push_back(test);
 		}
 
-		results.clear();
+		results.resize(0);
 	}
 }
 

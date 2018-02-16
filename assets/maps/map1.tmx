@@ -4792,7 +4792,7 @@
    </properties>
   </object>
   <object id="256" type="Actor" gid="466" x="359" y="1158" width="16" height="16"/>
-  <object id="301" name="Blob" type="Actor" gid="757" x="27" y="1065" width="16" height="16"/>
+  <object id="301" name="Blob" type="Actor" gid="757" x="193" y="1083" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Heroes">
   <object id="62" name="PlayerStart" type="PlayerStart" gid="354" x="112" y="1100" width="16" height="16"/>

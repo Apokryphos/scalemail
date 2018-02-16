@@ -62,6 +62,7 @@ public:
 	std::vector<TriggerCollision> getEntityIntersections(
 		const std::vector<Trigger>& triggers) const;
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
+	float getRadius(const PhysicsComponent& cmpnt) const;
 	void initialize(AssetManager& assetManager);
 	void setCollisionGroup(const PhysicsComponent& cmpnt,
 						   const CollisionGroup group);

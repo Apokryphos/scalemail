@@ -25,10 +25,11 @@ float introCameraStartY;
 float introCameraEndY;
 
 static std::vector<Entity> doorEntities;
+static std::vector<Entity> buriedEntities;
 
 //	============================================================================
 IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
-	GameState(gameStateManager) {
+	GameState(gameStateManager), mDoorsClosed(false) {
 	introState = 0;
 	introTicks = 0;
 	textAlpha = 0.0f;
@@ -69,6 +70,8 @@ void IntroGameState::activate(Game& game) {
 
 	World& world = *game.world;
 	doorEntities = world.getEntitiesByName("introDoor");
+	buriedEntities = world.getEntitiesByName("Skeleton");
+
 }
 
 //	============================================================================
@@ -146,14 +149,25 @@ void IntroGameState::updateState(World& world, Camera& camera,
 			STATE4_DURATION);
 
 		//	Close doors as camera Y position passes them
-		for (const auto entity : doorEntities) {
-			PhysicsSystem& physicsSystem = world.getPhysicsSystem();
-			PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-			glm::vec2 doorPosition = physicsSystem.getPosition(physicsCmpnt);
+		if (!mDoorsClosed) {
+			for (const auto entity : doorEntities) {
+				PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+				PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+				glm::vec2 doorPosition = physicsSystem.getPosition(physicsCmpnt);
 
-			if (position.y >= doorPosition.y) {
-				DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
-				world.getDoorSystem().setOpen(doorCmpnt, false);
+				if (position.y >= doorPosition.y) {
+					mDoorsClosed = true;
+					DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
+					world.getDoorSystem().setOpen(doorCmpnt, false);
+				}
+			}
+
+			if (mDoorsClosed) {
+				//	Unearth skeletons
+				for (const auto entity : buriedEntities) {
+					BuryComponent buryCmpnt = world.getBurySystem().getComponent(entity);
+					world.getBurySystem().rise(buryCmpnt, false);
+				}
 			}
 		}
 

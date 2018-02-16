@@ -392,8 +392,16 @@ static void processActorObject(World& world,
 	const std::string aiName = toLowercase(propertySet.GetValue("Ai", ""));
 	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
 
-	world.createActor(object.GetX(), object.GetY(), actorIndex, facing,
-					  object.GetName(), prefabName, aiName);
+	Entity entity = world.createActor(object.GetX(), object.GetY(), actorIndex,
+									  facing, object.GetName(), prefabName,
+									  aiName);
+
+	if (object.GetPropertySet().GetBoolValue("Buried", false)) {
+		BurySystem& burySystem = world.getBurySystem();
+		burySystem.addComponent(entity);
+		BuryComponent buryCmpnt = burySystem.getComponent(entity);
+		burySystem.bury(buryCmpnt, true);
+	}
 }
 
 //  ============================================================================

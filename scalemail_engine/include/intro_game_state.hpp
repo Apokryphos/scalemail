@@ -8,6 +8,7 @@ class World;
 
 class IntroGameState : public GameState
 {
+	bool mDoorsClosed;
 	int introState;
 	float introTicks;
 	float textAlpha;

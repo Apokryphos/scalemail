@@ -299,6 +299,10 @@ void World::destroyEntity(Entity entity) {
 		mBulletSystem.removeComponent(entity);
 	}
 
+	if (mBurySystem.hasComponent(entity)) {
+		mBurySystem.removeComponent(entity);
+	}
+
 	if (mDamageSystem.hasComponent(entity)) {
 		mDamageSystem.removeComponent(entity);
 	}
@@ -439,7 +443,7 @@ void World::initialize(AssetManager* assetManager) {
 	mDoorSystem.initialize(mPhysicsSystem, mSpriteSystem);
 	mPhysicsSystem.initialize(*assetManager);
 	mBulletSystem.initialize(mDamageSystem);
-	mBurySystem.initialize(mSpriteSystem);
+	mBurySystem.initialize(mPhysicsSystem, mSpriteSystem);
 }
 
 //  ============================================================================

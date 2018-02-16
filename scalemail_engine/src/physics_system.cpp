@@ -195,6 +195,11 @@ glm::vec2 PhysicsSystem::getPosition(const PhysicsComponent& cmpnt) const {
 }
 
 //	============================================================================
+float PhysicsSystem::getRadius(const PhysicsComponent& cmpnt) const {
+	return mRadius[cmpnt.index];
+}
+
+//	============================================================================
 void PhysicsSystem::initialize(AssetManager& assetManager) {
 	mLineShader = assetManager.getLineShader();
 	initLineMesh(mLineMesh, {});

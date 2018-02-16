@@ -1,5 +1,6 @@
 #include "ease.hpp"
 #include "bury_system.hpp"
+#include "physics_system.hpp"
 #include "sprite_system.hpp"
 #include "vector_util.hpp"
 #include <cmath>
@@ -25,8 +26,10 @@ void BurySystem::bury(const BuryComponent& cmpnt, bool immediate) {
 
 	const Entity& entity = this->getEntityByComponentIndex(cmpnt.index);
 	SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
+	PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
 
 	if (data.buryState == BuryState::NORMAL) {
+		data.collisionRadius = mPhysicsSystem->getRadius(physicsCmpnt);
 		data.offsetY = mSpriteSystem->getOffsetY(spriteCmpnt);
 		data.size = mSpriteSystem->getSize(spriteCmpnt);
 		data.sourceRect = mSpriteSystem->getSourceRect(spriteCmpnt);
@@ -35,11 +38,13 @@ void BurySystem::bury(const BuryComponent& cmpnt, bool immediate) {
 	if (immediate) {
 		data.buryState = BuryState::BURIED;
 		data.ticks = 0;
+		mPhysicsSystem->setRadius(physicsCmpnt, 0.0f);
 		mSpriteSystem->setSize(spriteCmpnt, glm::vec2(0.0f, 0.0f));
 		mSpriteSystem->animate(spriteCmpnt, false);
 	} else {
 		data.buryState = BuryState::BURYING;
 		data.ticks = data.duration;
+		mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
 		mSpriteSystem->setSize(spriteCmpnt, data.size);
 		mSpriteSystem->setSourceRect(spriteCmpnt, data.sourceRect);
 		mSpriteSystem->animate(spriteCmpnt, false);
@@ -67,7 +72,9 @@ BuryComponent BurySystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
-void BurySystem::initialize(SpriteSystem& spriteSystem) {
+void BurySystem::initialize(PhysicsSystem& physicsSystem,
+							SpriteSystem& spriteSystem) {
+	mPhysicsSystem = &physicsSystem;
 	mSpriteSystem = &spriteSystem;
 }
 
@@ -77,8 +84,11 @@ void BurySystem::rise(const BuryComponent& cmpnt, bool immediate) {
 
 	const Entity& entity = this->getEntityByComponentIndex(cmpnt.index);
 	SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
+	PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
 
 	if (data.buryState == BuryState::NORMAL) {
+		data.collisionRadius = mPhysicsSystem->getRadius(physicsCmpnt);
+		data.offsetY = mSpriteSystem->getOffsetY(spriteCmpnt);
 		data.size = mSpriteSystem->getSize(spriteCmpnt);
 		data.sourceRect = mSpriteSystem->getSourceRect(spriteCmpnt);
 	}
@@ -86,12 +96,14 @@ void BurySystem::rise(const BuryComponent& cmpnt, bool immediate) {
 	if (immediate) {
 		data.buryState = BuryState::NORMAL;
 		data.ticks = 0;
+		mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
 		mSpriteSystem->setSize(spriteCmpnt, data.size);
 		mSpriteSystem->setSourceRect(spriteCmpnt, data.sourceRect);
 		mSpriteSystem->animate(spriteCmpnt, false);
 	} else {
 		data.buryState = BuryState::RISING;
 		data.ticks = data.duration;
+		mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
 		mSpriteSystem->setSize(spriteCmpnt, glm::vec2(0.0f, 0.0f));
 		mSpriteSystem->setSourceRect(spriteCmpnt, data.sourceRect);
 		mSpriteSystem->animate(spriteCmpnt, false);
@@ -146,6 +158,8 @@ void BurySystem::update(float elapsedSeconds) {
 				mSpriteSystem->setOffsetY(spriteCmpnt, diff);
 
 				if (data.ticks <= 0.0f) {
+					PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
+					mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
 					mSpriteSystem->animate(spriteCmpnt, true);
 					data.buryState = BuryState::BURIED;
 				}
@@ -168,7 +182,9 @@ void BurySystem::update(float elapsedSeconds) {
 				mSpriteSystem->setOffsetY(spriteCmpnt, diff);
 
 				if (data.ticks <= 0.0f) {
+					PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
 					mSpriteSystem->animate(spriteCmpnt, true);
+					mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
 					data.buryState = BuryState::NORMAL;
 				}
 

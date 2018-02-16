@@ -106,7 +106,9 @@ void SpriteEffectSystem::update(float elapsedSeconds, SpriteSystem& spriteSystem
 
 		spriteSystem.setMaskColor(spriteCmpnt, color);
 
-		spriteSystem.setOffsetY(spriteCmpnt, std::sin(mData[index].bobTicks));
+		if (mData[index].bobSpeed > 0.0f) {
+			spriteSystem.setOffsetY(spriteCmpnt, std::sin(mData[index].bobTicks));
+		}
 	}
 }
 }

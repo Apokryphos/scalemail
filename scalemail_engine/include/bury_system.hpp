@@ -27,6 +27,7 @@ struct BuryComponent {
 };
 
 struct BuryComponentData {
+	bool holeSpawned;
 	bool spawnDirt;
 	BuryState buryState;
 	float ticks;
@@ -50,6 +51,7 @@ protected:
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 	void spawnDirt(const glm::vec2 origin, const float progress);
+	void spawnHole(const glm::vec2 origin);
 
 public:
 	BurySystem(EntityManager& entityManager, int maxComponents = 10000);

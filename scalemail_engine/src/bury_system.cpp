@@ -135,23 +135,25 @@ void BurySystem::spawnDirt(const glm::vec2 origin, const float progress) {
 		const float angle = mRandom->nextFloat(0.0f, TWO_PI);
 
 		const float ellipseWidth = 8.0f;
-		const float ellipseHeight = 4.0f;
+		const float ellipseHeight = 2.0f;
 
 		const float x = std::cos(angle) * ellipseWidth;
-		const float y = std::sin(angle) * mRandom->nextFloat(0.0f, ellipseHeight);
+		const float y = 2.0f + std::sin(angle) * (3.0f + mRandom->nextFloat(-ellipseHeight, ellipseHeight));
 
 		const float size = mRandom->nextFloat(0.25f, 2.5f);
 
+		const int tilesetIdCount = 4;
+
 		mPhysicsSystem->addComponent(entity);
 		PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
-		mPhysicsSystem->setPosition(physicsCmpnt, origin + glm::vec2(x, y + 2.0f + size));
+		mPhysicsSystem->setPosition(physicsCmpnt, origin + glm::vec2(x, y + size));
 		mPhysicsSystem->setRadius(physicsCmpnt, 0);
 
 		mSpriteSystem->addComponent(entity);
 		SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
-		mSpriteSystem->setOffsetZ(spriteCmpnt, size * 2.f);
+		mSpriteSystem->setOffsetZ(spriteCmpnt, size * 3.f);
 		mSpriteSystem->setTileset(spriteCmpnt, "dirt");
-		mSpriteSystem->setTilesetId(spriteCmpnt, { mRandom->nextInt(0, 3) });
+		mSpriteSystem->setTilesetId(spriteCmpnt, { mRandom->nextInt(1, 1 + tilesetIdCount) });
 		mSpriteSystem->setSize(spriteCmpnt, glm::vec2(size));
 
 		this->addComponent(entity);
@@ -161,6 +163,23 @@ void BurySystem::spawnDirt(const glm::vec2 origin, const float progress) {
 		this->bury(buryCmpnt, true);
 		this->rise(buryCmpnt, false);
 	}
+}
+
+//	============================================================================
+void BurySystem::spawnHole(const glm::vec2 position) {
+	const Entity entity = mEntityManager.createEntity();
+
+	mPhysicsSystem->addComponent(entity);
+	PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
+	mPhysicsSystem->setPosition(physicsCmpnt, position);
+	mPhysicsSystem->setRadius(physicsCmpnt, 0);
+
+	mSpriteSystem->addComponent(entity);
+	SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
+	mSpriteSystem->setOffsetZ(spriteCmpnt, 0.0f);
+	mSpriteSystem->setTileset(spriteCmpnt, "dirt");
+	mSpriteSystem->setTilesetId(spriteCmpnt, { 0 });
+	mSpriteSystem->setSize(spriteCmpnt, glm::vec2(20.0f, 8.0f));
 }
 
 //	============================================================================
@@ -179,10 +198,15 @@ void BurySystem::update(float elapsedSeconds) {
 
 		BuryComponentData& data = mData[index];
 
+		bool spawnFx = false;
+
 		const float d = data.duration;
 		const float t = data.duration - data.ticks;
 
 		const float progress = 1.0f - (data.ticks / data.duration);
+
+		SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
+		PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
 
 		switch (data.buryState) {
 			case BuryState::NORMAL: {
@@ -194,7 +218,7 @@ void BurySystem::update(float elapsedSeconds) {
 			}
 
 			case BuryState::BURYING: {
-				SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
+				spawnFx = true;
 
 				glm::vec2 size = data.size;
 				size.y = std::round(easeOutCubic(t, size.y, -size.y, d));
@@ -207,16 +231,9 @@ void BurySystem::update(float elapsedSeconds) {
 				float diff = data.offsetY + (data.size.y - size.y) / 2;
 				mSpriteSystem->setOffsetY(spriteCmpnt, diff);
 
-				PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
-
-				if (data.spawnDirt) {
-					glm::vec2 position = mPhysicsSystem->getPosition(physicsCmpnt);
-					this->spawnDirt(position, progress);
-				}
-
 				if (data.ticks <= 0.0f) {
 					mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
-					mSpriteSystem->animate(spriteCmpnt, true);
+					mSpriteSystem->animate(spriteCmpnt, false);
 					data.buryState = BuryState::BURIED;
 				}
 
@@ -224,7 +241,7 @@ void BurySystem::update(float elapsedSeconds) {
 			}
 
 			case BuryState::RISING: {
-				SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
+				spawnFx = true;
 
 				glm::vec2 size = data.size;
 				size.y = std::round(easeInCubic(t, 0.0f, size.y, d));
@@ -237,13 +254,6 @@ void BurySystem::update(float elapsedSeconds) {
 				float diff = data.offsetY + (data.size.y - size.y) / 2;
 				mSpriteSystem->setOffsetY(spriteCmpnt, diff);
 
-				PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
-
-				if (data.spawnDirt) {
-					glm::vec2 position = mPhysicsSystem->getPosition(physicsCmpnt);
-					this->spawnDirt(position, progress);
-				}
-
 				if (data.ticks <= 0.0f) {
 					mSpriteSystem->animate(spriteCmpnt, true);
 					mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
@@ -251,6 +261,19 @@ void BurySystem::update(float elapsedSeconds) {
 				}
 
 				break;
+			}
+		}
+
+		if (spawnFx) {
+			if (data.spawnDirt) {
+				glm::vec2 position = mPhysicsSystem->getPosition(physicsCmpnt);
+				this->spawnDirt(position, progress);
+
+				if (!data.holeSpawned && progress >= 0.6f) {
+					data.holeSpawned = true;
+					glm::vec2 holeOffset(0.0f, 1.0f + mSpriteSystem->getOffsetY(spriteCmpnt));
+					this->spawnHole(position + holeOffset);
+				}
 			}
 		}
 	}

@@ -92,6 +92,7 @@ public:
 	bool getAlpha(const SpriteComponent& cmpnt) const;
 	SpriteComponent getComponent(const Entity& entity) const;
 	float getOffsetY(const SpriteComponent& cmpnt) const;
+	float getOffsetZ(const SpriteComponent& cmpnt) const;
 	glm::vec2 getSize(const SpriteComponent& cmpnt) const;
 	float getRotate(const SpriteComponent& cmpnt) const;
 	glm::ivec4 getSourceRect(const SpriteComponent& cmpnt) const;

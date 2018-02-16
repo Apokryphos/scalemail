@@ -175,6 +175,11 @@ float SpriteSystem::getOffsetY(const SpriteComponent& cmpnt) const {
 }
 
 //	============================================================================
+float SpriteSystem::getOffsetZ(const SpriteComponent& cmpnt) const {
+	return mData[cmpnt.index].offsetZ;
+}
+
+//	============================================================================
 float SpriteSystem::getRotate(const SpriteComponent& cmpnt) const {
 	return mData[cmpnt.index].rotate;
 }

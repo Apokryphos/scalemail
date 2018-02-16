@@ -57,6 +57,7 @@ public:
 	BurySystem(EntityManager& entityManager, int maxComponents = 10000);
 	BuryComponent getComponent(const Entity& entity) const;
 	void bury(const BuryComponent& cmpnt, bool immediate);
+	BuryState getBuryState(const BuryComponent& cmpnt) const;
 	void initialize(Random& random, PhysicsSystem& physicsSystem,
 					SpriteSystem& spriteSystem);
 	void rise(const BuryComponent& cmpnt, bool immediate);

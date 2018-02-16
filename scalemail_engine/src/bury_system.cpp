@@ -70,6 +70,11 @@ void BurySystem::destroyComponent(int index) {
 }
 
 //	============================================================================
+BuryState BurySystem::getBuryState(const BuryComponent& cmpnt) const {
+	return mData[cmpnt.index].buryState;
+}
+
+//	============================================================================
 BuryComponent BurySystem::getComponent(const Entity& entity) const {
 	return makeComponent(mComponentIndicesByEntity.at(entity));
 }

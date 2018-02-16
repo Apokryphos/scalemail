@@ -70,9 +70,9 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	if (ai != "") {
 		std::shared_ptr<AiBehavior> aiBehavior =
 			mAiBehaviorFactory.createAiBehavior(ai);
-			aiBehavior->setEntity(entity);
 
 		if (aiBehavior != nullptr) {
+			aiBehavior->setEntity(entity);
 			mAiSystem.addComponent(entity);
 			AiComponent aiCmpnt = mAiSystem.getComponent(entity);
 			mAiSystem.addBehavior(aiCmpnt, aiBehavior);

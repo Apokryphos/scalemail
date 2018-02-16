@@ -33,8 +33,9 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 }
 
 //  ============================================================================
-Entity World::createActor(float x, float y, int actorIndex, Direction facing,
-						  std::string name, std::string prefab, std::string ai) {
+Entity World::createActor(float x, float y, glm::vec2 size, int actorIndex,
+						  Direction facing, std::string name,
+						  std::string prefab, std::string ai) {
 	Entity entity = mEntityManager.createEntity();
 
 	mSpriteSystem.addComponent(entity);
@@ -43,6 +44,7 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	mSpriteSystem.setActorIndex(spriteCmpnt, actorIndex);
 	mSpriteSystem.setFacing(spriteCmpnt, facing);
 	mSpriteSystem.setOffsetY(spriteCmpnt, -4.0f);
+	mSpriteSystem.setSize(spriteCmpnt, size);
 
 	mSpriteEffectSystem.addComponent(entity);
 	SpriteEffectComponent spriteEffectCmpnt =
@@ -53,7 +55,7 @@ Entity World::createActor(float x, float y, int actorIndex, Direction facing,
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
-	mPhysicsSystem.setRadius(physicsCmpnt, 4.0f);
+	mPhysicsSystem.setRadius(physicsCmpnt, size.x * 0.25f);
 
 	mHealthSystem.addComponent(entity);
 
@@ -216,7 +218,8 @@ Entity World::createEntity() {
 //  ============================================================================
 Entity World::createPlayerActor(float x, float y, int actorIndex, Direction facing,
 								std::string name) {
-	Entity entity = this->createActor(x, y, actorIndex, facing, name);
+	Entity entity = this->createActor(x, y, glm::vec2(16.0f, 16.0f), actorIndex,
+									  facing, name);
 
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_ACTOR);

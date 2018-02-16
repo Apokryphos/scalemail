@@ -393,7 +393,11 @@ static void processActorObject(World& world,
 	const std::string aiName = toLowercase(propertySet.GetValue("Ai", ""));
 	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
 
-	Entity entity = world.createActor(object.GetX(), object.GetY(), actorIndex,
+	const float width = object.GetWidth();
+	const float height = object.GetHeight();
+
+	Entity entity = world.createActor(object.GetX(), object.GetY(),
+									  glm::vec2(width, height), actorIndex,
 									  facing, object.GetName(), prefabName,
 									  aiName);
 

@@ -61,7 +61,7 @@ class World
 
 public:
 	World();
-	Entity createActor(float x, float y, int actorIndex,
+	Entity createActor(float x, float y, glm::vec2 size, int actorIndex,
 					   Direction facing = Direction::SOUTH,
 					   const std::string name = "",
 					   const std::string prefab = "",

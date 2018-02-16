@@ -352,6 +352,11 @@ AiSystem& World::getAiSystem() {
 }
 
 //  ============================================================================
+BurySystem& World::getBurySystem() {
+	return mBurySystem;
+}
+
+//  ============================================================================
 DamageSystem& World::getDamageSystem() {
 	return mDamageSystem;
 }

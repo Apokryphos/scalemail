@@ -66,6 +66,7 @@ Texture AssetManager::getTextureById(const int textureId) {
 void AssetManager::initialize() {
 	mMissingTexture = this->loadTexture("checker");
 
+	this->loadTexture("dirt_mask", "dirt");
 	this->loadTexture("fx_mask", "fx");
 	this->loadTexture("world_mask", "world");
 

@@ -1,6 +1,9 @@
 #include "ease.hpp"
 #include "bury_system.hpp"
+#include "entity_manager.hpp"
+#include "math_util.hpp"
 #include "physics_system.hpp"
+#include "random.hpp"
 #include "sprite_system.hpp"
 #include "vector_util.hpp"
 #include <cmath>
@@ -72,8 +75,10 @@ BuryComponent BurySystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
-void BurySystem::initialize(PhysicsSystem& physicsSystem,
+void BurySystem::initialize(Random& random,
+							PhysicsSystem& physicsSystem,
 							SpriteSystem& spriteSystem) {
+	mRandom = &random;
 	mPhysicsSystem = &physicsSystem;
 	mSpriteSystem = &spriteSystem;
 }
@@ -116,6 +121,49 @@ void BurySystem::setDuration(const BuryComponent& cmpnt, const float duration) {
 }
 
 //	============================================================================
+void BurySystem::setSpawnDirt(const BuryComponent& cmpnt, bool spawn) {
+	mData[cmpnt.index].spawnDirt = spawn;
+}
+
+//	============================================================================
+void BurySystem::spawnDirt(const glm::vec2 origin, const float progress) {
+	const float chance = 100.0f - (100.0f * progress);
+
+	if (mRandom->nextFloat(0.0f, chance) > (progress * 70.0f)) {
+		const Entity entity = mEntityManager.createEntity();
+
+		const float angle = mRandom->nextFloat(0.0f, TWO_PI);
+
+		const float ellipseWidth = 8.0f;
+		const float ellipseHeight = 4.0f;
+
+		const float x = std::cos(angle) * ellipseWidth;
+		const float y = std::sin(angle) * mRandom->nextFloat(0.0f, ellipseHeight);
+
+		const float size = mRandom->nextFloat(0.25f, 4.0f);
+
+		mPhysicsSystem->addComponent(entity);
+		PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
+		mPhysicsSystem->setPosition(physicsCmpnt, origin + glm::vec2(x, y + 2.0f + size));
+		mPhysicsSystem->setRadius(physicsCmpnt, 0);
+
+		mSpriteSystem->addComponent(entity);
+		SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
+		mSpriteSystem->setOffsetZ(spriteCmpnt, size * 2.f);
+		mSpriteSystem->setTileset(spriteCmpnt, "dirt");
+		mSpriteSystem->setTilesetId(spriteCmpnt, { 0 });
+		mSpriteSystem->setSize(spriteCmpnt, glm::vec2(size));
+
+		this->addComponent(entity);
+		BuryComponent buryCmpnt = this->getComponent(entity);
+		this->setDuration(buryCmpnt, 1.4f);
+		this->setSpawnDirt(buryCmpnt, false);
+		this->bury(buryCmpnt, true);
+		this->rise(buryCmpnt, false);
+	}
+}
+
+//	============================================================================
 void BurySystem::update(float elapsedSeconds) {
 	for (const auto& p : mEntitiesByComponentIndices) {
 		const size_t index = p.first;
@@ -133,6 +181,8 @@ void BurySystem::update(float elapsedSeconds) {
 
 		const float d = data.duration;
 		const float t = data.duration - data.ticks;
+
+		const float progress = 1.0f - (data.ticks / data.duration);
 
 		switch (data.buryState) {
 			case BuryState::NORMAL: {
@@ -157,8 +207,14 @@ void BurySystem::update(float elapsedSeconds) {
 				float diff = data.offsetY + (data.size.y - size.y) / 2;
 				mSpriteSystem->setOffsetY(spriteCmpnt, diff);
 
+				PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
+
+				if (data.spawnDirt) {
+					glm::vec2 position = mPhysicsSystem->getPosition(physicsCmpnt);
+					this->spawnDirt(position, progress);
+				}
+
 				if (data.ticks <= 0.0f) {
-					PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
 					mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
 					mSpriteSystem->animate(spriteCmpnt, true);
 					data.buryState = BuryState::BURIED;
@@ -181,8 +237,14 @@ void BurySystem::update(float elapsedSeconds) {
 				float diff = data.offsetY + (data.size.y - size.y) / 2;
 				mSpriteSystem->setOffsetY(spriteCmpnt, diff);
 
+				PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
+
+				if (data.spawnDirt) {
+					glm::vec2 position = mPhysicsSystem->getPosition(physicsCmpnt);
+					this->spawnDirt(position, progress);
+				}
+
 				if (data.ticks <= 0.0f) {
-					PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
 					mSpriteSystem->animate(spriteCmpnt, true);
 					mPhysicsSystem->setRadius(physicsCmpnt, data.collisionRadius);
 					data.buryState = BuryState::NORMAL;

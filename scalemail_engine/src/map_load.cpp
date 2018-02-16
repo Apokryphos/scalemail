@@ -401,6 +401,7 @@ static void processActorObject(World& world,
 		BurySystem& burySystem = world.getBurySystem();
 		burySystem.addComponent(entity);
 		BuryComponent buryCmpnt = burySystem.getComponent(entity);
+		burySystem.setSpawnDirt(buryCmpnt, true);
 		burySystem.bury(buryCmpnt, true);
 	}
 }

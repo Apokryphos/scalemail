@@ -2,13 +2,12 @@
 #include "camera.hpp"
 #include "collision.hpp"
 #include "collision_test.hpp"
+#include "math_util.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
 #include "vertex_data.hpp"
 #include <cmath>
 #include <functional>
-
-static const float TWO_PI = 6.28318530718f;
 
 namespace ScaleMail
 {
@@ -155,6 +154,11 @@ CollisionGroup PhysicsSystem::getCollisionGroup(const PhysicsComponent& cmpnt) c
 }
 
 //	============================================================================
+glm::vec2 PhysicsSystem::getDirection(const PhysicsComponent& cmpnt) const {
+	return mDirection[cmpnt.index];
+}
+
+//	============================================================================
 std::vector<TriggerCollision> PhysicsSystem::getEntityIntersections(
 	const std::vector<Trigger>& triggers) const {
 
@@ -197,6 +201,11 @@ glm::vec2 PhysicsSystem::getPosition(const PhysicsComponent& cmpnt) const {
 //	============================================================================
 float PhysicsSystem::getRadius(const PhysicsComponent& cmpnt) const {
 	return mRadius[cmpnt.index];
+}
+
+//	============================================================================
+float PhysicsSystem::getSpeed(const PhysicsComponent& cmpnt) const {
+	return mSpeed[cmpnt.index];
 }
 
 //	============================================================================

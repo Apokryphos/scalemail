@@ -5,6 +5,7 @@
 #include "light.hpp"
 #include "map.hpp"
 #include "mesh.hpp"
+#include "particle_system.hpp"
 #include "sprite.hpp"
 #include "string_util.hpp"
 #include "tileset.hpp"
@@ -654,6 +655,28 @@ static void processTorchObject(World& world,
 	lightSystem.setSize(lightCmpnt, torchLightSize);
 	lightSystem.setPulse(lightCmpnt, torchLightPulse);
 	lightSystem.setPulseSize(lightCmpnt, torchLightPulseSize);
+
+	ParticleSystem& particleSystem = world.getParticleSystem();
+	particleSystem.addComponent(entity);
+
+	ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
+
+	ParticleComponentData emitter = {};
+	emitter.life = 1.0f;
+	emitter.decay = 1.0f;
+	emitter.duration = 1.0f;
+	emitter.emitCount = 3;
+	emitter.interval = 0.16f;
+	emitter.minSize = 0.5f;
+	emitter.maxSize = 2.0f;
+	emitter.minSpeed = 4.0f;
+	emitter.maxSpeed = 8.0f;
+	emitter.spread = 0.349066f;
+	emitter.direction = glm::vec2(0.0f, -1.0f);
+	emitter.color = torchLightColor;
+	emitter.width = 4.0f;
+
+	particleSystem.setData(particleCmpnt, emitter);
 }
 
 //  ============================================================================

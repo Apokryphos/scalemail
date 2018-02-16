@@ -14,6 +14,7 @@
 #include "health_system.hpp"
 #include "light_system.hpp"
 #include "name_system.hpp"
+#include "particle_system.hpp"
 #include "physics_system.hpp"
 #include "player.hpp"
 #include "prefab_factory.hpp"
@@ -54,6 +55,7 @@ class World
 	DamageSystem mDamageSystem;
 	SpriteEffectSystem mSpriteEffectSystem;
 	BurySystem mBurySystem;
+	ParticleSystem mParticleSystem;
 
 	std::vector<Player> mPlayers;
 
@@ -95,6 +97,7 @@ public:
 	LightSystem& getLightSystem();
 	Map* getMap();
 	NameSystem& getNameSystem();
+	ParticleSystem& getParticleSystem();
 	PhysicsSystem& getPhysicsSystem();
 	std::vector<Player*> getPlayers();
 	Random& getRandom();

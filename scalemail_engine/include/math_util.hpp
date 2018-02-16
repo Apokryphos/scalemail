@@ -4,6 +4,8 @@
 
 namespace ScaleMail
 {
+static const float TWO_PI = 6.28318530718f;
+
 //  ============================================================================
 static inline int clamp( const int value, const int min, const int max ) {
 	return std::max<int>( min, std::min<int>( value, max ) );

@@ -63,6 +63,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/math_util.hpp
     include/mesh.hpp
     include/name_system.hpp
+    include/particle_system.hpp
     include/physics_system.hpp
     include/player_util.hpp
     include/player.hpp
@@ -137,6 +138,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/map_load.cpp
     src/map_render.cpp
     src/name_system.cpp
+    src/particle_system.cpp
     src/physics_system.cpp
     src/player_util.cpp
     src/prefab_factory.cpp

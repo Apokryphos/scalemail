@@ -3,6 +3,7 @@
 #include "direction.hpp"
 #include "map.hpp"
 #include "map_load.hpp"
+#include "math_util.hpp"
 #include "sprite.hpp"
 #include "world.hpp"
 
@@ -16,7 +17,7 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager),
 				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager),
 				 mSpriteEffectSystem(mEntityManager),
-				 mBurySystem(mEntityManager) {
+				 mBurySystem(mEntityManager), mParticleSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -138,6 +139,27 @@ Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
 	mLightSystem.setPulse(lightCmpnt, lightPulse);
 	mLightSystem.setPulseSize(lightCmpnt, lightPulseSize);
 
+	mParticleSystem.addComponent(entity);
+	ParticleComponent particleCmpnt = mParticleSystem.getComponent(entity);
+
+	ParticleComponentData emitter = {};
+	emitter.life = 0.9f;
+	emitter.decay = 1.0f;
+	emitter.duration = 1.0f;
+	emitter.emitCount = 1;
+	emitter.delay = 0.2f;
+	emitter.interval = 0.0f;
+	emitter.minSize = 0.5f;
+	emitter.maxSize = 2.0f;
+	emitter.minSpeed = speed * 0.25f;
+	emitter.maxSpeed = speed * 0.33f;
+	emitter.spread = 0.349066f;
+	emitter.direction = -direction;
+	emitter.color = lightColor;
+	emitter.radius = 4.0f;
+
+	mParticleSystem.setData(particleCmpnt, emitter);
+
 	return entity;
 }
 
@@ -251,6 +273,7 @@ Entity World::createTrigger(const float x, const float y, const float width,
 void World::destroyBullet(Entity entity) {
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	glm::vec2 bulletPosition = mPhysicsSystem.getPosition(physicsCmpnt);
+	float bulletSpeed = mPhysicsSystem.getSpeed(physicsCmpnt);
 
 	BulletComponent bulletCmpnt = mBulletSystem.getComponent(entity);
 	int impactTilesetId = mBulletSystem.getImpactTilesetId(bulletCmpnt);
@@ -287,6 +310,26 @@ void World::destroyBullet(Entity entity) {
 	mLightSystem.setColor(lightCmpnt, lightColor);
 	mLightSystem.setGlowSize(lightCmpnt, 0);
 	mLightSystem.setSize(lightCmpnt, 48);
+
+	mParticleSystem.addComponent(fxEntity);
+	ParticleComponent particleCmpnt = mParticleSystem.getComponent(fxEntity);
+
+	ParticleComponentData emitter = {};
+	emitter.life = 0.125f;
+	emitter.decay = 1.0f;
+	emitter.duration = 1.0f;
+	emitter.emitCount = 1;
+	emitter.interval = 0.0f;
+	emitter.minSize = 0.5f;
+	emitter.maxSize = 2.0f;
+	emitter.minSpeed = bulletSpeed * 0.1f;
+	emitter.maxSpeed = bulletSpeed * 0.2f;
+	emitter.spread = TWO_PI;
+	emitter.direction = glm::vec2(0.0f, 1.0f);
+	emitter.color = lightColor;
+	emitter.radius = 8.0f;
+
+	mParticleSystem.setData(particleCmpnt, emitter);
 }
 
 //  ============================================================================
@@ -329,6 +372,10 @@ void World::destroyEntity(Entity entity) {
 
 	if (mNameSystem.hasComponent(entity)) {
 		mNameSystem.removeComponent(entity);
+	}
+
+	if (mParticleSystem.hasComponent(entity)) {
+		mParticleSystem.removeComponent(entity);
 	}
 
 	if (mPhysicsSystem.hasComponent(entity)) {
@@ -391,6 +438,11 @@ LightSystem& World::getLightSystem() {
 }
 
 //  ============================================================================
+ParticleSystem& World::getParticleSystem() {
+	return mParticleSystem;
+}
+
+//  ============================================================================
 std::vector<Player*> World::getPlayers() {
 	std::vector<Player*> players;
 
@@ -444,6 +496,7 @@ void World::initialize(AssetManager* assetManager) {
 	mPhysicsSystem.initialize(*assetManager);
 	mBulletSystem.initialize(mDamageSystem);
 	mBurySystem.initialize(mPhysicsSystem, mSpriteSystem);
+	mParticleSystem.initialize(mRandom);
 }
 
 //  ============================================================================
@@ -497,5 +550,7 @@ void World::update(float elapsedSeconds) {
 	mHealthSystem.update(*this);
 
 	mExpireSystem.update(*this, elapsedSeconds);
+
+	mParticleSystem.update(mPhysicsSystem, elapsedSeconds);
 }
 }

@@ -63,6 +63,35 @@ bool initColorQuadMesh(Mesh& mesh) {
 }
 
 //  ============================================================================
+bool initPositionColorMesh(Mesh& mesh, size_t vertexCapacity) {
+	glGenVertexArrays(1, &mesh.vao);
+	glGenBuffers(1, &mesh.vbo);
+
+	mesh.elementCount = COLOR_QUAD_ELEMENT_COUNT;
+	mesh.vertexCount = 0;
+	mesh.vertexBufferSize = vertexCapacity * COLOR_QUAD_ELEMENT_COUNT;
+
+	glBindVertexArray(mesh.vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, mesh.vertexBufferSize, NULL, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+						  sizeof(float) * COLOR_QUAD_ELEMENT_COUNT, (void*) 0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
+						  sizeof(float) * COLOR_QUAD_ELEMENT_COUNT,
+						  (void*) (sizeof(float) * 2));
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
+//  ============================================================================
 bool initQuadMesh(Mesh& mesh) {
 	glGenVertexArrays(1, &mesh.vao);
 	glGenBuffers(1, &mesh.vbo);

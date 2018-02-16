@@ -1,0 +1,83 @@
+#pragma once
+
+#include "entity_system.hpp"
+#include "mesh.hpp"
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
+#include <vector>
+
+namespace ScaleMail
+{
+struct Entity;
+class EntityManager;
+class PhysicsSystem;
+class Random;
+
+struct ParticleComponent {
+	ParticleComponent(const int index) { this->index = index; }
+	int index;
+};
+
+//	Particle emitters
+struct ParticleComponentData {
+	int emitCount;
+	float life;
+	float decay;
+	float delay;
+	float duration;
+	float height;
+	float interval;
+	float minSize;
+	float maxSize;
+	float minSpeed;
+	float maxSpeed;
+	float radius;
+	float spread;
+	float ticks;
+	float width;
+	glm::vec2 direction;
+	glm::vec4 color;
+};
+
+class ParticleSystem : public EntitySystem
+{
+private:
+	//	Emitters
+	std::vector<ParticleComponentData> mData;
+
+	//	Particles
+	std::vector<float> mLife;
+	std::vector<float> mLifetime;
+	std::vector<float> mDecay;
+	std::vector<float> mSize;
+	std::vector<float> mSpeed;
+	std::vector<float> mDirectionX;
+	std::vector<float> mDirectionY;
+	std::vector<float> mPositionX;
+	std::vector<float> mPositionY;
+	std::vector<float> mColorR;
+	std::vector<float> mColorG;
+	std::vector<float> mColorB;
+	std::vector<float> mColorA;
+
+	std::vector<size_t> mRemoveParticles;
+
+	Mesh mMesh;
+	std::vector<float> mVertexData;
+
+	Random* mRandom;
+
+protected:
+	virtual void createComponent() override;
+	virtual void destroyComponent(int index) override;
+
+public:
+	ParticleSystem(EntityManager& entityManager, int maxComponents = 10000);
+	void buildVertexData();
+	ParticleComponent getComponent(const Entity& entity) const;
+	Mesh& getMesh();
+	void initialize(Random& random);
+	void setData(const ParticleComponent& cmpnt, const ParticleComponentData& data);
+	void update(PhysicsSystem& physicsSystem, float elapsedSeconds);
+};
+}

@@ -59,10 +59,12 @@ public:
 	void drawDebug(const Camera& camera);
 	CollisionGroup getCollisionGroup(const PhysicsComponent& cmpnt) const;
 	PhysicsComponent getComponent(const Entity& entity) const;
+	glm::vec2 getDirection(const PhysicsComponent& cmpnt) const;
 	std::vector<TriggerCollision> getEntityIntersections(
 		const std::vector<Trigger>& triggers) const;
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
 	float getRadius(const PhysicsComponent& cmpnt) const;
+	float getSpeed(const PhysicsComponent& cmpnt) const;
 	void initialize(AssetManager& assetManager);
 	void setCollisionGroup(const PhysicsComponent& cmpnt,
 						   const CollisionGroup group);

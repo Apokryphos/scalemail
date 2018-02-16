@@ -1,6 +1,7 @@
 #include "gui/gui.hpp"
 #include "ambient_light.hpp"
 #include "asset_manager.hpp"
+#include "blend.hpp"
 #include "camera.hpp"
 #include "font.hpp"
 #include "game.hpp"
@@ -77,6 +78,22 @@ void updateStencilBuffer(GameWindow& gameWindow, Camera& camera) {
 }
 
 //	============================================================================
+void renderParticles(World& world, Camera& camera) {
+	ParticleSystem& particleSystem = world.getParticleSystem();
+
+	particleSystem.buildVertexData();
+
+	Mesh& mesh = particleSystem.getMesh();
+
+	glm::mat4 mvp = camera.getProjection() * camera.getView();
+
+	glUseProgram(colorQuadShader.id);
+	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+	glBindVertexArray(mesh.vao);
+	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
+}
+
+//	============================================================================
 void render(Game& game, World& world, Camera& camera, GameState& gameState,
 			float totalElapsedSeconds) {
 	GameWindow& gameWindow = game.gameWindow;
@@ -94,6 +111,11 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	renderMap(*world.getMap(), camera, totalElapsedSeconds);
 	renderSprites(world.getSpriteSystem(), world.getSpriteEffectSystem(), camera);
 	renderLight(gameWindow, camera, world.getLightSystem());
+
+	blendAlphaAdditive();
+	renderParticles(world, camera);
+	blendNone();
+
 	renderTransition();
 
 	if (game.drawCollision) {

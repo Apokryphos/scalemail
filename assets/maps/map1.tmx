@@ -4628,7 +4628,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Triggers">
-  <object id="239" name="Door Trigger" type="Trigger" x="96" y="992" width="48" height="80">
+  <object id="239" name="Door Trigger" type="Trigger" x="96" y="1008" width="48" height="48">
    <properties>
     <property name="TargetName" value="introDoor"/>
    </properties>
@@ -4638,12 +4638,12 @@
     <property name="TargetName" value="doorD"/>
    </properties>
   </object>
-  <object id="242" name="Door Trigger" type="Trigger" x="112" y="240" width="48" height="80">
+  <object id="242" name="Door Trigger" type="Trigger" x="112" y="256" width="48" height="48">
    <properties>
     <property name="TargetName" value="doorA"/>
    </properties>
   </object>
-  <object id="243" name="Door Trigger" type="Trigger" x="160" y="448" width="48" height="80">
+  <object id="243" name="Door Trigger" type="Trigger" x="160" y="464" width="48" height="48">
    <properties>
     <property name="TargetName" value="doorB"/>
    </properties>

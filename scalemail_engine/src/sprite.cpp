@@ -78,6 +78,9 @@ void initializeSprites(AssetManager& assetManager) {
 	assetManager.loadTexture("items");
 	assetManager.loadTexture("dirt");
 
+	assetManager.loadTexture("actors_mask");
+	assetManager.loadTexture("items_mask");
+
 	spriteBatch.initialize(assetManager);
 }
 

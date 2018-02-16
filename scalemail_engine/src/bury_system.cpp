@@ -129,7 +129,7 @@ void BurySystem::setSpawnDirt(const BuryComponent& cmpnt, bool spawn) {
 void BurySystem::spawnDirt(const glm::vec2 origin, const float progress) {
 	const float chance = 100.0f - (100.0f * progress);
 
-	if (mRandom->nextFloat(0.0f, chance) > (progress * 70.0f)) {
+	if (mRandom->nextFloat(0.0f, chance) > (progress * 65.0f)) {
 		const Entity entity = mEntityManager.createEntity();
 
 		const float angle = mRandom->nextFloat(0.0f, TWO_PI);
@@ -140,7 +140,7 @@ void BurySystem::spawnDirt(const glm::vec2 origin, const float progress) {
 		const float x = std::cos(angle) * ellipseWidth;
 		const float y = std::sin(angle) * mRandom->nextFloat(0.0f, ellipseHeight);
 
-		const float size = mRandom->nextFloat(0.25f, 4.0f);
+		const float size = mRandom->nextFloat(0.25f, 2.5f);
 
 		mPhysicsSystem->addComponent(entity);
 		PhysicsComponent physicsCmpnt = mPhysicsSystem->getComponent(entity);
@@ -151,12 +151,12 @@ void BurySystem::spawnDirt(const glm::vec2 origin, const float progress) {
 		SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
 		mSpriteSystem->setOffsetZ(spriteCmpnt, size * 2.f);
 		mSpriteSystem->setTileset(spriteCmpnt, "dirt");
-		mSpriteSystem->setTilesetId(spriteCmpnt, { 0 });
+		mSpriteSystem->setTilesetId(spriteCmpnt, { mRandom->nextInt(0, 3) });
 		mSpriteSystem->setSize(spriteCmpnt, glm::vec2(size));
 
 		this->addComponent(entity);
 		BuryComponent buryCmpnt = this->getComponent(entity);
-		this->setDuration(buryCmpnt, 1.4f);
+		this->setDuration(buryCmpnt, 1.1f);
 		this->setSpawnDirt(buryCmpnt, false);
 		this->bury(buryCmpnt, true);
 		this->rise(buryCmpnt, false);

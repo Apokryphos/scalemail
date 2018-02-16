@@ -14,7 +14,6 @@ public:
 		std::random_device rd;
 		std::seed_seq seed{rd(), rd(), rd(), rd(), rd(), rd(), rd(), rd()};
 		mEngine = std::mt19937(seed);
-
 	}
 
 	template <typename T>
@@ -30,6 +29,10 @@ public:
 
 	float nextFloat(float min, float max) {
 		return static_cast<float>(std::uniform_real_distribution<double>(min, max)(mEngine));
+	}
+
+	int nextInt(int min, int max) {
+		return static_cast<int>(std::uniform_real_distribution<double>(min, max)(mEngine));
 	}
 };
 }

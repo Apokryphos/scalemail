@@ -1,6 +1,8 @@
 #pragma once
 
+#include "entity.hpp"
 #include "game_state.hpp"
+#include <vector>
 
 namespace ScaleMail
 {
@@ -9,9 +11,14 @@ class World;
 class IntroGameState : public GameState
 {
 	bool mDoorsClosed;
-	int introState;
-	float introTicks;
-	float textAlpha;
+	int mIntroState;
+	float mIntroTicks;
+	float mTextAlpha;
+	float mCameraStartY;
+	float mCameraEndY;
+
+	std::vector<Entity> mDoorEntities;
+	std::vector<Entity> mBuriedEntities;
 
 	void updateState(World& world, Camera& camera, float elapsedSeconds);
 

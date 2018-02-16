@@ -5,7 +5,6 @@
 #include "game.hpp"
 #include "game_state_manager.hpp"
 #include "game_window.hpp"
-#include "gl_headers.hpp"
 #include "intro_game_state.hpp"
 #include "map.hpp"
 #include "transition.hpp"
@@ -21,18 +20,11 @@ const float STATE3_DURATION = 3.0f;
 const float STATE4_DURATION = 15.0f;
 const float STATE5_DURATION = 1.0f;
 
-float introCameraStartY;
-float introCameraEndY;
-
-static std::vector<Entity> doorEntities;
-static std::vector<Entity> buriedEntities;
-
 //	============================================================================
 IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
-	GameState(gameStateManager), mDoorsClosed(false) {
-	introState = 0;
-	introTicks = 0;
-	textAlpha = 0.0f;
+	GameState(gameStateManager), mDoorsClosed(false), mIntroState(0),
+	mIntroTicks(0.0f), mTextAlpha(0.0f), mCameraStartY(0.0f),
+	mCameraEndY(0.0f) {
 }
 
 //	============================================================================
@@ -61,16 +53,16 @@ void IntroGameState::activate(Game& game) {
 
 	//	Use bounds adjusted camera position for end position
 	camera.setPosition(glm::vec2(path.points[1].y, path.points[1].y));
-	introCameraEndY = camera.getPosition().y;
+	mCameraEndY = camera.getPosition().y;
 
 	//	Use bounds adjusted camera position for start
 	//	This will also set the camera to the correct initial position
 	camera.setPosition(glm::vec2(path.points[0].x, path.points[0].y));
-	introCameraStartY = camera.getPosition().y;
+	mCameraStartY = camera.getPosition().y;
 
 	World& world = *game.world;
-	doorEntities = world.getEntitiesByName("introDoor");
-	buriedEntities = world.getEntitiesByName("Skeleton");
+	mDoorEntities = world.getEntitiesByName("introDoor");
+	mBuriedEntities = world.getEntitiesByName("Skeleton");
 
 }
 
@@ -86,7 +78,7 @@ void IntroGameState::draw(const Game& game, Camera& camera) {
 		drawCenterText(
 			glm::vec2(centerX, centerY),
 			"- SCALEMAIL -",
-			glm::vec4(1.0f, 1.0f, 1.0f, textAlpha),
+			glm::vec4(1.0f, 1.0f, 1.0f, mTextAlpha),
 			textSize);
 	}
 }
@@ -103,54 +95,54 @@ void IntroGameState::update(Game& game, float elapsedSeconds) {
 //	============================================================================
 void IntroGameState::updateState(World& world, Camera& camera,
 								 float elapsedSeconds) {
-	switch (introState) {
+	switch (mIntroState) {
 	//  Pause before fading title in
 	case 0:
-		introTicks += elapsedSeconds;
-		if (introTicks >= STATE1_DURATION) {
-			introTicks = 0;
-			++introState;
+		mIntroTicks += elapsedSeconds;
+		if (mIntroTicks >= STATE1_DURATION) {
+			mIntroTicks = 0;
+			++mIntroState;
 		}
 		break;
 
 	//  Fade title in
 	case 1:
-		introTicks += elapsedSeconds;
-		textAlpha = easeInCubic(introTicks, 0, 1, STATE2_DURATION);
-		if (introTicks >= STATE2_DURATION) {
-			introTicks = 0;
+		mIntroTicks += elapsedSeconds;
+		mTextAlpha = easeInCubic(mIntroTicks, 0, 1, STATE2_DURATION);
+		if (mIntroTicks >= STATE2_DURATION) {
+			mIntroTicks = 0;
 			transitionFadeIn();
-			++introState;
+			++mIntroState;
 		}
 		break;
 
 	//  Pause after fading in map
 	case 2:
-		introTicks += elapsedSeconds;
-		textAlpha = 1.0f;
-		if (introTicks >= STATE3_DURATION) {
-			introTicks = 0;
-			++introState;
+		mIntroTicks += elapsedSeconds;
+		mTextAlpha = 1.0f;
+		if (mIntroTicks >= STATE3_DURATION) {
+			mIntroTicks = 0;
+			++mIntroState;
 		}
 		break;
 
 	//  Scroll down and fade out title
 	case 3:
 	{
-		introTicks += elapsedSeconds;
-		textAlpha = 1 - easeOutCubic(introTicks, 0, 1, STATE2_DURATION);
+		mIntroTicks += elapsedSeconds;
+		mTextAlpha = 1 - easeOutCubic(mIntroTicks, 0, 1, STATE2_DURATION);
 
 		glm::vec2 position;
 
 		position.y = easeInOutSine(
-			introTicks,
-			introCameraStartY,
-			introCameraEndY - introCameraStartY,
+			mIntroTicks,
+			mCameraStartY,
+			mCameraEndY - mCameraStartY,
 			STATE4_DURATION);
 
 		//	Close doors as camera Y position passes them
 		if (!mDoorsClosed) {
-			for (const auto entity : doorEntities) {
+			for (const auto entity : mDoorEntities) {
 				PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 				PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 				glm::vec2 doorPosition = physicsSystem.getPosition(physicsCmpnt);
@@ -164,7 +156,7 @@ void IntroGameState::updateState(World& world, Camera& camera,
 
 			if (mDoorsClosed) {
 				//	Unearth skeletons
-				for (const auto entity : buriedEntities) {
+				for (const auto entity : mBuriedEntities) {
 					BuryComponent buryCmpnt = world.getBurySystem().getComponent(entity);
 					world.getBurySystem().rise(buryCmpnt, false);
 				}
@@ -173,20 +165,20 @@ void IntroGameState::updateState(World& world, Camera& camera,
 
 		camera.setPosition(position);
 
-		if (introTicks >= STATE4_DURATION) {
-			introTicks = 0;
-			camera.setPosition(glm::vec2(0, introCameraEndY));
-			++introState;
+		if (mIntroTicks >= STATE4_DURATION) {
+			mIntroTicks = 0;
+			camera.setPosition(glm::vec2(0, mCameraEndY));
+			++mIntroState;
 		}
 		break;
 	}
 
 	//  Pause before activating next game state
 	case 4:
-		introTicks += elapsedSeconds;
-		if (introTicks >= STATE5_DURATION) {
-			introTicks = 0;
-			++introState;
+		mIntroTicks += elapsedSeconds;
+		if (mIntroTicks >= STATE5_DURATION) {
+			mIntroTicks = 0;
+			++mIntroState;
 			this->getGameStateManager().activateMainGameState();
 		}
 	}

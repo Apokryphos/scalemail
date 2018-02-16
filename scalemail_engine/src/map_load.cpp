@@ -524,6 +524,55 @@ static void processDoorObject(World& world,
 }
 
 //  ============================================================================
+static void processItemObject(World& world,
+							   const TmxMapLib::Object& object,
+							   const TmxMapLib::Map& tmxMap) {
+	auto const tile = object.GetTile();
+
+	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
+
+	if (tileset == nullptr) {
+		std::cout << "Invalid item object in TMX map: no matching tileset." << std::endl;
+		return;
+	}
+
+	int gid = tile->GetGid() - tileset->GetFirstGid();
+
+	const TmxMapLib::TilesetTile* tilesetTile = tileset->GetTile(gid);
+
+	const TmxMapLib::PropertySet& propertySet = tilesetTile->GetPropertySet();
+
+	if (tilesetTile == nullptr) {
+		std::cout << "Invalid item object in TMX map: no matching tileset tile." << std::endl;
+		return;
+	}
+
+	const int tilesetId = tile->GetGid() - tileset->GetFirstGid();
+
+	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
+
+	const float width = object.GetWidth();
+	const float height = object.GetHeight();
+
+	const glm::vec2 position(object.GetX(), object.GetY());
+
+	const glm::vec2 size(width, height);
+
+	const std::string name = object.GetName();
+
+	Entity entity = world.createLoot(position, size, tilesetId, name, prefabName);
+
+	if (object.GetPropertySet().GetBoolValue("Buried", false)) {
+		BurySystem& burySystem = world.getBurySystem();
+		burySystem.addComponent(entity);
+		BuryComponent buryCmpnt = burySystem.getComponent(entity);
+		burySystem.setSpawnDirt(buryCmpnt, true);
+		burySystem.setDuration(buryCmpnt, world.getRandom().nextFloat(2.0f, 3.0f));
+		burySystem.bury(buryCmpnt, true);
+	}
+}
+
+//  ============================================================================
 static void processLightObject(World& world,
 							   const TmxMapLib::Object& object) {
 	//  Scale light size by constant...lights are too small
@@ -730,6 +779,8 @@ static void processObject(World& world,
 			processActorObject(world, object, tmxMap);
 		} else if (type == "door") {
 			processDoorObject(world, object, tmxMap);
+		} else if (type == "item") {
+			processItemObject(world, object, tmxMap);
 		} else if (type == "playerstart") {
 			PlayerStart playerStart;
 			if (processPlayerStartObject(object, tmxMap, playerStart)) {

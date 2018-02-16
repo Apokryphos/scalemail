@@ -77,6 +77,8 @@ public:
 					  int childClosedTilesetId, bool open,
 					  const std::string name);
 	Entity createEntity();
+	Entity createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
+					  std::string name, std::string prefab);
 	Entity createPlayerActor(float x, float y, int actorIndex,
 							 Direction facing = Direction::SOUTH,
 							 const std::string name = "");

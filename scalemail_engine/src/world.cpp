@@ -216,6 +216,42 @@ Entity World::createEntity() {
 }
 
 //  ============================================================================
+Entity World::createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
+						  std::string name, std::string prefab) {
+	Entity entity = mEntityManager.createEntity();
+
+	mSpriteSystem.addComponent(entity);
+	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
+	mSpriteSystem.setTileset(spriteCmpnt, "items");
+	mSpriteSystem.setTilesetId(spriteCmpnt, { tilesetId });
+	mSpriteSystem.setOffsetY(spriteCmpnt, -4.0f);
+	mSpriteSystem.setSize(spriteCmpnt, size);
+
+	mSpriteEffectSystem.addComponent(entity);
+	SpriteEffectComponent spriteEffectCmpnt =
+		mSpriteEffectSystem.getComponent(entity);
+	mSpriteEffectSystem.setBlinkDuration(spriteEffectCmpnt, 0.75f);
+
+	mPhysicsSystem.addComponent(entity);
+	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
+	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(position.x + 8.0f, position.y - 8.0f));
+	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ITEM);
+	mPhysicsSystem.setRadius(physicsCmpnt, size.x * 0.75f);
+
+	if (name != "") {
+		mNameSystem.addComponent(entity);
+		NameComponent nameCmpnt = mNameSystem.getComponent(entity);
+		mNameSystem.setName(nameCmpnt, name);
+	}
+
+	if (prefab != "") {
+		mPrefabFactory.buildPrefab(entity, prefab, *this);
+	}
+
+	return entity;
+}
+
+//  ============================================================================
 Entity World::createPlayerActor(float x, float y, int actorIndex, Direction facing,
 								std::string name) {
 	Entity entity = this->createActor(x, y, glm::vec2(16.0f, 16.0f), actorIndex,

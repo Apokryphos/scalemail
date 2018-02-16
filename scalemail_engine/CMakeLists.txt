@@ -21,6 +21,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/bullet_data.hpp
     include/bullet_system.hpp
     include/bullet_util.hpp
+    include/bury_system.hpp
     include/camera.hpp
     include/collision_group.hpp
     include/collision_test.hpp
@@ -96,6 +97,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/vampire_ai.cpp
     src/ai_behavior_factory.cpp
     src/ai_system.cpp
+    src/bury_system.cpp
     src/gui/gui.cpp
     src/gui/gui_screen.cpp
     src/gui/pause_gui_screen.cpp

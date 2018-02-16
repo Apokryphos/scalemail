@@ -15,7 +15,8 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mTriggerSystem(mEntityManager), mGunSystem(mEntityManager),
 				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager),
 				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager),
-				 mSpriteEffectSystem(mEntityManager) {
+				 mSpriteEffectSystem(mEntityManager),
+				 mBurySystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -433,6 +434,7 @@ void World::initialize(AssetManager* assetManager) {
 	mDoorSystem.initialize(mPhysicsSystem, mSpriteSystem);
 	mPhysicsSystem.initialize(*assetManager);
 	mBulletSystem.initialize(mDamageSystem);
+	mBurySystem.initialize(mSpriteSystem);
 }
 
 //  ============================================================================
@@ -480,6 +482,8 @@ void World::update(float elapsedSeconds) {
 	mDamageSystem.applyDamage(mHealthSystem, mSpriteEffectSystem);
 
 	mSpriteEffectSystem.update(elapsedSeconds, mSpriteSystem);
+
+	mBurySystem.update(elapsedSeconds);
 
 	mHealthSystem.update(*this);
 

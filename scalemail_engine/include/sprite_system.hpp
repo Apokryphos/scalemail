@@ -29,10 +29,12 @@ struct SpriteComponentData {
 	unsigned int textureId;
 	unsigned int maskTextureId;
 	int tilesetId;
+	float animate;
 	float rotate;
 	float offsetY;
 	float offsetZ;
 	glm::vec2 size;
+	glm::ivec4 sourceRect;
 	glm::vec2 uv1;
 	glm::vec2 uv2;
 	glm::vec3 position;
@@ -82,14 +84,17 @@ protected:
 
 public:
 	SpriteSystem(EntityManager& entityManager, int maxComponents = 10000);
+	void animate(const SpriteComponent& cmpnt, const bool animate);
 	void buildVertexData(SpriteBatch& spriteBatch);
 	void buildVertexData(
 		SpriteBatch& spriteBatch,
 		const std::vector<Entity>& entities);
 	bool getAlpha(const SpriteComponent& cmpnt) const;
 	SpriteComponent getComponent(const Entity& entity) const;
+	float getOffsetY(const SpriteComponent& cmpnt) const;
 	glm::vec2 getSize(const SpriteComponent& cmpnt) const;
 	float getRotate(const SpriteComponent& cmpnt) const;
+	glm::ivec4 getSourceRect(const SpriteComponent& cmpnt) const;
 	int getTextureId(const SpriteComponent& cmpnt) const;
 	int getTilesetId(const SpriteComponent& cmpnt) const;
 	void initialize(AssetManager* assetManager);
@@ -108,6 +113,9 @@ public:
 		const SpriteComponent& cmpnt, const glm::vec2 direction);
 	void setRotate(const SpriteComponent& cmpnt, float rotate);
 	void setSize(const SpriteComponent& cmpnt, const glm::vec2& size);
+	void setSourceRect(
+		const SpriteComponent& cmpnt,
+		const glm::ivec4& sourceRect);
 	void setTileset(
 		const SpriteComponent& cmpnt, const std::string& textureName);
 	void update(float elapsedSeconds, PhysicsSystem& physicsSystem);

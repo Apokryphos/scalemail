@@ -31,8 +31,14 @@ SpriteSystem::SpriteSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
+void SpriteSystem::animate(const SpriteComponent& cmpnt, const bool animate) {
+	mData[cmpnt.index].animate = animate ? 1.0f : 0.0f;
+}
+
+//	============================================================================
 void SpriteSystem::createComponent() {
 	SpriteComponentData data = {};
+	data.animate = 1.0f;
 	data.facing = Direction::SOUTH;
 	data.offsetY = 0.0f;
 	data.offsetZ = 16.0f;
@@ -41,6 +47,7 @@ void SpriteSystem::createComponent() {
 	data.tilesetId = 0;
 	data.rotate = 0;
 	data.size = glm::vec2(16.0f);
+	data.sourceRect = glm::ivec4(0, 0, 16, 16);
 	data.uv1 = glm::vec2(0.0f);
 	data.uv2 = glm::vec2(0.0f);
 	data.position = glm::vec3(0.0f);
@@ -163,6 +170,11 @@ SpriteComponent SpriteSystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
+float SpriteSystem::getOffsetY(const SpriteComponent& cmpnt) const {
+	return mData[cmpnt.index].offsetY;
+}
+
+//	============================================================================
 float SpriteSystem::getRotate(const SpriteComponent& cmpnt) const {
 	return mData[cmpnt.index].rotate;
 }
@@ -170,6 +182,11 @@ float SpriteSystem::getRotate(const SpriteComponent& cmpnt) const {
 //	============================================================================
 glm::vec2 SpriteSystem::getSize(const SpriteComponent& cmpnt) const {
 	return mData[cmpnt.index].size;
+}
+
+//	============================================================================
+glm::ivec4 SpriteSystem::getSourceRect(const SpriteComponent& cmpnt) const {
+	return mData[cmpnt.index].sourceRect;
 }
 
 //	============================================================================
@@ -183,7 +200,7 @@ void SpriteSystem::calculateTextureCoords(int componentIndex) {
 	glm::vec2 uv2;
 
 	mData[componentIndex].tileset.getTileUv(
-		mData[componentIndex].tilesetId, uv1, uv2);
+		mData[componentIndex].tilesetId, mData[componentIndex].sourceRect, uv1, uv2);
 
 	mData[componentIndex].uv1 = uv1;
 	mData[componentIndex].uv2 = uv2;
@@ -268,6 +285,13 @@ void SpriteSystem::setSize(
 }
 
 //	============================================================================
+void SpriteSystem::setSourceRect(
+		const SpriteComponent& cmpnt, const glm::ivec4& sourceRect) {
+	mData[cmpnt.index].sourceRect = sourceRect;
+	this->calculateTextureCoords(cmpnt.index);
+}
+
+//	============================================================================
 void SpriteSystem::setTileset(
 	const SpriteComponent& cmpnt, const std::string& textureName) {
 	SpriteComponentData& data = mData[cmpnt.index];
@@ -314,7 +338,7 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 	for (const auto& p : mEntitiesByComponentIndices) {
 		SpriteAnimation& animation = mData[p.first].animation;
 
-		animation.ticks += elapsedSeconds;
+		animation.ticks += elapsedSeconds * mData[p.first].animate;
 
 		const float duration = animation.frames[animation.frameIndex].duration;
 

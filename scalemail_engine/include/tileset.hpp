@@ -2,6 +2,7 @@
 
 #include "texture.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 namespace ScaleMail
 {
@@ -14,7 +15,9 @@ public:
 	}
 
 	Tileset(Texture texture, int tileWidth, int tileHeight);
-	void getTileUv(int index, glm::vec2& uv1, glm::vec2& uv2);
+	void getTileUv(const int index, glm::vec2& uv1, glm::vec2& uv2) const;
+	void getTileUv(const int index, const glm::ivec4& sourceRect,
+				   glm::vec2& uv1, glm::vec2& uv2) const;
 	Texture texture;
 	int tileHeight;
 	int tileWidth;

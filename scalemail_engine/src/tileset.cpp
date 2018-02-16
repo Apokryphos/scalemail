@@ -9,7 +9,7 @@ Tileset::Tileset(Texture texture, int tileWidth, int tileHeight)
 }
 
 //  ============================================================================
-void Tileset::getTileUv(int index, glm::vec2& uv1, glm::vec2& uv2) {
+void Tileset::getTileUv(const int index, glm::vec2& uv1, glm::vec2& uv2) const {
 	const int TILES_PER_ROW = this->texture.width / this->tileWidth;
 
 	int x = index % TILES_PER_ROW;
@@ -28,6 +28,26 @@ void Tileset::getTileUv(int index, glm::vec2& uv1, glm::vec2& uv2) {
 	uv2 = glm::vec2(u2, v1);
 }
 
+//  ============================================================================
+void Tileset::getTileUv(const int index, const glm::ivec4& sourceRect,
+						glm::vec2& uv1, glm::vec2& uv2) const {
+	const int TILES_PER_ROW = this->texture.width / this->tileWidth;
+
+	int x = index % TILES_PER_ROW;
+	int y = index / TILES_PER_ROW;
+
+	int pixelX = x * this->tileWidth;
+	int pixelY = y * this->tileHeight;
+
+	double u1 = (pixelX + sourceRect.x) / (double)this->texture.width;
+	double v1 = (pixelY + sourceRect.y) / (double)this->texture.height;
+
+	double u2 = (pixelX + sourceRect[2]) / (double)this->texture.width;
+	double v2 = (pixelY + sourceRect[3]) / (double)this->texture.height;
+
+	uv1 = glm::vec2(u1, v2);
+	uv2 = glm::vec2(u2, v1);
+}
 
 //  ============================================================================
 void getTilesetUv(const int index, const int width, const int height,

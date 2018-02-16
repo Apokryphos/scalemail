@@ -3,6 +3,7 @@
 #include "ai_behavior_factory.hpp"
 #include "ai_system.hpp"
 #include "bullet_system.hpp"
+#include "bury_system.hpp"
 #include "damage_system.hpp"
 #include "direction.hpp"
 #include "door_system.hpp"
@@ -52,6 +53,7 @@ class World
 	HealthSystem mHealthSystem;
 	DamageSystem mDamageSystem;
 	SpriteEffectSystem mSpriteEffectSystem;
+	BurySystem mBurySystem;
 
 	std::vector<Player> mPlayers;
 
@@ -84,6 +86,7 @@ public:
 	void destroyBullet(Entity entity);
 	void destroyEntity(Entity entity);
 	AiSystem& getAiSystem();
+	BurySystem& getBurySystem();
 	DamageSystem& getDamageSystem();
 	DoorSystem& getDoorSystem();
 	std::vector<Entity> getEntitiesByName(const std::string name) const;

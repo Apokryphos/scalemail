@@ -67,6 +67,19 @@ void MainGameState::activate(Game& game) {
 	updateCameraPosition(game);
 
 	game.gui->showPlayerHud(true);
+
+	World& world = *game.world;
+
+	//	Unearth skeletons
+	BurySystem& burySystem = world.getBurySystem();
+	std::vector<Entity> buriedEntities = world.getEntitiesByName("Skeleton");
+	for (const auto entity : buriedEntities) {
+		BuryComponent buryCmpnt = burySystem.getComponent(entity);
+
+		if (burySystem.getBuryState(buryCmpnt) == BuryState::BURIED) {
+			world.getBurySystem().rise(buryCmpnt, false);
+		}
+	}
 }
 
 //	============================================================================

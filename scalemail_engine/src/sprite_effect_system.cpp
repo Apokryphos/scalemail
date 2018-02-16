@@ -31,6 +31,11 @@ void SpriteEffectSystem::createComponent() {
 }
 
 //	============================================================================
+void SpriteEffectSystem::bob(const SpriteEffectComponent& cmpnt, float speed) {
+	mData[cmpnt.index].bobSpeed = speed;
+}
+
+//	============================================================================
 void SpriteEffectSystem::buildVertexData(
 	SpriteBatch& spriteBatch,
 	SpriteSystem& spriteSystem) {
@@ -77,6 +82,8 @@ void SpriteEffectSystem::update(float elapsedSeconds, SpriteSystem& spriteSystem
 		mData[index].blinkTicks = std::max(
 			mData[index].blinkTicks - elapsedSeconds,
 			0.0f);
+
+		mData[index].bobTicks += mData[index].bobSpeed * elapsedSeconds;
 	}
 
 	for (const auto& p : mEntitiesByComponentIndices) {
@@ -98,6 +105,8 @@ void SpriteEffectSystem::update(float elapsedSeconds, SpriteSystem& spriteSystem
 			easeInOutCubic);
 
 		spriteSystem.setMaskColor(spriteCmpnt, color);
+
+		spriteSystem.setOffsetY(spriteCmpnt, std::sin(mData[index].bobTicks));
 	}
 }
 }

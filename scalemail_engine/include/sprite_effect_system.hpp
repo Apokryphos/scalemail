@@ -17,6 +17,8 @@ struct SpriteEffectComponent {
 };
 
 struct SpriteEffectComponentData {
+	float bobSpeed;
+	float bobTicks;
 	float blinkCount;
 	float blinkTicks;
 	float blinkDuration;
@@ -36,6 +38,7 @@ public:
 	SpriteEffectSystem(EntityManager& entityManager, int maxComponents = 10000);
 	SpriteEffectComponent getComponent(const Entity& entity) const;
 	void blink(const SpriteEffectComponent& cmpnt);
+	void bob(const SpriteEffectComponent& cmpnt, const float speed);
 	void buildVertexData(SpriteBatch& spriteBatch, SpriteSystem& spriteSystem);
 	void setBlinkDuration(const SpriteEffectComponent& cmpnt, const float duration);
 	void setBlinkColor(const SpriteEffectComponent& cmpnt, const glm::vec4 color);

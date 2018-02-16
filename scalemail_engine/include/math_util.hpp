@@ -4,6 +4,7 @@
 
 namespace ScaleMail
 {
+static const float PI = 3.141592653589793f;
 static const float TWO_PI = 6.28318530718f;
 
 //  ============================================================================
@@ -33,5 +34,10 @@ static inline unsigned int nextPowerOfTwo( unsigned int value ) {
 	value++;
 
 	return value;
+}
+
+//  ============================================================================
+static inline float toRadians(float degrees) {
+	return degrees * PI / 180.0f;
 }
 }

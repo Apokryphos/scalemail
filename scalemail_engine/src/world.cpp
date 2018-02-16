@@ -224,19 +224,59 @@ Entity World::createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
 	mSpriteSystem.setTileset(spriteCmpnt, "items");
 	mSpriteSystem.setTilesetId(spriteCmpnt, { tilesetId });
-	mSpriteSystem.setOffsetY(spriteCmpnt, -4.0f);
 	mSpriteSystem.setSize(spriteCmpnt, size);
 
 	mSpriteEffectSystem.addComponent(entity);
 	SpriteEffectComponent spriteEffectCmpnt =
 		mSpriteEffectSystem.getComponent(entity);
 	mSpriteEffectSystem.setBlinkDuration(spriteEffectCmpnt, 0.75f);
+	mSpriteEffectSystem.bob(spriteEffectCmpnt, 2.5f);
 
 	mPhysicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(position.x + 8.0f, position.y - 8.0f));
 	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ITEM);
-	mPhysicsSystem.setRadius(physicsCmpnt, size.x * 0.75f);
+	mPhysicsSystem.setRadius(physicsCmpnt, size.x * 0.5f);
+
+	glm::vec4 lightColor(0.8706f, 0.1373f, 0.1373f, 1.0f);
+	const float lightSize = size.x * 1.5f;
+	const float lightGlowSize = size.x * 0.5f;
+	const float lightPulse = 16;
+	const float lightPulseSize = 3;
+
+	mLightSystem.addComponent(entity);
+	LightComponent lightCmpnt = mLightSystem.getComponent(entity);
+	mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
+	mLightSystem.setColor(lightCmpnt, lightColor);
+	mLightSystem.setGlowSize(lightCmpnt, lightGlowSize);
+	mLightSystem.setSize(lightCmpnt, lightSize);
+	mLightSystem.setPulse(lightCmpnt, lightPulse);
+	mLightSystem.setPulseSize(lightCmpnt, lightPulseSize);
+
+	mParticleSystem.addComponent(entity);
+	ParticleComponent particleCmpnt = mParticleSystem.getComponent(entity);
+
+	lightColor.a = 0.5f;
+
+	ParticleComponentData emitter = {};
+	emitter.life = 0.9f;
+	emitter.decay = 1.0f;
+	emitter.duration = 1.0f;
+	emitter.emitCount = 3;
+	emitter.delay = 0.0f;
+	emitter.interval = 0.1f;
+	emitter.minSize = 0.5f;
+	emitter.maxSize = 3.0f;
+	emitter.minSpeed = 4.0f;
+	emitter.maxSpeed = 8.0f;
+	emitter.spread = toRadians(45.0f);
+	emitter.direction = glm::vec2(0.0f, -1.0f);
+	emitter.color = lightColor;
+	emitter.height = 8.0f;
+	emitter.width = 8.0f;
+	emitter.radius = 8.0f;
+
+	mParticleSystem.setData(particleCmpnt, emitter);
 
 	if (name != "") {
 		mNameSystem.addComponent(entity);

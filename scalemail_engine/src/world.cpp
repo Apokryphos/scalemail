@@ -145,7 +145,7 @@ Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
 	ParticleComponent particleCmpnt = mParticleSystem.getComponent(entity);
 
 	ParticleComponentData emitter = {};
-	emitter.life = 0.9f;
+	emitter.life = 0.7f;
 	emitter.decay = 1.0f;
 	emitter.duration = 1.0f;
 	emitter.emitCount = 1;
@@ -156,7 +156,10 @@ Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
 	emitter.minSpeed = speed * 0.25f;
 	emitter.maxSpeed = speed * 0.33f;
 	emitter.spread = 0.349066f;
-	emitter.direction = -direction;
+	emitter.direction = glm::vec3(-1, 1, 0.0f);
+	emitter.height = 8.0f;
+	emitter.width = 8.0f;
+	emitter.direction = glm::vec3(-direction, 0.0f);
 	emitter.color = lightColor;
 	emitter.radius = 4.0f;
 
@@ -259,20 +262,20 @@ Entity World::createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
 	lightColor.a = 0.5f;
 
 	ParticleComponentData emitter = {};
-	emitter.life = 0.9f;
+	emitter.life = 2.9f;
 	emitter.decay = 1.0f;
 	emitter.duration = 1.0f;
-	emitter.emitCount = 3;
+	emitter.emitCount = 4;
 	emitter.delay = 0.0f;
 	emitter.interval = 0.1f;
-	emitter.minSize = 0.5f;
-	emitter.maxSize = 3.0f;
-	emitter.minSpeed = 4.0f;
-	emitter.maxSpeed = 8.0f;
+	emitter.minSize = 0.25f;
+	emitter.maxSize = 2.0f;
+	emitter.minSpeed = 6.0f;
+	emitter.maxSpeed = 10.0f;
 	emitter.spread = toRadians(45.0f);
-	emitter.direction = glm::vec2(0.0f, -1.0f);
+	emitter.direction = glm::vec3(0.0f, -1.5f, 2.0f);
 	emitter.color = lightColor;
-	emitter.height = 8.0f;
+	emitter.height = 24.0f;
 	emitter.width = 8.0f;
 	emitter.radius = 8.0f;
 
@@ -404,7 +407,7 @@ void World::destroyBullet(Entity entity) {
 	emitter.minSpeed = bulletSpeed * 0.1f;
 	emitter.maxSpeed = bulletSpeed * 0.2f;
 	emitter.spread = TWO_PI;
-	emitter.direction = glm::vec2(0.0f, 1.0f);
+	emitter.direction = glm::vec3(0.0f, 1.0f, 0.0f);
 	emitter.color = lightColor;
 	emitter.radius = 8.0f;
 

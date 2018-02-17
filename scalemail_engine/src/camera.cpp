@@ -5,8 +5,23 @@ namespace ScaleMail
 {
 //  ============================================================================
 Camera::Camera(float width, float height, float zoom)
-	: mZoom(zoom), mBounds(0, 0, 2048, 2048) {
+	: mDevMode(false), mZoom(zoom), mBounds(0, 0, 2048, 2048) {
 	this->setSize(width, height);
+}
+
+//  ============================================================================
+void Camera::calculateProjection() {
+	if (mDevMode) {
+		mProjection = glm::perspective(
+			glm::radians(90.0f),
+			mWidth / mHeight,
+			0.01f, 1024.0f);
+	} else {
+		mProjection = glm::ortho(
+			0.0f, mWidth / mZoom,
+			mHeight / mZoom, 0.0f,
+			-100.0f, 100.0f);
+	}
 }
 
 //  ============================================================================
@@ -41,18 +56,30 @@ glm::mat4 Camera::getTransform() const {
 
 //  ============================================================================
 glm::mat4 Camera::getView() const {
-	const glm::vec3 cameraOffset(0.0f, 0.0f, 1.0f);
-	const glm::vec3 cameraUp(0.0f, 1.0f, 1.0f);
+	if (mDevMode) {
+		const glm::vec3 cameraOffset(-64.0f, 0.0f, 128.0f);
+		const glm::vec3 cameraUp(0.0f, -1.0f, 0.0f);
 
-	const glm::vec3 center =
-		glm::vec3(mWidth * 0.5f, mHeight * 0.5f, 0.0f) / mZoom;
+		const glm::vec3 position = glm::vec3(mPosition, 0.0f);
 
-	const glm::vec3 position = glm::vec3(mPosition, 0.0f) - center;
+		return glm::lookAt(
+			position + cameraOffset,
+			position,
+			cameraUp);
+	} else {
+		const glm::vec3 cameraOffset(0.0f, 0.0f, 1.0f);
+		const glm::vec3 cameraUp(0.0f, 1.0f, 1.0f);
 
-	return glm::lookAt(
-		position + cameraOffset,
-		position,
-		cameraUp);
+		const glm::vec3 center =
+			glm::vec3(mWidth * 0.5f, mHeight * 0.5f, 0.0f) / mZoom;
+
+		const glm::vec3 position = glm::vec3(mPosition, 0.0f) - center;
+
+		return glm::lookAt(
+			position + cameraOffset,
+			position,
+			cameraUp);
+	}
 }
 
 //  ============================================================================
@@ -64,6 +91,12 @@ float Camera::getZoom() const {
 void Camera::setBounds(const Rectangle bounds) {
 	mBounds = bounds;
 	this->setPosition(mPosition);
+}
+
+//  ============================================================================
+void Camera::setDevMode(bool enabled) {
+	mDevMode = enabled;
+	this->calculateProjection();
 }
 
 //  ============================================================================
@@ -112,17 +145,14 @@ void Camera::setSize(float width, float height) {
 	mWidth = width;
 	mHeight = height;
 
-	mProjection = glm::ortho(
-		0.0f, mWidth / mZoom,
-		mHeight / mZoom, 0.0f,
-		-100.0f, 100.0f);
-
+	this->calculateProjection();
 	this->setPosition(mPosition);
 }
 
 //  ============================================================================
 void Camera::setZoom(float zoom) {
 	mZoom = zoom;
+	this->calculateProjection();
 	this->setPosition(mPosition);
 }
 

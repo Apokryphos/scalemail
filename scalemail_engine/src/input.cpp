@@ -52,6 +52,10 @@ static void keyCallback(GLFWwindow* window, int key,
 				inputState.capture = !inputState.capture;
 				break;
 
+			case GLFW_KEY_D:
+				game->devMode = !game->devMode;
+				break;
+
 			case GLFW_KEY_O:
 				transitionFadeOut();
 				break;

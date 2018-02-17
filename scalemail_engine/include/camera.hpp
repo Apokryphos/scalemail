@@ -8,12 +8,15 @@ namespace ScaleMail
 {
 class Camera
 {
+	bool mDevMode;
 	float mWidth;
 	float mHeight;
 	float mZoom;
 	glm::vec2 mPosition;
 	Rectangle mBounds;
 	glm::mat4 mProjection;
+
+	void calculateProjection();
 
 public:
 	Camera(float width, float height, float zoom = 2.0f);
@@ -25,6 +28,7 @@ public:
 	glm::mat4 getView() const;
 	float getZoom() const;
 	void setBounds(const Rectangle bounds);
+	void setDevMode(bool enabled);
 	void setPosition(const glm::vec2 position);
 	void setSize(float width, float height);
 	void setZoom(const float zoom);

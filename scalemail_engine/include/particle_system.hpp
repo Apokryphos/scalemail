@@ -3,6 +3,7 @@
 #include "entity_system.hpp"
 #include "mesh.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <vector>
 
@@ -35,7 +36,7 @@ struct ParticleComponentData {
 	float spread;
 	float ticks;
 	float width;
-	glm::vec2 direction;
+	glm::vec3 direction;
 	glm::vec4 color;
 };
 
@@ -53,8 +54,10 @@ private:
 	std::vector<float> mSpeed;
 	std::vector<float> mDirectionX;
 	std::vector<float> mDirectionY;
+	std::vector<float> mDirectionZ;
 	std::vector<float> mPositionX;
 	std::vector<float> mPositionY;
+	std::vector<float> mPositionZ;
 	std::vector<float> mColorR;
 	std::vector<float> mColorG;
 	std::vector<float> mColorB;

@@ -139,6 +139,8 @@ int startEngine() {
 		lastSeconds = seconds;
 		seconds = glfwGetTime();
 
+		camera.setDevMode(game.devMode);
+
 		GameState* gameState = gameStateManager.getActiveGameState();
 
 		if (game.paused) {

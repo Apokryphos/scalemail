@@ -11,6 +11,7 @@ class World;
 struct Game
 {
 	bool cameraFollow;
+	bool devMode;
 	bool drawCollision;
 	bool paused;
 	bool quit;

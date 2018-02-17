@@ -23,11 +23,13 @@ namespace ScaleMail
 {
 static Mesh quadMesh;
 static QuadShader colorQuadShader;
+static QuadShader particleShader;
 
 //	============================================================================
 void initializeRender(AssetManager& assetManager) {
 	quadMesh = assetManager.getQuadMesh();
 	colorQuadShader = assetManager.getColorQuadShader();
+	particleShader = assetManager.getParticleShader();
 
 	initializeFont(assetManager);
 	initializeTransition(assetManager);
@@ -84,8 +86,8 @@ void renderParticles(World& world, Camera& camera) {
 
 	const glm::mat4 mvp = camera.getProjection() * camera.getView();
 
-	glUseProgram(colorQuadShader.id);
-	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+	glUseProgram(particleShader.id);
+	glUniformMatrix4fv(particleShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
 	glBindVertexArray(mesh.vao);
 	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
 }
@@ -109,9 +111,11 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	renderSprites(world.getSpriteSystem(), world.getSpriteEffectSystem(), camera);
 	renderLight(gameWindow, camera, world.getLightSystem());
 
+	glEnable(GL_DEPTH_TEST);
 	blendAlphaAdditive();
 	renderParticles(world, camera);
 	blendNone();
+	glDisable(GL_DEPTH_TEST);
 
 	renderTransition();
 

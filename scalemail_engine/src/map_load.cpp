@@ -701,7 +701,7 @@ static void processTorchObject(World& world,
 	emitter.minSpeed = 4.0f;
 	emitter.maxSpeed = 8.0f;
 	emitter.spread = 0.349066f;
-	emitter.direction = glm::vec2(0.0f, -1.0f);
+	emitter.direction = glm::vec3(0.0f, -1.0f, 2.0f);
 	emitter.color = torchLightColor;
 	emitter.width = 4.0f;
 

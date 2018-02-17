@@ -21,6 +21,7 @@ class AssetManager
 	Mesh mQuadMesh;
 
 	QuadShader mColorQuadShader;
+	QuadShader mParticleShader;
 	FadeShader mFadeShader;
 	QuadShader mQuadShader;
 	LineShader mLineShader;
@@ -36,6 +37,7 @@ public:
 	Mesh getQuadMesh();
 	QuadShader getQuadShader();
 	LineShader getLineShader();
+	QuadShader getParticleShader();
 	SpriteShader getSpriteShader();
 	Tileset getTileset(const std::string textureName);
 	TileShader getTileShader();

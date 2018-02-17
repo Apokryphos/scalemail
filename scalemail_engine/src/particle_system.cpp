@@ -8,11 +8,12 @@ namespace ScaleMail
 static const size_t PARTICLE_RESERVE = 10000;
 
 //	============================================================================
-static inline glm::vec2 rotate(const glm::vec2& vector, float radians)
+static inline glm::vec3 rotate(const glm::vec3& vector, float radians)
 {
-	return glm::vec2(
+	return glm::vec3(
 		vector.x * std::cos(radians) - vector.y * std::sin(radians),
-		vector.x * std::sin(radians) + vector.y * std::cos(radians));
+		vector.x * std::sin(radians) + vector.y * std::cos(radians),
+		vector.z);
 }
 
 //	============================================================================
@@ -39,6 +40,7 @@ ParticleSystem::ParticleSystem(EntityManager& entityManager, int maxComponents)
 	mSpeed.reserve(PARTICLE_RESERVE);
 	mPositionX.reserve(PARTICLE_RESERVE);
 	mPositionY.reserve(PARTICLE_RESERVE);
+	mPositionZ.reserve(PARTICLE_RESERVE);
 	mDirectionX.reserve(PARTICLE_RESERVE);
 	mDirectionY.reserve(PARTICLE_RESERVE);
 	mColorR.reserve(PARTICLE_RESERVE);
@@ -59,6 +61,7 @@ void ParticleSystem::buildVertexData() {
 
 		mVertexData.emplace_back(mPositionX[index] - halfSize);
 		mVertexData.emplace_back(mPositionY[index] - halfSize);
+		mVertexData.emplace_back(mPositionZ[index] + halfSize);
 		mVertexData.emplace_back(mColorR[index]);
 		mVertexData.emplace_back(mColorG[index]);
 		mVertexData.emplace_back(mColorB[index]);
@@ -66,6 +69,7 @@ void ParticleSystem::buildVertexData() {
 
 		mVertexData.emplace_back(mPositionX[index] - halfSize);
 		mVertexData.emplace_back(mPositionY[index] + halfSize);
+		mVertexData.emplace_back(mPositionZ[index] - halfSize);
 		mVertexData.emplace_back(mColorR[index]);
 		mVertexData.emplace_back(mColorG[index]);
 		mVertexData.emplace_back(mColorB[index]);
@@ -73,6 +77,7 @@ void ParticleSystem::buildVertexData() {
 
 		mVertexData.emplace_back(mPositionX[index] + halfSize);
 		mVertexData.emplace_back(mPositionY[index] + halfSize);
+		mVertexData.emplace_back(mPositionZ[index] - halfSize);
 		mVertexData.emplace_back(mColorR[index]);
 		mVertexData.emplace_back(mColorG[index]);
 		mVertexData.emplace_back(mColorB[index]);
@@ -80,6 +85,7 @@ void ParticleSystem::buildVertexData() {
 
 		mVertexData.emplace_back(mPositionX[index] + halfSize);
 		mVertexData.emplace_back(mPositionY[index] + halfSize);
+		mVertexData.emplace_back(mPositionZ[index] - halfSize);
 		mVertexData.emplace_back(mColorR[index]);
 		mVertexData.emplace_back(mColorG[index]);
 		mVertexData.emplace_back(mColorB[index]);
@@ -87,6 +93,7 @@ void ParticleSystem::buildVertexData() {
 
 		mVertexData.emplace_back(mPositionX[index] + halfSize);
 		mVertexData.emplace_back(mPositionY[index] - halfSize);
+		mVertexData.emplace_back(mPositionZ[index] + halfSize);
 		mVertexData.emplace_back(mColorR[index]);
 		mVertexData.emplace_back(mColorG[index]);
 		mVertexData.emplace_back(mColorB[index]);
@@ -94,6 +101,7 @@ void ParticleSystem::buildVertexData() {
 
 		mVertexData.emplace_back(mPositionX[index] - halfSize);
 		mVertexData.emplace_back(mPositionY[index] - halfSize);
+		mVertexData.emplace_back(mPositionZ[index] + halfSize);
 		mVertexData.emplace_back(mColorR[index]);
 		mVertexData.emplace_back(mColorG[index]);
 		mVertexData.emplace_back(mColorB[index]);
@@ -166,6 +174,7 @@ void ParticleSystem::update(PhysicsSystem& physicsSystem, float elapsedSeconds) 
 		swapWithLastElementAndRemove(mSpeed, index);
 		swapWithLastElementAndRemove(mPositionX, index);
 		swapWithLastElementAndRemove(mPositionY, index);
+		swapWithLastElementAndRemove(mPositionZ, index);
 		swapWithLastElementAndRemove(mDirectionX, index);
 		swapWithLastElementAndRemove(mDirectionY, index);
 		swapWithLastElementAndRemove(mColorR, index);
@@ -179,6 +188,7 @@ void ParticleSystem::update(PhysicsSystem& physicsSystem, float elapsedSeconds) 
 	for (size_t index = 0; index < particleCount; ++index) {
 		mPositionX[index] += mDirectionX[index] * mSpeed[index] * elapsedSeconds;
 		mPositionY[index] += mDirectionY[index] * mSpeed[index] * elapsedSeconds;
+		mPositionZ[index] += mDirectionZ[index] * mSpeed[index] * elapsedSeconds;
 	}
 
 	//	Update emitters
@@ -201,23 +211,32 @@ void ParticleSystem::update(PhysicsSystem& physicsSystem, float elapsedSeconds) 
 			PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 
+			position.y += 0.001f;
+
 				//	Create new particles
 			for (int p = 0; p < data.emitCount; ++p) {
-				glm::vec2 direction = rotate(
+				glm::vec3 direction = rotate(
 					data.direction,
 					mRandom->nextFloat(
 						-data.spread * 0.5f, data.spread * 0.5f));
 
 				mDirectionX.emplace_back(direction.x);
 				mDirectionY.emplace_back(direction.y);
+				mDirectionZ.emplace_back(direction.z);
 
 				float radialOffset = mRandom->nextFloat(0.0f, data.radius);
+
 				float offsetX = mRandom->nextFloat(
 					-data.width * 0.5f, data.width * 0.5f);
+
 				float offsetY = mRandom->nextFloat(
 					-data.height * 0.5f, data.height * 0.5f);
+
 				mPositionX.emplace_back(position.x + offsetX + direction.x * radialOffset);
+
 				mPositionY.emplace_back(position.y + offsetY + direction.y * radialOffset);
+
+				mPositionZ.emplace_back(10.0f);
 
 				float speed = mRandom->nextFloat(data.minSpeed, data.maxSpeed);
 				mSpeed.emplace_back(speed);

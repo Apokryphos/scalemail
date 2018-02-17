@@ -873,7 +873,9 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 	buildMapMesh(mapData, mapMesh);
 
 	std::shared_ptr<Map> map =
-		std::make_shared<Map>(tmxMap.GetWidth(), tmxMap.GetHeight());
+		std::make_shared<Map>(
+			tmxMap.GetWidth(), tmxMap.GetHeight(),
+			tmxMap.GetTileWidth(), tmxMap.GetTileHeight());
 
 	map->mapMesh = mapMesh;
 

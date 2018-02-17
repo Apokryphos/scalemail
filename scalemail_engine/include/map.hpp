@@ -35,17 +35,25 @@ struct MapCamera {
 
 class Map
 {
+	int mWidth;
+	int mHeight;
+	int mTileWidth;
+	int mTileHeight;
+
 	std::vector<MapCamera> mCameras;
 	std::vector<PlayerStart> mPlayerStarts;
 
 public:
-	Map(const int width, const int height);
+	Map(const int width, const int height, const int tileWidth,
+		const int tileHeight);
 	void addCamera(const MapCamera& mapCamera);
 	const MapCamera* getCamera(const std::string name) const;
+	int getHeight() const;
 	std::vector<PlayerStart> getPlayerStarts() const;
-	const int height;
+	int getTileHeight() const;
+	int getTileWidth() const;
+	int getWidth() const;
 	MapMesh mapMesh;
 	void setPlayerStarts(const std::vector<PlayerStart> playerStarts);
-	const int width;
 };
 }

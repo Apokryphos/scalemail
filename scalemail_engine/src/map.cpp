@@ -3,9 +3,10 @@
 namespace ScaleMail
 {
 //  ============================================================================
-Map::Map(const int width, const int height) :
-	height(height),
-	width(width) {
+Map::Map(const int width, const int height, const int tileWidth,
+		 const int tileHeight) :
+	mWidth(width), mHeight(height), mTileWidth(tileWidth),
+	mTileHeight(tileHeight) {
 }
 
 //  ============================================================================
@@ -25,8 +26,28 @@ const MapCamera* Map::getCamera(const std::string name) const {
 }
 
 //  ============================================================================
+int Map::getHeight() const {
+	return mHeight;
+}
+
+//  ============================================================================
 std::vector<PlayerStart> Map::getPlayerStarts() const {
 	return mPlayerStarts;
+}
+
+//  ============================================================================
+int Map::getTileHeight() const {
+	return mTileHeight;
+}
+
+//  ============================================================================
+int Map::getTileWidth() const {
+	return mTileWidth;
+}
+
+//  ============================================================================
+int Map::getWidth() const {
+	return mWidth;
 }
 
 //  ============================================================================

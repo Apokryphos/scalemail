@@ -3,10 +3,18 @@
 #include "sprite_batch.hpp"
 #include "texture.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
 #include <iostream>
 
 namespace ScaleMail
 {
+static const glm::vec3 gSpriteVertices[] = {
+	glm::vec3(-0.5f, -0.5f, 1.0f),
+	glm::vec3(-0.5f,  0.5f, 0.0f),
+	glm::vec3( 0.5f,  0.5f, 0.0f),
+	glm::vec3( 0.5f, -0.5f, 1.0f),
+};
+
 static const glm::vec2 gQuadVertices[] = {
 	glm::vec2(-0.5f, -0.5f),
 	glm::vec2(-0.5f,  0.5f),
@@ -341,22 +349,18 @@ void SpriteBatch::buildSpriteVertexData(
 		size_t&         e      = batch.IndexOffset;
 		size_t&         v      = batch.VertexElementOffset;
 
-		//	Rotation code should be moved into shader
-		float sinAngle = sin(rotate[s]);
-		float cosAngle = cos(rotate[s]);
+		glm::mat3 rotation =
+			glm::rotate(rotate[s], glm::vec3(0.0f, 0.0f, 1.0f));
 
-		glm::mat2 rotation =
-			glm::mat2(cosAngle, sinAngle, -sinAngle, cosAngle);
-
-		glm::vec2 quadA = rotation * gQuadVertices[0];
-		glm::vec2 quadB = rotation * gQuadVertices[1];
-		glm::vec2 quadC = rotation * gQuadVertices[2];
-		glm::vec2 quadD = rotation * gQuadVertices[3];
+		glm::vec3 quadA = rotation * gSpriteVertices[0];
+		glm::vec3 quadB = rotation * gSpriteVertices[1];
+		glm::vec3 quadC = rotation * gSpriteVertices[2];
+		glm::vec3 quadD = rotation * gSpriteVertices[3];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadA.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadA.y;
-		vertexData[v++] = positionZ[s];
+		vertexData[v++] = sizeY[s] * quadA.z;
 		//	UV
 		vertexData[v++] = texU1[s];
 		vertexData[v++] = texV2[s];
@@ -369,7 +373,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadB.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadB.y;
-		vertexData[v++] = positionZ[s];
+		vertexData[v++] = sizeY[s] * quadB.z;
 		//	UV
 		vertexData[v++] = texU1[s];
 		vertexData[v++] = texV1[s];
@@ -382,7 +386,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadC.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadC.y;
-		vertexData[v++] = positionZ[s];
+		vertexData[v++] = sizeY[s] * quadC.z;
 		//	UV
 		vertexData[v++] = texU2[s];
 		vertexData[v++] = texV1[s];
@@ -395,7 +399,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadD.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadD.y;
-		vertexData[v++] = positionZ[s];
+		vertexData[v++] = sizeY[s] * quadD.z;
 		//	UV
 		vertexData[v++] = texU2[s];
 		vertexData[v++] = texV2[s];

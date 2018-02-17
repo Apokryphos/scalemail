@@ -115,7 +115,7 @@ void Camera::setSize(float width, float height) {
 	mProjection = glm::ortho(
 		0.0f, mWidth / mZoom,
 		mHeight / mZoom, 0.0f,
-		-1.0f, 1.0f);
+		-100.0f, 100.0f);
 
 	this->setPosition(mPosition);
 }

@@ -41,7 +41,7 @@ void SpriteSystem::createComponent() {
 	data.animate = 1.0f;
 	data.facing = Direction::SOUTH;
 	data.offsetY = 0.0f;
-	data.offsetZ = 16.0f;
+	data.decal = 0.0f;
 	data.textureId = 0;
 	data.maskTextureId = 0;
 	data.tilesetId = 0;
@@ -94,11 +94,14 @@ void SpriteSystem::buildVertexData(
 	std::vector<SpriteComponentData> sprites(spriteData);
 	std::sort(sprites.begin(), sprites.end(), sortSprite);
 
+	//	Small offset to prevent sprites against walls from being hidden
+	const float SPRITE_OFFSET = 0.001f;
+
 	for (const auto& sprite : sprites) {
 		mTextureId.emplace_back(mask ? sprite.maskTextureId : sprite.textureId);
 		mAlpha.emplace_back(sprite.alpha);
 		mPositionX.emplace_back(sprite.position.x);
-		mPositionY.emplace_back(sprite.position.y);
+		mPositionY.emplace_back(sprite.position.y + SPRITE_OFFSET);
 		mPositionZ.emplace_back(sprite.position.z);
 		mColorR.emplace_back(mask ? sprite.maskColor.r : sprite.color.r);
 		mColorG.emplace_back(mask ? sprite.maskColor.g : sprite.color.g);
@@ -175,11 +178,6 @@ float SpriteSystem::getOffsetY(const SpriteComponent& cmpnt) const {
 }
 
 //	============================================================================
-float SpriteSystem::getOffsetZ(const SpriteComponent& cmpnt) const {
-	return mData[cmpnt.index].offsetZ;
-}
-
-//	============================================================================
 float SpriteSystem::getRotate(const SpriteComponent& cmpnt) const {
 	return mData[cmpnt.index].rotate;
 }
@@ -246,6 +244,11 @@ void SpriteSystem::setColor(const SpriteComponent& cmpnt,
 }
 
 //	============================================================================
+void SpriteSystem::setDecal(const SpriteComponent& cmpnt, bool decal) {
+	mData[cmpnt.index].decal = decal ? 1.0f : 0.0f;
+}
+
+//	============================================================================
 void SpriteSystem::setFacing(const SpriteComponent& cmpnt,
 							 const Direction facing) {
 	mData[cmpnt.index].facing = facing;
@@ -271,11 +274,6 @@ void SpriteSystem::setMaskColor(const SpriteComponent& cmpnt,
 //	============================================================================
 void SpriteSystem::setOffsetY(const SpriteComponent& cmpnt, float offsetY) {
 	mData[cmpnt.index].offsetY = offsetY;
-}
-
-//	============================================================================
-void SpriteSystem::setOffsetZ(const SpriteComponent& cmpnt, float offsetZ) {
-	mData[cmpnt.index].offsetZ = offsetZ;
 }
 
 //	============================================================================
@@ -335,9 +333,7 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 
 		mData[index].position.x = position.x;
 		mData[index].position.y = position.y + mData[index].offsetY;
-
-		mData[index].position.z = getLayerZ(2,
-			(position.y - mData[index].size.y * 0.5f) + mData[index].offsetZ);
+		mData[index].position.z = (1.0f - mData[index].decal);
 	}
 
 	for (const auto& p : mEntitiesByComponentIndices) {

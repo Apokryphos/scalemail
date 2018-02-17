@@ -58,6 +58,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/line_shader.hpp
     include/main_game_state.hpp
     include/map_load.hpp
+    include/map_mesh.hpp
     include/map_render.hpp
     include/map.hpp
     include/math_util.hpp
@@ -136,6 +137,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/mesh.cpp
     src/map.cpp
     src/map_load.cpp
+    src/map_mesh.cpp
     src/map_render.cpp
     src/name_system.cpp
     src/particle_system.cpp

@@ -156,7 +156,7 @@ void BurySystem::spawnDirt(const glm::vec2 origin, const float progress) {
 
 		mSpriteSystem->addComponent(entity);
 		SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
-		mSpriteSystem->setOffsetZ(spriteCmpnt, size * 3.f);
+		// mSpriteSystem->setOffsetZ(spriteCmpnt, size * 3.f);
 		mSpriteSystem->setTileset(spriteCmpnt, "dirt");
 		mSpriteSystem->setTilesetId(spriteCmpnt, { mRandom->nextInt(1, 1 + tilesetIdCount) });
 		mSpriteSystem->setSize(spriteCmpnt, glm::vec2(size));
@@ -181,7 +181,7 @@ void BurySystem::spawnHole(const glm::vec2 position) {
 
 	mSpriteSystem->addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem->getComponent(entity);
-	mSpriteSystem->setOffsetZ(spriteCmpnt, 0.0f);
+	mSpriteSystem->setDecal(spriteCmpnt, true);
 	mSpriteSystem->setTileset(spriteCmpnt, "dirt");
 	mSpriteSystem->setTilesetId(spriteCmpnt, { 0 });
 	mSpriteSystem->setSize(spriteCmpnt, glm::vec2(20.0f, 8.0f));

@@ -82,9 +82,9 @@ public:
 	Entity createPlayerActor(float x, float y, int actorIndex,
 							 Direction facing = Direction::SOUTH,
 							 const std::string name = "");
-	Entity createProp(glm::vec2 position, int tilesetId, float offsetZ);
+	Entity createProp(glm::vec2 position, int tilesetId, bool decal);
 	Entity createProp(glm::vec2 position, int frame1TilesetId,
-					  int frame2TilesetId, float offsetZ);
+					  int frame2TilesetId, bool decal);
 	Entity createTrigger(const float x, const float y, const float width,
 						 const float height, const std::string targetName);
 	void destroyBullet(Entity entity);

@@ -4,6 +4,7 @@
 #include "layer.hpp"
 #include "light.hpp"
 #include "map.hpp"
+#include "map_mesh.hpp"
 #include "mesh.hpp"
 #include "particle_system.hpp"
 #include "sprite.hpp"
@@ -26,6 +27,8 @@ struct TileData {
 	bool flipHorz;
 	bool flipVert;
 	bool flipDiag;
+	bool wallFace;
+	bool wallTop;
 	int x;
 	int y;
 	int tilesetId;
@@ -105,17 +108,34 @@ static bool getTilesetAnimation(const TmxMapLib::Map& tmxMap, const int gid,
 }
 
 //  ============================================================================
-static float getTilesetOffsetZ(const TmxMapLib::Map& tmxMap, const int gid) {
+static void loadTileData(TileData& tileData, const TmxMapLib::Map& tmxMap,
+						 const int gid) {
 	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
 
 	const TmxMapLib::TilesetTile* tilesetTile =
 		tileset->GetTile(gid - 1);
 
 	if (tilesetTile) {
-		return tilesetTile->GetPropertySet().GetFloatValue("OffsetZ", 16.0f);
+		tileData.wallFace =
+			tilesetTile->GetPropertySet().GetBoolValue("WallFace", false);
+
+		tileData.wallTop =
+			tilesetTile->GetPropertySet().GetBoolValue("WallTop", false);
+	}
+}
+
+//  ============================================================================
+static float getDecal(const TmxMapLib::Map& tmxMap, const int gid) {
+	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
+
+	const TmxMapLib::TilesetTile* tilesetTile =
+		tileset->GetTile(gid - 1);
+
+	if (tilesetTile) {
+		return tilesetTile->GetPropertySet().GetBoolValue("Decal", false);
 	}
 
-	return 16.0f;
+	return false;
 }
 
 //  ============================================================================
@@ -208,66 +228,6 @@ static void createTileMeshBuffer(Mesh& mesh, std::vector<float>& meshVertexData)
 }
 
 //  ============================================================================
-static void addTileVertexData(std::vector<float>& meshVertexData,
-							  const glm::vec2 position, const glm::vec2 size,
-							  const glm::vec2 uv1, const glm::vec2 uv2,
-							  float rotate, float z) {
-	float u1 = uv1.x;
-	float v1 = uv1.y;
-	float u2 = uv2.x;
-	float v2 = uv2.y;
-
-	float sinAngle = sin(rotate);
-	float cosAngle = cos(rotate);
-	glm::mat2 rotation = glm::mat2(
-		cosAngle, -sinAngle,
-		sinAngle,  cosAngle);
-
-	glm::vec2 offset = glm::vec2(8.f, 8.0f);
-
-	glm::vec2 quadA = position + offset + rotation * gQuadVertices[0] * size;
-	glm::vec2 quadB = position + offset + rotation * gQuadVertices[1] * size;
-	glm::vec2 quadC = position + offset + rotation * gQuadVertices[2] * size;
-	glm::vec2 quadD = position + offset + rotation * gQuadVertices[3] * size;
-
-	meshVertexData.push_back(quadA.x);
-	meshVertexData.push_back(quadA.y);
-	meshVertexData.push_back(z);
-	meshVertexData.push_back(u1);
-	meshVertexData.push_back(v1);
-
-	meshVertexData.push_back(quadB.x);
-	meshVertexData.push_back(quadB.y);
-	meshVertexData.push_back(z);
-	meshVertexData.push_back(u1);
-	meshVertexData.push_back(v2);
-
-	meshVertexData.push_back(quadC.x);
-	meshVertexData.push_back(quadC.y);
-	meshVertexData.push_back(z);
-	meshVertexData.push_back(u2);
-	meshVertexData.push_back(v2);
-
-	meshVertexData.push_back(quadA.x);
-	meshVertexData.push_back(quadA.y);
-	meshVertexData.push_back(z);
-	meshVertexData.push_back(u1);
-	meshVertexData.push_back(v1);
-
-	meshVertexData.push_back(quadC.x);
-	meshVertexData.push_back(quadC.y);
-	meshVertexData.push_back(z);
-	meshVertexData.push_back(u2);
-	meshVertexData.push_back(v2);
-
-	meshVertexData.push_back(quadD.x);
-	meshVertexData.push_back(quadD.y);
-	meshVertexData.push_back(z);
-	meshVertexData.push_back(u2);
-	meshVertexData.push_back(v1);
-}
-
-//  ============================================================================
 static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 	std::vector<float> staticVertexData;
 	std::vector<float> alphaVertexData;
@@ -278,9 +238,27 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 
 	for (auto& tileLayer : mapData.tileLayers) {
 		for (auto& tile : tileLayer.tiles) {
-			glm::vec2 size = glm::vec2(16);
+			glm::vec3 size =
+				glm::vec3(16.0f, 16.0f, 0.0f);
 
-			glm::vec2 position = glm::vec2(tile.x, tile.y) * size;
+			//	Make a 45 degree wall face
+			if (tile.wallFace) {
+				size.z = 16.0f;
+			}
+
+			glm::vec3 position =
+				glm::vec3(tile.x, tile.y, 0.0f) * size;
+
+			//	Make a raised wall top
+			if (tile.wallTop) {
+				position.z = 17.0f;
+			}
+
+			const int MAX_TILE_LAYERS = 50;
+
+			if (!tile.wallTop && !tile.wallFace) {
+				position.z = -MAX_TILE_LAYERS + tileLayer.layerZ;
+			}
 
 			int tilesetId = tile.tilesetId;
 
@@ -288,14 +266,10 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 			getTilesetUv(tilesetId, 256, 304, 16, 16, uv1, uv2);
 			flipTileUv(tile, uv1, uv2);
 
-			//	Subtract a small offset so that objects like torches are
-			//	not obscured by the walls they are on.
-			float z = getLayerZ(tileLayer.layerZ, position.y + size.y - 0.1f);
-
 			if (!tile.animated) {
 				addTileVertexData(tile.alpha ? alphaVertexData : staticVertexData,
 								  position, size, uv1, uv2,
-								  tile.rotation, z);
+								  tile.rotation);
 			} else {
 				if (tileLayer.scroll) {
 					int scrollTilesetIdOffset =
@@ -305,20 +279,20 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 								 32, 64, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame1VertexData, position, size,
-									  uv1, uv2, tile.rotation, z);
+									  uv1, uv2, tile.rotation);
 
 					getTilesetUv(tile.nextFrame - scrollTilesetIdOffset,
 								 32, 64, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame2VertexData, position, size,
-									  uv1, uv2, tile.rotation, z);
+									  uv1, uv2, tile.rotation);
 				} else {
 					addTileVertexData(frame1VertexData, position, size, uv1,
-									  uv2, tile.rotation, z);
+									  uv2, tile.rotation);
 					getTilesetUv(tile.nextFrame, 256, 304, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(frame2VertexData, position, size, uv1,
-									  uv2, tile.rotation, z);
+									  uv2, tile.rotation);
 				}
 			}
 		}
@@ -618,12 +592,12 @@ static void processMiscObject(World& world,
 
 	const int tilesetId = tile->GetGid() - 1;
 
-	float offsetZ = getTilesetOffsetZ(tmxMap, tile->GetGid());
+	bool decal = getDecal(tmxMap, tile->GetGid());
 
 	int nextFrame = tilesetId;
 	getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame);
 
-	world.createProp(glm::vec2(x, y), tilesetId, nextFrame, offsetZ);
+	world.createProp(glm::vec2(x, y), tilesetId, nextFrame, decal);
 }
 
 //  ============================================================================
@@ -694,10 +668,10 @@ static void processTorchObject(World& world,
 	const float x = object.GetX();
 	const float y = object.GetY();
 
-	float offsetZ = getTilesetOffsetZ(tmxMap, tile->GetGid());
+	bool decal = getDecal(tmxMap, tile->GetGid());
 
 	Entity entity = world.createProp(glm::vec2(x, y), tilesetId, nextFrame,
-									 offsetZ);
+									 decal);
 
 	LightSystem& lightSystem = world.getLightSystem();
 	lightSystem.addComponent(entity);
@@ -877,6 +851,8 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 				tileData.flipDiag = tile->GetFlipDiagonally();
 
 				tileData.alpha = getTilesetAlpha(tmxMap, tile->GetGid());
+
+				loadTileData(tileData, tmxMap, tile->GetGid());
 
 				int nextFrame;
 				if (getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame)) {

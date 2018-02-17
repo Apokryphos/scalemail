@@ -360,7 +360,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadA.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadA.y;
-		vertexData[v++] = sizeY[s] * quadA.z;
+		vertexData[v++] = positionZ[s] * sizeY[s] * quadA.z;
 		//	UV
 		vertexData[v++] = texU1[s];
 		vertexData[v++] = texV2[s];
@@ -373,7 +373,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadB.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadB.y;
-		vertexData[v++] = sizeY[s] * quadB.z;
+		vertexData[v++] = positionZ[s] * sizeY[s] * quadB.z;
 		//	UV
 		vertexData[v++] = texU1[s];
 		vertexData[v++] = texV1[s];
@@ -386,7 +386,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadC.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadC.y;
-		vertexData[v++] = sizeY[s] * quadC.z;
+		vertexData[v++] = positionZ[s] * sizeY[s] * quadC.z;
 		//	UV
 		vertexData[v++] = texU2[s];
 		vertexData[v++] = texV1[s];
@@ -399,7 +399,7 @@ void SpriteBatch::buildSpriteVertexData(
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadD.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadD.y;
-		vertexData[v++] = sizeY[s] * quadD.z;
+		vertexData[v++] = positionZ[s] * sizeY[s] * quadD.z;
 		//	UV
 		vertexData[v++] = texU2[s];
 		vertexData[v++] = texV2[s];

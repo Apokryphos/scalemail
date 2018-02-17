@@ -30,9 +30,10 @@ struct SpriteComponentData {
 	unsigned int maskTextureId;
 	int tilesetId;
 	float animate;
+	//	Decals are flat Y axis aligned quads
+	float decal;
 	float rotate;
 	float offsetY;
-	float offsetZ;
 	glm::vec2 size;
 	glm::ivec4 sourceRect;
 	glm::vec2 uv1;
@@ -92,7 +93,6 @@ public:
 	bool getAlpha(const SpriteComponent& cmpnt) const;
 	SpriteComponent getComponent(const Entity& entity) const;
 	float getOffsetY(const SpriteComponent& cmpnt) const;
-	float getOffsetZ(const SpriteComponent& cmpnt) const;
 	glm::vec2 getSize(const SpriteComponent& cmpnt) const;
 	float getRotate(const SpriteComponent& cmpnt) const;
 	glm::ivec4 getSourceRect(const SpriteComponent& cmpnt) const;
@@ -104,10 +104,10 @@ public:
 	void setAnimationDuration(const SpriteComponent& cmpnt,
 							  const float duration);
 	void setColor(const SpriteComponent& cmpnt, const glm::vec4 color);
+	void setDecal(const SpriteComponent& cmpnt, const bool decal);
 	void setFacing(const SpriteComponent& cmpnt, const Direction facing);
 	void setMaskColor(const SpriteComponent& cmpnt, const glm::vec4 color);
 	void setOffsetY(const SpriteComponent& cmpnt, float offsetY);
-	void setOffsetZ(const SpriteComponent& cmpnt, float offsetZ);
 	void setTilesetId(const SpriteComponent& cmpnt,
 					  std::vector<int> frameTilesetIds);
 	void setDirection(

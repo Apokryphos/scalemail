@@ -89,7 +89,7 @@ void renderSprites(
 	SpriteSystem& spriteSystem,
 	SpriteEffectSystem& spriteEffectSystem,
 	Camera& camera) {
-	glm::mat4 screenMvp = camera.getProjection() * camera.getView();
+	const glm::mat4 screenMvp = camera.getProjection() * camera.getView();
 
 	glEnable(GL_DEPTH_TEST);
 

@@ -58,7 +58,7 @@ void PhysicsSystem::clearStaticObstacles() {
 
 //	============================================================================
 void PhysicsSystem::drawDebug(const Camera& camera) {
-	glm::mat4 mvp = camera.getProjection() * camera.getView();
+	const glm::mat4 mvp = camera.getProjection() * camera.getView();
 
 	const int lineCount = 16;
 

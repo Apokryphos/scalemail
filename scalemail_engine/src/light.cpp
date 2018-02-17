@@ -98,23 +98,23 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 		std::cout << "Light framebuffers resized to " << fboSize << std::endl;
 	}
 
-	glm::mat4 quadWorld =
+	const glm::mat4 quadWorld =
 		glm::translate(glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 0.0f)) *
 		glm::scale(glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 1.0f));
 
-	glm::mat4 fboProjection = glm::ortho(
-		0.0f, (float)fboSize,
-		0.0f, (float)fboSize,
+	const glm::mat4 fboProjection = glm::ortho(
+		0.0f, (float)fboSize / camera.getZoom(),
+		0.0f, (float)fboSize / camera.getZoom(),
 		0.0f, 1.0f);
 
-	glm::mat4 screenProjection = glm::ortho(
+	const glm::mat4 screenProjection = glm::ortho(
 		0.0f, (float)gameWindow.width,
-		0.0f, (float)gameWindow.height,
+		(float)gameWindow.height, 0.0f,
 		0.0f, 1.0f);
 
-	glm::mat4 lightMvp = camera.getProjection() * camera.getView();
+	const glm::mat4 lightMvp = fboProjection * camera.getTransform();
 
-	glm::mat4 screenMvp = screenProjection * quadWorld;
+	const glm::mat4 screenMvp = screenProjection * quadWorld;
 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

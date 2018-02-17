@@ -33,7 +33,7 @@ void renderMap(const Map& map, const Camera& camera,
 	//  Draw map
 	const Mesh& mesh = map.mapMesh.staticMesh;
 
-	glm::mat4 mvp = camera.getProjection() * camera.getView();
+	const glm::mat4 mvp = camera.getProjection() * camera.getView();
 
 	glEnable(GL_DEPTH_TEST);
 	blendAlpha();

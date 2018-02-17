@@ -49,9 +49,8 @@ void updateStencilBuffer(Camera& camera) {
 			cameraBounds.width * 0.5f,
 			cameraBounds.height * 0.5f, 1.0f));
 
-	glm::mat4 screenProjection = camera.getProjection();
-
-	glm::mat4 mvp = screenProjection * camera.getView() * quadWorld;
+	const glm::mat4 mvp =
+		camera.getProjection() * camera.getView() * quadWorld;
 
 	//	Prepare stencil buffer writes
 	glEnable(GL_STENCIL_TEST);
@@ -81,9 +80,9 @@ void renderParticles(World& world, Camera& camera) {
 
 	particleSystem.buildVertexData();
 
-	Mesh& mesh = particleSystem.getMesh();
+	const Mesh& mesh = particleSystem.getMesh();
 
-	glm::mat4 mvp = camera.getProjection() * camera.getView();
+	const glm::mat4 mvp = camera.getProjection() * camera.getView();
 
 	glUseProgram(colorQuadShader.id);
 	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);

@@ -30,13 +30,29 @@ glm::vec2 Camera::getSize() const {
 }
 
 //  ============================================================================
-glm::mat4 Camera::getView() const {
+glm::mat4 Camera::getTransform() const {
 	glm::vec2 position =
 		mPosition -
-		glm::vec2(mWidth * 0.5f, mHeight * 0.5f) *
-		(1 / mZoom);
+		glm::vec2(mWidth * 0.5f, mHeight * 0.5f) /
+		mZoom;
 
 	return glm::translate(glm::vec3(-position, 0.0f));
+}
+
+//  ============================================================================
+glm::mat4 Camera::getView() const {
+	const glm::vec3 cameraOffset(0.0f, 0.0f, 1.0f);
+	const glm::vec3 cameraUp(0.0f, 1.0f, 1.0f);
+
+	const glm::vec3 center =
+		glm::vec3(mWidth * 0.5f, mHeight * 0.5f, 0.0f) / mZoom;
+
+	const glm::vec3 position = glm::vec3(mPosition, 0.0f) - center;
+
+	return glm::lookAt(
+		position + cameraOffset,
+		position,
+		cameraUp);
 }
 
 //  ============================================================================

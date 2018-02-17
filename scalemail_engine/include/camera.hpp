@@ -21,6 +21,7 @@ public:
 	glm::vec2 getPosition() const;
 	glm::mat4 getProjection() const;
 	glm::vec2 getSize() const;
+	glm::mat4 getTransform() const;
 	glm::mat4 getView() const;
 	float getZoom() const;
 	void setBounds(const Rectangle bounds);

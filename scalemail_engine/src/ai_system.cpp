@@ -1,10 +1,7 @@
 #include "ai_behavior.hpp"
 #include "ai_system.hpp"
-#include "gun_system.hpp"
-#include "physics_system.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"
-#include <glm/vec4.hpp>
 
 namespace ScaleMail
 {
@@ -23,6 +20,15 @@ AiSystem::AiSystem(EntityManager& entityManager, int maxComponents)
 void AiSystem::addBehavior(const AiComponent& cmpnt,
 						   std::shared_ptr<AiBehavior> behavior) {
 	mData[cmpnt.index].behaviors.push_back(behavior);
+}
+
+//	============================================================================
+void AiSystem::addObstacle(const glm::vec2& position, const float radius) {
+	Obstacle obstacle = {};
+	obstacle.position = position;
+	obstacle.radius = radius;
+
+	mObstacles.push_back(obstacle);
 }
 
 //	============================================================================

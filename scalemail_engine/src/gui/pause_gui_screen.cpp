@@ -14,7 +14,7 @@ void PauseGuiScreen::draw(Game& game, [[maybe_unused]]SpriteBatch& spriteBatch) 
 	const GameWindow& gameWindow = game.gameWindow;
 	const Camera& camera = *game.camera;
 
-	const float textSize = 8.0f * camera.getZoom();
+	const float textSize = NORMAL_FONT_SIZE * camera.getZoom();
 	const float centerX = gameWindow.width * 0.5f;
 	const float centerY = gameWindow.height * 0.5f - textSize;
 

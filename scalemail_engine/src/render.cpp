@@ -105,7 +105,9 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	updateStencilBuffer(camera);
+	if (!game.devMode) {
+		updateStencilBuffer(camera);
+	}
 
 	renderMap(*world.getMap(), camera, totalElapsedSeconds);
 	renderSprites(world.getSpriteSystem(), world.getSpriteEffectSystem(), camera);

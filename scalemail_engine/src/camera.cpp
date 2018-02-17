@@ -3,6 +3,9 @@
 
 namespace ScaleMail
 {
+static const float DEVMODE_NEAR = 0.01f;
+static const float DEVMODE_FAR = 1024.0f;
+
 //  ============================================================================
 Camera::Camera(float width, float height, float zoom)
 	: mDevMode(false), mZoom(zoom), mBounds(0, 0, 2048, 2048) {
@@ -15,7 +18,7 @@ void Camera::calculateProjection() {
 		mProjection = glm::perspective(
 			glm::radians(90.0f),
 			mWidth / mHeight,
-			0.01f, 1024.0f);
+			DEVMODE_NEAR, DEVMODE_FAR);
 
 		//	Flip X axis
 		mProjection[0][0] *= -1;

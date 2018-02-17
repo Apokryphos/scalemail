@@ -254,10 +254,10 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 				position.z = 17.0f;
 			}
 
-			const int MAX_TILE_LAYERS = 50;
+			const int MAX_TILE_LAYERS = 10;
 
 			if (!tile.wallTop && !tile.wallFace) {
-				position.z = -MAX_TILE_LAYERS + tileLayer.layerZ;
+				position.z = -1.0f + ((float)tileLayer.layerZ / (float)MAX_TILE_LAYERS);
 			}
 
 			int tilesetId = tile.tilesetId;

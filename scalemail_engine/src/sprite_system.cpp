@@ -95,7 +95,7 @@ void SpriteSystem::buildVertexData(
 	std::sort(sprites.begin(), sprites.end(), sortSprite);
 
 	//	Small offset to prevent sprites against walls from being hidden
-	const float SPRITE_OFFSET = 0.001f;
+	const float SPRITE_OFFSET = 1.0f;
 
 	for (const auto& sprite : sprites) {
 		mTextureId.emplace_back(mask ? sprite.maskTextureId : sprite.textureId);

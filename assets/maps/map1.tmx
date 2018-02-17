@@ -5,9 +5,129 @@
  </properties>
  <tileset firstgid="1" name="world" tilewidth="16" tileheight="16" tilecount="304" columns="16">
   <image source="../textures/world.png" width="256" height="304"/>
+  <tile id="0">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
   <tile id="13">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="26">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="29">
@@ -15,9 +135,129 @@
     <property name="AlphaTest" type="bool" value="true"/>
    </properties>
   </tile>
+  <tile id="32">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="34">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="37">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="40">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="41">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="42">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="43">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
   <tile id="45">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="48">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="49">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="50">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="51">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="52">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="53">
+   <properties>
+    <property name="WallFace" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="55">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="56">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="57">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="58">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="59">
+   <properties>
+    <property name="WallTop" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="61">
@@ -313,7 +553,7 @@
   <tile id="199">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
-    <property name="OffsetZ" type="int" value="0"/>
+    <property name="Decal" type="bool" value="true"/>
    </properties>
    <animation>
     <frame tileid="199" duration="100"/>
@@ -323,7 +563,7 @@
   <tile id="200">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
-    <property name="OffsetZ" type="int" value="0"/>
+    <property name="Decal" type="bool" value="true"/>
    </properties>
    <animation>
     <frame tileid="200" duration="100"/>
@@ -368,26 +608,31 @@
   <tile id="208">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallTop" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="209">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallTop" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="210">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallTop" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="211">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallTop" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="212">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallTop" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="213">
@@ -633,11 +878,13 @@
   <tile id="261">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="262">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="267">
@@ -658,11 +905,13 @@
   <tile id="270">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="271">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="273">
@@ -701,16 +950,19 @@
   <tile id="285">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="286">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="287">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="288">
@@ -761,36 +1013,43 @@
   <tile id="297">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="298">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="299">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="300">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="301">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="302">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="303">
    <properties>
     <property name="AlphaTest" type="bool" value="true"/>
+    <property name="WallFace" type="bool" value="true"/>
    </properties>
   </tile>
  </tileset>

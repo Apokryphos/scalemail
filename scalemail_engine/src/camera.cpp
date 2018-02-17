@@ -16,6 +16,9 @@ void Camera::calculateProjection() {
 			glm::radians(90.0f),
 			mWidth / mHeight,
 			0.01f, 1024.0f);
+
+		//	Flip X axis
+		mProjection[0][0] *= -1;
 	} else {
 		mProjection = glm::ortho(
 			0.0f, mWidth / mZoom,

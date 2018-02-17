@@ -51,7 +51,25 @@ int Map::getWidth() const {
 }
 
 //  ============================================================================
+bool Map::pointInBounds(const glm::vec2& point) {
+	return
+		point.x >= 0 &&
+		point.y >= 0 &&
+		point.x <= mWidth * mTileWidth &&
+		point.y <= mHeight * mTileHeight;
+}
+
+//  ============================================================================
 void Map::setPlayerStarts(const std::vector<PlayerStart> playerStarts) {
 	mPlayerStarts = playerStarts;
+}
+
+//  ============================================================================
+bool Map::tileInBounds(const int tileX, int tileY) {
+	return
+		tileX >= 0 &&
+		tileY >= 0 &&
+		tileX <= mWidth &&
+		tileY <= mHeight;
 }
 }

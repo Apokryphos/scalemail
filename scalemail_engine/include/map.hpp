@@ -54,6 +54,8 @@ public:
 	int getTileWidth() const;
 	int getWidth() const;
 	MapMesh mapMesh;
+	bool pointInBounds(const glm::vec2& point);
 	void setPlayerStarts(const std::vector<PlayerStart> playerStarts);
+	bool tileInBounds(const int tileX, int tileY);
 };
 }

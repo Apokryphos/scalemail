@@ -38,7 +38,7 @@ void initializeRender(AssetManager& assetManager) {
 }
 
 //	============================================================================
-void updateStencilBuffer(GameWindow& gameWindow, Camera& camera) {
+void updateStencilBuffer(Camera& camera) {
 	Rectangle cameraBounds = camera.getBounds();
 
 	glm::mat4 quadWorld =
@@ -49,9 +49,7 @@ void updateStencilBuffer(GameWindow& gameWindow, Camera& camera) {
 			cameraBounds.width * 0.5f,
 			cameraBounds.height * 0.5f, 1.0f));
 
-	glm::mat4 screenProjection = glm::ortho(
-		0.0f, (float)gameWindow.width, (float)gameWindow.height, 0.0f,
-		0.0f, 1.0f);
+	glm::mat4 screenProjection = camera.getProjection();
 
 	glm::mat4 mvp = screenProjection * camera.getView() * quadWorld;
 
@@ -106,7 +104,7 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	updateStencilBuffer(gameWindow, camera);
+	updateStencilBuffer(camera);
 
 	renderMap(*world.getMap(), camera, totalElapsedSeconds);
 	renderSprites(world.getSpriteSystem(), world.getSpriteEffectSystem(), camera);

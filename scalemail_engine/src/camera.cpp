@@ -33,12 +33,10 @@ glm::vec2 Camera::getSize() const {
 glm::mat4 Camera::getView() const {
 	glm::vec2 position =
 		mPosition -
-		glm::vec2(mWidth / 2, mHeight / 2) *
+		glm::vec2(mWidth * 0.5f, mHeight * 0.5f) *
 		(1 / mZoom);
 
-	return
-		glm::scale(glm::vec3(mZoom, mZoom, 1.0f)) *
-		glm::translate(glm::vec3(-position, 0.0f));
+	return glm::translate(glm::vec3(-position, 0.0f));
 }
 
 //  ============================================================================
@@ -98,7 +96,10 @@ void Camera::setSize(float width, float height) {
 	mWidth = width;
 	mHeight = height;
 
-	mProjection = glm::ortho(0.0f, mWidth, mHeight, 0.0f, -1.0f, 1.0f);
+	mProjection = glm::ortho(
+		0.0f, mWidth / mZoom,
+		mHeight / mZoom, 0.0f,
+		-1.0f, 1.0f);
 
 	this->setPosition(mPosition);
 }

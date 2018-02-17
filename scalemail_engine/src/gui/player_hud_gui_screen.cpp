@@ -5,6 +5,7 @@
 #include "sprite_batch.hpp"
 #include "world.hpp"
 #include <glm/mat4x4.hpp>
+#include <glm/gtx/transform2.hpp>
 
 namespace ScaleMail
 {
@@ -72,7 +73,13 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 	Camera& camera = *game.camera;
 	World& world = *game.world;
 
-	glm::mat4 projection = camera.getProjection();
+	glm::mat4 projection = glm::ortho(
+		0.0f,
+		(float)game.gameWindow.width,
+		(float)game.gameWindow.height,
+		0.0f,
+		-1.0f,
+		1.0f);
 
 	std::vector<Player*> players = world.getPlayers();
 

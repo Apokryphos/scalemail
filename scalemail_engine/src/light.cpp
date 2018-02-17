@@ -102,13 +102,17 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 		glm::translate(glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 0.0f)) *
 		glm::scale(glm::vec3(fboSize * 0.5f, fboSize * 0.5f, 1.0f));
 
-	glm::mat4 fboProjection = glm::ortho(0.0f, (float)fboSize, 0.0f, (float)fboSize, 0.0f, 1.0f);
-
-	glm::mat4 screenProjection = glm::ortho(
-		0.0f, (float)gameWindow.width, (float)gameWindow.height, 0.0f,
+	glm::mat4 fboProjection = glm::ortho(
+		0.0f, (float)fboSize,
+		0.0f, (float)fboSize,
 		0.0f, 1.0f);
 
-	glm::mat4 lightMvp = fboProjection * camera.getView();
+	glm::mat4 screenProjection = glm::ortho(
+		0.0f, (float)gameWindow.width,
+		0.0f, (float)gameWindow.height,
+		0.0f, 1.0f);
+
+	glm::mat4 lightMvp = camera.getProjection() * camera.getView();
 
 	glm::mat4 screenMvp = screenProjection * quadWorld;
 

@@ -46,6 +46,7 @@ void AiSystem::addObstacle(const float x, const float y, const float width,
 	} else if (width > height) {
 		const float radius = height * 0.5f;
 
+		//	Add a circle to the right to cover the remainder
 		this->addObstacle(
 			glm::vec2(x + width - radius, y + radius),
 			radius);
@@ -60,6 +61,7 @@ void AiSystem::addObstacle(const float x, const float y, const float width,
 	} else {
 		const float radius = width * 0.5f;
 
+		//	Add a circle to the bottom to cover the remainder
 		this->addObstacle(
 			glm::vec2(x + radius, y + height - radius),
 			radius);
@@ -122,12 +124,31 @@ void AiSystem::initialize(AssetManager& assetManager) {
 }
 
 //	============================================================================
+void AiSystem::setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction) {
+	mData[cmpnt.index].moveDirection = direction;
+}
+
+//	============================================================================
 void AiSystem::update(World& world, float elapsedSeconds) {
+	//	Update AI behaviors
 	const size_t count = mData.size();
 	for (size_t index = 0; index < count; ++index) {
 		for (auto& behavior : mData[index].behaviors) {
 			behavior.get()->think(world, elapsedSeconds);
 		}
+	}
+
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+
+	//	Apply movements
+	for (auto& p : mEntitiesByComponentIndices) {
+		const size_t index = p.first;
+		const Entity& entity = p.second;
+
+		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+		physicsSystem.setDirection(physicsCmpnt, mData[index].moveDirection);
+
+		mData[index].moveDirection = glm::vec2(0.0f);
 	}
 }
 }

@@ -29,6 +29,7 @@ class AiSystem : public EntitySystem
 
 	struct AiComponentData
 	{
+		glm::vec2 moveDirection;
 		std::vector<std::shared_ptr<AiBehavior>> behaviors;
 	};
 
@@ -52,6 +53,7 @@ public:
 	void drawDebug(const Camera& camera);
 	AiComponent getComponent(const Entity& entity) const;
 	void initialize(AssetManager& assetManager);
+	void setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction);
 	void update(World& world, float elapsedSeconds);
 };
 }

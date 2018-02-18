@@ -11,9 +11,9 @@ public:
 	HealthGauge(float max = 100);
 	void add(float amount);
 	void fill();
-	float getMax();
-	float getValue();
-	bool isEmpty();
+	float getMax() const;
+	float getValue() const;
+	bool isEmpty() const;
 	void setMax(float max);
 	void setValue(float value);
 	void subtract(float amount);

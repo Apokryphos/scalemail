@@ -19,17 +19,17 @@ void HealthGauge::fill() {
 }
 
 //	============================================================================
-float HealthGauge::getMax() {
+float HealthGauge::getMax() const {
 	return mMax;
 }
 
 //	============================================================================
-float HealthGauge::getValue() {
+float HealthGauge::getValue() const {
 	return mValue;
 }
 
 //	============================================================================
-bool HealthGauge::isEmpty() {
+bool HealthGauge::isEmpty() const {
 	return mValue <= 0.0f;
 }
 

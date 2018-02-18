@@ -7,11 +7,13 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(SCALEMAIL_ENGINE_INCLUDE
+    include/ai/skeleton_ai.hpp
     include/ai/vampire_ai.hpp
     include/gui/gui.hpp
     include/gui/gui_screen.hpp
     include/gui/pause_gui_screen.hpp
     include/gui/player_hud_gui_screen.hpp
+    include/actor_util.hpp
     include/ai_behavior_factory.hpp
     include/ai_behavior.hpp
     include/ai_system.hpp
@@ -35,6 +37,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/entity_collision.hpp
     include/entity_manager.hpp
     include/entity_system.hpp
+    include/entity_util.hpp
     include/entity.hpp
     include/expire_system.hpp
     include/fade_shader.hpp
@@ -96,19 +99,21 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
+    src/ai/skeleton_ai.cpp
     src/ai/vampire_ai.cpp
     src/ai_behavior_factory.cpp
-    src/ai_system.cpp
-    src/bury_system.cpp
     src/gui/gui.cpp
     src/gui/gui_screen.cpp
     src/gui/pause_gui_screen.cpp
     src/gui/player_hud_gui_screen.cpp
+    src/ai_system.cpp
+    src/actor_util.cpp
     src/ambient_light.cpp
     src/asset_manager.cpp
     src/blend.cpp
     src/bullet_system.cpp
     src/bullet_util.cpp
+    src/bury_system.cpp
     src/camera.cpp
     src/collision.cpp
     src/collision_test.cpp
@@ -119,6 +124,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/entity.cpp
     src/entity_manager.cpp
     src/entity_system.cpp
+    src/entity_util.cpp
     src/expire_system.cpp
     src/font.cpp
     src/gl_util.cpp

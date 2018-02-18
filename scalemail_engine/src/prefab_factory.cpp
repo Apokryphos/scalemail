@@ -15,6 +15,10 @@ static void buildBlob(Entity entity, World& world) {
 }
 
 //  ============================================================================
+static void buildSkeleton(Entity entity, World& world) {
+}
+
+//  ============================================================================
 static void buildVampire(Entity entity, World& world) {
 	GunSystem& gunSystem = world.getGunSystem();
 	GunComponent gunCmpnt = gunSystem.getComponent(entity);
@@ -31,7 +35,9 @@ void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 
 	if (prefabName == "blob") {
 		buildBlob(entity, world);
-	} if (prefabName == "vampire") {
+	} else if (prefabName == "skeleton") {
+		buildSkeleton(entity, world);
+	} else if (prefabName == "vampire") {
 		buildVampire(entity, world);
 	}
 }

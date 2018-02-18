@@ -6,6 +6,7 @@
 #include "physics_system.hpp"
 #include "vector_util.hpp"
 #include "vertex_data.hpp"
+#include <glm/gtx/norm.hpp>
 #include <cmath>
 #include <functional>
 
@@ -223,7 +224,11 @@ void PhysicsSystem::setCollisionGroup(const PhysicsComponent& cmpnt,
 //	============================================================================
 void PhysicsSystem::setDirection(const PhysicsComponent& cmpnt,
 								 const glm::vec2 direction) {
-	mDirection[cmpnt.index] = direction;
+	if (glm::length2(direction) != 0.0f) {
+		mDirection[cmpnt.index] = glm::normalize(direction);
+	} else {
+		mDirection[cmpnt.index] = direction;
+	}
 }
 
 //	============================================================================

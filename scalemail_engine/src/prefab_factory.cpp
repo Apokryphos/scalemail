@@ -16,6 +16,9 @@ static void buildBlob(Entity entity, World& world) {
 
 //  ============================================================================
 static void buildSkeleton(Entity entity, World& world) {
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	physicsSystem.setSpeed(physicsCmpnt, 32.0f);
 }
 
 //  ============================================================================

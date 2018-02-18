@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 
 namespace ScaleMail
 {
@@ -34,6 +35,14 @@ static inline unsigned int nextPowerOfTwo( unsigned int value ) {
 	value++;
 
 	return value;
+}
+
+//	============================================================================
+static inline glm::vec2 rotateVec2(const glm::vec2& vector, float radians)
+{
+	return glm::vec2(
+		vector.x * std::cos(radians) - vector.y * std::sin(radians),
+		vector.x * std::sin(radians) + vector.y * std::cos(radians));
 }
 
 //  ============================================================================

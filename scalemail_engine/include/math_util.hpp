@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <glm/gtx/norm.hpp>
 
 namespace ScaleMail
 {
@@ -25,6 +26,17 @@ static inline bool isPowerOfTwo( const unsigned int value ) {
 }
 
 //  ============================================================================
+template <typename Vector>
+inline Vector limit(const Vector &vector, float max) {
+	float length = glm::length2(vector);
+	if (length > max * max)	{
+		return glm::normalize(vector) * max;
+	} else {
+		return vector;
+	}
+}
+
+//  ============================================================================
 static inline unsigned int nextPowerOfTwo( unsigned int value ) {
 	value--;
 	value |= value >> 1;
@@ -38,8 +50,16 @@ static inline unsigned int nextPowerOfTwo( unsigned int value ) {
 }
 
 //	============================================================================
-static inline glm::vec2 rotateVec2(const glm::vec2& vector, float radians)
-{
+static inline glm::vec2 normalizeVec2(const glm::vec2& v) {
+	if (glm::length2(v) != 0.0f) {
+		return glm::normalize(v);
+	} else {
+		return v;
+	}
+}
+
+//	============================================================================
+static inline glm::vec2 rotateVec2(const glm::vec2& vector, float radians) {
 	return glm::vec2(
 		vector.x * std::cos(radians) - vector.y * std::sin(radians),
 		vector.x * std::sin(radians) + vector.y * std::cos(radians));

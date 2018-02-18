@@ -583,6 +583,11 @@ void World::initialize(AssetManager* assetManager) {
 }
 
 //  ============================================================================
+bool World::entityIsAlive(const Entity& entity) {
+	return mEntityManager.isAlive(entity);
+}
+
+//  ============================================================================
 void World::loadMap(const std::string& mapName) {
 	mMap = ScaleMail::loadMap("assets/maps/" + mapName + ".tmx", *this);
 

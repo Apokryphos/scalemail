@@ -89,6 +89,7 @@ public:
 						 const float height, const std::string targetName);
 	void destroyBullet(Entity entity);
 	void destroyEntity(Entity entity);
+	bool entityIsAlive(const Entity& entity);
 	AiSystem& getAiSystem();
 	BurySystem& getBurySystem();
 	DamageSystem& getDamageSystem();

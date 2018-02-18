@@ -1,5 +1,7 @@
 #include "player.hpp"
 #include "physics_system.hpp"
+#include "world.hpp"
+#include <glm/vec2.hpp>
 #include <glm/gtx/norm.hpp>
 
 namespace ScaleMail
@@ -29,5 +31,17 @@ std::vector<Player*> getPlayersInRange(
 	}
 
 	return inRange;
+}
+
+//  ============================================================================
+Player* getRandomPlayerInRange(World& world, const glm::vec2& position,
+							   float range) {
+	std::vector<Player*> allPlayers = world.getPlayers();
+
+	std::vector<Player*> players =
+		getPlayersInRange(
+			allPlayers, world.getPhysicsSystem(), position, range);
+
+	return world.getRandom().getRandomElement(players);
 }
 }

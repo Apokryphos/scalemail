@@ -125,6 +125,10 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 		world.getPhysicsSystem().drawDebug(camera);
 	}
 
+	if (game.drawAi) {
+		world.getAiSystem().drawDebug(camera);
+	}
+
 	glDisable(GL_STENCIL_TEST);
 
 	gameState.draw(game, camera);

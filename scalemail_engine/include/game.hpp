@@ -12,6 +12,7 @@ struct Game
 {
 	bool cameraFollow;
 	bool devMode;
+	bool drawAi;
 	bool drawCollision;
 	bool paused;
 	bool quit;

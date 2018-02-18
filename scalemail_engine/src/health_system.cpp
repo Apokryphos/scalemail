@@ -31,6 +31,12 @@ HealthComponent HealthSystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
+const HealthGauge& HealthSystem::getHealthGauge(
+	const HealthComponent& cmpnt) const  {
+	return mData[cmpnt.index].healthGauge;
+}
+
+//	============================================================================
 HealthGauge& HealthSystem::getHealthGauge(const HealthComponent& cmpnt) {
 	return mData[cmpnt.index].healthGauge;
 }

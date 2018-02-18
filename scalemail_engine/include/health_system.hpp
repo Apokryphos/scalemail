@@ -29,6 +29,7 @@ class HealthSystem : public EntitySystem
 public:
 	HealthSystem(EntityManager& entityManager, int maxComponents = 1000);
 	HealthComponent getComponent(const Entity& entity) const;
+	const HealthGauge& getHealthGauge(const HealthComponent& cmpnt) const;
 	HealthGauge& getHealthGauge(const HealthComponent& cmpnt);
 	void setRespawn(const HealthComponent& cmpnt, const bool respawn);
 	void update(World& world);

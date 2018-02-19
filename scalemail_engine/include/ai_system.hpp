@@ -29,7 +29,10 @@ class AiSystem : public EntitySystem
 
 	struct AiComponentData
 	{
+		glm::vec2 avoid;
+		glm::vec2 seek;
 		glm::vec2 moveDirection;
+		glm::vec2 position;
 		std::vector<std::shared_ptr<AiBehavior>> behaviors;
 	};
 

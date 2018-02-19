@@ -25,6 +25,7 @@ PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 	mPosition.reserve(maxComponents);
 	mRadius.reserve(maxComponents);
 	mSpeed.reserve(maxComponents);
+	mForce.reserve(maxComponents);
 	mVelocity.reserve(maxComponents);
 }
 
@@ -131,6 +132,7 @@ void PhysicsSystem::createComponent() {
 	mPosition.emplace_back(0.0f);
 	mRadius.emplace_back(0.0f);
 	mSpeed.emplace_back(64.0f);
+	mForce.emplace_back(0.0f);
 	mVelocity.emplace_back(0.0f);
 }
 
@@ -141,6 +143,7 @@ void PhysicsSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mPosition, index);
 	swapWithLastElementAndRemove(mRadius, index);
 	swapWithLastElementAndRemove(mSpeed, index);
+	swapWithLastElementAndRemove(mForce, index);
 	swapWithLastElementAndRemove(mVelocity, index);
 }
 
@@ -232,6 +235,12 @@ void PhysicsSystem::setDirection(const PhysicsComponent& cmpnt,
 }
 
 //	============================================================================
+void PhysicsSystem::setForce(const PhysicsComponent& cmpnt,
+							 const glm::vec2 force) {
+	mForce[cmpnt.index] = force;
+}
+
+//	============================================================================
 void PhysicsSystem::setPosition(const PhysicsComponent& cmpnt,
 								const glm::vec2 position) {
 	mPosition[cmpnt.index] = position;
@@ -278,8 +287,18 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	//	Calculate velocities
 	size_t count = mPosition.size();
 	for (size_t index = 0; index < count; ++index) {
-		mVelocity[index] =
-			mDirection[index] * mSpeed[index] * elapsedSeconds;
+		glm::vec2 velocity =
+			mDirection[index] * mSpeed[index];
+
+		velocity += mForce[index];
+
+		//	Reset forces
+		mForce[index].x = 0.0f;
+		mForce[index].y = 0.0f;
+
+		velocity = limit(velocity, mSpeed[index]);
+
+		mVelocity[index] = velocity * elapsedSeconds;
 	}
 
 	std::vector<CollisionTest> actorTests;
@@ -294,21 +313,27 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 
 	//	Separate entities by collision group
 	for (const auto& p : mEntitiesByComponentIndices) {
+		const size_t index = p.first;
+
 		//	Skip zero radius entities
-		if (mRadius[p.first] <= 0.0f) {
+		if (mRadius[index] <= 0.0f) {
 			continue;
 		}
 
 		CollisionTest test = {};
 		test.entity = p.second;
-		test.group = mGroup[p.first];
-		test.position = mPosition[p.first];
-		test.radius = mRadius[p.first];
-		test.velocity = mVelocity[p.first];
+		test.group = mGroup[index];
+		test.position = mPosition[index];
+		test.radius = mRadius[index];
+		test.velocity = mVelocity[index];
 
-		switch (mGroup[p.first]) {
+		const bool isMoving = glm::length2(mVelocity[index]) > 0.0f;
+
+		switch (mGroup[index]) {
 			case CollisionGroup::ACTOR: {
-				actorTests.push_back(test);
+				if (isMoving) {
+					actorTests.push_back(test);
+				}
 
 				vsActorTests.push_back(test);
 				vsPlayerActorTests.push_back(test);
@@ -316,18 +341,24 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 				break;
 			}
 			case CollisionGroup::PLAYER_ACTOR: {
-				playerActorTests.push_back(test);
+				if (isMoving) {
+					playerActorTests.push_back(test);
+				}
 
 				vsActorTests.push_back(test);
 				vsBulletTests.push_back(test);
 				break;
 			}
 			case CollisionGroup::BULLET: {
-				bulletTests.push_back(test);
+				if (isMoving) {
+					bulletTests.push_back(test);
+				}
 				break;
 			}
 			case CollisionGroup::PLAYER_BULLET: {
-				playerBulletTests.push_back(test);
+				if (isMoving) {
+					playerBulletTests.push_back(test);
+				}
 				break;
 			}
 			case CollisionGroup::STATIC: {
@@ -363,6 +394,8 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	//	VS entities
 	processEntityCollisions(playerActorTests, vsPlayerActorTests, actorPassed,
 							mEntityCollisions);
+
+	actorPassed.resize(0);
 
 	//	-------------
 	//	TEST ACTORS |

@@ -394,6 +394,8 @@ static void processActorCollisionObject(World& world,
 	const float height = object.GetHeight();
 
 	world.getPhysicsSystem().addStaticActorObstacle(x, y, width, height);
+
+	world.getAiSystem().addObstacle(x, y, width, height);
 }
 
 //  ============================================================================

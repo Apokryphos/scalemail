@@ -65,7 +65,7 @@ static void keyCallback(GLFWwindow* window, int key,
 				game->devOptions.enabled = !game->devOptions.enabled;
 				std::cout << "Development mode "
 						  << (game->devOptions.enabled ?
-						  	  "enabled." :
+							  "enabled." :
 							  "disabled.")
 						  << std::endl;
 				break;

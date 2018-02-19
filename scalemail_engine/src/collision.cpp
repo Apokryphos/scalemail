@@ -6,7 +6,7 @@ namespace ScaleMail
 {
 //  ============================================================================
 bool circleIntersects(glm::vec2 position1, float radius1, glm::vec2 position2,
-			   float radius2) {
+					  float radius2) {
 	return
 		(((position2.x - position1.x) * (position2.x - position1.x)) +
 		 ((position2.y - position1.y) * (position2.y - position1.y))) <=

@@ -260,16 +260,30 @@ void PhysicsSystem::setSpeed(const PhysicsComponent& cmpnt,
 
 //	============================================================================
 void PhysicsSystem::update() {
-	//	Process entity collisions
-	for (const auto& collision : mEntityCollisions) {
-		const int index = this->getComponentIndexByEntity(collision.sourceEntity);
-		mVelocity[index] = collision.velocity;
-	}
-
 	//	Process static collisions
 	for (const auto& collision : mStaticCollisions) {
 		const int index = this->getComponentIndexByEntity(collision.sourceEntity);
-		mVelocity[index] = collision.velocity;
+
+		if (mVelocity[index].x != 0.0f) {
+			mVelocity[index].x = collision.velocity.x;
+		}
+
+		if (mVelocity[index].y != 0.0f) {
+			mVelocity[index].y = collision.velocity.y;
+		}
+	}
+
+	//	Process entity collisions
+	for (const auto& collision : mEntityCollisions) {
+		const int index = this->getComponentIndexByEntity(collision.sourceEntity);
+
+		if (mVelocity[index].x != 0.0f || collision.push) {
+			mVelocity[index].x = collision.velocity.x;
+		}
+
+		if (mVelocity[index].y != 0.0f || collision.push) {
+			mVelocity[index].y = collision.velocity.y;
+		}
 	}
 
 	//	Apply velocities
@@ -373,73 +387,47 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 		}
 	}
 
-	std::vector<CollisionTest> actorPassed;
+	//	Combine tests for actor obstacles to prevent sliding along static obstacles
+	//	and through static actor-only obstacles.
+	std::vector<glm::vec4> actorObstacles;
+	actorObstacles.insert(actorObstacles.begin(), mStaticActorObstacles.begin(), mStaticActorObstacles.end());
+	actorObstacles.insert(actorObstacles.begin(), mStaticObstacles.begin(), mStaticObstacles.end());
 
 	//	--------------------
 	//	TEST PLAYER ACTORS |
 	//	--------------------
 	//	VS static obstacles
-	processStaticCollisions(playerActorTests, mStaticObstacles, actorPassed,
-							mStaticCollisions);
-
-	//	Clear and reuse for output of next pass
-	playerActorTests.resize(0);
-
-	//	VS static actor-only obstacles
-	processStaticCollisions(actorPassed, mStaticActorObstacles, playerActorTests,
-							mStaticCollisions);
-
-	actorPassed.resize(0);
+	processStaticCollisions(playerActorTests, actorObstacles, mStaticCollisions);
 
 	//	VS entities
-	processEntityCollisions(playerActorTests, vsPlayerActorTests, actorPassed,
-							mEntityCollisions);
-
-	actorPassed.resize(0);
+	processEntityCollisions(playerActorTests, vsPlayerActorTests, mEntityCollisions, true);
 
 	//	-------------
 	//	TEST ACTORS |
 	//	-------------
 	//	VS static obstacles
-	processStaticCollisions(actorTests, mStaticObstacles, actorPassed,
-							mStaticCollisions);
-
-	actorTests.resize(0);
-
-	//	VS static actor-only obstacles
-	processStaticCollisions(actorPassed, mStaticActorObstacles, actorTests,
-							mStaticCollisions);
-
-	actorPassed.resize(0);
+	processStaticCollisions(actorTests, actorObstacles, mStaticCollisions);
 
 	//	VS entities
-	processEntityCollisions(actorTests, vsActorTests, actorPassed, mEntityCollisions);
+	processEntityCollisions(actorTests, vsActorTests, mEntityCollisions, false);
 
 	//	--------------
 	//	TEST BULLETS |
 	//	--------------
-	std::vector<CollisionTest> bulletPassed;
-
 	//	VS static obstacles
-	processStaticCollisions(bulletTests, mStaticObstacles, bulletPassed,
-							mStaticCollisions);
-
-	bulletTests.resize(0);
+	processStaticCollisions(bulletTests, mStaticObstacles, mStaticCollisions);
 
 	//	Test bullets VS entities
-	processEntityCollisions(bulletPassed, vsBulletTests, bulletTests, mEntityCollisions);
+	processEntityCollisions(bulletTests, vsBulletTests, mEntityCollisions, false);
 
 	//	---------------------
 	//	TEST PLAYER BULLETS |
 	//	---------------------
-	bulletPassed.resize(0);
 	//	Test player bullets VS static obstacles
-	processStaticCollisions(playerBulletTests, mStaticObstacles, bulletPassed,
-							mStaticCollisions);
-	playerBulletTests.resize(0);
+	processStaticCollisions(playerBulletTests, mStaticObstacles, mStaticCollisions);
+
 	//	Test player bullets VS entities
-	processEntityCollisions(bulletPassed, vsPlayerBulletTests, playerBulletTests,
-							mEntityCollisions);
+	processEntityCollisions(playerBulletTests, vsPlayerBulletTests, mEntityCollisions, false);
 
 	for (auto& collision : mEntityCollisions) {
 		for (const auto& callback : mEntityCollisionCallbacks) {

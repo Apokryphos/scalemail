@@ -1,7 +1,8 @@
 #include "collision.hpp"
 #include "collision_test.hpp"
-#include <algorithm>
+#include "math_util.hpp"
 #include <glm/gtx/norm.hpp>
+#include <algorithm>
 
 namespace ScaleMail
 {
@@ -22,8 +23,8 @@ inline static bool sortEntityCollision(const EntityCollision& result1,
 void processEntityCollisions(
 	const std::vector<CollisionTest>& tests,
 	const std::vector<CollisionTest>& otherTests,
-	std::vector<CollisionTest>& passed,
-	std::vector<EntityCollision>& entityCollisions) {
+	std::vector<EntityCollision>& entityCollisions,
+	bool allowPush) {
 	//	Separate results so they can be sorted by distance
 	std::vector<EntityCollision> results;
 
@@ -42,15 +43,16 @@ void processEntityCollisions(
 			result.targetGroup = other.group;
 			result.velocity = test.velocity;
 
-			bool collision = false;
+			bool collisionX = false;
+			bool collisionY = false;
 
 			//	Test X-axis
 			if (circleIntersects(
 				test.position + deltaX, test.radius,
 				other.position, other.radius)) {
 				result.velocity.x = 0.0f;
-				result.distance = glm::distance2(test.position + deltaX, other.position);
-				collision = true;
+				result.distance = glm::distance2(test.position, other.position);
+				collisionX = true;
 			}
 
 			//	Test Y-axis
@@ -58,27 +60,63 @@ void processEntityCollisions(
 				test.position + deltaY, test.radius,
 				other.position, other.radius)) {
 				result.velocity.y = 0.0f;
-				result.distance = glm::distance2(test.position + deltaY, other.position);
-				collision = true;
+				result.distance = glm::distance2(test.position, other.position);
+				collisionY = true;
 			}
 
-			if (collision) {
+			//	Push to slide around circle
+			if (allowPush) {
+				if (collisionX && !collisionY) {
+
+					glm::vec2 push(0.0f);
+					float speed = glm::length(test.velocity);
+
+					if (test.position.y > other.position.y) {
+						push.y = speed;
+					} else {
+						push.y = -speed;
+					}
+
+					if (!circleIntersects(
+						test.position + push, test.radius,
+						other.position, other.radius)) {
+						result.velocity = push;
+						result.push = true;
+					}
+				} else if (!collisionX && collisionY) {
+					glm::vec2 push(0.0f);
+					float speed = glm::length(test.velocity);
+
+					if (test.position.x > other.position.x) {
+						push.x = speed;
+					} else {
+						push.x = -speed;
+					}
+
+					if (!circleIntersects(
+						test.position + push, test.radius,
+						other.position, other.radius)) {
+						result.velocity = push;
+						result.push = true;
+					}
+				}
+			}
+
+			//	Add collision to results
+			if (collisionX || collisionY) {
 				results.push_back(result);
 			}
 		}
 
 		if (results.size() > 0) {
-			//	Sort results by distance
+			//	Sort results by distance, farthest first
 			std::sort(results.begin(), results.end(), sortEntityCollision);
 
-			//	Use nearest result
-			EntityCollision result = results[0];
-
-			result.sourceEntity = test.entity;
-			result.sourceGroup = test.group;
-			entityCollisions.push_back(result);
-		} else {
-			passed.push_back(test);
+			for (auto& result : results) {
+				result.sourceEntity = test.entity;
+				result.sourceGroup = test.group;
+				entityCollisions.push_back(result);
+			}
 		}
 
 		results.resize(0);
@@ -89,7 +127,6 @@ void processEntityCollisions(
 void processStaticCollisions(
 	std::vector<CollisionTest>& tests,
 	const std::vector<glm::vec4>& obstacles,
-	std::vector<CollisionTest>& passed,
 	std::vector<StaticCollision>& staticCollisions) {
 	for (auto& test : tests) {
 		glm::vec2 deltaX = glm::vec2(test.velocity.x, 0);
@@ -121,8 +158,6 @@ void processStaticCollisions(
 			staticCollision.sourceGroup = test.group;
 			staticCollision.velocity = test.velocity;
 			staticCollisions.push_back(staticCollision);
-		} else {
-			passed.push_back(test);
 		}
 	}
 }

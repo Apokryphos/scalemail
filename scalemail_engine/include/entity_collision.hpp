@@ -9,6 +9,7 @@ namespace ScaleMail
 struct EntityCollision
 {
 	bool ignore;
+	bool push;
 	float distance;
 	CollisionGroup sourceGroup;
 	CollisionGroup targetGroup;

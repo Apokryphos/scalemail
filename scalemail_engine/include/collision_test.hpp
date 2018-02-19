@@ -20,12 +20,11 @@ struct CollisionTest
 void processEntityCollisions(
 	const std::vector<CollisionTest>& tests,
 	const std::vector<CollisionTest>& otherTests,
-	std::vector<CollisionTest>& passed,
-	std::vector<EntityCollision>& entityCollisions);
+	std::vector<EntityCollision>& entityCollisions,
+	bool allowPush);
 
 void processStaticCollisions(
 	std::vector<CollisionTest>& tests,
 	const std::vector<glm::vec4>& obstacles,
-	std::vector<CollisionTest>& passed,
 	std::vector<StaticCollision>& staticCollisions);
 }

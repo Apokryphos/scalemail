@@ -8,15 +8,27 @@ class Camera;
 class Gui;
 class World;
 
+struct DevOptions
+{
+	bool camera3d;
+	bool drawAi;
+	bool drawCollision;
+	bool enabled;
+	bool step;
+	int stepCount;
+};
+
 struct Game
 {
 	bool cameraFollow;
-	bool devMode;
 	bool drawAi;
 	bool drawCollision;
 	bool paused;
 	bool quit;
 	double speed;
+
+	DevOptions devOptions;
+
 	Camera* camera;
 	GameWindow gameWindow;
 	Gui* gui;

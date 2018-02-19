@@ -45,11 +45,16 @@ static void keyCallback(GLFWwindow* window, int key,
 				break;
 
 			case GLFW_KEY_F1:
-				game->drawCollision = !game->drawCollision;
+				game->devOptions.drawCollision =
+					!game->devOptions.drawCollision;
 				break;
 
 			case GLFW_KEY_F2:
-				game->drawAi = !game->drawAi;
+				game->devOptions.drawAi = !game->devOptions.drawAi;
+				break;
+
+			case GLFW_KEY_F3:
+				game->devOptions.camera3d = !game->devOptions.camera3d;
 				break;
 
 			case GLFW_KEY_F10:
@@ -57,11 +62,12 @@ static void keyCallback(GLFWwindow* window, int key,
 				break;
 
 			case GLFW_KEY_D:
-				game->devMode = !game->devMode;
-				break;
-
-			case GLFW_KEY_O:
-				transitionFadeOut();
+				game->devOptions.enabled = !game->devOptions.enabled;
+				std::cout << "Development mode "
+						  << (game->devOptions.enabled ?
+						  	  "enabled." :
+							  "disabled.")
+						  << std::endl;
 				break;
 
 			case GLFW_KEY_F:
@@ -72,8 +78,30 @@ static void keyCallback(GLFWwindow* window, int key,
 				transitionFadeIn();
 				break;
 
+			case GLFW_KEY_O:
+				transitionFadeOut();
+				break;
+
 			case GLFW_KEY_P:
 				game->paused = !game->paused;
+				break;
+
+			case GLFW_KEY_S:
+				game->devOptions.step = !game->devOptions.step;
+				break;
+
+			case GLFW_KEY_LEFT_BRACKET:
+				game->devOptions.stepCount =
+					std::max(game->devOptions.stepCount - 1, 1);
+				std::cout << "Step count decreased to "
+						  << game->devOptions.stepCount << "." << std::endl;
+				break;
+
+			case GLFW_KEY_RIGHT_BRACKET:
+				game->devOptions.stepCount =
+					std::min(game->devOptions.stepCount + 1, 100);
+				std::cout << "Step count increased to "
+						  << game->devOptions.stepCount << "." << std::endl;
 				break;
 
 			case GLFW_KEY_MINUS:

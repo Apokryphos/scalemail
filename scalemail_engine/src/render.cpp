@@ -105,7 +105,8 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if (!game.devMode) {
+	//	Don't use stencil buffer if the camera is in 3D
+	if (!game.devOptions.camera3d) {
 		updateStencilBuffer(camera);
 	}
 
@@ -121,12 +122,15 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 
 	renderTransition();
 
-	if (game.drawCollision) {
-		world.getPhysicsSystem().drawDebug(camera);
-	}
+	//	Debug drawing
+	if (game.devOptions.enabled) {
+		if (game.devOptions.drawCollision) {
+			world.getPhysicsSystem().drawDebug(camera);
+		}
 
-	if (game.drawAi) {
-		world.getAiSystem().drawDebug(camera);
+		if (game.devOptions.drawAi) {
+			world.getAiSystem().drawDebug(camera);
+		}
 	}
 
 	glDisable(GL_STENCIL_TEST);

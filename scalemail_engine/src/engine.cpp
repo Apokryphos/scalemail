@@ -16,6 +16,8 @@
 
 namespace ScaleMail {
 
+const double TIME_STEP = 1.0 / 60.0;
+
 const int CAPTURE_SKIP_FRAMES = 2;
 int captureSkipFrames = 0;
 ScreenCapture capture;
@@ -46,6 +48,22 @@ static void screenCapture() {
 			captureSkipFrames = CAPTURE_SKIP_FRAMES;
 		}
 	}
+}
+
+//  ============================================================================
+static bool update(Game& game, World& world, GameState* gameState,
+				   double& accumulated) {
+	bool updated = false;
+	while (accumulated >= TIME_STEP) {
+		updated = true;
+		accumulated -= TIME_STEP;
+
+		addTransitionTime(TIME_STEP);
+		gameState->update(game, TIME_STEP);
+		world.update(TIME_STEP);
+	}
+
+	return updated;
 }
 
 //  ============================================================================
@@ -104,7 +122,8 @@ int startEngine() {
 	World world;
 	world.initialize(&assetManager);
 
-	world.loadMap("map1");
+	// world.loadMap("map1");
+	world.loadMap("test_map");
 
 	buildAmbientLights();
 
@@ -113,6 +132,8 @@ int startEngine() {
 	Gui gui;
 
 	Game game = {};
+	game.devOptions.enabled = true;
+	game.devOptions.stepCount = 1;
 	game.camera = &camera;
 	game.gameWindow.window = window;
 	game.gui = &gui;
@@ -130,7 +151,6 @@ int startEngine() {
 	double lastSeconds = 0;
 	double seconds = glfwGetTime();
 
-	const double timeStep = 1.0 / 60.0;
 	double accumulated = 0;
 
 	while (!game.quit && !glfwWindowShouldClose(window)) {
@@ -139,32 +159,38 @@ int startEngine() {
 		lastSeconds = seconds;
 		seconds = glfwGetTime();
 
-		camera.setDevMode(game.devMode);
+		camera.setDevMode(game.devOptions.camera3d);
 
 		GameState* gameState = gameStateManager.getActiveGameState();
 
-		if (game.paused) {
+		//	If paused, render frame and continue loop
+		if (game.paused && !game.devOptions.step) {
 			render(game, world, camera, *gameState, totalElapsedSeconds);
 			continue;
 		}
 
-		double elapsedSeconds = (seconds - lastSeconds) * game.speed;
-
-		accumulated += elapsedSeconds;
-		totalElapsedSeconds += elapsedSeconds;
-
 		bool updated = false;
-		while (accumulated >= timeStep) {
-			updated = true;
-			accumulated -= timeStep;
+		if (game.devOptions.step) {
+			//	Step mode update
+			game.paused = false;
 
-			//  Update
-			addTransitionTime(timeStep);
+			double step = game.devOptions.stepCount * TIME_STEP;
+			update(game, world, gameState, step);
 
-			gameState->update(game, timeStep);
-			world.update(timeStep);
+			game.paused = true;
+			game.devOptions.step = false;
+			continue;
+		} else {
+			//	Normal update
+			double elapsedSeconds = (seconds - lastSeconds) * game.speed;
+
+			accumulated += elapsedSeconds;
+			totalElapsedSeconds += elapsedSeconds;
+
+			updated = update(game, world, gameState, accumulated);
 		}
 
+		//	Only render after an update
 		if (updated) {
 			render(game, world, camera, *gameState, totalElapsedSeconds);
 			screenCapture();

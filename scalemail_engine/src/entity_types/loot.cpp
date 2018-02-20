@@ -45,7 +45,7 @@ Entity createLoot(World& world, const glm::vec2& position,
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	physicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	physicsSystem.setPosition(physicsCmpnt, glm::vec2(position.x + 8.0f, position.y - 8.0f));
+	physicsSystem.setPosition(physicsCmpnt, position);
 	physicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ITEM);
 	physicsSystem.setRadius(physicsCmpnt, size.x * 0.5f);
 

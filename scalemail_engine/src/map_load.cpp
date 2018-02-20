@@ -69,6 +69,13 @@ static int getScrollTilesetIdOffset(int tilesetId) {
 }
 
 //  ============================================================================
+static glm::vec2 getTileObjectPosition(const TmxMapLib::Object& object) {
+	return glm::vec2(
+		object.GetX() + object.GetWidth() * 0.5f,
+		object.GetY() - object.GetHeight() * 0.5f);
+}
+
+//  ============================================================================
 static bool getTilesetAlpha(const TmxMapLib::Map& tmxMap, const int gid) {
 	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
 
@@ -368,7 +375,7 @@ static void processActorObject(World& world,
 	const std::string aiName = toLowercase(propertySet.GetValue("Ai", ""));
 	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
 
-	const glm::vec2 position(object.GetX(), object.GetY());
+	const glm::vec2 position = getTileObjectPosition(object);
 	const glm::vec2 size(object.GetWidth(), object.GetHeight());
 
 	Entity entity = createActor(world, position, size, actorIndex, facing,
@@ -451,8 +458,7 @@ static void processCollisionObject(World& world,
 static void processDoorObject(World& world,
 							  const TmxMapLib::Object& object,
 							  const TmxMapLib::Map& tmxMap) {
-	const float x = object.GetX();
-	const float y = object.GetY();
+	const glm::vec2 position = getTileObjectPosition(object);
 
 	const TmxMapLib::Tile* tile = object.GetTile();
 
@@ -488,11 +494,11 @@ static void processDoorObject(World& world,
 		}
 
 		if (tilesetTile->GetPropertySet().GetBoolValue("DoorChild", false)) {
-			createDoor(world, glm::vec2(x, y), openTilesetId, closedTilesetId,
+			createDoor(world, position, openTilesetId, closedTilesetId,
 					   openTilesetId + 1, closedTilesetId + 1, open,
 					   object.GetName());
 		} else {
-			createDoor(world, glm::vec2(x, y), openTilesetId, closedTilesetId,
+			createDoor(world, position, openTilesetId, closedTilesetId,
 					   open, object.GetName());
 		}
 
@@ -529,12 +535,9 @@ static void processItemObject(World& world,
 
 	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
 
-	const float width = object.GetWidth();
-	const float height = object.GetHeight();
+	const glm::vec2 size(object.GetWidth(), object.GetHeight());
 
-	const glm::vec2 position(object.GetX(), object.GetY());
-
-	const glm::vec2 size(width, height);
+	const glm::vec2 position = getTileObjectPosition(object);
 
 	const std::string name = object.GetName();
 
@@ -591,7 +594,7 @@ static void processLightObject(World& world,
 static void processMiscObject(World& world,
 							  const TmxMapLib::Object& object,
 							  const TmxMapLib::Map& tmxMap) {
-	const glm::vec2 position(object.GetX(), object.GetY());
+	const glm::vec2 position = getTileObjectPosition(object);
 
 	auto const tile = object.GetTile();
 	const int tilesetId = tile->GetGid() - 1;
@@ -669,7 +672,7 @@ static void processTorchObject(World& world,
 	int nextFrame = tilesetId;
 	getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame);
 
-	const glm::vec2 position(object.GetX(), object.GetY());
+	const glm::vec2 position = getTileObjectPosition(object);
 
 	bool decal = getDecal(tmxMap, tile->GetGid());
 

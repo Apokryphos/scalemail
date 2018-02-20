@@ -21,7 +21,7 @@ Entity createProp(World& world, const glm::vec2& position,
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	physicsSystem.addComponent(entity);
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	physicsSystem.setPosition(physicsCmpnt, position + glm::vec2(8.0f, -8.0f));
+	physicsSystem.setPosition(physicsCmpnt, position);
 	physicsSystem.setRadius(physicsCmpnt, 0);
 
 	return entity;

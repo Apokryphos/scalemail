@@ -71,8 +71,6 @@ public:
 					   const std::string prefab = "",
 					   const std::string ai = "");
 	Entity createEntity();
-	Entity createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
-					  std::string name, std::string prefab);
 	Entity createPlayerActor(float x, float y, int actorIndex,
 							 Direction facing = Direction::SOUTH,
 							 const std::string name = "");
@@ -100,6 +98,7 @@ public:
 	ParticleSystem& getParticleSystem();
 	PhysicsSystem& getPhysicsSystem();
 	std::vector<Player*> getPlayers();
+	PrefabFactory& getPrefabFactory();
 	Random& getRandom();
 	SpriteSystem& getSpriteSystem();
 	SpriteEffectSystem& getSpriteEffectSystem();

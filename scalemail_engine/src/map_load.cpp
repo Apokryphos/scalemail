@@ -540,7 +540,8 @@ static void processItemObject(World& world,
 
 	const std::string name = object.GetName();
 
-	Entity entity = world.createLoot(position, size, tilesetId, name, prefabName);
+	Entity entity =
+		createLoot(world, position, size, tilesetId, name, prefabName);
 
 	if (object.GetPropertySet().GetBoolValue("Buried", false)) {
 		BurySystem& burySystem = world.getBurySystem();

@@ -99,89 +99,6 @@ Entity World::createEntity() {
 }
 
 //  ============================================================================
-Entity World::createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
-						  std::string name, std::string prefab) {
-	Entity entity = mEntityManager.createEntity();
-
-	Item item = {};
-	item.tilesetId = tilesetId;
-
-	mLootSystem.addComponent(entity);
-	LootComponent lootCmpnt = mLootSystem.getComponent(entity);
-	mLootSystem.setItem(lootCmpnt, item);
-
-	mSpriteSystem.addComponent(entity);
-	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
-	mSpriteSystem.setTileset(spriteCmpnt, "items");
-	mSpriteSystem.setTilesetId(spriteCmpnt, { tilesetId });
-	mSpriteSystem.setSize(spriteCmpnt, size);
-
-	mSpriteEffectSystem.addComponent(entity);
-	SpriteEffectComponent spriteEffectCmpnt =
-		mSpriteEffectSystem.getComponent(entity);
-	mSpriteEffectSystem.setBlinkDuration(spriteEffectCmpnt, 0.75f);
-	mSpriteEffectSystem.bob(spriteEffectCmpnt, 2.5f);
-
-	mPhysicsSystem.addComponent(entity);
-	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(position.x + 8.0f, position.y - 8.0f));
-	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ITEM);
-	mPhysicsSystem.setRadius(physicsCmpnt, size.x * 0.5f);
-
-	glm::vec4 lightColor(0.8706f, 0.1373f, 0.1373f, 1.0f);
-	const float lightSize = size.x * 1.5f;
-	const float lightGlowSize = size.x * 0.5f;
-	const float lightPulse = 16;
-	const float lightPulseSize = 3;
-
-	mLightSystem.addComponent(entity);
-	LightComponent lightCmpnt = mLightSystem.getComponent(entity);
-	mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
-	mLightSystem.setColor(lightCmpnt, lightColor);
-	mLightSystem.setGlowSize(lightCmpnt, glm::vec2(lightGlowSize));
-	mLightSystem.setSize(lightCmpnt, glm::vec2(lightSize));
-	mLightSystem.setPulse(lightCmpnt, lightPulse);
-	mLightSystem.setPulseSize(lightCmpnt, lightPulseSize);
-
-	mParticleSystem.addComponent(entity);
-	ParticleComponent particleCmpnt = mParticleSystem.getComponent(entity);
-
-	lightColor.a = 0.5f;
-
-	ParticleComponentData emitter = {};
-	emitter.life = 2.9f;
-	emitter.decay = 1.0f;
-	emitter.duration = 1.0f;
-	emitter.emitCount = 4;
-	emitter.delay = 0.0f;
-	emitter.interval = 0.1f;
-	emitter.minSize = 0.25f;
-	emitter.maxSize = 2.0f;
-	emitter.minSpeed = 6.0f;
-	emitter.maxSpeed = 10.0f;
-	emitter.spread = toRadians(45.0f);
-	emitter.direction = glm::vec3(0.0f, -1.5f, 2.0f);
-	emitter.color = lightColor;
-	emitter.height = 24.0f;
-	emitter.width = 8.0f;
-	emitter.radius = 8.0f;
-
-	mParticleSystem.setData(particleCmpnt, emitter);
-
-	if (name != "") {
-		mNameSystem.addComponent(entity);
-		NameComponent nameCmpnt = mNameSystem.getComponent(entity);
-		mNameSystem.setName(nameCmpnt, name);
-	}
-
-	if (prefab != "") {
-		mPrefabFactory.buildPrefab(entity, prefab, *this);
-	}
-
-	return entity;
-}
-
-//  ============================================================================
 Entity World::createPlayerActor(float x, float y, int actorIndex, Direction facing,
 								std::string name) {
 	Entity entity = this->createActor(x, y, glm::vec2(16.0f, 16.0f), actorIndex,
@@ -446,6 +363,11 @@ std::vector<Player*> World::getPlayers() {
 	}
 
 	return players;
+}
+
+//  ============================================================================
+PrefabFactory& World::getPrefabFactory() {
+	return mPrefabFactory;
 }
 
 //  ============================================================================

@@ -108,6 +108,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/vampire_ai.cpp
     src/entity_types/bullet.cpp
     src/entity_types/door.cpp
+    src/entity_types/loot.cpp
     src/gui/gui.cpp
     src/gui/gui_screen.cpp
     src/gui/pause_gui_screen.cpp

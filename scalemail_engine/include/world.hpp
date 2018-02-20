@@ -66,7 +66,6 @@ class World
 public:
 	World();
 	Entity createEntity();
-	void destroyBullet(Entity entity);
 	void destroyEntity(Entity entity);
 	bool entityIsAlive(const Entity& entity);
 	AiBehaviorFactory& getAiBehaviorFactory();
@@ -76,6 +75,7 @@ public:
 	DamageSystem& getDamageSystem();
 	DoorSystem& getDoorSystem();
 	std::vector<Entity> getEntitiesByName(const std::string name) const;
+	ExpireSystem& getExpireSystem();
 	GunSystem& getGunSystem();
 	HealthSystem& getHealthSystem();
 	InventorySystem& getInventorySystem();

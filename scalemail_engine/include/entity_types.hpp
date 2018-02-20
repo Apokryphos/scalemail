@@ -46,4 +46,6 @@ Entity createProp(World& world, const glm::vec2& position,
 
 Entity createTrigger(World& world, const glm::vec2& position,
 					 const glm::vec2& size, const std::string& targetName);
+
+void destroyBullet(World& world, const Entity& entity);
 }

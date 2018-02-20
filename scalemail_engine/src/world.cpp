@@ -43,69 +43,6 @@ Entity World::createEntity() {
 }
 
 //  ============================================================================
-void World::destroyBullet(Entity entity) {
-	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	glm::vec2 bulletPosition = mPhysicsSystem.getPosition(physicsCmpnt);
-	float bulletSpeed = mPhysicsSystem.getSpeed(physicsCmpnt);
-
-	BulletComponent bulletCmpnt = mBulletSystem.getComponent(entity);
-	int impactTilesetId = mBulletSystem.getImpactTilesetId(bulletCmpnt);
-
-	LightComponent lightCmpnt = mLightSystem.getComponent(entity);
-	glm::vec4 lightColor = mLightSystem.getColor(lightCmpnt);
-
-	//	Destroy bullet entity
-	this->destroyEntity(entity);
-
-	//	Create bullet impact effect entity
-	Entity fxEntity = mEntityManager.createEntity();
-
-	mSpriteSystem.addComponent(fxEntity);
-	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(fxEntity);
-	mSpriteSystem.setTileset(spriteCmpnt, "fx");
-	mSpriteSystem.setTilesetId(
-		spriteCmpnt,
-		{ impactTilesetId, impactTilesetId + 1, impactTilesetId + 2 });
-	mSpriteSystem.setAnimationDuration(spriteCmpnt, 0.3f);
-
-	mPhysicsSystem.addComponent(fxEntity);
-	physicsCmpnt = mPhysicsSystem.getComponent(fxEntity);
-	mPhysicsSystem.setPosition(physicsCmpnt, bulletPosition);
-	mPhysicsSystem.setRadius(physicsCmpnt, 0);
-
-	mExpireSystem.addComponent(fxEntity);
-	ExpireComponent expireCmpnt = mExpireSystem.getComponent(fxEntity);
-	mExpireSystem.setDuration(expireCmpnt, 0.3f);
-
-	mLightSystem.addComponent(fxEntity);
-	lightCmpnt = mLightSystem.getComponent(fxEntity);
-	mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
-	mLightSystem.setColor(lightCmpnt, lightColor);
-	mLightSystem.setGlowSize(lightCmpnt, glm::vec2(0));
-	mLightSystem.setSize(lightCmpnt, glm::vec2(48));
-
-	mParticleSystem.addComponent(fxEntity);
-	ParticleComponent particleCmpnt = mParticleSystem.getComponent(fxEntity);
-
-	ParticleComponentData emitter = {};
-	emitter.life = 0.125f;
-	emitter.decay = 1.0f;
-	emitter.duration = 1.0f;
-	emitter.emitCount = 1;
-	emitter.interval = 0.0f;
-	emitter.minSize = 0.5f;
-	emitter.maxSize = 2.0f;
-	emitter.minSpeed = bulletSpeed * 0.1f;
-	emitter.maxSpeed = bulletSpeed * 0.2f;
-	emitter.spread = TWO_PI;
-	emitter.direction = glm::vec3(0.0f, 1.0f, 0.0f);
-	emitter.color = lightColor;
-	emitter.radius = 8.0f;
-
-	mParticleSystem.setData(particleCmpnt, emitter);
-}
-
-//  ============================================================================
 void World::destroyEntity(Entity entity) {
 	if (mAiSystem.hasComponent(entity)) {
 		mAiSystem.removeComponent(entity);
@@ -211,6 +148,11 @@ DoorSystem& World::getDoorSystem() {
 //	============================================================================
 std::vector<Entity> World::getEntitiesByName(const std::string name) const {
 	return mNameSystem.getEntitiesByName(name);
+}
+
+//  ============================================================================
+ExpireSystem& World::getExpireSystem() {
+	return mExpireSystem;
 }
 
 //  ============================================================================

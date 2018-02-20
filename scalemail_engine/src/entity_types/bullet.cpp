@@ -1,8 +1,10 @@
 #include "bullet_data.hpp"
 #include "bullet_system.hpp"
 #include "entity.hpp"
+#include "expire_system.hpp"
 #include "light_data.hpp"
 #include "light_system.hpp"
+#include "math_util.hpp"
 #include "particle_system.hpp"
 #include "physics_system.hpp"
 #include "sprite_system.hpp"
@@ -88,5 +90,74 @@ Entity createBullet(World& world, const Entity& sourceEntity,
 	particleSystem.setData(particleCmpnt, emitter);
 
 	return entity;
+}
+
+//  ============================================================================
+void destroyBullet(World& world, const Entity& entity) {
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	glm::vec2 bulletPosition = physicsSystem.getPosition(physicsCmpnt);
+	float bulletSpeed = physicsSystem.getSpeed(physicsCmpnt);
+
+	BulletSystem& bulletSystem = world.getBulletSystem();
+	BulletComponent bulletCmpnt = bulletSystem.getComponent(entity);
+	int impactTilesetId = bulletSystem.getImpactTilesetId(bulletCmpnt);
+
+	LightSystem& lightSystem = world.getLightSystem();
+	LightComponent lightCmpnt = lightSystem.getComponent(entity);
+	glm::vec4 lightColor = lightSystem.getColor(lightCmpnt);
+
+	//	Destroy bullet entity
+	world.destroyEntity(entity);
+
+	//	Create bullet impact effect entity
+	Entity fxEntity = world.createEntity();
+
+	SpriteSystem& spriteSystem = world.getSpriteSystem();
+	spriteSystem.addComponent(fxEntity);
+	SpriteComponent spriteCmpnt = spriteSystem.getComponent(fxEntity);
+	spriteSystem.setTileset(spriteCmpnt, "fx");
+	spriteSystem.setTilesetId(
+		spriteCmpnt,
+		{ impactTilesetId, impactTilesetId + 1, impactTilesetId + 2 });
+	spriteSystem.setAnimationDuration(spriteCmpnt, 0.3f);
+
+	physicsSystem.addComponent(fxEntity);
+	physicsCmpnt = physicsSystem.getComponent(fxEntity);
+	physicsSystem.setPosition(physicsCmpnt, bulletPosition);
+	physicsSystem.setRadius(physicsCmpnt, 0);
+
+	ExpireSystem& expireSystem = world.getExpireSystem();
+	expireSystem.addComponent(fxEntity);
+	ExpireComponent expireCmpnt = expireSystem.getComponent(fxEntity);
+	expireSystem.setDuration(expireCmpnt, 0.3f);
+
+	lightSystem.addComponent(fxEntity);
+	lightCmpnt = lightSystem.getComponent(fxEntity);
+	lightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
+	lightSystem.setColor(lightCmpnt, lightColor);
+	lightSystem.setGlowSize(lightCmpnt, glm::vec2(0));
+	lightSystem.setSize(lightCmpnt, glm::vec2(48));
+
+	ParticleSystem& particleSystem = world.getParticleSystem();
+	particleSystem.addComponent(fxEntity);
+	ParticleComponent particleCmpnt = particleSystem.getComponent(fxEntity);
+
+	ParticleComponentData emitter = {};
+	emitter.life = 0.125f;
+	emitter.decay = 1.0f;
+	emitter.duration = 1.0f;
+	emitter.emitCount = 1;
+	emitter.interval = 0.0f;
+	emitter.minSize = 0.5f;
+	emitter.maxSize = 2.0f;
+	emitter.minSpeed = bulletSpeed * 0.1f;
+	emitter.maxSpeed = bulletSpeed * 0.2f;
+	emitter.spread = TWO_PI;
+	emitter.direction = glm::vec3(0.0f, 1.0f, 0.0f);
+	emitter.color = lightColor;
+	emitter.radius = 8.0f;
+
+	particleSystem.setData(particleCmpnt, emitter);
 }
 }

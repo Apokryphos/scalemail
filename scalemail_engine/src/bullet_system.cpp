@@ -1,5 +1,6 @@
 #include "bullet_system.hpp"
 #include "entity_collision.hpp"
+#include "entity_types.hpp"
 #include "damage_system.hpp"
 #include "static_collision.hpp"
 #include "vector_util.hpp"
@@ -156,7 +157,7 @@ void BulletSystem::simulate(World& world, float elapsedSeconds) {
 	}
 
 	for (const auto& entity : removeEntities) {
-		world.destroyBullet(entity);
+		destroyBullet(world, entity);
 	}
 }
 }

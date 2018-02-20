@@ -21,6 +21,10 @@
 
 namespace ScaleMail
 {
+static Mesh debugLineMesh;
+static std::vector<float> debugLineVertexData;
+static LineShader debugLineShader;
+
 static Mesh quadMesh;
 static QuadShader colorQuadShader;
 static QuadShader particleShader;
@@ -30,6 +34,10 @@ void initializeRender(AssetManager& assetManager) {
 	quadMesh = assetManager.getQuadMesh();
 	colorQuadShader = assetManager.getColorQuadShader();
 	particleShader = assetManager.getParticleShader();
+
+	debugLineShader = assetManager.getLineShader();
+	initLineMesh(debugLineMesh, {});
+	debugLineVertexData.reserve(500000);
 
 	initializeFont(assetManager);
 	initializeTransition(assetManager);
@@ -74,6 +82,40 @@ void updateStencilBuffer(Camera& camera) {
 	glStencilMask(0x00);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glDepthMask(GL_TRUE);
+}
+
+//	============================================================================
+void renderDebug(Game& game, Camera& camera) {
+	//	Clear vertex data
+	debugLineVertexData.resize(0);
+
+	if (game.devOptions.enabled) {
+		World& world = *game.world;
+
+		if (game.devOptions.drawCollision) {
+			world.getPhysicsSystem().drawDebug(debugLineVertexData);
+		}
+
+		if (game.devOptions.drawAi) {
+			world.getAiSystem().drawDebug(debugLineVertexData);
+		}
+
+		if (game.devOptions.drawTriggers) {
+			world.getTriggerSystem().drawDebug(debugLineVertexData);
+		}
+
+		if (debugLineVertexData.size() > 0) {
+			const glm::mat4 mvp = camera.getProjection() * camera.getView();
+
+			updateMesh(debugLineMesh, debugLineVertexData);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glUseProgram(debugLineShader.id);
+			glUniformMatrix4fv(debugLineShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+			glBindVertexArray(debugLineMesh.vao);
+			glDrawArrays(GL_LINES, 0, debugLineMesh.vertexCount);
+		}
+	}
 }
 
 //	============================================================================
@@ -123,15 +165,7 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	renderTransition();
 
 	//	Debug drawing
-	if (game.devOptions.enabled) {
-		if (game.devOptions.drawCollision) {
-			world.getPhysicsSystem().drawDebug(camera);
-		}
-
-		if (game.devOptions.drawAi) {
-			world.getAiSystem().drawDebug(camera);
-		}
-	}
+	renderDebug(game, camera);
 
 	glDisable(GL_STENCIL_TEST);
 

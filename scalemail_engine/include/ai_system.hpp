@@ -1,8 +1,6 @@
 #pragma once
 
 #include "entity_system.hpp"
-#include "line_shader.hpp"
-#include "mesh.hpp"
 #include <glm/vec2.hpp>
 #include <memory>
 #include <vector>
@@ -10,8 +8,6 @@
 namespace ScaleMail
 {
 class AiBehavior;
-class AssetManager;
-class Camera;
 class World;
 
 struct AiComponent {
@@ -39,10 +35,6 @@ class AiSystem : public EntitySystem
 	std::vector<Obstacle> mObstacles;
 	std::vector<AiComponentData> mData;
 
-	Mesh mLineMesh;
-	LineShader mLineShader;
-	std::vector<float> mLineVertexData;
-
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 
@@ -53,9 +45,8 @@ public:
 	void addObstacle(const glm::vec2& position, const float radius);
 	void addObstacle(const float x, const float y, const float width,
 					 const float height);
-	void drawDebug(const Camera& camera);
+	void drawDebug(std::vector<float>& lineVertexData);
 	AiComponent getComponent(const Entity& entity) const;
-	void initialize(AssetManager& assetManager);
 	void setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction);
 	void update(World& world, float elapsedSeconds);
 };

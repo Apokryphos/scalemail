@@ -13,6 +13,7 @@ struct DevOptions
 	bool camera3d;
 	bool drawAi;
 	bool drawCollision;
+	bool drawTriggers;
 	bool enabled;
 	bool step;
 	int stepCount;

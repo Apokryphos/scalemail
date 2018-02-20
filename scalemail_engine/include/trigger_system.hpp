@@ -33,6 +33,7 @@ class TriggerSystem : public EntitySystem
 
 public:
 	TriggerSystem(EntityManager& entityManager, int maxComponents = 1000);
+	void drawDebug(std::vector<float>& lineVertexData);
 	TriggerComponent getComponent(const Entity& entity) const;
   	void setPosition(const TriggerComponent& cmpnt, const glm::vec2 position);
 	void setSize(const TriggerComponent& cmpnt, const glm::vec2 size);

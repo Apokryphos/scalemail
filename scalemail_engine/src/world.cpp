@@ -236,11 +236,9 @@ void World::initialize(AssetManager* assetManager) {
 	mSpriteSystem.initialize(assetManager);
 	mLightSystem.initialize(*assetManager);
 	mDoorSystem.initialize(mPhysicsSystem, mSpriteSystem);
-	mPhysicsSystem.initialize(*assetManager);
 	mBulletSystem.initialize(mDamageSystem);
 	mBurySystem.initialize(mRandom, mPhysicsSystem, mSpriteSystem);
 	mParticleSystem.initialize(mRandom);
-	mAiSystem.initialize(*assetManager);
 	mLootSystem.initialize(mInventorySystem);
 }
 

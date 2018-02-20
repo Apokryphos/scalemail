@@ -1,8 +1,6 @@
 #pragma once
 
 #include "entity_system.hpp"
-#include "line_shader.hpp"
-#include "mesh.hpp"
 #include "entity_collision.hpp"
 #include "static_collision.hpp"
 #include "trigger.hpp"
@@ -14,9 +12,6 @@
 
 namespace ScaleMail
 {
-class AssetManager;
-class Camera;
-
 struct PhysicsComponent {
 	PhysicsComponent(const int index) { this->index = index; }
 	int index;
@@ -41,10 +36,6 @@ class PhysicsSystem : public EntitySystem
 	std::vector<std::function<void(EntityCollision&)>> mEntityCollisionCallbacks;
 	std::vector<std::function<void(StaticCollision&)>> mStaticCollisionCallbacks;
 
-	Mesh mLineMesh;
-	LineShader mLineShader;
-	std::vector<float> mLineVertexData;
-
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 
@@ -57,7 +48,7 @@ public:
 	void addStaticObstacle(const float x,     const float y,
 						   const float width, const float height);
 	void clearStaticObstacles();
-	void drawDebug(const Camera& camera);
+	void drawDebug(std::vector<float>& lineVertexData);
 	CollisionGroup getCollisionGroup(const PhysicsComponent& cmpnt) const;
 	PhysicsComponent getComponent(const Entity& entity) const;
 	glm::vec2 getDirection(const PhysicsComponent& cmpnt) const;
@@ -66,7 +57,6 @@ public:
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
 	float getRadius(const PhysicsComponent& cmpnt) const;
 	float getSpeed(const PhysicsComponent& cmpnt) const;
-	void initialize(AssetManager& assetManager);
 	void setCollisionGroup(const PhysicsComponent& cmpnt,
 						   const CollisionGroup group);
 	void setDirection(const PhysicsComponent& cmpnt, const glm::vec2 direction);

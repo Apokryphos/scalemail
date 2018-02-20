@@ -5,6 +5,7 @@
 #include "trigger_collision.hpp"
 #include "trigger_system.hpp"
 #include "vector_util.hpp"
+#include "vertex_data.hpp"
 #include <glm/vec4.hpp>
 
 namespace ScaleMail
@@ -28,6 +29,16 @@ void TriggerSystem::createComponent() {
 //	============================================================================
 void TriggerSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mData, index);
+}
+
+//	============================================================================
+void TriggerSystem::drawDebug(std::vector<float>& lineVertexData) {
+	const glm::vec4 triggerColor = glm::vec4(0.0f, 0.1f, 1.0f, 1.0f);
+
+	for (const auto& data : mData) {
+		addQuadLineVertexData(lineVertexData, data.position, data.size,
+							  triggerColor);
+	}
 }
 
 //	============================================================================

@@ -1,4 +1,3 @@
-#include "asset_manager.hpp"
 #include "camera.hpp"
 #include "collision.hpp"
 #include "collision_test.hpp"
@@ -59,12 +58,8 @@ void PhysicsSystem::clearStaticObstacles() {
 }
 
 //	============================================================================
-void PhysicsSystem::drawDebug(const Camera& camera) {
-	const glm::mat4 mvp = camera.getProjection() * camera.getView();
-
+void PhysicsSystem::drawDebug(std::vector<float>& lineVertexData) {
 	const int lineCount = 16;
-
-	mLineVertexData.resize(0);
 
 	const glm::vec4 circleColor = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
 
@@ -82,19 +77,19 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 			float y1 = position.y + radius * sin(n * TWO_PI / lineCount);
 			float y2 = position.y + radius * sin((n + 1) * TWO_PI / lineCount);
 
-			mLineVertexData.emplace_back(x1);
-			mLineVertexData.emplace_back(y1);
-			mLineVertexData.emplace_back(circleColor.r);
-			mLineVertexData.emplace_back(circleColor.g);
-			mLineVertexData.emplace_back(circleColor.b);
-			mLineVertexData.emplace_back(circleColor.a);
+			lineVertexData.emplace_back(x1);
+			lineVertexData.emplace_back(y1);
+			lineVertexData.emplace_back(circleColor.r);
+			lineVertexData.emplace_back(circleColor.g);
+			lineVertexData.emplace_back(circleColor.b);
+			lineVertexData.emplace_back(circleColor.a);
 
-			mLineVertexData.emplace_back(x2);
-			mLineVertexData.emplace_back(y2);
-			mLineVertexData.emplace_back(circleColor.r);
-			mLineVertexData.emplace_back(circleColor.g);
-			mLineVertexData.emplace_back(circleColor.b);
-			mLineVertexData.emplace_back(circleColor.a);
+			lineVertexData.emplace_back(x2);
+			lineVertexData.emplace_back(y2);
+			lineVertexData.emplace_back(circleColor.r);
+			lineVertexData.emplace_back(circleColor.g);
+			lineVertexData.emplace_back(circleColor.b);
+			lineVertexData.emplace_back(circleColor.a);
 		}
 	}
 
@@ -104,7 +99,7 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
-		addQuadLineVertexData(mLineVertexData, position, size, staticColor);
+		addQuadLineVertexData(lineVertexData, position, size, staticColor);
 	}
 
 	const glm::vec4 staticActorColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
@@ -113,16 +108,8 @@ void PhysicsSystem::drawDebug(const Camera& camera) {
 		glm::vec2 position = glm::vec2(rect.x, rect.y);
 		glm::vec2 size = glm::vec2(rect.z, rect.w);
 
-		addQuadLineVertexData(mLineVertexData, position, size, staticActorColor);
+		addQuadLineVertexData(lineVertexData, position, size, staticActorColor);
 	}
-
-	updateMesh(mLineMesh, mLineVertexData);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glUseProgram(mLineShader.id);
-	glUniformMatrix4fv(mLineShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-	glBindVertexArray(mLineMesh.vao);
-	glDrawArrays(GL_LINES, 0, mLineMesh.vertexCount);
 }
 
 //	============================================================================
@@ -210,12 +197,6 @@ float PhysicsSystem::getRadius(const PhysicsComponent& cmpnt) const {
 //	============================================================================
 float PhysicsSystem::getSpeed(const PhysicsComponent& cmpnt) const {
 	return mSpeed[cmpnt.index];
-}
-
-//	============================================================================
-void PhysicsSystem::initialize(AssetManager& assetManager) {
-	mLineShader = assetManager.getLineShader();
-	initLineMesh(mLineMesh, {});
 }
 
 //	============================================================================

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <random>
 #include <vector>
 
@@ -15,6 +16,18 @@ public:
 		std::seed_seq seed{rd(), rd(), rd(), rd(), rd(), rd(), rd(), rd()};
 		mEngine = std::mt19937(seed);
 	}
+
+	template <typename T>
+	std::optional<T> getRandomOptionalElement(const std::vector<T>& v) {
+		if (v.size() == 0) {
+			return {};
+		}
+
+		std::uniform_int_distribution<int> dist(0, v.size() - 1);
+		int index = dist(mEngine);
+		return v[index];
+	}
+
 
 	template <typename T>
 	T getRandomElement(const std::vector<T>& v) {

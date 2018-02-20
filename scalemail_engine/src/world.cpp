@@ -489,6 +489,10 @@ void World::destroyEntity(Entity entity) {
 		mTriggerSystem.removeComponent(entity);
 	}
 
+	if (mLootSystem.hasComponent(entity)) {
+		mLootSystem.removeComponent(entity);
+	}
+
 	mEntityManager.destroyEntity(entity);
 }
 

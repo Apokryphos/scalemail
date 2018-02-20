@@ -25,6 +25,7 @@ public:
 	EntitySystem(EntityManager& entityManager, unsigned int maxComponents);
 	void addComponent(const Entity& entity);
 	void garbageCollect();
+	std::vector<Entity> getEntities() const;
 	EntityManager& getEntityManager();
 	bool hasComponent(const Entity& entity) const;
 	const size_t maxComponents;

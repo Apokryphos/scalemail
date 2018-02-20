@@ -46,7 +46,7 @@ void LootSystem::onEntityCollision(EntityCollision& collision) {
 
 	collision.ignore = true;
 
-	if (collision.sourceGroup == CollisionGroup::PLAYER_ACTOR) {
+	// if (collision.sourceGroup == CollisionGroup::PLAYER_ACTOR) {
 		if (this->hasComponent(collision.targetEntity)) {
 			LootComponent lootCmpnt = this->getComponent(collision.targetEntity);
 
@@ -58,7 +58,7 @@ void LootSystem::onEntityCollision(EntityCollision& collision) {
 			mLootable[lootCmpnt.index] = false;
 			mTargetEntity[lootCmpnt.index] = collision.sourceEntity;
 		}
-	}
+	// }
 }
 
 //	============================================================================

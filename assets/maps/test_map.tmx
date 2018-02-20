@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" nextobjectid="303">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" nextobjectid="306">
  <properties>
   <property name="CollisionLayer" type="int" value="0"/>
  </properties>
@@ -419,6 +419,9 @@
  </objectgroup>
  <objectgroup name="Items">
   <object id="302" name="Potion" type="Item" gid="834" x="179" y="147" width="16" height="16"/>
+  <object id="303" name="Potion" type="Item" gid="834" x="231" y="53" width="16" height="16"/>
+  <object id="304" name="Potion" type="Item" gid="834" x="329" y="123" width="16" height="16"/>
+  <object id="305" name="Potion" type="Item" gid="834" x="427" y="104" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Props"/>
  <objectgroup name="Collision">

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <stdexcept>
+
 namespace ScaleMail
 {
 enum class CollisionGroup : uint8_t

@@ -17,7 +17,8 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager),
 				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager),
 				 mSpriteEffectSystem(mEntityManager),
-				 mBurySystem(mEntityManager), mParticleSystem(mEntityManager) {
+				 mBurySystem(mEntityManager), mParticleSystem(mEntityManager),
+				 mLootSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -29,6 +30,10 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 
 	mPhysicsSystem.addStaticCollisionCallback(
 		std::bind(&BulletSystem::onStaticCollision, &mBulletSystem,
+				  std::placeholders::_1));
+
+	mPhysicsSystem.addEntityCollisionCallback(
+		std::bind(&LootSystem::onEntityCollision, &mLootSystem,
 				  std::placeholders::_1));
 }
 
@@ -222,6 +227,13 @@ Entity World::createEntity() {
 Entity World::createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
 						  std::string name, std::string prefab) {
 	Entity entity = mEntityManager.createEntity();
+
+	Item item = {};
+	item.tilesetId = tilesetId;
+
+	mLootSystem.addComponent(entity);
+	LootComponent lootCmpnt = mLootSystem.getComponent(entity);
+	mLootSystem.setItem(lootCmpnt, item);
 
 	mSpriteSystem.addComponent(entity);
 	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
@@ -521,6 +533,11 @@ LightSystem& World::getLightSystem() {
 }
 
 //  ============================================================================
+LootSystem& World::getLootSystem() {
+	return mLootSystem;
+}
+
+//  ============================================================================
 ParticleSystem& World::getParticleSystem() {
 	return mParticleSystem;
 }
@@ -641,5 +658,7 @@ void World::update(float elapsedSeconds) {
 	mExpireSystem.update(*this, elapsedSeconds);
 
 	mParticleSystem.update(mPhysicsSystem, elapsedSeconds);
+
+	mLootSystem.simulate(*this, elapsedSeconds);
 }
 }

@@ -382,6 +382,11 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 				vsPlayerBulletTests.push_back(test);
 				break;
 			}
+			case CollisionGroup::ITEM: {
+				vsPlayerActorTests.push_back(test);
+				vsActorTests.push_back(test);
+				break;
+			}
 			default:
 				break;
 		}

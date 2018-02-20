@@ -15,6 +15,21 @@ static void buildBlob(Entity entity, World& world) {
 }
 
 //  ============================================================================
+static void buildHealthPotion(Entity entity, World& world) {
+	SpriteSystem& spriteSystem = world.getSpriteSystem();
+	SpriteComponent spriteCmpnt = spriteSystem.getComponent(entity);
+	int tilesetId = spriteSystem.getTilesetId(spriteCmpnt);
+
+	Item item = {};
+	item.heal = 50.0f;
+	item.tilesetId = tilesetId;
+
+	LootSystem& lootSystem = world.getLootSystem();
+	LootComponent lootCmpnt = lootSystem.getComponent(entity);
+	world.getLootSystem().setItem(lootCmpnt, item);
+}
+
+//  ============================================================================
 static void buildSkeleton(Entity entity, World& world) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
@@ -46,6 +61,8 @@ void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 		buildSkeleton(entity, world);
 	} else if (prefabName == "vampire") {
 		buildVampire(entity, world);
+	} else if (prefabName == "healthpotion") {
+		buildHealthPotion(entity, world);
 	}
 }
 }

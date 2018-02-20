@@ -162,8 +162,6 @@ void AiSystem::drawDebug(const Camera& camera) {
 	const glm::vec4 moveColor(0.25f, 0.25f, 1.0f, 1.0f);
 	const glm::vec4 seekColor(0.25f, 1.0f, 0.25f, 1.0f);
 
-	size_t c = 0;
-	size_t v = 0;
 	for (size_t n = 0; n < mData.size(); ++n) {
 		const AiComponentData& data = mData[n];
 

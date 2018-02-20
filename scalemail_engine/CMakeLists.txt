@@ -59,6 +59,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/light_system.hpp
     include/light.hpp
     include/line_shader.hpp
+    include/loot_system.hpp
     include/main_game_state.hpp
     include/map_load.hpp
     include/map_mesh.hpp
@@ -139,6 +140,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/layer.cpp
     src/light.cpp
     src/light_system.cpp
+    src/loot_system.cpp
     src/main_game_state.cpp
     src/mesh.cpp
     src/map.cpp

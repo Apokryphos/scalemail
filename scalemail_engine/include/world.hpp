@@ -13,6 +13,7 @@
 #include "gun_system.hpp"
 #include "health_system.hpp"
 #include "light_system.hpp"
+#include "loot_system.hpp"
 #include "name_system.hpp"
 #include "particle_system.hpp"
 #include "physics_system.hpp"
@@ -56,6 +57,7 @@ class World
 	SpriteEffectSystem mSpriteEffectSystem;
 	BurySystem mBurySystem;
 	ParticleSystem mParticleSystem;
+	LootSystem mLootSystem;
 
 	std::vector<Player> mPlayers;
 
@@ -98,6 +100,7 @@ public:
 	GunSystem& getGunSystem();
 	HealthSystem& getHealthSystem();
 	LightSystem& getLightSystem();
+	LootSystem& getLootSystem();
 	Map* getMap();
 	NameSystem& getNameSystem();
 	ParticleSystem& getParticleSystem();

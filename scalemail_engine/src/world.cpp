@@ -18,7 +18,7 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager),
 				 mSpriteEffectSystem(mEntityManager),
 				 mBurySystem(mEntityManager), mParticleSystem(mEntityManager),
-				 mLootSystem(mEntityManager) {
+				 mLootSystem(mEntityManager), mInventorySystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -322,6 +322,8 @@ Entity World::createPlayerActor(float x, float y, int actorIndex, Direction faci
 	mGunSystem.setBulletDamage(gunCmpnt, 10.0f);
 	mGunSystem.setCooldownDuration(gunCmpnt, 0.1f);
 
+	mInventorySystem.addComponent(entity);
+
 	return entity;
 }
 
@@ -493,6 +495,10 @@ void World::destroyEntity(Entity entity) {
 		mLootSystem.removeComponent(entity);
 	}
 
+	if (mInventorySystem.hasComponent(entity)) {
+		mInventorySystem.removeComponent(entity);
+	}
+
 	mEntityManager.destroyEntity(entity);
 }
 
@@ -529,6 +535,11 @@ GunSystem& World::getGunSystem() {
 //  ============================================================================
 HealthSystem& World::getHealthSystem() {
 	return mHealthSystem;
+}
+
+//  ============================================================================
+InventorySystem& World::getInventorySystem() {
+	return mInventorySystem;
 }
 
 //  ============================================================================
@@ -602,6 +613,7 @@ void World::initialize(AssetManager* assetManager) {
 	mBurySystem.initialize(mRandom, mPhysicsSystem, mSpriteSystem);
 	mParticleSystem.initialize(mRandom);
 	mAiSystem.initialize(*assetManager);
+	mLootSystem.initialize(mInventorySystem);
 }
 
 //  ============================================================================

@@ -7,6 +7,7 @@
 namespace ScaleMail
 {
 struct EntityCollision;
+struct InventorySystem;
 class World;
 
 struct LootComponent {
@@ -20,12 +21,15 @@ class LootSystem : public EntitySystem
 	std::vector<Entity> mTargetEntity;
 	std::vector<Item> mItem;
 
+	InventorySystem* mInventorySystem;
+
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 
 public:
 	LootSystem(EntityManager& entityManager, int maxComponents = 1000);
 	LootComponent getComponent(const Entity& entity) const;
+	void initialize(InventorySystem& inventorySystem);
 	void onEntityCollision(EntityCollision& collision);
 	void setItem(const LootComponent& cmpnt, struct Item& item);
 	void simulate(World& world, float elapsedSeconds);

@@ -39,6 +39,11 @@ LootComponent LootSystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
+void LootSystem::initialize(InventorySystem& inventorySystem) {
+	mInventorySystem = &inventorySystem;
+}
+
+//	============================================================================
 void LootSystem::onEntityCollision(EntityCollision& collision) {
 	if (collision.targetGroup != CollisionGroup::ITEM) {
 		return;
@@ -46,19 +51,22 @@ void LootSystem::onEntityCollision(EntityCollision& collision) {
 
 	collision.ignore = true;
 
-	// if (collision.sourceGroup == CollisionGroup::PLAYER_ACTOR) {
-		if (this->hasComponent(collision.targetEntity)) {
-			LootComponent lootCmpnt = this->getComponent(collision.targetEntity);
+	//	Only entities with inventory components can pick up loot
+	if (!mInventorySystem->hasComponent(collision.sourceEntity)) {
+		return;
+	}
 
-			if (!mLootable[lootCmpnt.index]) {
-				//	Item was already looted this frame
-				return;
-			}
+	if (this->hasComponent(collision.targetEntity)) {
+		LootComponent lootCmpnt = this->getComponent(collision.targetEntity);
 
-			mLootable[lootCmpnt.index] = false;
-			mTargetEntity[lootCmpnt.index] = collision.sourceEntity;
+		if (!mLootable[lootCmpnt.index]) {
+			//	Item was already looted this frame
+			return;
 		}
-	// }
+
+		mLootable[lootCmpnt.index] = false;
+		mTargetEntity[lootCmpnt.index] = collision.sourceEntity;
+	}
 }
 
 //	============================================================================
@@ -74,19 +82,24 @@ void LootSystem::simulate(World& world, float elapsedSeconds) {
 		const int index = p.first;
 
 		if (!mLootable[index]) {
-			if (mItem[index].heal > 0.0f) {
-				HealthSystem& healthSystem = world.getHealthSystem();
+			InventoryComponent inventoryCmpnt =
+				mInventorySystem->getComponent(mTargetEntity[index]);
 
-				if (healthSystem.hasComponent(mTargetEntity[index])) {
-					HealthComponent healthCmpnt =
-						healthSystem.getComponent(mTargetEntity[index]);
+			mInventorySystem->addItem(inventoryCmpnt, mItem[index]);
 
-					HealthGauge& healthGauge =
-						healthSystem.getHealthGauge(healthCmpnt);
+			// if (mItem[index].heal > 0.0f) {
+			// 	HealthSystem& healthSystem = world.getHealthSystem();
 
-					healthGauge.add(mItem[index].heal);
-				}
-			}
+			// 	if (healthSystem.hasComponent(mTargetEntity[index])) {
+			// 		HealthComponent healthCmpnt =
+			// 			healthSystem.getComponent(mTargetEntity[index]);
+
+			// 		HealthGauge& healthGauge =
+			// 			healthSystem.getHealthGauge(healthCmpnt);
+
+			// 		healthGauge.add(mItem[index].heal);
+			// 	}
+			// }
 
 			removeEntities.push_back(p.second);
 		}

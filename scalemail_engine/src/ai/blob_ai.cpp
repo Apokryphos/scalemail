@@ -12,7 +12,8 @@
 
 namespace ScaleMail
 {
-const float MIN_LOOT_RANGE = 128.0f;
+const int MAX_ITEM_CARRY = 3;
+const float MIN_LOOT_RANGE = 256.0f;
 const float NORMAL_SPEED = 16.0f;
 const float LOOT_CHASE_SPEED = 64.0f;
 
@@ -66,39 +67,49 @@ void BlobAi::think(World& world, float elapsedSeconds) {
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 	glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 
-	if (!mTargetEntity.has_value() ||
-		!world.getLootSystem().hasComponent(mTargetEntity.value())) {
-		//	Assign a new target
-		mTargetEntity = getRandomLootInRange(world, position, MIN_LOOT_RANGE);
+	InventorySystem& inventorySystem = world.getInventorySystem();
+	InventoryComponent inventoryCmpnt = inventorySystem.getComponent(entity);
+
+	//	Chase loot if inventory isn't full
+	if (inventorySystem.getItemCount(inventoryCmpnt) < MAX_ITEM_CARRY) {
+		if (!mTargetEntity.has_value() ||
+			!world.getLootSystem().hasComponent(mTargetEntity.value())) {
+			//	Assign a new target
+			mTargetEntity = getRandomLootInRange(world, position, MIN_LOOT_RANGE);
+		}
+
+		if (mTargetEntity.has_value() &&
+			world.getLootSystem().hasComponent(mTargetEntity.value())) {
+			PhysicsComponent targetPhysicsCmpnt =
+				physicsSystem.getComponent(mTargetEntity.value());
+			glm::vec2 targetPosition = physicsSystem.getPosition(targetPhysicsCmpnt);
+
+			//	Increase speed
+			physicsSystem.setSpeed(physicsCmpnt, LOOT_CHASE_SPEED);
+
+			//	Set move direction towards target
+			AiSystem& aiSystem = world.getAiSystem();
+			AiComponent aiCmpnt = aiSystem.getComponent(entity);
+			aiSystem.setMoveDirection(aiCmpnt, targetPosition - position);
+
+			//	Stop running AI
+			return;
+		}
 	}
 
-	if (mTargetEntity.has_value() &&
-		world.getLootSystem().hasComponent(mTargetEntity.value())) {
-		PhysicsComponent targetPhysicsCmpnt =
-			physicsSystem.getComponent(mTargetEntity.value());
-		glm::vec2 targetPosition = physicsSystem.getPosition(targetPhysicsCmpnt);
+	//	Wander
+	Random& random = world.getRandom();
 
-		//	Increase speed
-		physicsSystem.setSpeed(physicsCmpnt, LOOT_CHASE_SPEED);
+	//	Set speed to normal
+	physicsSystem.setSpeed(physicsCmpnt, NORMAL_SPEED);
 
-		//	Set move direction towards target
-		AiSystem& aiSystem = world.getAiSystem();
-		AiComponent aiCmpnt = aiSystem.getComponent(entity);
-		aiSystem.setMoveDirection(aiCmpnt, targetPosition - position);
-	} else {
-		Random& random = world.getRandom();
+	//	Pick random direction
+	glm::vec2 direction =
+		rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
 
-		//	Set speed to normal
-		physicsSystem.setSpeed(physicsCmpnt, NORMAL_SPEED);
-
-		//	Pick random direction
-		glm::vec2 direction =
-			rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
-
-		//	Set move direction
-		AiSystem& aiSystem = world.getAiSystem();
-		AiComponent aiCmpnt = aiSystem.getComponent(entity);
-		aiSystem.setMoveDirection(aiCmpnt, direction);
-	}
+	//	Set move direction
+	AiSystem& aiSystem = world.getAiSystem();
+	AiComponent aiCmpnt = aiSystem.getComponent(entity);
+	aiSystem.setMoveDirection(aiCmpnt, direction);
 }
 }

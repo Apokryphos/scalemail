@@ -12,6 +12,7 @@
 #include "expire_system.hpp"
 #include "gun_system.hpp"
 #include "health_system.hpp"
+#include "inventory_system.hpp"
 #include "light_system.hpp"
 #include "loot_system.hpp"
 #include "name_system.hpp"
@@ -58,6 +59,7 @@ class World
 	BurySystem mBurySystem;
 	ParticleSystem mParticleSystem;
 	LootSystem mLootSystem;
+	InventorySystem mInventorySystem;
 
 	std::vector<Player> mPlayers;
 
@@ -99,6 +101,7 @@ public:
 	std::vector<Entity> getEntitiesByName(const std::string name) const;
 	GunSystem& getGunSystem();
 	HealthSystem& getHealthSystem();
+	InventorySystem& getInventorySystem();
 	LightSystem& getLightSystem();
 	LootSystem& getLootSystem();
 	Map* getMap();

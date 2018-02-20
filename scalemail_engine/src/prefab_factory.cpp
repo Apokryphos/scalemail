@@ -12,6 +12,8 @@ static void buildBlob(Entity entity, World& world) {
 	SpriteSystem& spriteSystem = world.getSpriteSystem();
 	SpriteComponent spriteCmpnt = spriteSystem.getComponent(entity);
 	spriteSystem.setColor(spriteCmpnt, glm::vec4(1.0f, 1.0f, 1.0f, 0.5f));
+
+	world.getInventorySystem().addComponent(entity);
 }
 
 //  ============================================================================

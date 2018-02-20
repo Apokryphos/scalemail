@@ -55,6 +55,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/input_state.hpp
     include/input.hpp
     include/intro_game_state.hpp
+    include/inventory_system.hpp
     include/layer.hpp
     include/light_data.hpp
     include/light_system.hpp
@@ -139,6 +140,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/health_system.cpp
     src/input.cpp
     src/intro_game_state.cpp
+    src/inventory_system.cpp
     src/layer.cpp
     src/light.cpp
     src/light_system.cpp

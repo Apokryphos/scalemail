@@ -120,31 +120,6 @@ Entity World::createPlayerActor(float x, float y, int actorIndex, Direction faci
 }
 
 //  ============================================================================
-Entity World::createProp(glm::vec2 position, int tilesetId, bool decal) {
-	return this->createProp(position, tilesetId, tilesetId, decal);
-}
-
-//  ============================================================================
-Entity World::createProp(glm::vec2 position, int frame1TilesetId,
-						 int frame2TilesetId, bool decal) {
-	Entity entity = mEntityManager.createEntity();
-
-	mSpriteSystem.addComponent(entity);
-	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
-	mSpriteSystem.setDecal(spriteCmpnt, decal);
-	mSpriteSystem.setTileset(spriteCmpnt, "world");
-	mSpriteSystem.setTilesetId(spriteCmpnt,
-							   { frame1TilesetId, frame2TilesetId });
-
-	mPhysicsSystem.addComponent(entity);
-	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	mPhysicsSystem.setPosition(physicsCmpnt, position + glm::vec2(8.0f, -8.0f));
-	mPhysicsSystem.setRadius(physicsCmpnt, 0);
-
-	return entity;
-}
-
-//  ============================================================================
 void World::destroyBullet(Entity entity) {
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	glm::vec2 bulletPosition = mPhysicsSystem.getPosition(physicsCmpnt);

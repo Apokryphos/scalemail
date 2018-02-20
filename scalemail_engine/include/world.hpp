@@ -74,9 +74,6 @@ public:
 	Entity createPlayerActor(float x, float y, int actorIndex,
 							 Direction facing = Direction::SOUTH,
 							 const std::string name = "");
-	Entity createProp(glm::vec2 position, int tilesetId, bool decal);
-	Entity createProp(glm::vec2 position, int frame1TilesetId,
-					  int frame2TilesetId, bool decal);
 	void destroyBullet(Entity entity);
 	void destroyEntity(Entity entity);
 	bool entityIsAlive(const Entity& entity);

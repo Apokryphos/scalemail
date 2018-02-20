@@ -28,6 +28,12 @@ Entity createLoot(World& world, const glm::vec2& position,
 				  const glm::vec2& size, const int tilesetId,
 				  const std::string& name, const std::string& prefab);
 
+Entity createProp(World& world, const glm::vec2& position, const int tilesetId,
+				  const bool decal);
+
+Entity createProp(World& world, const glm::vec2& position,
+				  const int frame1TilesetId, int frame2TilesetId, bool decal);
+
 Entity createTrigger(World& world, const glm::vec2& position,
 					 const glm::vec2& size, const std::string& targetName);
 }

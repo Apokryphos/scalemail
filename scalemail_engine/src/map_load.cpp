@@ -593,11 +593,9 @@ static void processLightObject(World& world,
 static void processMiscObject(World& world,
 							  const TmxMapLib::Object& object,
 							  const TmxMapLib::Map& tmxMap) {
-	const float x = object.GetX();
-	const float y = object.GetY();
+	const glm::vec2 position(object.GetX(), object.GetY());
 
 	auto const tile = object.GetTile();
-
 	const int tilesetId = tile->GetGid() - 1;
 
 	bool decal = getDecal(tmxMap, tile->GetGid());
@@ -605,7 +603,7 @@ static void processMiscObject(World& world,
 	int nextFrame = tilesetId;
 	getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame);
 
-	world.createProp(glm::vec2(x, y), tilesetId, nextFrame, decal);
+	createProp(world, position, tilesetId, nextFrame, decal);
 }
 
 //  ============================================================================
@@ -673,13 +671,12 @@ static void processTorchObject(World& world,
 	int nextFrame = tilesetId;
 	getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame);
 
-	const float x = object.GetX();
-	const float y = object.GetY();
+	const glm::vec2 position(object.GetX(), object.GetY());
 
 	bool decal = getDecal(tmxMap, tile->GetGid());
 
-	Entity entity = world.createProp(glm::vec2(x, y), tilesetId, nextFrame,
-									 decal);
+	Entity entity =
+		createProp(world, position, tilesetId, nextFrame, decal);
 
 	LightSystem& lightSystem = world.getLightSystem();
 	lightSystem.addComponent(entity);

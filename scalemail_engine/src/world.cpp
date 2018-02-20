@@ -94,51 +94,6 @@ Entity World::createActor(float x, float y, glm::vec2 size, int actorIndex,
 }
 
 //  ============================================================================
-Entity World::createDoor(float x, float y, int openTilesetId,
-						 int closedTilesetId, bool open, const std::string name) {
-	Entity entity = mEntityManager.createEntity();
-
-	mPhysicsSystem.addComponent(entity);
-	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
-	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::STATIC);
-
-	mSpriteSystem.addComponent(entity);
-	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
-	mSpriteSystem.setTileset(spriteCmpnt, "world");
-	mSpriteSystem.setTilesetId(spriteCmpnt,
-							   { open ? openTilesetId : closedTilesetId });
-
-	mDoorSystem.addComponent(entity);
-	DoorComponent doorCmpnt = mDoorSystem.getComponent(entity);
-	mDoorSystem.setTilesetId(doorCmpnt, openTilesetId, closedTilesetId);
-	mDoorSystem.setOpen(doorCmpnt, open);
-
-	if (name != "") {
-		mNameSystem.addComponent(entity);
-		NameComponent nameCmpnt = mNameSystem.getComponent(entity);
-		mNameSystem.setName(nameCmpnt, name);
-	}
-
-	return entity;
-}
-
-//  ============================================================================
-Entity World::createDoor(float x, float y, int openTilesetId,
-						 int closedTilesetId, int childOpenTilesetId,
-						 int childClosedTilesetId, bool open,
-						 const std::string name) {
-	Entity entity = this->createDoor(x, y, openTilesetId, closedTilesetId,
-									 open, name);
-
-	DoorComponent doorCmpnt = mDoorSystem.getComponent(entity);
-	mDoorSystem.setChildTilesetId(doorCmpnt, childOpenTilesetId,
-								  childClosedTilesetId);
-
-	return entity;
-}
-
-//  ============================================================================
 Entity World::createEntity() {
 	return mEntityManager.createEntity();
 }

@@ -1,5 +1,6 @@
 #include "ambient_light.hpp"
 #include "direction_util.hpp"
+#include "entity_types.hpp"
 #include "gl_headers.hpp"
 #include "layer.hpp"
 #include "light.hpp"
@@ -489,11 +490,12 @@ static void processDoorObject(World& world,
 		}
 
 		if (tilesetTile->GetPropertySet().GetBoolValue("DoorChild", false)) {
-			world.createDoor(x, y, openTilesetId, closedTilesetId,
-					openTilesetId + 1, closedTilesetId + 1,
-					open, object.GetName());
+			createDoor(world, glm::vec2(x, y), openTilesetId, closedTilesetId,
+					   openTilesetId + 1, closedTilesetId + 1, open,
+					   object.GetName());
 		} else {
-			world.createDoor(x, y, openTilesetId, closedTilesetId, open, object.GetName());
+			createDoor(world, glm::vec2(x, y), openTilesetId, closedTilesetId,
+					   open, object.GetName());
 		}
 
 	} else {

@@ -1,5 +1,5 @@
 #include "bullet_util.hpp"
-#include "entity_create.hpp"
+#include "entity_types.hpp"
 #include "gun_system.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"

@@ -36,9 +36,9 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/door_system.hpp
     include/ease.hpp
     include/entity_collision.hpp
-    include/entity_create.hpp
     include/entity_manager.hpp
     include/entity_system.hpp
+    include/entity_types.hpp
     include/entity_util.hpp
     include/entity.hpp
     include/expire_system.hpp
@@ -106,11 +106,13 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/blob_ai.cpp
     src/ai/skeleton_ai.cpp
     src/ai/vampire_ai.cpp
-    src/ai_behavior_factory.cpp
+    src/entity_types/bullet.cpp
+    src/entity_types/door.cpp
     src/gui/gui.cpp
     src/gui/gui_screen.cpp
     src/gui/pause_gui_screen.cpp
     src/gui/player_hud_gui_screen.cpp
+    src/ai_behavior_factory.cpp
     src/ai_system.cpp
     src/actor_util.cpp
     src/ambient_light.cpp
@@ -127,7 +129,6 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/direction_util.cpp
     src/door_system.cpp
     src/entity.cpp
-    src/entity_create.cpp
     src/entity_manager.cpp
     src/entity_system.cpp
     src/entity_util.cpp

@@ -75,7 +75,7 @@ void LootSystem::setItem(const LootComponent& cmpnt, struct Item& item) {
 }
 
 //	============================================================================
-void LootSystem::simulate(World& world, float elapsedSeconds) {
+void LootSystem::simulate(World& world, [[maybe_unused]]float elapsedSeconds) {
 	std::vector <Entity> removeEntities;
 
 	for (const auto& p : mEntitiesByComponentIndices) {

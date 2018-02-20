@@ -17,7 +17,7 @@ SkeletonAi::SkeletonAi() {
 }
 
 //	============================================================================
-void SkeletonAi::think(World& world, float elapsedSeconds) {
+void SkeletonAi::think(World& world, [[maybe_unused]]float elapsedSeconds) {
 	const Entity entity = this->getEntity();
 
 	if (!actorCanMove(entity, world)) {

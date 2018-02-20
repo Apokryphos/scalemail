@@ -70,12 +70,6 @@ public:
 					   const std::string name = "",
 					   const std::string prefab = "",
 					   const std::string ai = "");
-	Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
-					  bool open, const std::string name = "");
-	Entity createDoor(float x, float y, int openTilesetId,
-					  int closedTilesetId, int childOpenTilesetId,
-					  int childClosedTilesetId, bool open,
-					  const std::string name);
 	Entity createEntity();
 	Entity createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
 					  std::string name, std::string prefab);

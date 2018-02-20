@@ -1,9 +1,40 @@
+#include "entity_types.hpp"
 #include "health_system.hpp"
+#include "inventory_system.hpp"
+#include "physics_system.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"
 
 namespace ScaleMail
 {
+//	============================================================================
+static void dropLoot(World& world, const Entity& entity) {
+	InventorySystem& inventorySystem = world.getInventorySystem();
+
+	if (!inventorySystem.hasComponent(entity)) {
+		return;
+	}
+
+	InventoryComponent inventoryCmpnt = inventorySystem.getComponent(entity);
+
+	if (inventorySystem.getItemCount(inventoryCmpnt) <= 0) {
+		return;
+	}
+
+	PhysicsSystem physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+
+	const glm::vec2 size(16.0f);
+
+	std::vector<Item> items = inventorySystem.getItems(inventoryCmpnt);
+
+	for (auto& item : items) {
+		createLoot(world, position, size, item.tilesetId, item.name,
+				   item.prefab);
+	}
+}
+
 //	============================================================================
 static HealthComponent makeComponent(const int index) {
 	return HealthComponent(index);
@@ -52,10 +83,12 @@ void HealthSystem::update(World& world) {
 
 	for (const auto& p : mEntitiesByComponentIndices) {
 		const int index = p.first;
+		const Entity& entity = p.second;
 
 		if (mData[index].healthGauge.isEmpty()) {
 			//	Only destroy entities if they don't respawn
 			if (!mData[index].respawn) {
+				dropLoot(world, entity);
 				removeEntities.push_back(p.second);
 			} else {
 				//	Fill health gauge for now...

@@ -19,6 +19,8 @@ Entity createLoot(World& world, const glm::vec2& position,
 	Entity entity = world.createEntity();
 
 	Item item = {};
+	item.name = name;
+	item.prefab = prefab;
 	item.tilesetId = tilesetId;
 
 	LootSystem& lootSystem = world.getLootSystem();

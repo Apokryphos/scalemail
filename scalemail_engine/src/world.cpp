@@ -145,23 +145,23 @@ Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
 	ParticleComponent particleCmpnt = mParticleSystem.getComponent(entity);
 
 	ParticleComponentData emitter = {};
-	emitter.life = 0.7f;
+	emitter.life = 0.6f;
 	emitter.decay = 1.0f;
 	emitter.duration = 1.0f;
 	emitter.emitCount = 1;
 	emitter.delay = 0.2f;
-	emitter.interval = 0.0f;
+	emitter.interval = 0.01f;
 	emitter.minSize = 0.5f;
 	emitter.maxSize = 2.0f;
 	emitter.minSpeed = speed * 0.25f;
 	emitter.maxSpeed = speed * 0.33f;
 	emitter.spread = 0.349066f;
 	emitter.direction = glm::vec3(-1, 1, 0.0f);
-	emitter.height = 8.0f;
-	emitter.width = 8.0f;
+	emitter.height = 4.0f;
+	emitter.width = 4.0f;
 	emitter.direction = glm::vec3(-direction, 0.0f);
 	emitter.color = lightColor;
-	emitter.radius = 4.0f;
+	emitter.radius = 2.0f;
 
 	mParticleSystem.setData(particleCmpnt, emitter);
 
@@ -308,6 +308,7 @@ Entity World::createPlayerActor(float x, float y, int actorIndex, Direction faci
 
 	GunComponent gunCmpnt = mGunSystem.getComponent(entity);
 	mGunSystem.setBulletDamage(gunCmpnt, 10.0f);
+	mGunSystem.setCooldownDuration(gunCmpnt, 0.1f);
 
 	return entity;
 }

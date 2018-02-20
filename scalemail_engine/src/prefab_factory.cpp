@@ -23,12 +23,16 @@ static void buildSkeleton(Entity entity, World& world) {
 
 //  ============================================================================
 static void buildVampire(Entity entity, World& world) {
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	physicsSystem.setSpeed(physicsCmpnt, 50.0f);
+
 	GunSystem& gunSystem = world.getGunSystem();
 	GunComponent gunCmpnt = gunSystem.getComponent(entity);
 	gunSystem.setBulletImpactTilesetId(gunCmpnt, getBulletImpactTilesetId(3));
 	gunSystem.setBulletTilesetId(gunCmpnt, getBulletTilesetId(3));
 	gunSystem.setBulletLightColor(gunCmpnt, getBulletLightColor(3));
-	gunSystem.setCooldownDuration(gunCmpnt, 0.1f);
+	gunSystem.setCooldownDuration(gunCmpnt, 0.25f);
 }
 
 //  ============================================================================

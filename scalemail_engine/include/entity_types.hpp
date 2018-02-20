@@ -1,5 +1,6 @@
 #pragma once
 
+#include "direction.hpp"
 #include <glm/vec2.hpp>
 #include <string>
 
@@ -9,6 +10,11 @@ struct BulletData;
 struct Entity;
 struct LightData;
 class World;
+
+Entity createActor(World& world, const glm::vec2& position,
+				   const glm::vec2& size, const int actorIndex,
+				   const Direction facing, const std::string& name,
+				   const std::string& prefab, const std::string& ai);
 
 Entity createBullet(World& world, const Entity& sourceEntity,
 					const glm::vec2& position, const BulletData& bulletData,
@@ -27,6 +33,10 @@ Entity createDoor(World& world, const glm::vec2& position,
 Entity createLoot(World& world, const glm::vec2& position,
 				  const glm::vec2& size, const int tilesetId,
 				  const std::string& name, const std::string& prefab);
+
+Entity createPlayerActor(World& world, const glm::vec2 position,
+						 const int actorIndex, const Direction facing,
+						 const std::string& name);
 
 Entity createProp(World& world, const glm::vec2& position, const int tilesetId,
 				  const bool decal);

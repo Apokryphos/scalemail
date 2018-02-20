@@ -65,18 +65,11 @@ class World
 
 public:
 	World();
-	Entity createActor(float x, float y, glm::vec2 size, int actorIndex,
-					   Direction facing = Direction::SOUTH,
-					   const std::string name = "",
-					   const std::string prefab = "",
-					   const std::string ai = "");
 	Entity createEntity();
-	Entity createPlayerActor(float x, float y, int actorIndex,
-							 Direction facing = Direction::SOUTH,
-							 const std::string name = "");
 	void destroyBullet(Entity entity);
 	void destroyEntity(Entity entity);
 	bool entityIsAlive(const Entity& entity);
+	AiBehaviorFactory& getAiBehaviorFactory();
 	AiSystem& getAiSystem();
 	BulletSystem& getBulletSystem();
 	BurySystem& getBurySystem();

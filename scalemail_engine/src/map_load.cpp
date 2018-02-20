@@ -368,13 +368,11 @@ static void processActorObject(World& world,
 	const std::string aiName = toLowercase(propertySet.GetValue("Ai", ""));
 	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
 
-	const float width = object.GetWidth();
-	const float height = object.GetHeight();
+	const glm::vec2 position(object.GetX(), object.GetY());
+	const glm::vec2 size(object.GetWidth(), object.GetHeight());
 
-	Entity entity = world.createActor(object.GetX(), object.GetY(),
-									  glm::vec2(width, height), actorIndex,
-									  facing, object.GetName(), prefabName,
-									  aiName);
+	Entity entity = createActor(world, position, size, actorIndex, facing,
+								object.GetName(), prefabName, aiName);
 
 	if (object.GetPropertySet().GetBoolValue("Buried", false)) {
 		BurySystem& burySystem = world.getBurySystem();

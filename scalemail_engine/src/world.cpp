@@ -1,6 +1,6 @@
-#include "ai_behavior.hpp"
 #include "bullet_util.hpp"
 #include "direction.hpp"
+#include "entity_types.hpp"
 #include "map.hpp"
 #include "map_load.hpp"
 #include "math_util.hpp"
@@ -38,85 +38,8 @@ World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
 }
 
 //  ============================================================================
-Entity World::createActor(float x, float y, glm::vec2 size, int actorIndex,
-						  Direction facing, std::string name,
-						  std::string prefab, std::string ai) {
-	Entity entity = mEntityManager.createEntity();
-
-	mSpriteSystem.addComponent(entity);
-	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
-	mSpriteSystem.setTileset(spriteCmpnt, "actors");
-	mSpriteSystem.setActorIndex(spriteCmpnt, actorIndex);
-	mSpriteSystem.setFacing(spriteCmpnt, facing);
-	mSpriteSystem.setOffsetY(spriteCmpnt, -4.0f);
-	mSpriteSystem.setSize(spriteCmpnt, size);
-
-	mSpriteEffectSystem.addComponent(entity);
-	SpriteEffectComponent spriteEffectCmpnt =
-		mSpriteEffectSystem.getComponent(entity);
-	mSpriteEffectSystem.setBlinkDuration(spriteEffectCmpnt, 0.75f);
-
-	mPhysicsSystem.addComponent(entity);
-	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	mPhysicsSystem.setPosition(physicsCmpnt, glm::vec2(x + 8.0f, y - 8.0f));
-	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
-	mPhysicsSystem.setRadius(physicsCmpnt, size.x * 0.25f);
-
-	mHealthSystem.addComponent(entity);
-
-	mDamageSystem.addComponent(entity);
-
-	mGunSystem.addComponent(entity);
-
-	if (name != "") {
-		mNameSystem.addComponent(entity);
-		NameComponent nameCmpnt = mNameSystem.getComponent(entity);
-		mNameSystem.setName(nameCmpnt, name);
-	}
-
-	if (ai != "") {
-		std::shared_ptr<AiBehavior> aiBehavior =
-			mAiBehaviorFactory.createAiBehavior(ai);
-
-		if (aiBehavior != nullptr) {
-			aiBehavior->setEntity(entity);
-			mAiSystem.addComponent(entity);
-			AiComponent aiCmpnt = mAiSystem.getComponent(entity);
-			mAiSystem.addBehavior(aiCmpnt, aiBehavior);
-		}
-	}
-
-	if (prefab != "") {
-		mPrefabFactory.buildPrefab(entity, prefab, *this);
-	}
-
-	return entity;
-}
-
-//  ============================================================================
 Entity World::createEntity() {
 	return mEntityManager.createEntity();
-}
-
-//  ============================================================================
-Entity World::createPlayerActor(float x, float y, int actorIndex, Direction facing,
-								std::string name) {
-	Entity entity = this->createActor(x, y, glm::vec2(16.0f, 16.0f), actorIndex,
-									  facing, name);
-
-	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_ACTOR);
-
-	HealthComponent healthCmpnt = mHealthSystem.getComponent(entity);
-	mHealthSystem.setRespawn(healthCmpnt, true);
-
-	GunComponent gunCmpnt = mGunSystem.getComponent(entity);
-	mGunSystem.setBulletDamage(gunCmpnt, 10.0f);
-	mGunSystem.setCooldownDuration(gunCmpnt, 0.1f);
-
-	mInventorySystem.addComponent(entity);
-
-	return entity;
 }
 
 //  ============================================================================
@@ -253,6 +176,11 @@ void World::destroyEntity(Entity entity) {
 	}
 
 	mEntityManager.destroyEntity(entity);
+}
+
+//  ============================================================================
+AiBehaviorFactory& World::getAiBehaviorFactory() {
+	return mAiBehaviorFactory;
 }
 
 //  ============================================================================
@@ -396,9 +324,9 @@ void World::loadMap(const std::string& mapName) {
 	for (size_t p = 0; p < mPlayers.size(); ++p) {
 		PlayerStart& playerStart = playerStarts[p];
 
-		Entity entity = this->createPlayerActor(
-			playerStart.position.x,
-			playerStart.position.y,
+		Entity entity = createPlayerActor(
+			*this,
+			playerStart.position,
 			playerStart.actorIndex,
 			playerStart.facing,
 			"Player" + (p + 1));

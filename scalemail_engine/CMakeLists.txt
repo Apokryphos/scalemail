@@ -106,6 +106,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/blob_ai.cpp
     src/ai/skeleton_ai.cpp
     src/ai/vampire_ai.cpp
+    src/entity_types/actor.cpp
     src/entity_types/bullet.cpp
     src/entity_types/door.cpp
     src/entity_types/loot.cpp

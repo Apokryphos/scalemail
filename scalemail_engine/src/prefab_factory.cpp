@@ -36,6 +36,11 @@ static void buildSkeleton(Entity entity, World& world) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 	physicsSystem.setSpeed(physicsCmpnt, 32.0f);
+
+	HealthSystem& healthSystem = world.getHealthSystem();
+	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
+	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
+	healthGauge.setMax(30.0f);
 }
 
 //  ============================================================================

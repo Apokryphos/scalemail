@@ -48,7 +48,7 @@ static void keyCallback(GLFWwindow* window, int key,
 				game->devOptions.drawCollision =
 					!game->devOptions.drawCollision;
 				std::cout << "Collision debug drawing "
-						  << (game->devOptions.enabled ?
+						  << (game->devOptions.drawCollision ?
 							  "enabled." :
 							  "disabled.")
 						  << std::endl;
@@ -57,7 +57,7 @@ static void keyCallback(GLFWwindow* window, int key,
 			case GLFW_KEY_F2:
 				game->devOptions.drawAi = !game->devOptions.drawAi;
 				std::cout << "AI debug drawing "
-						  << (game->devOptions.enabled ?
+						  << (game->devOptions.drawAi ?
 							  "enabled." :
 							  "disabled.")
 						  << std::endl;
@@ -66,7 +66,7 @@ static void keyCallback(GLFWwindow* window, int key,
 			case GLFW_KEY_F3:
 				game->devOptions.drawTriggers = !game->devOptions.drawTriggers;
 				std::cout << "Trigger debug drawing "
-						  << (game->devOptions.enabled ?
+						  << (game->devOptions.drawTriggers ?
 							  "enabled." :
 							  "disabled.")
 						  << std::endl;

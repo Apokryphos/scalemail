@@ -8,6 +8,7 @@
 #include "main_game_state.hpp"
 #include "map.hpp"
 #include "physics_system.hpp"
+#include "name_system.hpp"
 #include "rectangle.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
@@ -71,8 +72,10 @@ void MainGameState::activate(Game& game) {
 	World& world = *game.world;
 
 	//	Unearth skeletons
+	NameSystem& nameSystem = world.getNameSystem();
+	std::vector<Entity> buriedEntities = nameSystem.getEntitiesByName("Skeleton");
+
 	BurySystem& burySystem = world.getBurySystem();
-	std::vector<Entity> buriedEntities = world.getEntitiesByName("Skeleton");
 	for (const auto entity : buriedEntities) {
 		BuryComponent buryCmpnt = burySystem.getComponent(entity);
 

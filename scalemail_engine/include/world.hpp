@@ -74,7 +74,6 @@ public:
 	BurySystem& getBurySystem();
 	DamageSystem& getDamageSystem();
 	DoorSystem& getDoorSystem();
-	std::vector<Entity> getEntitiesByName(const std::string name) const;
 	ExpireSystem& getExpireSystem();
 	GunSystem& getGunSystem();
 	HealthSystem& getHealthSystem();

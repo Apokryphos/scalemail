@@ -145,11 +145,6 @@ DoorSystem& World::getDoorSystem() {
 	return mDoorSystem;
 }
 
-//	============================================================================
-std::vector<Entity> World::getEntitiesByName(const std::string name) const {
-	return mNameSystem.getEntitiesByName(name);
-}
-
 //  ============================================================================
 ExpireSystem& World::getExpireSystem() {
 	return mExpireSystem;

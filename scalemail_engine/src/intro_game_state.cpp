@@ -7,6 +7,7 @@
 #include "game_window.hpp"
 #include "intro_game_state.hpp"
 #include "map.hpp"
+#include "name_system.hpp"
 #include "transition.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
@@ -61,8 +62,9 @@ void IntroGameState::activate(Game& game) {
 	mCameraStartY = camera.getPosition().y;
 
 	World& world = *game.world;
-	mDoorEntities = world.getEntitiesByName("introDoor");
-	mBuriedEntities = world.getEntitiesByName("Skeleton");
+	NameSystem& nameSystem = world.getNameSystem();
+	mDoorEntities = nameSystem.getEntitiesByName("introDoor");
+	mBuriedEntities = nameSystem.getEntitiesByName("Skeleton");
 
 }
 

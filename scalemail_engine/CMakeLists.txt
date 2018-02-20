@@ -36,6 +36,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/door_system.hpp
     include/ease.hpp
     include/entity_collision.hpp
+    include/entity_create.hpp
     include/entity_manager.hpp
     include/entity_system.hpp
     include/entity_util.hpp
@@ -126,6 +127,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/direction_util.cpp
     src/door_system.cpp
     src/entity.cpp
+    src/entity_create.cpp
     src/entity_manager.cpp
     src/entity_system.cpp
     src/entity_util.cpp

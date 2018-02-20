@@ -43,11 +43,11 @@ public:
 	glm::vec4 getColor(const LightComponent& cmpnt);
 	void initialize(AssetManager& assetManager);
 	void setColor(const LightComponent& cmpnt, const glm::vec4 color);
-	void setGlowSize(const LightComponent& cmpnt, const float glowSize);
+	void setGlowSize(const LightComponent& cmpnt, const glm::vec2 glowSize);
 	void setOffset(const LightComponent& cmpnt, const glm::vec2 offset);
 	void setPulse(const LightComponent& cmpnt, const float pulse);
 	void setPulseSize(const LightComponent& cmpnt, const float pulseSize);
-	void setSize(const LightComponent& cmpnt, const float size);
+	void setSize(const LightComponent& cmpnt, const glm::vec2 size);
 	void update(float elapsedSeconds, const PhysicsSystem& physicsSystem);
 };
 }

@@ -88,8 +88,9 @@ void LightSystem::setColor(const LightComponent& cmpnt, const glm::vec4 color) {
 }
 
 //	============================================================================
-void LightSystem::setGlowSize(const LightComponent& cmpnt, const float glowSize) {
-	mGlowSize[cmpnt.index] = glm::vec2(glowSize);
+void LightSystem::setGlowSize(const LightComponent& cmpnt,
+							  const glm::vec2 glowSize) {
+	mGlowSize[cmpnt.index] = glowSize;
 }
 
 //	============================================================================
@@ -108,8 +109,8 @@ void LightSystem::setPulseSize(const LightComponent& cmpnt, const float pulseSiz
 }
 
 //	============================================================================
-void LightSystem::setSize(const LightComponent& cmpnt, const float size) {
-	mSize[cmpnt.index] = glm::vec2(size);
+void LightSystem::setSize(const LightComponent& cmpnt, const glm::vec2 size) {
+	mSize[cmpnt.index] = size;
 }
 
 //	============================================================================

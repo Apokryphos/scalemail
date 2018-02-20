@@ -554,7 +554,8 @@ static void processItemObject(World& world,
 static void processLightObject(World& world,
 							   const TmxMapLib::Object& object) {
 	//  Scale light size by constant...lights are too small
-	float lightSize = object.GetWidth() * 2.5f;
+	glm::vec2 lightSize =
+		glm::vec2(object.GetWidth(), object.GetHeight()) * 2.5f;
 
 	const auto& propertySet = object.GetPropertySet();
 
@@ -684,8 +685,8 @@ static void processTorchObject(World& world,
 
 	lightSystem.setOffset(lightCmpnt, glm::vec2(0, 1));
 	lightSystem.setColor(lightCmpnt, torchLightColor);
-	lightSystem.setGlowSize(lightCmpnt, torchLightGlowSize);
-	lightSystem.setSize(lightCmpnt, torchLightSize);
+	lightSystem.setGlowSize(lightCmpnt, glm::vec2(torchLightGlowSize));
+	lightSystem.setSize(lightCmpnt, glm::vec2(torchLightSize));
 	lightSystem.setPulse(lightCmpnt, torchLightPulse);
 	lightSystem.setPulseSize(lightCmpnt, torchLightPulseSize);
 

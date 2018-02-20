@@ -70,7 +70,6 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 
 //	============================================================================
 void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
-	Camera& camera = *game.camera;
 	World& world = *game.world;
 
 	glm::mat4 projection = glm::ortho(

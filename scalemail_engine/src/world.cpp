@@ -94,86 +94,6 @@ Entity World::createActor(float x, float y, glm::vec2 size, int actorIndex,
 }
 
 //  ============================================================================
-Entity World::createBullet(Entity sourceEntity, glm::vec2 position,
-						   glm::vec2 direction, float damage,
-						   float speed, int tilesetId, int impactTilesetId,
-						   glm::vec4 lightColor) {
-	Entity entity = mEntityManager.createEntity();
-
-	mBulletSystem.addComponent(entity);
-	BulletComponent bulletCmpnt = mBulletSystem.getComponent(entity);
-	mBulletSystem.setDamage(bulletCmpnt, damage);
-	mBulletSystem.setSourceEntity(bulletCmpnt, sourceEntity);
-	mBulletSystem.setImpactTilesetId(bulletCmpnt, impactTilesetId);
-
-	mSpriteSystem.addComponent(entity);
-	SpriteComponent spriteCmpnt = mSpriteSystem.getComponent(entity);
-	mSpriteSystem.setDirection(spriteCmpnt, direction);
-	mSpriteSystem.setSize(spriteCmpnt, glm::vec2(12.0f, 12.0f));
-	mSpriteSystem.setTileset(spriteCmpnt, "fx");
-	mSpriteSystem.setTilesetId(spriteCmpnt, { tilesetId });
-
-	mPhysicsSystem.addComponent(entity);
-	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
-	mPhysicsSystem.setPosition(physicsCmpnt, position);
-	mPhysicsSystem.setDirection(physicsCmpnt, direction);
-	mPhysicsSystem.setRadius(physicsCmpnt, 3.0f);
-	mPhysicsSystem.setSpeed(physicsCmpnt, speed);
-
-	PhysicsComponent sourcePhysicsCmpnt =
-		mPhysicsSystem.getComponent(sourceEntity);
-
-	CollisionGroup sourceGroup =
-		mPhysicsSystem.getCollisionGroup(sourcePhysicsCmpnt);
-
-	if (sourceGroup == CollisionGroup::PLAYER_ACTOR) {
-		mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::PLAYER_BULLET);
-	} else {
-		mPhysicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::BULLET);
-	}
-
-	const float lightSize = 16;
-	const float lightGlowSize = lightSize * 0.33f;
-	const float lightPulse = 32;
-	const float lightPulseSize = 6;
-
-	mLightSystem.addComponent(entity);
-	LightComponent lightCmpnt = mLightSystem.getComponent(entity);
-	mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
-	mLightSystem.setColor(lightCmpnt, lightColor);
-	mLightSystem.setGlowSize(lightCmpnt, lightGlowSize);
-	mLightSystem.setSize(lightCmpnt, lightSize);
-	mLightSystem.setPulse(lightCmpnt, lightPulse);
-	mLightSystem.setPulseSize(lightCmpnt, lightPulseSize);
-
-	mParticleSystem.addComponent(entity);
-	ParticleComponent particleCmpnt = mParticleSystem.getComponent(entity);
-
-	ParticleComponentData emitter = {};
-	emitter.life = 0.6f;
-	emitter.decay = 1.0f;
-	emitter.duration = 1.0f;
-	emitter.emitCount = 1;
-	emitter.delay = 0.2f;
-	emitter.interval = 0.01f;
-	emitter.minSize = 0.5f;
-	emitter.maxSize = 2.0f;
-	emitter.minSpeed = speed * 0.25f;
-	emitter.maxSpeed = speed * 0.33f;
-	emitter.spread = 0.349066f;
-	emitter.direction = glm::vec3(-1, 1, 0.0f);
-	emitter.height = 4.0f;
-	emitter.width = 4.0f;
-	emitter.direction = glm::vec3(-direction, 0.0f);
-	emitter.color = lightColor;
-	emitter.radius = 2.0f;
-
-	mParticleSystem.setData(particleCmpnt, emitter);
-
-	return entity;
-}
-
-//  ============================================================================
 Entity World::createDoor(float x, float y, int openTilesetId,
 						 int closedTilesetId, bool open, const std::string name) {
 	Entity entity = mEntityManager.createEntity();
@@ -263,8 +183,8 @@ Entity World::createLoot(glm::vec2 position, glm::vec2 size, int tilesetId,
 	LightComponent lightCmpnt = mLightSystem.getComponent(entity);
 	mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
 	mLightSystem.setColor(lightCmpnt, lightColor);
-	mLightSystem.setGlowSize(lightCmpnt, lightGlowSize);
-	mLightSystem.setSize(lightCmpnt, lightSize);
+	mLightSystem.setGlowSize(lightCmpnt, glm::vec2(lightGlowSize));
+	mLightSystem.setSize(lightCmpnt, glm::vec2(lightSize));
 	mLightSystem.setPulse(lightCmpnt, lightPulse);
 	mLightSystem.setPulseSize(lightCmpnt, lightPulseSize);
 
@@ -405,8 +325,8 @@ void World::destroyBullet(Entity entity) {
 	lightCmpnt = mLightSystem.getComponent(fxEntity);
 	mLightSystem.setOffset(lightCmpnt, glm::vec2(0.0f, 0.0f));
 	mLightSystem.setColor(lightCmpnt, lightColor);
-	mLightSystem.setGlowSize(lightCmpnt, 0);
-	mLightSystem.setSize(lightCmpnt, 48);
+	mLightSystem.setGlowSize(lightCmpnt, glm::vec2(0));
+	mLightSystem.setSize(lightCmpnt, glm::vec2(48));
 
 	mParticleSystem.addComponent(fxEntity);
 	ParticleComponent particleCmpnt = mParticleSystem.getComponent(fxEntity);
@@ -505,6 +425,11 @@ void World::destroyEntity(Entity entity) {
 //  ============================================================================
 AiSystem& World::getAiSystem() {
 	return mAiSystem;
+}
+
+//  ============================================================================
+BulletSystem& World::getBulletSystem() {
+	return mBulletSystem;
 }
 
 //  ============================================================================

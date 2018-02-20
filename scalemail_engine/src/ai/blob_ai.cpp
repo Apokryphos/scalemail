@@ -56,7 +56,7 @@ BlobAi::BlobAi() {
 }
 
 //	============================================================================
-void BlobAi::think(World& world, float elapsedSeconds) {
+void BlobAi::think(World& world, [[maybe_unused]] float elapsedSeconds) {
 	const Entity entity = this->getEntity();
 
 	if (!actorCanMove(entity, world)) {

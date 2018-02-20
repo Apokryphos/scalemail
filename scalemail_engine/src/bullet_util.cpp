@@ -1,3 +1,4 @@
+#include "light_data.hpp"
 #include <glm/vec4.hpp>
 
 namespace ScaleMail
@@ -37,6 +38,19 @@ glm::vec4 getBulletLightColor(int bulletIndex) {
 		default:
 			return ORANGE_LIGHT_COLOR;
 	}
+}
+
+//  ============================================================================
+LightData getBulletLightData(int bulletIndex) {
+	LightData lightData = {};
+	lightData.pulse = 32.0f;
+	lightData.pulseSize = 6.0f;
+	lightData.size = glm::vec2(16.0f);
+	lightData.color = getBulletLightColor(bulletIndex);
+
+	lightData.glowSize = lightData.size * 0.33f;
+
+	return lightData;
 }
 
 //  ============================================================================

@@ -1,4 +1,5 @@
 #include "bullet_util.hpp"
+#include "entity_create.hpp"
 #include "gun_system.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
@@ -34,8 +35,7 @@ void GunSystem::createComponent() {
 	bulletData.tilesetId = getBulletTilesetId(0);
 	mBulletData.push_back(bulletData);
 
-	LightData lightData = {};
-	lightData.color = getBulletLightColor(0);
+	LightData lightData = getBulletLightData(0);
 	mLightData.push_back(lightData);
 }
 
@@ -134,15 +134,14 @@ void GunSystem::update(World& world, float elapsedSeconds) {
 			BulletData& bulletData = mBulletData[index];
 			LightData& lightData = mLightData[index];
 
-			world.createBullet(
+			bulletData.direction = gunData.direction;
+
+			createBullet(
+				world,
 				p.second,
 				gunData.position,
-				gunData.direction,
-				bulletData.damage,
-				bulletData.speed,
-				bulletData.tilesetId,
-				bulletData.impactTilesetId,
-				lightData.color);
+				bulletData,
+				lightData);
 		}
 	}
 }

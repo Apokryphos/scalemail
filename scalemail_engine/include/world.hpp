@@ -70,10 +70,6 @@ public:
 					   const std::string name = "",
 					   const std::string prefab = "",
 					   const std::string ai = "");
-	Entity createBullet(Entity sourceEntity, glm::vec2 position,
-						glm::vec2 direction, float damage, float speed,
-						int tilesetId, int impactTilesetId,
-						glm::vec4 lightColor);
 	Entity createDoor(float x, float y, int openTilesetId, int closedTilesetId,
 					  bool open, const std::string name = "");
 	Entity createDoor(float x, float y, int openTilesetId,
@@ -95,6 +91,7 @@ public:
 	void destroyEntity(Entity entity);
 	bool entityIsAlive(const Entity& entity);
 	AiSystem& getAiSystem();
+	BulletSystem& getBulletSystem();
 	BurySystem& getBurySystem();
 	DamageSystem& getDamageSystem();
 	DoorSystem& getDoorSystem();

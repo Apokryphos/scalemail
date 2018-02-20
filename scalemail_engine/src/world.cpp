@@ -216,8 +216,16 @@ void World::destroyEntity(Entity entity) {
 		mHealthSystem.removeComponent(entity);
 	}
 
+	if (mInventorySystem.hasComponent(entity)) {
+		mInventorySystem.removeComponent(entity);
+	}
+
 	if (mLightSystem.hasComponent(entity)) {
 		mLightSystem.removeComponent(entity);
+	}
+
+	if (mLootSystem.hasComponent(entity)) {
+		mLootSystem.removeComponent(entity);
 	}
 
 	if (mNameSystem.hasComponent(entity)) {
@@ -242,14 +250,6 @@ void World::destroyEntity(Entity entity) {
 
 	if (mTriggerSystem.hasComponent(entity)) {
 		mTriggerSystem.removeComponent(entity);
-	}
-
-	if (mLootSystem.hasComponent(entity)) {
-		mLootSystem.removeComponent(entity);
-	}
-
-	if (mInventorySystem.hasComponent(entity)) {
-		mInventorySystem.removeComponent(entity);
 	}
 
 	mEntityManager.destroyEntity(entity);

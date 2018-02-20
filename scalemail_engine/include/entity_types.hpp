@@ -27,4 +27,7 @@ Entity createDoor(World& world, const glm::vec2& position,
 Entity createLoot(World& world, const glm::vec2& position,
 				  const glm::vec2& size, const int tilesetId,
 				  const std::string& name, const std::string& prefab);
+
+Entity createTrigger(World& world, const glm::vec2& position,
+					 const glm::vec2& size, const std::string& targetName);
 }

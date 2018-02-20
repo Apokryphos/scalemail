@@ -724,15 +724,13 @@ static void processTriggerObject(World& world,
 		return;
 	}
 
-	const float x = object.GetX();
-	const float y = object.GetY();
-	const float width = object.GetWidth();
-	const float height = object.GetHeight();
+	const glm::vec2 position(object.GetX(), object.GetY());
+	const glm::vec2 size(object.GetWidth(), object.GetHeight());
 
 	const std::string targetName =
 		object.GetPropertySet().GetValue("TargetName", "");
 
-	world.createTrigger(x, y, width, height, targetName);
+	createTrigger(world, position, size, targetName);
 }
 
 //  ============================================================================

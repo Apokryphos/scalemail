@@ -145,20 +145,6 @@ Entity World::createProp(glm::vec2 position, int frame1TilesetId,
 }
 
 //  ============================================================================
-Entity World::createTrigger(const float x, const float y, const float width,
-						  const float height, const std::string targetName) {
-	Entity entity = mEntityManager.createEntity();
-
-	mTriggerSystem.addComponent(entity);
-	TriggerComponent triggerCmpnt = mTriggerSystem.getComponent(entity);
-	mTriggerSystem.setPosition(triggerCmpnt, glm::vec2(x, y));
-	mTriggerSystem.setSize(triggerCmpnt, glm::vec2(width, height));
-	mTriggerSystem.setTargetName(triggerCmpnt, targetName);
-
-	return entity;
-}
-
-//  ============================================================================
 void World::destroyBullet(Entity entity) {
 	PhysicsComponent physicsCmpnt = mPhysicsSystem.getComponent(entity);
 	glm::vec2 bulletPosition = mPhysicsSystem.getPosition(physicsCmpnt);

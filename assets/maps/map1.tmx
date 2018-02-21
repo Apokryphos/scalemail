@@ -897,7 +897,7 @@
    </properties>
   </object>
   <object id="256" type="Actor" gid="466" x="359" y="1158" width="16" height="16"/>
-  <object id="301" name="Blob" type="Actor" gid="757" x="193" y="1083" width="32" height="32"/>
+  <object id="301" name="Blob" type="Actor" gid="757" x="448" y="915" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Heroes">
   <object id="62" name="PlayerStart" type="PlayerStart" gid="354" x="112" y="1100" width="16" height="16"/>
@@ -906,7 +906,7 @@
   <object id="65" name="PlayerStart" type="PlayerStart" gid="312" x="152" y="1092" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Items">
-  <object id="302" name="Potion" type="Item" gid="834" x="41" y="1096" width="16" height="16"/>
+  <object id="302" name="Potion" type="Item" gid="834" x="308" y="920" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Props">
   <object id="117" gid="232" x="29" y="390" width="16" height="16"/>

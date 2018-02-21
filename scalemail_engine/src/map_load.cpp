@@ -1,5 +1,6 @@
 #include "ambient_light.hpp"
 #include "direction_util.hpp"
+#include "entity_util.hpp"
 #include "entity_types.hpp"
 #include "gl_headers.hpp"
 #include "layer.hpp"
@@ -54,6 +55,15 @@ static const glm::vec2 gQuadVertices[] =
 	glm::vec2( 0.5f,  0.5f),
 	glm::vec2( 0.5f, -0.5f),
 };
+
+//  ============================================================================
+static void buryEntity(const TmxMapLib::Object& object, const Entity& entity,
+					   World& world) {
+	if (object.GetPropertySet().GetBoolValue("Buried", false)) {
+		buryEntity(entity, world.getBurySystem(), true,
+			world.getRandom().nextFloat(4.0f, 5.0f), true);
+	}
+}
 
 //  ============================================================================
 static int getScrollTilesetIdOffset(int tilesetId) {
@@ -381,14 +391,7 @@ static void processActorObject(World& world,
 	Entity entity = createActor(world, position, size, actorIndex, facing,
 								object.GetName(), prefabName, aiName);
 
-	if (object.GetPropertySet().GetBoolValue("Buried", false)) {
-		BurySystem& burySystem = world.getBurySystem();
-		burySystem.addComponent(entity);
-		BuryComponent buryCmpnt = burySystem.getComponent(entity);
-		burySystem.setSpawnDirt(buryCmpnt, true);
-		burySystem.setDuration(buryCmpnt, world.getRandom().nextFloat(2.0f, 3.0f));
-		burySystem.bury(buryCmpnt, true);
-	}
+	buryEntity(object, entity, world);
 }
 
 //  ============================================================================
@@ -544,14 +547,7 @@ static void processItemObject(World& world,
 	Entity entity =
 		createLoot(world, position, size, tilesetId, name, prefabName);
 
-	if (object.GetPropertySet().GetBoolValue("Buried", false)) {
-		BurySystem& burySystem = world.getBurySystem();
-		burySystem.addComponent(entity);
-		BuryComponent buryCmpnt = burySystem.getComponent(entity);
-		burySystem.setSpawnDirt(buryCmpnt, true);
-		burySystem.setDuration(buryCmpnt, world.getRandom().nextFloat(2.0f, 3.0f));
-		burySystem.bury(buryCmpnt, true);
-	}
+	buryEntity(object, entity, world);
 }
 
 //  ============================================================================

@@ -6,6 +6,19 @@
 namespace ScaleMail
 {
 //	============================================================================
+void buryEntity(const Entity& entity, BurySystem& burySystem, bool immediate,
+				float duration, bool spawnDirt) {
+	if (!burySystem.hasComponent(entity)) {
+		burySystem.addComponent(entity);
+	}
+
+	BuryComponent buryCmpnt = burySystem.getComponent(entity);
+	burySystem.setSpawnDirt(buryCmpnt, spawnDirt);
+	burySystem.setDuration(buryCmpnt, duration);
+	burySystem.bury(buryCmpnt, immediate);
+}
+
+//	============================================================================
 bool entityIsAlive(const HealthSystem& healthSystem,
 				   const HealthComponent& healthCmpnt) {
 	return !healthSystem.getHealthGauge(healthCmpnt).isEmpty();

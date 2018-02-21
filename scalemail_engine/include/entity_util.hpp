@@ -4,14 +4,17 @@ namespace ScaleMail
 {
 struct BuryComponent;
 class BurySystem;
+struct Entity;
 struct HealthComponent;
 class HealthSystem;
-struct Entity;
 class World;
 
 //	Entity utility functions
 //	These functions check entity components only and don't contain any game
 //	rules logic.
+
+void buryEntity(const Entity& entity, BurySystem& burySystem, bool immediate,
+				float duration, bool spawnDirt);
 
 bool entityIsAlive(const HealthSystem& healthSystem,
 				   const HealthComponent& healthCmpnt);

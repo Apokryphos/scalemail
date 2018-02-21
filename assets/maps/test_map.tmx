@@ -363,53 +363,53 @@
  </objectgroup>
  <objectgroup name="Lights"/>
  <objectgroup name="Villains">
-  <object id="66" name="Skeleton" type="Actor" gid="456" x="270" y="255" width="16" height="16">
+  <object id="66" name="Skeleton" type="Villain" gid="456" x="270" y="255" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="67" name="Skeleton" type="Actor" gid="436" x="287" y="270" width="16" height="16">
+  <object id="67" name="Skeleton" type="Villain" gid="436" x="287" y="270" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="68" name="Skeleton" type="Actor" gid="435" x="250" y="285" width="16" height="16">
+  <object id="68" name="Skeleton" type="Villain" gid="435" x="250" y="285" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="69" name="Skeleton" type="Actor" gid="455" x="250" y="263" width="16" height="16">
+  <object id="69" name="Skeleton" type="Villain" gid="455" x="250" y="263" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="70" name="Skeleton" type="Actor" gid="439" x="241" y="249" width="16" height="16">
+  <object id="70" name="Skeleton" type="Villain" gid="439" x="241" y="249" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="71" name="Skeleton" type="Actor" gid="437" x="227" y="258" width="16" height="16">
+  <object id="71" name="Skeleton" type="Villain" gid="437" x="227" y="258" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="129" name="Skeleton" gid="433" x="235" y="270" width="16" height="16">
+  <object id="129" name="Skeleton" type="Villain" gid="433" x="235" y="270" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="130" name="Skeleton" type="Actor" gid="435" x="270" y="292" width="16" height="16">
+  <object id="130" name="Skeleton" type="Villain" gid="435" x="270" y="292" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="131" name="Skeleton" type="Actor" gid="435" x="266" y="273" width="16" height="16">
+  <object id="131" name="Skeleton" type="Villain" gid="435" x="266" y="273" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="256" type="Actor" gid="466" x="369" y="195" width="16" height="16"/>
-  <object id="301" name="Blob" type="Actor" gid="757" x="96" y="242" width="32" height="32"/>
+  <object id="256" name="Vampire" type="Villain" gid="466" x="369" y="195" width="16" height="16"/>
+  <object id="301" name="Blob" type="Villain" gid="757" x="96" y="242" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Heroes">
   <object id="62" name="PlayerStart" type="PlayerStart" gid="354" x="227" y="122" width="16" height="16"/>

@@ -60,6 +60,16 @@ void AllyAi::think(World& world, float elapsedSeconds) {
 	getEntitiesInRange(villains, physicsSystem, position, MIN_VILLAIN_RANGE,
 					   inRange);
 
+	const BurySystem& burySystem = world.getBurySystem();
+
+	//	Ignore buried entities
+	inRange.erase(
+		std::remove_if(inRange.begin(), inRange.end(),
+			[&burySystem](const Entity& e) {
+				 return entityIsBuried(e, burySystem);
+			}),
+		inRange.end());
+
 	if (inRange.size() > 0) {
 		std::optional<Entity> villainEntity =
 			random.getRandomOptionalElement(inRange);

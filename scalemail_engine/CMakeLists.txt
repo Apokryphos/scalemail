@@ -91,6 +91,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/sprite.hpp
     include/static_collision.hpp
     include/string_util.hpp
+    include/team_system.hpp
     include/texture.hpp
     include/tile_shader.hpp
     include/tileset.hpp
@@ -173,6 +174,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/sprite_effect_system.cpp
     src/sprite_system.cpp
     src/string_util.cpp
+    src/team_system.cpp
     src/texture.cpp
     src/tileset.cpp
     src/transition.cpp

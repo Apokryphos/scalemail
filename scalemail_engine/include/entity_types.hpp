@@ -38,6 +38,11 @@ Entity createPlayerActor(World& world, const glm::vec2 position,
 						 const int actorIndex, const Direction facing,
 						 const std::string& name);
 
+Entity createVillainActor(World& world, const glm::vec2& position,
+						  const glm::vec2& size, const int actorIndex,
+						  const Direction facing, const std::string& name,
+						  const std::string& prefab, const std::string& ai);
+
 Entity createProp(World& world, const glm::vec2& position, const int tilesetId,
 				  const bool decal);
 

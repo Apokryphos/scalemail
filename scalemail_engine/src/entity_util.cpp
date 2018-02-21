@@ -4,8 +4,11 @@
 #include "bury_system.hpp"
 #include "health_system.hpp"
 #include "name_system.hpp"
+#include "physics_system.hpp"
 #include "prefab_factory.hpp"
 #include "world.hpp"
+#include <glm/gtx/norm.hpp>
+#include <vector>
 
 namespace ScaleMail
 {
@@ -80,6 +83,27 @@ bool entityIsBuried(const Entity& entity, const BurySystem& burySystem) {
 	}
 
 	return false;
+}
+
+//  ============================================================================
+void getEntitiesInRange(
+	const std::vector<Entity>& entities, PhysicsSystem& physicsSystem,
+	glm::vec2 position, float distance, std::vector<Entity>& inRange) {
+	const float distanceSquared = distance * distance;
+
+	for (const Entity& entity : entities) {
+		if (physicsSystem.hasComponent(entity)) {
+			PhysicsComponent physicsCmpnt =
+				physicsSystem.getComponent(entity);
+
+			glm::vec2 entityPosition =
+				physicsSystem.getPosition(physicsCmpnt);
+
+			if (glm::distance2(position, entityPosition) <= distanceSquared) {
+				inRange.push_back(entity);
+			}
+		}
+	}
 }
 
 //	============================================================================

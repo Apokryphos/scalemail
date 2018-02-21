@@ -8,6 +8,7 @@
 #include "physics_system.hpp"
 #include "sprite_effect_system.hpp"
 #include "sprite_system.hpp"
+#include "team_system.hpp"
 #include "world.hpp"
 
 
@@ -78,7 +79,28 @@ Entity createPlayerActor(World& world, const glm::vec2 position,
 	gunSystem.setBulletDamage(gunCmpnt, 10.0f);
 	gunSystem.setCooldownDuration(gunCmpnt, 0.1f);
 
+	TeamSystem& teamSystem = world.getTeamSystem();
+	teamSystem.addComponent(entity);
+	TeamComponent teamCmpnt = teamSystem.getComponent(entity);
+	teamSystem.setTeam(teamCmpnt, Team::PLAYER);
+
 	world.getInventorySystem().addComponent(entity);
+
+	return entity;
+}
+
+//  ============================================================================
+Entity createVillainActor(World& world, const glm::vec2& position,
+						  const glm::vec2& size, const int actorIndex,
+						  const Direction facing, const std::string& name,
+						  const std::string& prefab, const std::string& ai) {
+	Entity entity = createActor(world, position, size, actorIndex, facing,
+								name, prefab, ai);
+
+	TeamSystem& teamSystem = world.getTeamSystem();
+	teamSystem.addComponent(entity);
+	TeamComponent teamCmpnt = teamSystem.getComponent(entity);
+	teamSystem.setTeam(teamCmpnt, Team::VILLAIN);
 
 	return entity;
 }

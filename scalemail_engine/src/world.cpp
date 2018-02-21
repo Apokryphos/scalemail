@@ -11,15 +11,18 @@
 namespace ScaleMail
 {
 //  ============================================================================
-World::World() : mPhysicsSystem(mEntityManager), mSpriteSystem(mEntityManager),
+World::World() : mPhysicsSystem(mEntityManager, 10000),
+				 mSpriteSystem(mEntityManager),
 				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
 				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
 				 mTriggerSystem(mEntityManager), mGunSystem(mEntityManager),
 				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager),
 				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager),
 				 mSpriteEffectSystem(mEntityManager),
-				 mBurySystem(mEntityManager), mParticleSystem(mEntityManager),
-				 mLootSystem(mEntityManager), mInventorySystem(mEntityManager) {
+				 mBurySystem(mEntityManager),
+				 mParticleSystem(mEntityManager),
+				 mLootSystem(mEntityManager), mInventorySystem(mEntityManager),
+				 mTeamSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -107,6 +110,10 @@ void World::destroyEntity(Entity entity) {
 
 	if (mSpriteEffectSystem.hasComponent(entity)) {
 		mSpriteEffectSystem.removeComponent(entity);
+	}
+
+	if (mTeamSystem.hasComponent(entity)) {
+		mTeamSystem.removeComponent(entity);
 	}
 
 	if (mTriggerSystem.hasComponent(entity)) {
@@ -225,6 +232,11 @@ SpriteEffectSystem& World::getSpriteEffectSystem() {
 //  ============================================================================
 SpriteSystem& World::getSpriteSystem() {
 	return mSpriteSystem;
+}
+
+//  ============================================================================
+TeamSystem& World::getTeamSystem() {
+	return mTeamSystem;
 }
 
 //  ============================================================================

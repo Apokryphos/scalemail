@@ -1,6 +1,8 @@
 #pragma once
 
+#include <glm/vec2.hpp>
 #include <string>
+#include <vector>
 
 namespace ScaleMail
 {
@@ -11,6 +13,7 @@ class BurySystem;
 struct Entity;
 struct HealthComponent;
 class HealthSystem;
+class PhysicsSystem;
 class PrefabFactory;
 class NameSystem;
 class World;
@@ -34,6 +37,10 @@ bool entityIsAlive(const Entity& entity, const HealthSystem& healthSystem);
 bool entityIsBuried(const BurySystem& burySystem,
 					const BuryComponent& buryCmpnt);
 bool entityIsBuried(const Entity& entity, const BurySystem& burySystem);
+
+void getEntitiesInRange(
+	const std::vector<Entity>& entities, PhysicsSystem& physicsSystem,
+	glm::vec2 position, float distance, std::vector<Entity>& inRange);
 
 void setEntityName(const std::string name, const Entity& entity,
 				   NameSystem& nameSystem);

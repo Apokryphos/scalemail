@@ -1,4 +1,5 @@
 #include "ai/ally_ai.hpp"
+#include "entity_util.hpp"
 #include "gun_system.hpp"
 #include "math_util.hpp"
 #include "physics_system.hpp"
@@ -29,8 +30,9 @@ void AllyAi::think(World& world, float elapsedSeconds) {
 
 	mMoveCooldown -= elapsedSeconds;
 
+	Random& random = world.getRandom();
+
 	if (mMoveCooldown <= 0.0f) {
-		Random& random = world.getRandom();
 
 		//	Pick random direction
 		glm::vec2 direction =
@@ -45,24 +47,34 @@ void AllyAi::think(World& world, float elapsedSeconds) {
 	}
 
 	//	Fire at the nearest villain
-	// PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 
 	// PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	// glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+	glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 
-	// std::optional<Entity> villain =
-	// 	getRandomVillainInRange(world, position, MIN_VILLAIN_RANGE);
+	std::vector<Entity> villains;
+	world.getTeamSystem().getEntitiesByTeam(Team::VILLAIN, villains);
 
-	// if (villain.has_value()) {
-	// 	PhysicsComponent targetPhysicsCmpnt =
-	// 		physicsSystem.getComponent(player->entity);
+	std::vector<Entity> inRange;
+	getEntitiesInRange(villains, physicsSystem, position, MIN_VILLAIN_RANGE,
+					   inRange);
 
-	// 	glm::vec2 targetPosition =
-	// 		physicsSystem.getPosition(targetPhysicsCmpnt);
+	if (inRange.size() > 0) {
+		std::optional<Entity> villainEntity =
+			random.getRandomOptionalElement(inRange);
 
-	// 	//	Fire bullets at villain
-	// 	gunSystem.setTarget(gunCmpnt, targetPosition);
-	// 	gunSystem.setFire(gunCmpnt, true);
-	// }
+		if (villainEntity.has_value()) {
+			PhysicsComponent targetPhysicsCmpnt =
+				physicsSystem.getComponent(villainEntity.value());
+
+			glm::vec2 targetPosition =
+				physicsSystem.getPosition(targetPhysicsCmpnt);
+
+			//	Fire bullets at villain
+			gunSystem.setTarget(gunCmpnt, targetPosition);
+			gunSystem.setFire(gunCmpnt, true);
+		}
+	}
 }
 }

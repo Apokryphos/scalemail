@@ -23,6 +23,7 @@
 #include "random.hpp"
 #include "sprite_system.hpp"
 #include "sprite_effect_system.hpp"
+#include "team_system.hpp"
 #include "trigger_system.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
@@ -60,6 +61,7 @@ class World
 	ParticleSystem mParticleSystem;
 	LootSystem mLootSystem;
 	InventorySystem mInventorySystem;
+	TeamSystem mTeamSystem;
 
 	std::vector<Player> mPlayers;
 
@@ -89,6 +91,7 @@ public:
 	Random& getRandom();
 	SpriteSystem& getSpriteSystem();
 	SpriteEffectSystem& getSpriteEffectSystem();
+	TeamSystem& getTeamSystem();
 	TriggerSystem& getTriggerSystem();
 	void initialize(AssetManager* assetManager);
 	void loadMap(const std::string& mapName);

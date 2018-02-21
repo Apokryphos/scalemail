@@ -339,9 +339,9 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 }
 
 //  ============================================================================
-static void processActorObject(World& world,
-							   const TmxMapLib::Object& object,
-							   const TmxMapLib::Map& tmxMap) {
+static void processVillainObject(World& world,
+								 const TmxMapLib::Object& object,
+								 const TmxMapLib::Map& tmxMap) {
 	auto const tile = object.GetTile();
 
 	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
@@ -388,8 +388,9 @@ static void processActorObject(World& world,
 	const glm::vec2 position = getTileObjectPosition(object);
 	const glm::vec2 size(object.GetWidth(), object.GetHeight());
 
-	Entity entity = createActor(world, position, size, actorIndex, facing,
-								object.GetName(), prefabName, aiName);
+	Entity entity = createVillainActor(world, position, size, actorIndex,
+									   facing, object.GetName(), prefabName,
+									   aiName);
 
 	buryEntity(object, entity, world);
 }
@@ -749,8 +750,8 @@ static void processObject(World& world,
 			std::cout << "Map object is not a tile object." << std::endl;
 		}
 
-		if (type == "actor") {
-			processActorObject(world, object, tmxMap);
+		if (type == "villain") {
+			processVillainObject(world, object, tmxMap);
 		} else if (type == "door") {
 			processDoorObject(world, object, tmxMap);
 		} else if (type == "item") {

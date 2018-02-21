@@ -83,6 +83,8 @@ void MainGameState::activate(Game& game) {
 			world.getBurySystem().rise(buryCmpnt, false);
 		}
 	}
+
+	world.getAiSystem().enable(true);
 }
 
 //	============================================================================

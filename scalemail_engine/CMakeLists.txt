@@ -7,6 +7,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(SCALEMAIL_ENGINE_INCLUDE
+    include/ai/ally_ai.hpp
     include/ai/blob_ai.hpp
     include/ai/skeleton_ai.hpp
     include/ai/vampire_ai.hpp
@@ -103,6 +104,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
+    src/ai/ally_ai.cpp
     src/ai/blob_ai.cpp
     src/ai/skeleton_ai.cpp
     src/ai/vampire_ai.cpp

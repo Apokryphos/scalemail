@@ -8,6 +8,22 @@
 namespace ScaleMail
 {
 //  ============================================================================
+static void buildAlly(Entity entity, World& world) {
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	physicsSystem.setSpeed(physicsCmpnt, 16.0f);
+
+	int bulletIndex = world.getRandom().nextInt(0, 4);
+
+	GunSystem& gunSystem = world.getGunSystem();
+	GunComponent gunCmpnt = gunSystem.getComponent(entity);
+	gunSystem.setBulletImpactTilesetId(gunCmpnt, getBulletImpactTilesetId(bulletIndex));
+	gunSystem.setBulletTilesetId(gunCmpnt, getBulletTilesetId(bulletIndex));
+	gunSystem.setBulletLightColor(gunCmpnt, getBulletLightColor(bulletIndex));
+	gunSystem.setCooldownDuration(gunCmpnt, 0.4f);
+}
+
+//  ============================================================================
 static void buildBlob(Entity entity, World& world) {
 	SpriteSystem& spriteSystem = world.getSpriteSystem();
 	SpriteComponent spriteCmpnt = spriteSystem.getComponent(entity);
@@ -62,7 +78,9 @@ void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 								World& world) {
 	prefabName = toLowercase(prefabName);
 
-	if (prefabName == "blob") {
+	if (prefabName == "ally") {
+		buildAlly(entity, world);
+	} else if (prefabName == "blob") {
 		buildBlob(entity, world);
 	} else if (prefabName == "skeleton") {
 		buildSkeleton(entity, world);

@@ -66,6 +66,8 @@ void IntroGameState::activate(Game& game) {
 	mDoorEntities = nameSystem.getEntitiesByName("introDoor");
 	mBuriedEntities = nameSystem.getEntitiesByName("Skeleton");
 
+	//	Disable AI during camera pan
+	world.getAiSystem().enable(false);
 }
 
 //	============================================================================

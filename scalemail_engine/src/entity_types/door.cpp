@@ -1,5 +1,6 @@
 #include "door_system.hpp"
 #include "entity.hpp"
+#include "entity_util.hpp"
 #include "name_system.hpp"
 #include "physics_system.hpp"
 #include "sprite_system.hpp"
@@ -33,12 +34,7 @@ Entity createDoor(World& world, const glm::vec2& position,
 	doorSystem.setTilesetId(doorCmpnt, openTilesetId, closedTilesetId);
 	doorSystem.setOpen(doorCmpnt, open);
 
-	if (name != "") {
-		NameSystem& nameSystem = world.getNameSystem();
-		nameSystem.addComponent(entity);
-		NameComponent nameCmpnt = nameSystem.getComponent(entity);
-		nameSystem.setName(nameCmpnt, name);
-	}
+	setEntityName(name, entity, world.getNameSystem());
 
 	return entity;
 }

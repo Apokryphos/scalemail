@@ -122,8 +122,8 @@ int startEngine() {
 	World world;
 	world.initialize(&assetManager);
 
-	// world.loadMap("map1");
-	world.loadMap("test_map");
+	world.loadMap("map1");
+	// world.loadMap("test_map");
 
 	buildAmbientLights();
 
@@ -145,7 +145,7 @@ int startEngine() {
 
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
-	gameStateManager.activateMainGameState();
+	gameStateManager.activateIntroGameState();
 
 	double totalElapsedSeconds = 0;
 	double lastSeconds = 0;

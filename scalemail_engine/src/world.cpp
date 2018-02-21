@@ -1,6 +1,7 @@
 #include "bullet_util.hpp"
 #include "direction.hpp"
 #include "entity_types.hpp"
+#include "entity_util.hpp"
 #include "map.hpp"
 #include "map_load.hpp"
 #include "math_util.hpp"
@@ -267,6 +268,12 @@ void World::loadMap(const std::string& mapName) {
 			"Player" + (p + 1));
 
 		mPlayers[p].entity = entity;
+
+		//	HACK: Add ally AI to other players for testing
+		if (p > 0) {
+			addAiBehavior("ally", entity, mAiSystem, mAiBehaviorFactory);
+			addPrefab("ally", entity, *this);
+		}
 	}
 }
 

@@ -32,6 +32,8 @@ class AiSystem : public EntitySystem
 		std::vector<std::shared_ptr<AiBehavior>> behaviors;
 	};
 
+	bool mEnabled;
+
 	std::vector<Obstacle> mObstacles;
 	std::vector<AiComponentData> mData;
 
@@ -46,6 +48,7 @@ public:
 	void addObstacle(const float x, const float y, const float width,
 					 const float height);
 	void drawDebug(std::vector<float>& lineVertexData);
+	void enable(bool enabled);
 	AiComponent getComponent(const Entity& entity) const;
 	void setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction);
 	void update(World& world, float elapsedSeconds);

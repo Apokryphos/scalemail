@@ -1,6 +1,7 @@
 #include "ai_behavior.hpp"
 #include "ai_system.hpp"
 #include "damage_system.hpp"
+#include "entity_util.hpp"
 #include "gun_system.hpp"
 #include "health_system.hpp"
 #include "name_system.hpp"
@@ -47,30 +48,12 @@ Entity createActor(World& world, const glm::vec2& position,
 
 	world.getGunSystem().addComponent(entity);
 
-	if (name != "") {
-		NameSystem& nameSystem = world.getNameSystem();
-		nameSystem.addComponent(entity);
-		NameComponent nameCmpnt = nameSystem.getComponent(entity);
-		nameSystem.setName(nameCmpnt, name);
-	}
+	setEntityName(name, entity, world.getNameSystem());
 
-	if (ai != "") {
-		std::shared_ptr<AiBehavior> aiBehavior =
-			world.getAiBehaviorFactory().createAiBehavior(ai);
+	addAiBehavior(ai, entity, world.getAiSystem(),
+				  world.getAiBehaviorFactory());
 
-		if (aiBehavior != nullptr) {
-			aiBehavior->setEntity(entity);
-
-			AiSystem& aiSystem = world.getAiSystem();
-			aiSystem.addComponent(entity);
-			AiComponent aiCmpnt = aiSystem.getComponent(entity);
-			aiSystem.addBehavior(aiCmpnt, aiBehavior);
-		}
-	}
-
-	if (prefab != "") {
-		world.getPrefabFactory().buildPrefab(entity, prefab, world);
-	}
+	addPrefab(prefab, entity, world);
 
 	return entity;
 }

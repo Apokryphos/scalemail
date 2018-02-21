@@ -1,4 +1,5 @@
 #include "entity.hpp"
+#include "entity_util.hpp"
 #include "item.hpp"
 #include "loot_system.hpp"
 #include "light_system.hpp"
@@ -91,16 +92,9 @@ Entity createLoot(World& world, const glm::vec2& position,
 
 	particleSystem.setData(particleCmpnt, emitter);
 
-	if (name != "") {
-		NameSystem& nameSystem = world.getNameSystem();
-		nameSystem.addComponent(entity);
-		NameComponent nameCmpnt = nameSystem.getComponent(entity);
-		nameSystem.setName(nameCmpnt, name);
-	}
+	setEntityName(name, entity, world.getNameSystem());
 
-	if (prefab != "") {
-		world.getPrefabFactory().buildPrefab(entity, prefab, world);
-	}
+	addPrefab(prefab, entity, world);
 
 	return entity;
 }

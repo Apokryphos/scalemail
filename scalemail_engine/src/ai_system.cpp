@@ -44,7 +44,7 @@ static AiComponent makeComponent(const int index) {
 
 //	============================================================================
 AiSystem::AiSystem(EntityManager& entityManager, int maxComponents)
-	: EntitySystem(entityManager, maxComponents) {
+	: EntitySystem(entityManager, maxComponents), mEnabled(true) {
 	mData.reserve(maxComponents);
 }
 
@@ -171,6 +171,11 @@ void AiSystem::destroyComponent(int index) {
 }
 
 //	============================================================================
+void AiSystem::enable(bool enabled) {
+	mEnabled = enabled;
+}
+
+//	============================================================================
 AiComponent AiSystem::getComponent(const Entity& entity) const {
 	return makeComponent(this->getComponentIndexByEntity(entity));
 }
@@ -182,6 +187,10 @@ void AiSystem::setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction) {
 
 //	============================================================================
 void AiSystem::update(World& world, float elapsedSeconds) {
+	if (!mEnabled) {
+		return;
+	}
+
 	//	Update AI behaviors
 	const size_t count = mData.size();
 	for (size_t index = 0; index < count; ++index) {

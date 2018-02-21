@@ -171,11 +171,14 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 
 	gameState.draw(game, camera);
 
-	if (game.gui != nullptr) {
-		game.gui->draw(game);
-	}
+	//	Draw GUI
+	if (!game.devOptions.enabled || !game.devOptions.hideGui) {
+		if (game.gui != nullptr) {
+			game.gui->draw(game);
+		}
 
-	renderText(gameWindow);
+		renderText(gameWindow);
+	}
 
 	glfwSwapBuffers(window);
 }

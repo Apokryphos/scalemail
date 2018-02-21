@@ -15,6 +15,7 @@ struct DevOptions
 	bool drawCollision;
 	bool drawTriggers;
 	bool enabled;
+	bool hideGui;
 	bool step;
 	int stepCount;
 };

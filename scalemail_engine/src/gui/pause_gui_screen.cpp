@@ -18,8 +18,7 @@ void PauseGuiScreen::draw(Game& game, [[maybe_unused]]SpriteBatch& spriteBatch) 
 	const float centerX = gameWindow.width * 0.5f;
 	const float centerY = gameWindow.height * 0.5f - textSize;
 
-	//	Don't show pause text when development mode is enabled (screenshots)
-	if (game.paused && !game.devOptions.enabled) {
+	if (game.paused) {
 		drawCenterText(
 			glm::vec2(centerX, centerY),
 			"PAUSED",

@@ -31,20 +31,20 @@ inline static float hueToRGB(float v1, float v2, float vH) {
 inline static glm::vec4 hslToRgb(const glm::vec4& hsl) {
 	float hue = hsl[0];
 	float sat = hsl[1];
-	float lum = hsl[2];
+	float light = hsl[2];
 
 	if (sat == 0.0f) {
-		return glm::vec4(lum, lum, lum, hsl.a);
+		return glm::vec4(light, light, light, hsl.a);
 	} else {
 		float v2;
 
-		if (lum < 0.5f) {
-			v2 = lum * (1 + sat);
+		if (light < 0.5f) {
+			v2 = light * (1 + sat);
 		} else {
-			v2 = (lum + sat) - (sat * lum);
+			v2 = (light + sat) - (sat * light);
 		}
 
-		float v1 = 2 * lum - v2;
+		float v1 = 2 * light - v2;
 
 		return glm::vec4(
 			hueToRGB(v1, v2, hue + (1.0f / 3.0f)),
@@ -64,17 +64,20 @@ inline static glm::vec4 rgbToHsl(const glm::vec4& rgb) {
 	float vMax = std::max(std::max(r, g), b);
 	float delta = vMax - vMin;
 
-	float hue, sat, lum;
+	float hue, sat, light;
 
-	lum = (vMax + vMin)/ 2.0f;
+	light = (vMax + vMin)/ 2.0f;
 
 	if (delta == 0)	{
 		//	No chroma
 		hue = 0;
 		sat = 0;
 	} else {
-		if (lum < 0.5) sat = delta / (vMax + vMin);
-		else           sat = delta / (2 - vMax - vMin);
+		if (light < 0.5) {
+			sat = delta / (vMax + vMin);
+		} else {
+			sat = delta / (2 - vMax - vMin);
+		}
 
 		float del_R = (((vMax - r) / 6.0f) + (delta / 2.0f)) / delta;
 		float del_G = (((vMax - g) / 6.0f) + (delta / 2.0f)) / delta;
@@ -92,6 +95,6 @@ inline static glm::vec4 rgbToHsl(const glm::vec4& rgb) {
 		if (hue > 1) hue -= 1;
 	}
 
-	return glm::vec4(hue, sat, lum, rgb.a);
+	return glm::vec4(hue, sat, light, rgb.a);
 }
 }

@@ -256,7 +256,7 @@ void ParticleSystem::update(PhysicsSystem& physicsSystem, float elapsedSeconds) 
 				//	Vary hue
 				hsl[0] = wrap(hsl[0] + mRandom->nextFloat(-0.025f, 0.025f));
 
-				//	Vary luminance
+				//	Vary lightness
 				hsl[2] = wrap(hsl[2] + mRandom->nextFloat(-0.3f, 0.1f));
 
 				//	Convert color back to RGB

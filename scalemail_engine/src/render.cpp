@@ -154,13 +154,14 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 
 	renderMap(*world.getMap(), camera, totalElapsedSeconds);
 	renderSprites(world.getSpriteSystem(), world.getSpriteEffectSystem(), camera);
-	renderLight(gameWindow, camera, world.getLightSystem());
 
 	glEnable(GL_DEPTH_TEST);
 	blendAlphaAdditive();
 	renderParticles(world, camera);
 	blendNone();
 	glDisable(GL_DEPTH_TEST);
+
+	renderLight(gameWindow, camera, world.getLightSystem());
 
 	renderTransition();
 

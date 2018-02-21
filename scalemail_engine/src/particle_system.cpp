@@ -1,3 +1,5 @@
+#include "color_util.hpp"
+#include "math_util.hpp"
 #include "particle_system.hpp"
 #include "physics_system.hpp"
 #include "random.hpp"
@@ -247,10 +249,23 @@ void ParticleSystem::update(PhysicsSystem& physicsSystem, float elapsedSeconds) 
 				mLife.emplace_back(data.life);
 				mLifetime.emplace_back(data.life);
 				mDecay.emplace_back(data.decay);
-				mColorR.emplace_back(data.color.r);
-				mColorG.emplace_back(data.color.g);
-				mColorB.emplace_back(data.color.b);
-				mColorA.emplace_back(data.color.a);
+
+				//	Convert color to HSL
+				glm::vec4 hsl = rgbToHsl(data.color);
+
+				//	Vary hue
+				hsl[0] = wrap(hsl[0] + mRandom->nextFloat(-0.025f, 0.025f));
+
+				//	Vary luminance
+				hsl[2] = wrap(hsl[2] + mRandom->nextFloat(-0.3f, 0.1f));
+
+				//	Convert color back to RGB
+				glm::vec4 rgb = hslToRgb(hsl);
+
+				mColorR.emplace_back(rgb.r);
+				mColorG.emplace_back(rgb.g);
+				mColorB.emplace_back(rgb.b);
+				mColorA.emplace_back(rgb.a);
 			}
 		}
 	}

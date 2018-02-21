@@ -69,4 +69,14 @@ static inline glm::vec2 rotateVec2(const glm::vec2& vector, float radians) {
 static inline float toRadians(float degrees) {
 	return degrees * PI / 180.0f;
 }
+
+//  ============================================================================
+//	Wraps a value to the range of one to zero
+static inline float wrap(const float value) {
+	if (value >= 0.0f && value <= 1.0f) {
+		return value;
+	}
+
+	return std::abs(value - std::floor(value));
+}
 }

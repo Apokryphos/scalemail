@@ -694,10 +694,10 @@ static void processTorchObject(World& world,
 	ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
 
 	ParticleComponentData emitter = {};
-	emitter.life = 1.0f;
+	emitter.life = 1.6f;
 	emitter.decay = 1.0f;
 	emitter.duration = 1.0f;
-	emitter.emitCount = 3;
+	emitter.emitCount = 4;
 	emitter.interval = 0.16f;
 	emitter.minSize = 0.5f;
 	emitter.maxSize = 2.0f;

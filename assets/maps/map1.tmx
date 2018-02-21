@@ -900,10 +900,10 @@
   <object id="301" name="Blob" type="Actor" gid="757" x="448" y="915" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Heroes">
-  <object id="62" name="PlayerStart" type="PlayerStart" gid="354" x="112" y="1100" width="16" height="16"/>
-  <object id="63" name="PlayerStart" type="PlayerStart" gid="330" x="132" y="1100" width="16" height="16"/>
-  <object id="64" name="PlayerStart" type="PlayerStart" gid="361" x="92" y="1092" width="16" height="16"/>
-  <object id="65" name="PlayerStart" type="PlayerStart" gid="312" x="152" y="1092" width="16" height="16"/>
+  <object id="62" name="PlayerStart" type="PlayerStart" gid="354" x="102" y="1079" width="16" height="16"/>
+  <object id="63" name="PlayerStart" type="PlayerStart" gid="330" x="122" y="1079" width="16" height="16"/>
+  <object id="64" name="PlayerStart" type="PlayerStart" gid="361" x="84" y="1076" width="16" height="16"/>
+  <object id="65" name="PlayerStart" type="PlayerStart" gid="312" x="138" y="1076" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Items">
   <object id="302" name="Potion" type="Item" gid="834" x="308" y="920" width="16" height="16"/>

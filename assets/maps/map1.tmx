@@ -851,12 +851,12 @@
   </object>
  </objectgroup>
  <objectgroup name="Villains">
-  <object id="66" name="Skeleton" type="Villain" gid="456" x="139" y="1157" width="16" height="16">
+  <object id="66" name="Skeleton" type="Villain" gid="456" x="130" y="1153" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="67" name="Skeleton" type="Villain" gid="436" x="156" y="1172" width="16" height="16">
+  <object id="67" name="Skeleton" type="Villain" gid="436" x="147" y="1175" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
@@ -866,7 +866,7 @@
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="69" name="Skeleton" type="Villain" gid="455" x="119" y="1165" width="16" height="16">
+  <object id="69" name="Skeleton" type="Villain" gid="455" x="148" y="1150" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>
@@ -891,7 +891,7 @@
     <property name="Buried" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="131" name="Skeleton" type="Villain" gid="435" x="135" y="1175" width="16" height="16">
+  <object id="131" name="Skeleton" type="Villain" gid="435" x="128" y="1171" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
    </properties>

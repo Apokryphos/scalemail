@@ -3,7 +3,7 @@
  <image source="../../../scalemail/assets/textures/items.png" width="256" height="96"/>
  <tile id="17">
   <properties>
-   <property name="Prefab" value="healthPotion"/>
+   <property name="Prefab" value="health_potion"/>
   </properties>
  </tile>
 </tileset>

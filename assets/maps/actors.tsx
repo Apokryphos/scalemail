@@ -804,33 +804,33 @@
  <tile id="132">
   <properties>
    <property name="ActorIndex" type="int" value="17"/>
-   <property name="Ai" value="skeleton"/>
+   <property name="Ai" value="skeleton_warrior"/>
    <property name="Facing" value="east"/>
-   <property name="Prefab" value="skeleton"/>
+   <property name="Prefab" value="skeleton_warrior"/>
   </properties>
  </tile>
  <tile id="133">
   <properties>
    <property name="ActorIndex" type="int" value="17"/>
-   <property name="Ai" value="skeleton"/>
+   <property name="Ai" value="skeleton_warrior"/>
    <property name="Facing" value="south"/>
-   <property name="Prefab" value="skeleton"/>
+   <property name="Prefab" value="skeleton_warrior"/>
   </properties>
  </tile>
  <tile id="134">
   <properties>
    <property name="ActorIndex" type="int" value="17"/>
-   <property name="Ai" value="skeleton"/>
+   <property name="Ai" value="skeleton_warrior"/>
    <property name="Facing" value="north"/>
-   <property name="Prefab" value="skeleton"/>
+   <property name="Prefab" value="skeleton_warrior"/>
   </properties>
  </tile>
  <tile id="135">
   <properties>
    <property name="ActorIndex" type="int" value="17"/>
-   <property name="Ai" value="skeleton"/>
+   <property name="Ai" value="skeleton_warrior"/>
    <property name="Facing" value="west"/>
-   <property name="Prefab" value="skeleton"/>
+   <property name="Prefab" value="skeleton_warrior"/>
   </properties>
  </tile>
  <tile id="136">
@@ -916,33 +916,33 @@
  <tile id="148">
   <properties>
    <property name="ActorIndex" type="int" value="17"/>
-   <property name="Ai" value="skeleton"/>
+   <property name="Ai" value="skeleton_warrior"/>
    <property name="Facing" value="east"/>
-   <property name="Prefab" value="skeleton"/>
+   <property name="Prefab" value="skeleton_warrior"/>
   </properties>
  </tile>
  <tile id="149">
   <properties>
    <property name="ActorIndex" type="int" value="17"/>
-   <property name="Ai" value="skeleton"/>
+   <property name="Ai" value="skeleton_warrior"/>
    <property name="Facing" value="south"/>
-   <property name="Prefab" value="skeleton"/>
+   <property name="Prefab" value="skeleton_warrior"/>
   </properties>
  </tile>
  <tile id="150">
   <properties>
    <property name="ActorIndex" type="int" value="17"/>
-   <property name="Ai" value="skeleton"/>
+   <property name="Ai" value="skeleton_warrior"/>
    <property name="Facing" value="north"/>
-   <property name="Prefab" value="skeleton"/>
+   <property name="Prefab" value="skeleton_warrior"/>
   </properties>
  </tile>
  <tile id="151">
   <properties>
    <property name="ActorIndex" type="int" value="17"/>
-   <property name="Ai" value="skeleton"/>
+   <property name="Ai" value="skeleton_warrior"/>
    <property name="Facing" value="west"/>
-   <property name="Prefab" value="skeleton"/>
+   <property name="Prefab" value="skeleton_warrior"/>
   </properties>
  </tile>
  <tile id="152">

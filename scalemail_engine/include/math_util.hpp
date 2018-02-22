@@ -66,6 +66,13 @@ static inline glm::vec2 rotateVec2(const glm::vec2& vector, float radians) {
 }
 
 //  ============================================================================
+static inline int toQuadrant(const glm::vec2& direction)
+{
+	float angle = atan2(direction.y, direction.x);
+	return (int)round(4.0f * angle / (2.0f * PI) + 4.0f) % 4;
+}
+
+//  ============================================================================
 static inline float toRadians(float degrees) {
 	return degrees * PI / 180.0f;
 }

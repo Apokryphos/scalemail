@@ -23,7 +23,8 @@
 
 namespace ScaleMail
 {
-struct TileData {
+struct TileData
+{
 	bool alpha;
 	bool animated;
 	bool flipHorz;
@@ -31,20 +32,22 @@ struct TileData {
 	bool flipDiag;
 	bool wallFace;
 	bool wallTop;
+	int nextFrame;
+	int tilesetId;
 	int x;
 	int y;
-	int tilesetId;
-	int nextFrame;
 	float rotation;
 };
 
-struct TileLayerData {
+struct TileLayerData
+{
 	bool scroll;
 	int layerZ;
 	std::vector<TileData> tiles;
 };
 
-struct MapData {
+struct MapData
+{
 	std::vector<TileLayerData> tileLayers;
 };
 
@@ -66,37 +69,10 @@ static void buryEntity(const TmxMapLib::Object& object, const Entity& entity,
 }
 
 //  ============================================================================
-static int getScrollTilesetIdOffset(int tilesetId) {
-	if (tilesetId >= 140 && tilesetId <= 143) {
-		return 140;
-	}
-
-	if (tilesetId >= 152 && tilesetId <= 155) {
-		return 148;
-	}
-
-	return 0;
-}
-
-//  ============================================================================
 static glm::vec2 getTileObjectPosition(const TmxMapLib::Object& object) {
 	return glm::vec2(
 		object.GetX() + object.GetWidth() * 0.5f,
 		object.GetY() - object.GetHeight() * 0.5f);
-}
-
-//  ============================================================================
-static bool getTilesetAlpha(const TmxMapLib::Map& tmxMap, const int gid) {
-	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
-
-	const TmxMapLib::TilesetTile* tilesetTile =
-		tileset->GetTile(gid - 1);
-
-	if (tilesetTile) {
-		return tilesetTile->GetPropertySet().GetBoolValue("AlphaTest", false);
-	}
-
-	return false;
 }
 
 //  ============================================================================
@@ -116,7 +92,10 @@ static bool getTilesetAnimation(const TmxMapLib::Map& tmxMap, const int gid,
 			const TmxMapLib::TilesetTile* nextFrameTilesetTile =
 				tileset->GetTile(nextFrameId);
 
-			nextFrame = nextFrameTilesetTile->GetId();
+			//	Use alias as tileset ID if present
+			nextFrame =
+				nextFrameTilesetTile->GetPropertySet().GetIntValue(
+					"AliasTilesetId", nextFrameTilesetTile->GetId());
 
 			return true;
 		}
@@ -126,20 +105,85 @@ static bool getTilesetAnimation(const TmxMapLib::Map& tmxMap, const int gid,
 }
 
 //  ============================================================================
-static void loadTileData(TileData& tileData, const TmxMapLib::Map& tmxMap,
-						 const int gid) {
+static void loadTileDataProperties(TileData& tileData,
+								   const TmxMapLib::TilesetTile& tilesetTile) {
+	const TmxMapLib::PropertySet& propertySet = tilesetTile.GetPropertySet();
+
+	tileData.alpha =
+		propertySet.GetBoolValue("AlphaTest", false);
+
+	tileData.wallFace =
+		propertySet.GetBoolValue("WallFace", false);
+
+	tileData.wallTop =
+		propertySet.GetBoolValue("WallTop", false);
+
+	//	Use alias as tileset ID if present
+	tileData.tilesetId =
+		propertySet.GetIntValue("AliasTilesetId", tileData.tilesetId);
+}
+
+//  ============================================================================
+static TileData loadTileData(const TmxMapLib::Map& tmxMap,
+							 const TmxMapLib::Tile& tile) {
+	TileData tileData = {};
+	tileData.x = tile.GetX();
+	tileData.y = tile.GetY();
+	tileData.flipHorz = tile.GetFlipHorizontally();
+	tileData.flipVert = tile.GetFlipVertically();
+	tileData.flipDiag = tile.GetFlipDiagonally();
+
+	int gid = tile.GetGid();
+
+	//	Set initial tileset ID
+	tileData.tilesetId = gid - 1;
+
+	//	Set initial animation
+	tileData.nextFrame = tileData.tilesetId;
+	tileData.animated = getTilesetAnimation(tmxMap, gid, tileData.nextFrame);
+
+	//	Load properties from tileset tile
 	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
 
-	const TmxMapLib::TilesetTile* tilesetTile =
-		tileset->GetTile(gid - 1);
+	const TmxMapLib::TilesetTile* tilesetTile = tileset->GetTile(gid - 1);
 
-	if (tilesetTile) {
-		tileData.wallFace =
-			tilesetTile->GetPropertySet().GetBoolValue("WallFace", false);
-
-		tileData.wallTop =
-			tilesetTile->GetPropertySet().GetBoolValue("WallTop", false);
+	//	Return early if there's no matching tileset tile
+	if (tilesetTile == nullptr) {
+		return tileData;
 	}
+
+	const TmxMapLib::PropertySet& propertySet = tilesetTile->GetPropertySet();
+
+	//	Figure out if this is an odd/even tile (like a checkerboard)
+	const bool odd = (tileData.x + tileData.y) % 2;
+
+	int tilesetId = gid - 1;
+
+	//	Set tileset ID to alternate odd/even ID if it is specified
+	if (odd) {
+		tilesetId = propertySet.GetIntValue("OddTilesetId", tilesetId);
+	} else {
+		tilesetId = propertySet.GetIntValue("EvenTilesetId", tilesetId);
+	}
+
+	gid = tileset->GetFirstGid() + tilesetId;
+
+	//	Update to actual tileset ID
+	tileData.tilesetId = tilesetId;
+
+	//	Update animation to actual tileset ID
+	tileData.nextFrame = tilesetId;
+	tileData.animated = getTilesetAnimation(tmxMap, gid, tileData.nextFrame);
+
+	//	Get the actual tileset tile to use for properties
+	const TmxMapLib::TilesetTile* finalTilesetTile =
+		tileset->GetTile(tilesetId);
+
+	if (finalTilesetTile != nullptr) {
+		loadTileDataProperties(tileData, *finalTilesetTile);
+	}
+
+	return tileData;
 }
 
 //  ============================================================================
@@ -290,17 +334,14 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 								  tile.rotation);
 			} else {
 				if (tileLayer.scroll) {
-					int scrollTilesetIdOffset =
-						getScrollTilesetIdOffset(tilesetId);
-
-					getTilesetUv(tilesetId - scrollTilesetIdOffset,
-								 32, 64, 16, 16, uv1, uv2);
+					getTilesetUv(tilesetId,
+								 32, 96, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame1VertexData, position, size,
 									  uv1, uv2, tile.rotation);
 
-					getTilesetUv(tile.nextFrame - scrollTilesetIdOffset,
-								 32, 64, 16, 16, uv1, uv2);
+					getTilesetUv(tile.nextFrame,
+								 32, 96, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame2VertexData, position, size,
 									  uv1, uv2, tile.rotation);
@@ -843,23 +884,7 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 					continue;
 				}
 
-				TileData tileData = {};
-				tileData.x = tileX;
-				tileData.y = tileY;
-				tileData.tilesetId = tile->GetGid() - 1;
-				tileData.flipHorz = tile->GetFlipHorizontally();
-				tileData.flipVert = tile->GetFlipVertically();
-				tileData.flipDiag = tile->GetFlipDiagonally();
-
-				tileData.alpha = getTilesetAlpha(tmxMap, tile->GetGid());
-
-				loadTileData(tileData, tmxMap, tile->GetGid());
-
-				int nextFrame;
-				if (getTilesetAnimation(tmxMap, tile->GetGid(), nextFrame)) {
-					tileData.animated = true;
-					tileData.nextFrame = nextFrame;
-				}
+				TileData tileData = loadTileData(tmxMap, *tile);
 
 				tileLayerData.tiles.push_back(tileData);
 			}

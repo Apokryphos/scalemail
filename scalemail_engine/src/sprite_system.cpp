@@ -1,4 +1,5 @@
 #include "direction.hpp"
+#include "direction_util.hpp"
 #include "asset_manager.hpp"
 #include "layer.hpp"
 #include "physics_system.hpp"
@@ -252,9 +253,11 @@ void SpriteSystem::setDecal(const SpriteComponent& cmpnt, bool decal) {
 //	============================================================================
 void SpriteSystem::setFacing(const SpriteComponent& cmpnt,
 							 const Direction facing) {
-	mData[cmpnt.index].facing = facing;
-	this->updateAnimationTileset(cmpnt.index,
-								 mData[cmpnt.index].animation.frameIndex);
+	if (mData[cmpnt.index].facing != facing) {
+		mData[cmpnt.index].facing = facing;
+		this->updateAnimationTileset(cmpnt.index,
+									mData[cmpnt.index].animation.frameIndex);
+	}
 }
 
 //	============================================================================
@@ -340,6 +343,19 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 		mData[index].position.x = position.x;
 		mData[index].position.y = position.y + mData[index].offsetY;
 		mData[index].position.z = (1.0f - mData[index].decal);
+	}
+
+	//	Update sprite facings from position system
+	glm::vec2 direction;
+	for (const auto& p : mEntitiesByComponentIndices) {
+		direction =
+			physicsSystem.getDirection(physicsSystem.getComponent(p.second));
+
+		const size_t index = p.first;
+
+		if (direction.x != 0.0f || direction.y != 0.0f) {
+			this->setFacing(index, vec2ToDirection(direction));
+		}
 	}
 
 	for (const auto& p : mEntitiesByComponentIndices) {

@@ -8,6 +8,7 @@
 #include "gl_headers.hpp"
 #include "input.hpp"
 #include "input_state.hpp"
+#include "map_render.hpp"
 #include "render.hpp"
 #include "screen_capture.hpp"
 #include "transition.hpp"
@@ -61,6 +62,7 @@ static bool update(Game& game, World& world, GameState* gameState,
 		addTransitionTime(TIME_STEP);
 		gameState->update(game, TIME_STEP);
 		world.update(TIME_STEP);
+		updateMapMesh(TIME_STEP);
 	}
 
 	return updated;
@@ -122,8 +124,9 @@ int startEngine() {
 	World world;
 	world.initialize(&assetManager);
 
-	world.loadMap("map1");
+	// world.loadMap("map1");
 	// world.loadMap("test_map");
+	world.loadMap("test_map2");
 
 	buildAmbientLights();
 

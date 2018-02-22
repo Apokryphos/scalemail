@@ -77,10 +77,12 @@ void MainGameState::activate(Game& game) {
 
 	BurySystem& burySystem = world.getBurySystem();
 	for (const auto entity : buriedEntities) {
-		BuryComponent buryCmpnt = burySystem.getComponent(entity);
+		if (burySystem.hasComponent(entity)) {
+			BuryComponent buryCmpnt = burySystem.getComponent(entity);
 
-		if (burySystem.getBuryState(buryCmpnt) == BuryState::BURIED) {
-			world.getBurySystem().rise(buryCmpnt, false);
+			if (burySystem.getBuryState(buryCmpnt) == BuryState::BURIED) {
+				world.getBurySystem().rise(buryCmpnt, false);
+			}
 		}
 	}
 
@@ -117,26 +119,6 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 
 		if (!healthGauge.isEmpty()) {
 			InputState& inputState = player->inputState;
-
-			SpriteSystem& spriteSystem = world.getSpriteSystem();
-			SpriteComponent spriteCmpnt = spriteSystem.getComponent(player->entity);
-
-			//	Update sprite facing
-			if (inputState.moveLeft || inputState.moveRight) {
-				if (inputState.moveLeft && !inputState.moveRight) {
-					spriteSystem.setFacing(spriteCmpnt, Direction::WEST);
-				} else if (inputState.moveRight && !inputState.moveLeft) {
-					spriteSystem.setFacing(spriteCmpnt, Direction::EAST);
-				}
-			}
-
-			if (inputState.moveUp || inputState.moveDown) {
-				if (inputState.moveUp && !inputState.moveDown) {
-					spriteSystem.setFacing(spriteCmpnt, Direction::NORTH);
-				} else if (inputState.moveDown && !inputState.moveUp) {
-					spriteSystem.setFacing(spriteCmpnt, Direction::SOUTH);
-				}
-			}
 
 			//	Update direction
 			moveX =

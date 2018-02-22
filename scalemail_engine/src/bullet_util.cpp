@@ -51,9 +51,8 @@ LightData getBulletLightData(int bulletIndex) {
 	lightData.pulse = 32.0f;
 	lightData.pulseSize = 6.0f;
 	lightData.size = glm::vec2(16.0f);
+	lightData.glowSize = glm::vec2(0.0f);
 	lightData.color = getBulletLightColor(bulletIndex);
-
-	lightData.glowSize = lightData.size * 0.33f;
 
 	return lightData;
 }

@@ -28,6 +28,7 @@ class LightSystem : public EntitySystem
 	std::vector<glm::vec2> mSize;
 	std::vector<glm::vec2> mFinalGlowSize;
 	std::vector<glm::vec2> mFinalSize;
+	std::vector<float> mGlowScale;
 	std::vector<float> mPulse;
 	std::vector<float> mPulseSize;
 	std::vector<float> mTicks;

@@ -41,6 +41,7 @@ public:
 	void setBulletImpactTilesetId(const GunComponent& cmpnt, int tilesetId);
 	void setBulletLightColor(const GunComponent& cmpnt,
 							 const glm::vec4 lightColor);
+	void setBulletRotateOffset(const GunComponent& cmpnt, float offset);
 	void setBulletSpeed(const GunComponent& cmpnt, float speed);
 	void setBulletTilesetId(const GunComponent& cmpnt, int tilesetId);
 	void setCooldownDuration(const GunComponent& cmpnt, float duration);

@@ -70,6 +70,11 @@ void GunSystem::setBulletLightColor(const GunComponent& cmpnt,
 }
 
 //	============================================================================
+void GunSystem::setBulletRotateOffset(const GunComponent& cmpnt, float offset) {
+	mBulletData[cmpnt.index].rotateOffset = offset;
+}
+
+//	============================================================================
 void GunSystem::setBulletSpeed(const GunComponent& cmpnt, float speed) {
 	mBulletData[cmpnt.index].speed = speed;
 }

@@ -19,7 +19,7 @@ namespace ScaleMail
 Entity createActor(World& world, const glm::vec2& position,
 				   const glm::vec2& size, const int actorIndex,
 				   const Direction facing, const std::string& name,
-				   const std::string& prefab, const std::string& ai) {
+				   const std::string& ai) {
 	Entity entity = world.createEntity();
 
 	SpriteSystem& spriteSystem = world.getSpriteSystem();
@@ -55,8 +55,6 @@ Entity createActor(World& world, const glm::vec2& position,
 	addAiBehavior(ai, entity, world.getAiSystem(),
 				  world.getAiBehaviorFactory());
 
-	addPrefab(prefab, entity, world);
-
 	return entity;
 }
 
@@ -65,7 +63,7 @@ Entity createPlayerActor(World& world, const glm::vec2 position,
 						 const int actorIndex, const Direction facing,
 						 const std::string& name) {
 	Entity entity = createActor(world, position, glm::vec2(16.0f, 16.0f),
-								actorIndex, facing, name, "", "");
+								actorIndex, facing, name, "");
 
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
@@ -96,7 +94,7 @@ Entity createVillainActor(World& world, const glm::vec2& position,
 						  const Direction facing, const std::string& name,
 						  const std::string& prefab, const std::string& ai) {
 	Entity entity = createActor(world, position, size, actorIndex, facing,
-								name, prefab, ai);
+								name, ai);
 
 	TeamSystem& teamSystem = world.getTeamSystem();
 	teamSystem.addComponent(entity);
@@ -109,6 +107,9 @@ Entity createVillainActor(World& world, const glm::vec2& position,
 	gunSystem.setBulletTilesetId(gunCmpnt, getBulletTilesetId(3));
 	gunSystem.setBulletLightColor(gunCmpnt, getBulletLightColor(3));
 	gunSystem.setCooldownDuration(gunCmpnt, 0.25f);
+
+	//	Prefab last so it can override component settings
+	addPrefab(prefab, entity, world);
 
 	return entity;
 }

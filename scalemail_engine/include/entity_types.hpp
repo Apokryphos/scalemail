@@ -11,11 +11,6 @@ struct Entity;
 struct LightData;
 class World;
 
-Entity createActor(World& world, const glm::vec2& position,
-				   const glm::vec2& size, const int actorIndex,
-				   const Direction facing, const std::string& name,
-				   const std::string& prefab, const std::string& ai);
-
 Entity createBullet(World& world, const Entity& sourceEntity,
 					const glm::vec2& position, const BulletData& bulletData,
 					const LightData& lightData);

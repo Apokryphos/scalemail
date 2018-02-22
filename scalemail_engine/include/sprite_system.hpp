@@ -32,8 +32,9 @@ struct SpriteComponentData {
 	float animate;
 	//	Decals are flat Y axis aligned quads
 	float decal;
-	float rotate;
 	float offsetY;
+	float rotate;
+	float rotateOffset;
 	glm::vec2 size;
 	glm::ivec4 sourceRect;
 	glm::vec2 uv1;
@@ -113,6 +114,7 @@ public:
 	void setDirection(
 		const SpriteComponent& cmpnt, const glm::vec2 direction);
 	void setRotate(const SpriteComponent& cmpnt, float rotate);
+	void setRotateOffset(const SpriteComponent& cmpnt, float offset);
 	void setSize(const SpriteComponent& cmpnt, const glm::vec2& size);
 	void setSourceRect(
 		const SpriteComponent& cmpnt,

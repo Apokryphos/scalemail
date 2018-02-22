@@ -4,6 +4,7 @@
 #include "sprite_system.hpp"
 #include "string_util.hpp"
 #include "world.hpp"
+#include <glm/glm.hpp>
 
 namespace ScaleMail
 {
@@ -57,6 +58,14 @@ static void buildSkeleton(Entity entity, World& world) {
 	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
 	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
 	healthGauge.setMax(30.0f);
+
+	GunSystem& gunSystem = world.getGunSystem();
+	GunComponent gunCmpnt = gunSystem.getComponent(entity);
+	gunSystem.setBulletImpactTilesetId(gunCmpnt, getBulletImpactTilesetId(4));
+	gunSystem.setBulletTilesetId(gunCmpnt, getBulletTilesetId(4));
+	gunSystem.setBulletLightColor(gunCmpnt, getBulletLightColor(4));
+	gunSystem.setBulletRotateOffset(gunCmpnt, glm::radians(135.0f));
+	gunSystem.setCooldownDuration(gunCmpnt, 1.5f);
 }
 
 //  ============================================================================

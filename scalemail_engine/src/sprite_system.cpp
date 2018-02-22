@@ -46,6 +46,7 @@ void SpriteSystem::createComponent() {
 	data.maskTextureId = 0;
 	data.tilesetId = 0;
 	data.rotate = 0;
+	data.rotateOffset = 0.0f;
 	data.size = glm::vec2(16.0f);
 	data.sourceRect = glm::ivec4(0, 0, 16, 16);
 	data.uv1 = glm::vec2(0.0f);
@@ -109,7 +110,7 @@ void SpriteSystem::buildVertexData(
 		mColorA.emplace_back(mask ? sprite.maskColor.a : sprite.color.a);
 		mSizeX.emplace_back(sprite.size.x);
 		mSizeY.emplace_back(sprite.size.y);
-		mRotate.emplace_back(sprite.rotate);
+		mRotate.emplace_back(sprite.rotate + sprite.rotateOffset);
 		mTexU1.emplace_back(sprite.uv1.x);
 		mTexV1.emplace_back(sprite.uv1.y);
 		mTexU2.emplace_back(sprite.uv2.x);
@@ -279,6 +280,11 @@ void SpriteSystem::setOffsetY(const SpriteComponent& cmpnt, float offsetY) {
 //	============================================================================
 void SpriteSystem::setRotate(const SpriteComponent& cmpnt, float rotate) {
 	mData[cmpnt.index].rotate = rotate;
+}
+
+//	============================================================================
+void SpriteSystem::setRotateOffset(const SpriteComponent& cmpnt, float offset) {
+	mData[cmpnt.index].rotateOffset = offset;
 }
 
 //	============================================================================

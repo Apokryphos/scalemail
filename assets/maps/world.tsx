@@ -262,48 +262,120 @@
   </properties>
  </tile>
  <tile id="140">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="0"/>
+   <property name="EvenTilesetId" type="int" value="140"/>
+   <property name="OddTilesetId" type="int" value="141"/>
+  </properties>
   <animation>
    <frame tileid="140" duration="300"/>
    <frame tileid="141" duration="300"/>
   </animation>
  </tile>
  <tile id="141">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="1"/>
+   <property name="EvenTilesetId" type="int" value="141"/>
+   <property name="OddTilesetId" type="int" value="140"/>
+  </properties>
   <animation>
    <frame tileid="141" duration="300"/>
    <frame tileid="140" duration="300"/>
   </animation>
  </tile>
  <tile id="142">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="2"/>
+  </properties>
   <animation>
    <frame tileid="142" duration="300"/>
    <frame tileid="143" duration="300"/>
   </animation>
  </tile>
  <tile id="143">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="3"/>
+  </properties>
   <animation>
    <frame tileid="143" duration="300"/>
    <frame tileid="142" duration="300"/>
   </animation>
  </tile>
+ <tile id="146">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="8"/>
+   <property name="EvenTilesetId" type="int" value="146"/>
+   <property name="OddTilesetId" type="int" value="147"/>
+  </properties>
+  <animation>
+   <frame tileid="146" duration="100"/>
+   <frame tileid="147" duration="100"/>
+  </animation>
+ </tile>
+ <tile id="147">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="9"/>
+   <property name="EvenTilesetId" type="int" value="147"/>
+   <property name="OddTilesetId" type="int" value="146"/>
+  </properties>
+  <animation>
+   <frame tileid="147" duration="100"/>
+   <frame tileid="146" duration="100"/>
+  </animation>
+ </tile>
+ <tile id="148">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="10"/>
+   <property name="EvenTilesetId" type="int" value="148"/>
+   <property name="OddTilesetId" type="int" value="149"/>
+  </properties>
+  <animation>
+   <frame tileid="148" duration="100"/>
+   <frame tileid="149" duration="100"/>
+  </animation>
+ </tile>
+ <tile id="149">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="11"/>
+   <property name="EvenTilesetId" type="int" value="149"/>
+   <property name="OddTilesetId" type="int" value="148"/>
+  </properties>
+  <animation>
+   <frame tileid="149" duration="100"/>
+   <frame tileid="148" duration="100"/>
+  </animation>
+ </tile>
  <tile id="152">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="4"/>
+  </properties>
   <animation>
    <frame tileid="152" duration="300"/>
    <frame tileid="153" duration="300"/>
   </animation>
  </tile>
  <tile id="153">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="5"/>
+  </properties>
   <animation>
    <frame tileid="153" duration="300"/>
    <frame tileid="152" duration="300"/>
   </animation>
  </tile>
  <tile id="154">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="6"/>
+  </properties>
   <animation>
    <frame tileid="154" duration="300"/>
    <frame tileid="155" duration="300"/>
   </animation>
  </tile>
  <tile id="155">
+  <properties>
+   <property name="AliasTilesetId" type="int" value="7"/>
+  </properties>
   <animation>
    <frame tileid="155" duration="300"/>
    <frame tileid="154" duration="300"/>
@@ -892,11 +964,19 @@
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="268" duration="100"/>
+   <frame tileid="269" duration="100"/>
+  </animation>
  </tile>
  <tile id="269">
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="269" duration="100"/>
+   <frame tileid="268" duration="100"/>
+  </animation>
  </tile>
  <tile id="270">
   <properties>
@@ -980,43 +1060,75 @@
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="291" duration="100"/>
+   <frame tileid="292" duration="100"/>
+  </animation>
  </tile>
  <tile id="292">
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="292" duration="100"/>
+   <frame tileid="291" duration="100"/>
+  </animation>
  </tile>
  <tile id="293">
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="293" duration="100"/>
+   <frame tileid="294" duration="100"/>
+  </animation>
  </tile>
  <tile id="294">
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="294" duration="100"/>
+   <frame tileid="293" duration="100"/>
+  </animation>
  </tile>
  <tile id="295">
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="295" duration="100"/>
+   <frame tileid="296" duration="100"/>
+  </animation>
  </tile>
  <tile id="296">
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="296" duration="100"/>
+   <frame tileid="295" duration="100"/>
+  </animation>
  </tile>
  <tile id="297">
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
    <property name="WallFace" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="297" duration="100"/>
+   <frame tileid="298" duration="100"/>
+  </animation>
  </tile>
  <tile id="298">
   <properties>
    <property name="AlphaTest" type="bool" value="true"/>
    <property name="WallFace" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="298" duration="100"/>
+   <frame tileid="297" duration="100"/>
+  </animation>
  </tile>
  <tile id="299">
   <properties>

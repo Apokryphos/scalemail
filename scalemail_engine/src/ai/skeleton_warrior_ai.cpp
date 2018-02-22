@@ -1,4 +1,4 @@
-#include "ai/skeleton_ai.hpp"
+#include "ai/skeleton_warrior_ai.hpp"
 #include "ai_system.hpp"
 #include "actor_util.hpp"
 #include "physics_system.hpp"
@@ -13,11 +13,11 @@ namespace ScaleMail
 const float MIN_PLAYER_RANGE = 128.0f;
 
 //	============================================================================
-SkeletonAi::SkeletonAi() {
+SkeletonWarriorAi::SkeletonWarriorAi() {
 }
 
 //	============================================================================
-void SkeletonAi::think(World& world, [[maybe_unused]]float elapsedSeconds) {
+void SkeletonWarriorAi::think(World& world, [[maybe_unused]]float elapsedSeconds) {
 	const Entity entity = this->getEntity();
 
 	if (!actorCanMove(entity, world)) {
@@ -27,6 +27,11 @@ void SkeletonAi::think(World& world, [[maybe_unused]]float elapsedSeconds) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 	glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+
+	GunSystem& gunSystem = world.getGunSystem();
+	GunComponent gunCmpnt = gunSystem.getComponent(entity);
+
+	gunSystem.setFire(gunCmpnt, false);
 
 	if (!actorIsAlive(mTargetEntity, world)) {
 		//	Assign a new target
@@ -43,6 +48,10 @@ void SkeletonAi::think(World& world, [[maybe_unused]]float elapsedSeconds) {
 		AiSystem& aiSystem = world.getAiSystem();
 		AiComponent aiCmpnt = aiSystem.getComponent(entity);
 		aiSystem.setMoveDirection(aiCmpnt, targetPosition - position);
+
+		//	Fire at target
+		gunSystem.setTarget(gunCmpnt, targetPosition);
+		gunSystem.setFire(gunCmpnt, true);
 	}
 }
 }

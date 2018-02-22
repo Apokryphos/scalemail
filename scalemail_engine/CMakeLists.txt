@@ -10,6 +10,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/ai/ally_ai.hpp
     include/ai/blob_ai.hpp
     include/ai/skeleton_ai.hpp
+    include/ai/skeleton_warrior_ai.hpp
     include/ai/vampire_ai.hpp
     include/gui/gui.hpp
     include/gui/gui_screen.hpp
@@ -108,6 +109,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ally_ai.cpp
     src/ai/blob_ai.cpp
     src/ai/skeleton_ai.cpp
+    src/ai/skeleton_warrior_ai.cpp
     src/ai/vampire_ai.cpp
     src/entity_types/actor.cpp
     src/entity_types/bullet.cpp

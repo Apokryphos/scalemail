@@ -58,6 +58,18 @@ static void buildSkeleton(Entity entity, World& world) {
 	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
 	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
 	healthGauge.setMax(30.0f);
+}
+
+//  ============================================================================
+static void buildSkeletonWarrior(Entity entity, World& world) {
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	physicsSystem.setSpeed(physicsCmpnt, 32.0f);
+
+	HealthSystem& healthSystem = world.getHealthSystem();
+	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
+	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
+	healthGauge.setMax(30.0f);
 
 	GunSystem& gunSystem = world.getGunSystem();
 	GunComponent gunCmpnt = gunSystem.getComponent(entity);
@@ -90,9 +102,11 @@ void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 		buildBlob(entity, world);
 	} else if (prefabName == "skeleton") {
 		buildSkeleton(entity, world);
+	} else if (prefabName == "skeleton_warrior") {
+		buildSkeletonWarrior(entity, world);
 	} else if (prefabName == "vampire") {
 		buildVampire(entity, world);
-	} else if (prefabName == "healthpotion") {
+	} else if (prefabName == "health_potion") {
 		buildHealthPotion(entity, world);
 	}
 }

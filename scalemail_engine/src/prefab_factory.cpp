@@ -13,7 +13,7 @@ static void buildAlly(Entity entity, World& world) {
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 	physicsSystem.setSpeed(physicsCmpnt, 16.0f);
 
-	int bulletIndex = world.getRandom().nextInt(0, 4);
+	int bulletIndex = world.getRandom().nextInt(0, 3);
 
 	GunSystem& gunSystem = world.getGunSystem();
 	GunComponent gunCmpnt = gunSystem.getComponent(entity);
@@ -67,9 +67,6 @@ static void buildVampire(Entity entity, World& world) {
 
 	GunSystem& gunSystem = world.getGunSystem();
 	GunComponent gunCmpnt = gunSystem.getComponent(entity);
-	gunSystem.setBulletImpactTilesetId(gunCmpnt, getBulletImpactTilesetId(3));
-	gunSystem.setBulletTilesetId(gunCmpnt, getBulletTilesetId(3));
-	gunSystem.setBulletLightColor(gunCmpnt, getBulletLightColor(3));
 	gunSystem.setCooldownDuration(gunCmpnt, 0.25f);
 }
 

@@ -1,5 +1,6 @@
 #include "ai_behavior.hpp"
 #include "ai_system.hpp"
+#include "bullet_util.hpp"
 #include "damage_system.hpp"
 #include "entity_util.hpp"
 #include "gun_system.hpp"
@@ -101,6 +102,13 @@ Entity createVillainActor(World& world, const glm::vec2& position,
 	teamSystem.addComponent(entity);
 	TeamComponent teamCmpnt = teamSystem.getComponent(entity);
 	teamSystem.setTeam(teamCmpnt, Team::VILLAIN);
+
+	GunSystem& gunSystem = world.getGunSystem();
+	GunComponent gunCmpnt = gunSystem.getComponent(entity);
+	gunSystem.setBulletImpactTilesetId(gunCmpnt, getBulletImpactTilesetId(3));
+	gunSystem.setBulletTilesetId(gunCmpnt, getBulletTilesetId(3));
+	gunSystem.setBulletLightColor(gunCmpnt, getBulletLightColor(3));
+	gunSystem.setCooldownDuration(gunCmpnt, 0.25f);
 
 	return entity;
 }

@@ -335,13 +335,13 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 			} else {
 				if (tileLayer.scroll) {
 					getTilesetUv(tilesetId,
-								 32, 96, 16, 16, uv1, uv2);
+								 32, 128, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame1VertexData, position, size,
 									  uv1, uv2, tile.rotation);
 
 					getTilesetUv(tile.nextFrame,
-								 32, 96, 16, 16, uv1, uv2);
+								 32, 128, 16, 16, uv1, uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame2VertexData, position, size,
 									  uv1, uv2, tile.rotation);

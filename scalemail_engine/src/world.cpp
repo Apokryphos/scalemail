@@ -22,7 +22,7 @@ World::World() : mPhysicsSystem(mEntityManager, 10000),
 				 mBurySystem(mEntityManager),
 				 mParticleSystem(mEntityManager),
 				 mLootSystem(mEntityManager), mInventorySystem(mEntityManager),
-				 mTeamSystem(mEntityManager) {
+				 mTeamSystem(mEntityManager), mFacingSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");
@@ -70,6 +70,10 @@ void World::destroyEntity(Entity entity) {
 
 	if (mExpireSystem.hasComponent(entity)) {
 		mExpireSystem.removeComponent(entity);
+	}
+
+	if (mFacingSystem.hasComponent(entity)) {
+		mFacingSystem.removeComponent(entity);
 	}
 
 	if (mGunSystem.hasComponent(entity)) {
@@ -156,6 +160,11 @@ DoorSystem& World::getDoorSystem() {
 //  ============================================================================
 ExpireSystem& World::getExpireSystem() {
 	return mExpireSystem;
+}
+
+//  ============================================================================
+FacingSystem& World::getFacingSystem() {
+	return mFacingSystem;
 }
 
 //  ============================================================================
@@ -296,6 +305,7 @@ void World::update(float elapsedSeconds) {
 	mAiSystem.update(*this, elapsedSeconds);
 
 	mPhysicsSystem.simulate(elapsedSeconds);
+	mFacingSystem.update(mPhysicsSystem, mSpriteSystem);
 	mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
 	mLightSystem.update(elapsedSeconds, mPhysicsSystem);
 

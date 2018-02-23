@@ -345,19 +345,6 @@ void SpriteSystem::update(float elapsedSeconds, PhysicsSystem& physicsSystem) {
 		mData[index].position.z = (1.0f - mData[index].decal);
 	}
 
-	//	Update sprite facings from position system
-	glm::vec2 direction;
-	for (const auto& p : mEntitiesByComponentIndices) {
-		direction =
-			physicsSystem.getDirection(physicsSystem.getComponent(p.second));
-
-		const size_t index = p.first;
-
-		if (direction.x != 0.0f || direction.y != 0.0f) {
-			this->setFacing(index, vec2ToDirection(direction));
-		}
-	}
-
 	for (const auto& p : mEntitiesByComponentIndices) {
 		SpriteAnimation& animation = mData[p.first].animation;
 

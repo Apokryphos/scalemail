@@ -3,6 +3,7 @@
 #include "bullet_util.hpp"
 #include "damage_system.hpp"
 #include "entity_util.hpp"
+#include "facing_system.hpp"
 #include "gun_system.hpp"
 #include "health_system.hpp"
 #include "name_system.hpp"
@@ -43,6 +44,8 @@ Entity createActor(World& world, const glm::vec2& position,
 	physicsSystem.setPosition(physicsCmpnt, position);
 	physicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
 	physicsSystem.setRadius(physicsCmpnt, size.x * 0.25f);
+
+	world.getFacingSystem().addComponent(entity);
 
 	world.getHealthSystem().addComponent(entity);
 

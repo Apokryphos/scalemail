@@ -10,6 +10,7 @@
 #include "entity.hpp"
 #include "entity_manager.hpp"
 #include "expire_system.hpp"
+#include "facing_system.hpp"
 #include "gun_system.hpp"
 #include "health_system.hpp"
 #include "inventory_system.hpp"
@@ -62,6 +63,7 @@ class World
 	LootSystem mLootSystem;
 	InventorySystem mInventorySystem;
 	TeamSystem mTeamSystem;
+	FacingSystem mFacingSystem;
 
 	std::vector<Player> mPlayers;
 
@@ -77,6 +79,7 @@ public:
 	DamageSystem& getDamageSystem();
 	DoorSystem& getDoorSystem();
 	ExpireSystem& getExpireSystem();
+	FacingSystem& getFacingSystem();
 	GunSystem& getGunSystem();
 	HealthSystem& getHealthSystem();
 	InventorySystem& getInventorySystem();

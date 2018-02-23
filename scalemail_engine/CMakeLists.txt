@@ -45,6 +45,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/entity.hpp
     include/expire_system.hpp
     include/fade_shader.hpp
+    include/facing_system.hpp
     include/font.hpp
     include/game_state_manager.hpp
     include/game_state.hpp
@@ -142,6 +143,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/entity_system.cpp
     src/entity_util.cpp
     src/expire_system.cpp
+    src/facing_system.cpp
     src/font.cpp
     src/gl_util.cpp
     src/engine.cpp

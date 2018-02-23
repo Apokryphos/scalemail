@@ -7,6 +7,7 @@
 #include "texture.hpp"
 #include "tile_shader.hpp"
 #include <glm/gtx/transform2.hpp>
+#include <cmath>
 
 namespace ScaleMail
 {
@@ -15,7 +16,7 @@ static TileShader tileShader;
 static Texture worldTexture;
 static Texture horzScrollTexture;
 
-static const float tileDuration = 0.33f;
+static const float tileDuration = 1.0f;
 static float tileTicks = 0;
 static int tileFrame = 0;
 
@@ -29,7 +30,7 @@ void initializeMapMesh(AssetManager& assetManager) {
 
 //	============================================================================
 void renderMap(const Map& map, const Camera& camera,
-			   float totalElapsedSeconds) {
+			   double totalElapsedSeconds) {
 	//  Draw map
 	const Mesh& mesh = map.mapMesh.staticMesh;
 
@@ -57,17 +58,19 @@ void renderMap(const Map& map, const Camera& camera,
 	}
 
 	const Mesh& scrollMesh = map.mapMesh.scrollMeshes[tileFrame];
-	glUniform1f(tileShader.timeLocation, totalElapsedSeconds * 0.5f);
-	glBindTexture(GL_TEXTURE_2D, horzScrollTexture.id);
-	glBindVertexArray(scrollMesh.vao);
-	glDrawArrays(GL_TRIANGLES, 0, scrollMesh.vertexCount);
+	if (scrollMesh.vertexCount > 0) {
+		glUniform1f(tileShader.timeLocation, totalElapsedSeconds * 0.5f);
+		glBindTexture(GL_TEXTURE_2D, horzScrollTexture.id);
+		glBindVertexArray(scrollMesh.vao);
+		glDrawArrays(GL_TRIANGLES, 0, scrollMesh.vertexCount);
+	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
 
 //	============================================================================
-void updateMapMesh(float elapsedSeconds) {
+void updateMapMeshAnimation(float elapsedSeconds) {
 	tileTicks += elapsedSeconds;
 	if (tileTicks >= tileDuration) {
 		tileTicks -= tileDuration;

@@ -154,7 +154,7 @@ static TileData loadTileData(const TmxMapLib::Map& tmxMap,
 
 	const TmxMapLib::PropertySet& propertySet = tilesetTile->GetPropertySet();
 
-	//	Figure out if this is an odd/even tile (like a checkerboard)
+	//	Is this is an odd/even tile (like a checkerboard)?
 	const bool odd = (tileData.x + tileData.y) % 2;
 
 	int tilesetId = gid - 1;

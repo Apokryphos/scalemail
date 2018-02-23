@@ -62,7 +62,8 @@ static bool update(Game& game, World& world, GameState* gameState,
 		addTransitionTime(TIME_STEP);
 		gameState->update(game, TIME_STEP);
 		world.update(TIME_STEP);
-		updateMapMesh(TIME_STEP);
+
+		updateMapMeshAnimation(TIME_STEP);
 	}
 
 	return updated;
@@ -172,6 +173,8 @@ int startEngine() {
 			continue;
 		}
 
+		double elapsedSeconds = (seconds - lastSeconds) * game.speed;
+
 		bool updated = false;
 		if (game.devOptions.step) {
 			//	Step mode update
@@ -185,8 +188,6 @@ int startEngine() {
 			continue;
 		} else {
 			//	Normal update
-			double elapsedSeconds = (seconds - lastSeconds) * game.speed;
-
 			accumulated += elapsedSeconds;
 			totalElapsedSeconds += elapsedSeconds;
 

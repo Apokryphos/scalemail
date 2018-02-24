@@ -45,25 +45,25 @@ class World
 	AiBehaviorFactory mAiBehaviorFactory;
 	PrefabFactory mPrefabFactory;
 
-	PhysicsSystem mPhysicsSystem;
-	SpriteSystem mSpriteSystem;
-	LightSystem mLightSystem;
-	NameSystem mNameSystem;
-	BulletSystem mBulletSystem;
-	ExpireSystem mExpireSystem;
-	TriggerSystem mTriggerSystem;
-	GunSystem mGunSystem;
-	DoorSystem mDoorSystem;
 	AiSystem mAiSystem;
-	HealthSystem mHealthSystem;
-	DamageSystem mDamageSystem;
-	SpriteEffectSystem mSpriteEffectSystem;
+	BulletSystem mBulletSystem;
 	BurySystem mBurySystem;
-	ParticleSystem mParticleSystem;
-	LootSystem mLootSystem;
-	InventorySystem mInventorySystem;
-	TeamSystem mTeamSystem;
+	DamageSystem mDamageSystem;
+	DoorSystem mDoorSystem;
+	ExpireSystem mExpireSystem;
 	FacingSystem mFacingSystem;
+	GunSystem mGunSystem;
+	HealthSystem mHealthSystem;
+	InventorySystem mInventorySystem;
+	LightSystem mLightSystem;
+	LootSystem mLootSystem;
+	NameSystem mNameSystem;
+	ParticleSystem mParticleSystem;
+	PhysicsSystem mPhysicsSystem;
+	SpriteEffectSystem mSpriteEffectSystem;
+	SpriteSystem mSpriteSystem;
+	TeamSystem mTeamSystem;
+	TriggerSystem mTriggerSystem;
 
 	std::vector<Player> mPlayers;
 

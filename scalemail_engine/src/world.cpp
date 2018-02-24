@@ -11,18 +11,18 @@
 namespace ScaleMail
 {
 //  ============================================================================
-World::World() : mPhysicsSystem(mEntityManager, 10000),
-				 mSpriteSystem(mEntityManager),
-				 mLightSystem(mEntityManager),   mNameSystem(mEntityManager),
-				 mBulletSystem(mEntityManager),  mExpireSystem(mEntityManager),
-				 mTriggerSystem(mEntityManager), mGunSystem(mEntityManager),
-				 mDoorSystem(mEntityManager),	 mAiSystem(mEntityManager),
-				 mHealthSystem(mEntityManager),  mDamageSystem(mEntityManager),
-				 mSpriteEffectSystem(mEntityManager),
-				 mBurySystem(mEntityManager),
-				 mParticleSystem(mEntityManager),
-				 mLootSystem(mEntityManager), mInventorySystem(mEntityManager),
-				 mTeamSystem(mEntityManager), mFacingSystem(mEntityManager) {
+World::World() :
+	mAiSystem(mEntityManager),		mBulletSystem(mEntityManager),
+	mBurySystem(mEntityManager),	mDamageSystem(mEntityManager),
+	mDoorSystem(mEntityManager),	mExpireSystem(mEntityManager),
+	mFacingSystem(mEntityManager),	mGunSystem(mEntityManager),
+	mHealthSystem(mEntityManager),	mInventorySystem(mEntityManager),
+	mLightSystem(mEntityManager),	mLootSystem(mEntityManager),
+	mNameSystem(mEntityManager),	mParticleSystem(mEntityManager),
+	mPhysicsSystem(mEntityManager, 10000),
+	mSpriteEffectSystem(mEntityManager),
+	mSpriteSystem(mEntityManager),	mTeamSystem(mEntityManager),
+	mTriggerSystem(mEntityManager) {
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");

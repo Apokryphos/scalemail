@@ -334,14 +334,29 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 								  tile.rotation);
 			} else {
 				if (tileLayer.scroll) {
+					const int scrollTextureWidth = 32;
+					const int scrollTextureHeight = 128;
+					const int scrollTileWidth = 16;
+					const int scrollTileHeight = 16;
+
 					getTilesetUv(tilesetId,
-								 32, 128, 16, 16, uv1, uv2);
+								 scrollTextureWidth,
+								 scrollTextureHeight,
+								 scrollTileWidth,
+								 scrollTileHeight,
+								 uv1,
+								 uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame1VertexData, position, size,
 									  uv1, uv2, tile.rotation);
 
 					getTilesetUv(tile.nextFrame,
-								 32, 128, 16, 16, uv1, uv2);
+								 scrollTextureWidth,
+								 scrollTextureHeight,
+								 scrollTileWidth,
+								 scrollTileHeight,
+								 uv1,
+								 uv2);
 					flipTileUv(tile, uv1, uv2);
 					addTileVertexData(scrollFrame2VertexData, position, size,
 									  uv1, uv2, tile.rotation);

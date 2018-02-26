@@ -36,7 +36,6 @@ struct TileData
 	int tilesetId;
 	int x;
 	int y;
-	float rotation;
 };
 
 struct TileLayerData
@@ -201,46 +200,6 @@ static float getDecal(const TmxMapLib::Map& tmxMap, const int gid) {
 }
 
 //  ============================================================================
-static void flipTileUv(TileData& tile, glm::vec2& uv1, glm::vec2& uv2) {
-	const float piOver2 = 3.14159265359f;
-
-	tile.rotation = 0;
-
-	if (tile.flipDiag) {
-		if (tile.flipHorz && tile.flipVert)
-		{
-			tile.rotation = piOver2;
-			tile.flipVert = false;
-		}
-		else if (tile.flipHorz)
-		{
-			tile.rotation = -piOver2;
-			tile.flipVert = !tile.flipVert;
-		}
-		else if (tile.flipVert)
-		{
-			tile.rotation = piOver2;
-			tile.flipHorz = false;
-		}
-		else
-		{
-			tile.rotation = -piOver2;
-			tile.flipHorz = !tile.flipHorz;
-		}
-	}
-
-	if (tile.flipHorz) {
-		std::swap(uv1.x, uv2.x);
-	}
-
-	if (!tile.flipVert) {
-		std::swap(uv1.y, uv2.y);
-	}
-
-	tile.rotation = 0;
-}
-
-//  ============================================================================
 static glm::vec4 hexToVec4(std::string input) {
 
 	if (input[0] == '#') {
@@ -326,12 +285,11 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 
 			glm::vec2 uv1, uv2;
 			getTilesetUv(tilesetId, 256, 304, 16, 16, uv1, uv2);
-			flipTileUv(tile, uv1, uv2);
 
 			if (!tile.animated) {
 				addTileVertexData(tile.alpha ? alphaVertexData : staticVertexData,
-								  position, size, uv1, uv2,
-								  tile.rotation);
+								  position, size, uv1, uv2, tile.flipDiag,
+								  tile.flipHorz, tile.flipVert);
 			} else {
 				if (tileLayer.scroll) {
 					const int scrollTextureWidth = 32;
@@ -339,34 +297,31 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 					const int scrollTileWidth = 16;
 					const int scrollTileHeight = 16;
 
-					getTilesetUv(tilesetId,
-								 scrollTextureWidth,
-								 scrollTextureHeight,
-								 scrollTileWidth,
-								 scrollTileHeight,
-								 uv1,
-								 uv2);
-					flipTileUv(tile, uv1, uv2);
-					addTileVertexData(scrollFrame1VertexData, position, size,
-									  uv1, uv2, tile.rotation);
+					getTilesetUv(tilesetId, scrollTextureWidth,
+								 scrollTextureHeight, scrollTileWidth,
+								 scrollTileHeight, uv1, uv2);
 
-					getTilesetUv(tile.nextFrame,
-								 scrollTextureWidth,
-								 scrollTextureHeight,
-								 scrollTileWidth,
-								 scrollTileHeight,
-								 uv1,
-								 uv2);
-					flipTileUv(tile, uv1, uv2);
+					addTileVertexData(scrollFrame1VertexData, position, size,
+									  uv1, uv2, tile.flipDiag, tile.flipHorz,
+									  tile.flipVert);
+
+					getTilesetUv(tile.nextFrame, scrollTextureWidth,
+								 scrollTextureHeight, scrollTileWidth,
+								 scrollTileHeight, uv1, uv2);
+
 					addTileVertexData(scrollFrame2VertexData, position, size,
-									  uv1, uv2, tile.rotation);
+									  uv1, uv2, tile.flipDiag, tile.flipHorz,
+									  tile.flipVert);
 				} else {
 					addTileVertexData(frame1VertexData, position, size, uv1,
-									  uv2, tile.rotation);
+									  uv2, tile.flipDiag, tile.flipHorz,
+									  tile.flipVert);
+
 					getTilesetUv(tile.nextFrame, 256, 304, 16, 16, uv1, uv2);
-					flipTileUv(tile, uv1, uv2);
+
 					addTileVertexData(frame2VertexData, position, size, uv1,
-									  uv2, tile.rotation);
+									  uv2, tile.flipDiag, tile.flipHorz,
+									  tile.flipVert);
 				}
 			}
 		}

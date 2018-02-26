@@ -7,6 +7,7 @@
 namespace ScaleMail
 {
 static const float PI = 3.141592653589793f;
+static const float PI_OVER_TWO = 1.57079632679f;
 static const float TWO_PI = 6.28318530718f;
 
 //  ============================================================================

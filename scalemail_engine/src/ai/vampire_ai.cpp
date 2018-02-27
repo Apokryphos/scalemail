@@ -53,12 +53,15 @@ void VampireAi::think(World& world, float elapsedSeconds) {
 	} else {
 		Random& random = world.getRandom();
 
-		//	Pick random direction
+		// Pick random direction
 		glm::vec2 direction =
 			rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
 
 		AiSystem& aiSystem = world.getAiSystem();
 		AiComponent aiCmpnt = aiSystem.getComponent(entity);
+
+		aiSystem.setWander(aiCmpnt, true);
+
 		aiSystem.setMoveDirection(aiCmpnt, direction);
 
 		//	Transform into bats

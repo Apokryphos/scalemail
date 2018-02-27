@@ -25,10 +25,15 @@ class AiSystem : public EntitySystem
 
 	struct AiComponentData
 	{
-		glm::vec2 avoid;
-		glm::vec2 seek;
+		bool seekEnabled;
+		bool wanderEnabled;
+		float wanderAngle;
+		glm::vec2 avoidForce;
 		glm::vec2 moveDirection;
 		glm::vec2 position;
+		glm::vec2 seekForce;
+		glm::vec2 seekTarget;
+		glm::vec2 wanderForce;
 		std::vector<std::shared_ptr<AiBehavior>> behaviors;
 	};
 
@@ -51,6 +56,9 @@ public:
 	void enable(bool enabled);
 	AiComponent getComponent(const Entity& entity) const;
 	void setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction);
+	void setSeek(const AiComponent& cmpnt, bool enabled);
+	void setSeekTarget(const AiComponent& cmpnt, const glm::vec2& target);
+	void setWander(const AiComponent& cmpnt, bool enabled);
 	void update(World& world, float elapsedSeconds);
 };
 }

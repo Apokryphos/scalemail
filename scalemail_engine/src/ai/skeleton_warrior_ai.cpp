@@ -33,6 +33,9 @@ void SkeletonWarriorAi::think(World& world, [[maybe_unused]]float elapsedSeconds
 
 	gunSystem.setFire(gunCmpnt, false);
 
+	AiSystem& aiSystem = world.getAiSystem();
+	AiComponent aiCmpnt = aiSystem.getComponent(entity);
+
 	if (!actorIsAlive(mTargetEntity, world)) {
 		//	Assign a new target
 		Player* player = getRandomPlayerInRange(world, position, MIN_PLAYER_RANGE);
@@ -45,9 +48,8 @@ void SkeletonWarriorAi::think(World& world, [[maybe_unused]]float elapsedSeconds
 		glm::vec2 targetPosition = physicsSystem.getPosition(targetPhysicsCmpnt);
 
 		//	Set move direction towards target
-		AiSystem& aiSystem = world.getAiSystem();
-		AiComponent aiCmpnt = aiSystem.getComponent(entity);
-		aiSystem.setMoveDirection(aiCmpnt, targetPosition - position);
+		aiSystem.setSeek(aiCmpnt, true);
+		aiSystem.setSeekTarget(aiCmpnt, targetPosition);
 
 		//	Fire at target
 		gunSystem.setTarget(gunCmpnt, targetPosition);

@@ -92,24 +92,20 @@ void BlobAi::think(World& world, [[maybe_unused]] float elapsedSeconds) {
 			AiComponent aiCmpnt = aiSystem.getComponent(entity);
 			aiSystem.setMoveDirection(aiCmpnt, targetPosition - position);
 
+			//	Stop wandering
+			aiSystem.setWander(aiCmpnt, false);
+
 			//	Stop running AI
 			return;
 		}
 	}
 
-	//	Wander
-	Random& random = world.getRandom();
-
 	//	Set speed to normal
 	physicsSystem.setSpeed(physicsCmpnt, NORMAL_SPEED);
 
-	//	Pick random direction
-	glm::vec2 direction =
-		rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
-
-	//	Set move direction
+	//	Wander
 	AiSystem& aiSystem = world.getAiSystem();
 	AiComponent aiCmpnt = aiSystem.getComponent(entity);
-	aiSystem.setMoveDirection(aiCmpnt, direction);
+	aiSystem.setWander(aiCmpnt, true);
 }
 }

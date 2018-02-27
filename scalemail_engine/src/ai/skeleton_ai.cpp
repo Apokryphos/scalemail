@@ -28,21 +28,25 @@ void SkeletonAi::think(World& world, [[maybe_unused]]float elapsedSeconds) {
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 	glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 
+	AiSystem& aiSystem = world.getAiSystem();
+	AiComponent aiCmpnt = aiSystem.getComponent(entity);
+
 	if (!actorIsAlive(mTargetEntity, world)) {
 		//	Assign a new target
 		Player* player = getRandomPlayerInRange(world, position, MIN_PLAYER_RANGE);
 		if (player != nullptr) {
 			mTargetEntity = player->entity;
 		}
+
+		aiSystem.setSeek(aiCmpnt, false);
 	} else {
 		PhysicsComponent targetPhysicsCmpnt =
 			physicsSystem.getComponent(mTargetEntity);
 		glm::vec2 targetPosition = physicsSystem.getPosition(targetPhysicsCmpnt);
 
 		//	Set move direction towards target
-		AiSystem& aiSystem = world.getAiSystem();
-		AiComponent aiCmpnt = aiSystem.getComponent(entity);
-		aiSystem.setMoveDirection(aiCmpnt, targetPosition - position);
+		aiSystem.setSeek(aiCmpnt, true);
+		aiSystem.setSeekTarget(aiCmpnt, targetPosition);
 	}
 }
 }

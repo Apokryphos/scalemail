@@ -35,6 +35,12 @@ void PhysicsSystem::addEntityCollisionCallback(
 }
 
 //	============================================================================
+void PhysicsSystem::addForce(const PhysicsComponent& cmpnt,
+							 const glm::vec2 force) {
+	mForce[cmpnt.index] += force;
+}
+
+//	============================================================================
 void PhysicsSystem::addStaticCollisionCallback(
 	std::function<void(StaticCollision&)> callback) {
 	mStaticCollisionCallbacks.push_back(callback);
@@ -200,6 +206,11 @@ float PhysicsSystem::getSpeed(const PhysicsComponent& cmpnt) const {
 }
 
 //	============================================================================
+glm::vec2 PhysicsSystem::getVelocity(const PhysicsComponent& cmpnt) const {
+	return mDirection[cmpnt.index] * mSpeed[cmpnt.index];
+}
+
+//	============================================================================
 void PhysicsSystem::setCollisionGroup(const PhysicsComponent& cmpnt,
 								 	   const CollisionGroup group) {
 	mGroup[cmpnt.index] = group;
@@ -213,12 +224,6 @@ void PhysicsSystem::setDirection(const PhysicsComponent& cmpnt,
 	} else {
 		mDirection[cmpnt.index] = direction;
 	}
-}
-
-//	============================================================================
-void PhysicsSystem::setForce(const PhysicsComponent& cmpnt,
-							 const glm::vec2 force) {
-	mForce[cmpnt.index] = force;
 }
 
 //	============================================================================

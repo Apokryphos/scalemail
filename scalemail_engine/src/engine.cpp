@@ -126,8 +126,8 @@ int startEngine() {
 	world.initialize(&assetManager);
 
 	// world.loadMap("map1");
-	// world.loadMap("test_map");
-	world.loadMap("test_map2");
+	world.loadMap("test_map");
+	// world.loadMap("test_map2");
 
 	buildAmbientLights();
 

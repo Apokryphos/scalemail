@@ -42,6 +42,7 @@ class PhysicsSystem : public EntitySystem
 public:
 	PhysicsSystem(EntityManager& entityManager, int maxComponents = 1000);
 	void addEntityCollisionCallback(std::function<void(EntityCollision&)> callback);
+	void addForce(const PhysicsComponent& cmpnt, const glm::vec2 force);
 	void addStaticCollisionCallback(std::function<void(StaticCollision&)> callback);
 	void addStaticActorObstacle(const float x,     const float y,
 							    const float width, const float height);
@@ -57,10 +58,10 @@ public:
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
 	float getRadius(const PhysicsComponent& cmpnt) const;
 	float getSpeed(const PhysicsComponent& cmpnt) const;
+	glm::vec2 getVelocity(const PhysicsComponent& cmpnt) const;
 	void setCollisionGroup(const PhysicsComponent& cmpnt,
 						   const CollisionGroup group);
 	void setDirection(const PhysicsComponent& cmpnt, const glm::vec2 direction);
-	void setForce(const PhysicsComponent& cmpnt, const glm::vec2 force);
   	void setPosition(const PhysicsComponent& cmpnt, const glm::vec2 position);
 	void setRadius(const PhysicsComponent& cmpnt, const float radius);
 	void setSpeed(const PhysicsComponent& cmpnt, const float speed);

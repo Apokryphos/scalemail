@@ -5,6 +5,7 @@
 #include "vertex_data.hpp"
 #include "world.hpp"
 #include <glm/mat4x4.hpp>
+#include <iostream>
 
 namespace ScaleMail
 {
@@ -18,7 +19,6 @@ static inline void addLineVertexData(
 	const glm::vec4& color) {
 	const float VECTOR_LINE_LENGTH = 24.0f;
 
-	//	Draw avoid force vector
 	vertexData.emplace_back(position.x);
 	vertexData.emplace_back(position.y);
 	vertexData.emplace_back(color.r);
@@ -152,16 +152,18 @@ void AiSystem::drawDebug(std::vector<float>& lineVertexData) {
 			obstacleScaledColor);
 	}
 
-	const glm::vec4 avoidColor(1.0f, 0.25f, 0.25f, 1.f);
-	const glm::vec4 moveColor(0.25f, 0.25f, 1.0f, 1.0f);
-	const glm::vec4 seekColor(0.25f, 1.0f, 0.25f, 1.0f);
+	const glm::vec4 avoidColor(1.0f, 0.0f, 0.0f, 1.f);
+	const glm::vec4 moveColor(0.0f, 1.0f, 0.0f, 1.0f);
+	const glm::vec4 seekColor(0.0f, 0.0f, 1.0f, 1.0f);
+	const glm::vec4 wanderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	for (size_t n = 0; n < mData.size(); ++n) {
 		const AiComponentData& data = mData[n];
 
-		addLineVertexData(lineVertexData, data.position, data.avoid, avoidColor);
+		addLineVertexData(lineVertexData, data.position, data.avoidForce, avoidColor);
 		addLineVertexData(lineVertexData, data.position, data.moveDirection, moveColor);
-		addLineVertexData(lineVertexData, data.position, data.seek, seekColor);
+		addLineVertexData(lineVertexData, data.position, data.seekForce, seekColor);
+		addLineVertexData(lineVertexData, data.position, data.wanderForce, wanderColor);
 	}
 }
 
@@ -186,23 +188,92 @@ void AiSystem::setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction) {
 }
 
 //	============================================================================
+void AiSystem::setSeek(const AiComponent& cmpnt, bool enabled) {
+	mData[cmpnt.index].seekEnabled = enabled;
+}
+
+//	============================================================================
+void AiSystem::setSeekTarget(const AiComponent& cmpnt, const glm::vec2& target) {
+	mData[cmpnt.index].seekTarget = target;
+}
+
+//	============================================================================
+void AiSystem::setWander(const AiComponent& cmpnt, bool enabled) {
+	mData[cmpnt.index].wanderEnabled = enabled;
+}
+
+//	============================================================================
 void AiSystem::update(World& world, float elapsedSeconds) {
 	if (!mEnabled) {
 		return;
 	}
 
 	//	Update AI behaviors
-	const size_t count = mData.size();
+	size_t count = mData.size();
 	for (size_t index = 0; index < count; ++index) {
 		for (auto& behavior : mData[index].behaviors) {
 			behavior.get()->think(world, elapsedSeconds);
 		}
 	}
 
+	Random& random = world.getRandom();
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 
+	for (auto& p : mEntitiesByComponentIndices) {
+		const size_t index = p.first;
+		const Entity& entity = p.second;
+
+		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+
+		//	Calculate wander forces
+		if (mData[index].wanderEnabled) {
+			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+			glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
+
+			const float WANDER_CIRCLE_DISTANCE = 4.0f;
+
+			glm::vec2 circleCenter =
+				normalizeVec2(position + velocity) * WANDER_CIRCLE_DISTANCE;
+
+			const float WANDER_ANGLE_CHANGE = glm::radians(15.0f);
+
+			mData[index].wanderAngle += random.nextFloat(
+				-WANDER_ANGLE_CHANGE * 0.5f,
+				 WANDER_ANGLE_CHANGE * 0.5f);
+
+			const float WANDER_CIRCLE_RADIUS = 8.0f;
+
+			//	Pick random direction
+			glm::vec2 displacement =
+				rotateVec2(
+					glm::vec2(WANDER_CIRCLE_RADIUS, 0.0f),
+					mData[index].wanderAngle);
+
+			mData[index].wanderForce = circleCenter + displacement;
+
+			physicsSystem.addForce(physicsCmpnt, mData[index].wanderForce);
+		}
+
+		//	Calculate seek forces
+		if (mData[index].seekEnabled) {
+			float speed = physicsSystem.getSpeed(physicsCmpnt);
+			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+			glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
+
+			glm::vec2 v =
+				normalizeVec2(mData[index].seekTarget - position) * speed;
+
+			mData[index].seekForce = v - velocity;
+
+			physicsSystem.addForce(physicsCmpnt, mData[index].seekForce);
+		}
+	}
+
 	//	Amount to scale obstacle radius for purpose of avoidance
-	const float MAX_AVOID_FORCE = 128.0f;
+	const float AVOID_MAX_FORCE = 64.0f;
+
+	//	Distance ahead of character to detect obstacles
+	const float AVOID_DISTANCE = 16.0f;
 
 	for (auto& p : mEntitiesByComponentIndices) {
 		const size_t index = p.first;
@@ -210,9 +281,16 @@ void AiSystem::update(World& world, float elapsedSeconds) {
 
 		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 		glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+		glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
 
 		//	Save position for debugging
 		mData[index].position = position;
+
+		glm::vec2 ahead = position + normalizeVec2(velocity) * AVOID_DISTANCE;
+
+		glm::vec2 ahead2 = position + normalizeVec2(velocity) * AVOID_DISTANCE * 0.5f;
+
+		bool collision = false;
 
 		//	Avoid obstacles
 		glm::vec2 avoid(0.0f);
@@ -222,21 +300,28 @@ void AiSystem::update(World& world, float elapsedSeconds) {
 				(mObstacles[index].radius * OBSTACLE_SCALE) *
 				(mObstacles[index].radius * OBSTACLE_SCALE);
 
-			const float distance = glm::length2(position - mObstacles[index].position);
+			const float distance = glm::length2(ahead - mObstacles[index].position);
+			const float distance2 = glm::length2(ahead2 - mObstacles[index].position);
 
-			if (distance < radius) {
+			if (distance <= radius || distance2 <= radius) {
 				glm::vec2 force = position - mObstacles[index].position;
-				force = normalizeVec2(force) * MAX_AVOID_FORCE;
+				force = normalizeVec2(force) * AVOID_MAX_FORCE;
 				avoid += force;
+				collision = true;
 			}
 		}
 
-		mData[index].avoid = avoid;
+		if (collision) {
+			mData[index].moveDirection =
+				rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
+		}
+
+		mData[index].avoidForce = avoid;
 
 		//	Set forces
-		physicsSystem.setForce(physicsCmpnt, avoid);
+		physicsSystem.addForce(physicsCmpnt, avoid);
 
-		//	Set movement directions
+		//	Set movement direction
 		physicsSystem.setDirection(physicsCmpnt, mData[index].moveDirection);
 	}
 }

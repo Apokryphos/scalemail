@@ -25,6 +25,18 @@ static void buildAlly(Entity entity, World& world) {
 }
 
 //  ============================================================================
+static void buildBat(Entity entity, World& world) {
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	physicsSystem.setSpeed(physicsCmpnt, 48.0f);
+
+	HealthSystem& healthSystem = world.getHealthSystem();
+	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
+	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
+	healthGauge.setMax(50.0f);
+}
+
+//  ============================================================================
 static void buildBlob(Entity entity, World& world) {
 	SpriteSystem& spriteSystem = world.getSpriteSystem();
 	SpriteComponent spriteCmpnt = spriteSystem.getComponent(entity);
@@ -98,6 +110,8 @@ void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 
 	if (prefabName == "ally") {
 		buildAlly(entity, world);
+	} else if (prefabName == "bat") {
+		buildBat(entity, world);
 	} else if (prefabName == "blob") {
 		buildBlob(entity, world);
 	} else if (prefabName == "skeleton") {

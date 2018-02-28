@@ -8,6 +8,7 @@ endif()
 
 set(SCALEMAIL_ENGINE_INCLUDE
     include/ai/ally_ai.hpp
+    include/ai/bat_ai.hpp
     include/ai/blob_ai.hpp
     include/ai/skeleton_ai.hpp
     include/ai/skeleton_warrior_ai.hpp
@@ -108,6 +109,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
 
 set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ally_ai.cpp
+    src/ai/bat_ai.cpp
     src/ai/blob_ai.cpp
     src/ai/skeleton_ai.cpp
     src/ai/skeleton_warrior_ai.cpp

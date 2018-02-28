@@ -1,6 +1,7 @@
 #include "ai_behavior_factory.hpp"
 #include "string_util.hpp"
 #include "ai/ally_ai.hpp"
+#include "ai/bat_ai.hpp"
 #include "ai/blob_ai.hpp"
 #include "ai/skeleton_ai.hpp"
 #include "ai/skeleton_warrior_ai.hpp"
@@ -14,6 +15,8 @@ std::shared_ptr<AiBehavior> AiBehaviorFactory::createAiBehavior(std::string name
 
 	if (name == "ally") {
 		return std::make_shared<AllyAi>();
+	} else if (name == "bat") {
+		return std::make_shared<BatAi>();
 	} else if (name == "blob") {
 		return std::make_shared<BlobAi>();
 	} else if (name == "skeleton") {

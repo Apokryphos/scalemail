@@ -220,6 +220,7 @@ void SpriteSystem::initialize(AssetManager* assetManager) {
 void SpriteSystem::setActorIndex(const SpriteComponent& cmpnt,
 								 const int actorIndex) {
 	getActorSpriteAnimation(actorIndex, mData[cmpnt.index].animation);
+	this->updateAnimationTileset(cmpnt, 0);
 }
 
 //	============================================================================

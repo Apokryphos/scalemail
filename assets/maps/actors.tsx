@@ -1444,25 +1444,33 @@
  <tile id="232">
   <properties>
    <property name="ActorIndex" type="int" value="30"/>
+   <property name="Ai" value="bat"/>
    <property name="Facing" value="east"/>
+   <property name="Prefab" value="bat"/>
   </properties>
  </tile>
  <tile id="233">
   <properties>
    <property name="ActorIndex" type="int" value="30"/>
+   <property name="Ai" value="bat"/>
    <property name="Facing" value="south"/>
+   <property name="Prefab" value="bat"/>
   </properties>
  </tile>
  <tile id="234">
   <properties>
    <property name="ActorIndex" type="int" value="30"/>
+   <property name="Ai" value="bat"/>
    <property name="Facing" value="north"/>
+   <property name="Prefab" value="bat"/>
   </properties>
  </tile>
  <tile id="235">
   <properties>
    <property name="ActorIndex" type="int" value="30"/>
+   <property name="Ai" value="bat"/>
    <property name="Facing" value="west"/>
+   <property name="Prefab" value="bat"/>
   </properties>
  </tile>
  <tile id="236">
@@ -1540,25 +1548,33 @@
  <tile id="248">
   <properties>
    <property name="ActorIndex" type="int" value="30"/>
+   <property name="Ai" value="bat"/>
    <property name="Facing" value="east"/>
+   <property name="Prefab" value="bat"/>
   </properties>
  </tile>
  <tile id="249">
   <properties>
    <property name="ActorIndex" type="int" value="30"/>
+   <property name="Ai" value="bat"/>
    <property name="Facing" value="south"/>
+   <property name="Prefab" value="bat"/>
   </properties>
  </tile>
  <tile id="250">
   <properties>
    <property name="ActorIndex" type="int" value="30"/>
+   <property name="Ai" value="bat"/>
    <property name="Facing" value="north"/>
+   <property name="Prefab" value="bat"/>
   </properties>
  </tile>
  <tile id="251">
   <properties>
    <property name="ActorIndex" type="int" value="30"/>
+   <property name="Ai" value="bat"/>
    <property name="Facing" value="west"/>
+   <property name="Prefab" value="bat"/>
   </properties>
  </tile>
  <tile id="252">

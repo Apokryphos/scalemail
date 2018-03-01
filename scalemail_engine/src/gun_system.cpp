@@ -30,6 +30,7 @@ void GunSystem::createComponent() {
 
 	BulletData bulletData = {};
 	bulletData.damage = 1.0f;
+	bulletData.offset = 8.0f;
 	bulletData.speed = 128.0f;
 	bulletData.impactTilesetId = getBulletImpactTilesetId(0);
 	bulletData.tilesetId = getBulletTilesetId(0);

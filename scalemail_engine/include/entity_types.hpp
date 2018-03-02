@@ -44,6 +44,9 @@ Entity createProp(World& world, const glm::vec2& position, const int tilesetId,
 Entity createProp(World& world, const glm::vec2& position,
 				  const int frame1TilesetId, int frame2TilesetId, bool decal);
 
+Entity createTorch(World& world, const glm::vec2& position,
+				   const int frame1TilesetId, int frame2TilesetId);
+
 Entity createTrigger(World& world, const glm::vec2& position,
 					 const glm::vec2& size, const std::string& targetName);
 

@@ -119,6 +119,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/entity_types/door.cpp
     src/entity_types/loot.cpp
     src/entity_types/prop.cpp
+    src/entity_types/torch.cpp
     src/entity_types/trigger.cpp
     src/gui/gui.cpp
     src/gui/gui_screen.cpp

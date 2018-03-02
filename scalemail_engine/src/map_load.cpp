@@ -667,12 +667,6 @@ static bool processPlayerStartObject(const TmxMapLib::Object& object,
 static void processTorchObject(World& world,
 							   const TmxMapLib::Object& object,
 							   const TmxMapLib::Map& tmxMap) {
-	const glm::vec4 torchLightColor(1.0f, 0.6f, 0.0f, 0.75f);
-	const float torchLightSize = 64;
-	const float torchLightGlowSize = torchLightSize * 0.25f;
-	const float torchLightPulse = 8;
-	const float torchLightPulseSize = 8;
-
 	auto const tile = object.GetTile();
 
 	const int tilesetId = tile->GetGid() - 1;
@@ -682,44 +676,7 @@ static void processTorchObject(World& world,
 
 	const glm::vec2 position = getTileObjectPosition(object);
 
-	bool decal = getDecal(tmxMap, tile->GetGid());
-
-	Entity entity =
-		createProp(world, position, tilesetId, nextFrame, decal);
-
-	LightSystem& lightSystem = world.getLightSystem();
-	lightSystem.addComponent(entity);
-
-	LightComponent lightCmpnt = lightSystem.getComponent(entity);
-
-	lightSystem.setOffset(lightCmpnt, glm::vec2(0, 1));
-	lightSystem.setColor(lightCmpnt, torchLightColor);
-	lightSystem.setGlowSize(lightCmpnt, glm::vec2(torchLightGlowSize));
-	lightSystem.setSize(lightCmpnt, glm::vec2(torchLightSize));
-	lightSystem.setPulse(lightCmpnt, torchLightPulse);
-	lightSystem.setPulseSize(lightCmpnt, torchLightPulseSize);
-
-	ParticleSystem& particleSystem = world.getParticleSystem();
-	particleSystem.addComponent(entity);
-
-	ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
-
-	ParticleComponentData emitter = {};
-	emitter.life = 1.6f;
-	emitter.decay = 1.0f;
-	emitter.duration = 1.0f;
-	emitter.emitCount = 4;
-	emitter.interval = 0.16f;
-	emitter.minSize = 0.5f;
-	emitter.maxSize = 2.0f;
-	emitter.minSpeed = 4.0f;
-	emitter.maxSpeed = 8.0f;
-	emitter.spread = 0.349066f;
-	emitter.direction = glm::vec3(0.0f, -1.0f, 2.0f);
-	emitter.color = torchLightColor;
-	emitter.width = 4.0f;
-
-	particleSystem.setData(particleCmpnt, emitter);
+	createTorch(world, position, tilesetId, nextFrame);
 }
 
 //  ============================================================================

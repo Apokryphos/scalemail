@@ -113,25 +113,6 @@ void AssetManager::initialize() {
 //  ============================================================================
 Texture AssetManager::loadTexture(const std::string textureName) {
 	return this->loadTexture(textureName, textureName);
-	// std::string texturePath = getTexturePath(textureName);
-
-	// auto result = mTexturesByPath.find(texturePath);
-
-	// if (result != mTexturesByPath.end()) {
-	// 	return result->second;
-	// }
-
-	// Texture texture;
-	// if (!loadPngTexture(texturePath, texture)) {
-	// 	texture = mMissingTexture;
-	// }
-
-	// mTexturesByPath.emplace(texturePath, texture);
-	// mTexturesById.emplace(texture.id, texture);
-
-	// std::cout << textureName << " texture loaded." << std::endl;
-
-	// return texture;
 }
 
 //  ============================================================================

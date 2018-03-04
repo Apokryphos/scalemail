@@ -11,6 +11,8 @@ class AiBehavior
 	Entity mEntity;
 
 public:
+	virtual ~AiBehavior() {}
+
 	Entity getEntity() {
 		return mEntity;
 	}

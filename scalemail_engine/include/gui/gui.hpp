@@ -19,5 +19,6 @@ public:
 	void draw(Game& game);
 	void initialize(AssetManager& assetManager);
 	void showPlayerHud(bool visible);
+	void update(float elapsedSeconds);
 };
 }

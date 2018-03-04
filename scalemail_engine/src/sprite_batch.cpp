@@ -1,5 +1,6 @@
 #include "asset_manager.hpp"
 #include "gl_headers.hpp"
+#include "math_util.hpp"
 #include "sprite_batch.hpp"
 #include "texture.hpp"
 #include <glm/gtc/type_ptr.hpp>
@@ -470,6 +471,7 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 void SpriteBatch::render(const glm::mat4& transform) {
 	glUseProgram(mShader.id);
 	glUniformMatrix4fv(mShader.mvpLocation, 1, GL_FALSE, &transform[0][0]);
+	glUniform1f(mShader.alphaLocation, mAlpha);
 
 	glBindVertexArray(mVao);
 
@@ -540,5 +542,10 @@ void SpriteBatch::renderBatches(
 		//	Disable alpha blending
 		glDisable(GL_BLEND);
 	}
+}
+
+//	===========================================================================
+void SpriteBatch::setAlpha(float alpha) {
+	mAlpha = clamp(alpha, 0.0f, 1.0f);
 }
 }

@@ -9,10 +9,10 @@ namespace ScaleMail
 void Gui::draw(Game& game) {
 	glDisable(GL_DEPTH_TEST);
 
-	mPauseGuiScreen.draw(game, mSpriteBatch);
+	mPauseGuiScreen.drawScreen(game, mSpriteBatch);
 
 	if (mPlayerHudGuiScreen.getVisible()) {
-		mPlayerHudGuiScreen.draw(game, mSpriteBatch);
+		mPlayerHudGuiScreen.drawScreen(game, mSpriteBatch);
 	}
 }
 
@@ -26,5 +26,10 @@ void Gui::initialize(AssetManager& assetManager) {
 //	============================================================================
 void Gui::showPlayerHud(bool visible) {
 	mPlayerHudGuiScreen.setVisible(visible);
+}
+
+//	============================================================================
+void Gui::update(float elapsedSeconds) {
+	mPlayerHudGuiScreen.update(elapsedSeconds);
 }
 }

@@ -9,8 +9,10 @@ class PlayerHudGuiScreen : public GuiScreen
 {
 	Tileset mGuiTileset;
 
-public:
+protected:
 	virtual void draw(Game& game, SpriteBatch& spriteBatch) override;
+
+public:
 	virtual void initialize(AssetManager& assetManager) override;
 };
 }

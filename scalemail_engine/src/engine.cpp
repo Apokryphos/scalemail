@@ -63,6 +63,8 @@ static bool update(Game& game, World& world, GameState* gameState,
 		gameState->update(game, TIME_STEP);
 		world.update(TIME_STEP);
 
+		game.gui->update(TIME_STEP);
+
 		updateMapMeshAnimation(TIME_STEP);
 	}
 
@@ -125,8 +127,8 @@ int startEngine() {
 	World world;
 	world.initialize(&assetManager);
 
-	// world.loadMap("map1");
-	world.loadMap("test_map");
+	world.loadMap("map1");
+	// world.loadMap("test_map");
 	// world.loadMap("test_map2");
 
 	buildAmbientLights();
@@ -149,7 +151,7 @@ int startEngine() {
 
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
-	gameStateManager.activateMainGameState();
+	gameStateManager.activateIntroGameState();
 
 	double totalElapsedSeconds = 0;
 	double lastSeconds = 0;

@@ -6,8 +6,10 @@ namespace ScaleMail
 {
 class PauseGuiScreen : public GuiScreen
 {
-public:
+protected:
 	virtual void draw(Game& game, SpriteBatch& spriteBatch) override;
+
+public:
 	virtual void initialize(AssetManager& assetManager) override;
 };
 }

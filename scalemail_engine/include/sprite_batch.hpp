@@ -32,6 +32,8 @@ class SpriteBatch
 	const int QuadIndexCount          = 6;
 	const int QuadVertexElementCount  = QuadVertexCount * VertexElementCount;
 
+	float mAlpha = 1.0f;
+
 	SpriteShader mShader;
 	GLuint   mVao;
 
@@ -90,6 +92,7 @@ public:
 
 	void end();
 	void initialize(AssetManager& assetManager);
+	void setAlpha(float alpha);
 	void render(const glm::mat4& transform);
 };
 }

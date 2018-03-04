@@ -7,5 +7,6 @@ namespace ScaleMail
 struct SpriteShader {
 	GLuint id;
 	GLuint mvpLocation;
+	GLuint alphaLocation;
 };
 }

@@ -103,6 +103,7 @@ void AssetManager::initialize() {
 	initShaderProgram("assets/shaders/sprite.vert", "assets/shaders/sprite.frag",
 					  mSpriteShader.id);
 	mSpriteShader.mvpLocation = glGetUniformLocation(mSpriteShader.id, "MVP");
+	mSpriteShader.alphaLocation = glGetUniformLocation(mSpriteShader.id, "alpha");
 
 	initShaderProgram("assets/shaders/tile.vert", "assets/shaders/tile.frag",
 					  mTileShader.id);

@@ -1,4 +1,10 @@
-# ScaleMail Prototype
+# ScaleMail
+
+An arcade game made with C++ and OpenGL.
+
+**This game is an early work in progress.**
+
+![screenshot](/screenshot.png?raw=true)
 
 ## Build
 

@@ -18,11 +18,9 @@ void addAiBehavior(const std::string& ai, const Entity& entity,
 				   AiSystem& aiSystem, AiBehaviorFactory& aiBehaviorFactory) {
 	if (ai != "") {
 		std::shared_ptr<AiBehavior> aiBehavior =
-			aiBehaviorFactory.createAiBehavior(ai);
+			aiBehaviorFactory.createAiBehavior(ai, entity);
 
 		if (aiBehavior != nullptr) {
-			aiBehavior->setEntity(entity);
-
 			if (!aiSystem.hasComponent(entity)) {
 				aiSystem.addComponent(entity);
 			}

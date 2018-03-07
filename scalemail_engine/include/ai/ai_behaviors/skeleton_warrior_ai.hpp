@@ -2,17 +2,16 @@
 
 #include "ai_behavior.hpp"
 #include <glm/vec2.hpp>
-#include <optional>
 
 namespace ScaleMail
 {
-class BlobAi : public AiBehavior
+class SkeletonWarriorAi : public AiBehavior
 {
-	std::optional<Entity> mTargetEntity;
+	Entity mTargetEntity;
 	glm::vec2 mMoveDirection;
 
 public:
-	BlobAi();
+	SkeletonWarriorAi(Entity entity);
 	virtual void think(World& world, float elapsedSeconds) override;
 };
 }

@@ -1,17 +1,18 @@
 #pragma once
 
+#include "ai/ai_tree.hpp"
 #include "ai_behavior.hpp"
 #include <glm/vec2.hpp>
+#include <optional>
 
 namespace ScaleMail
 {
-class SkeletonAi : public AiBehavior
+class AllyAi : public AiBehavior
 {
-	Entity mTargetEntity;
-	glm::vec2 mMoveDirection;
+	AiTree mAiTree;
 
 public:
-	SkeletonAi();
+	AllyAi(Entity entity);
 	virtual void think(World& world, float elapsedSeconds) override;
 };
 }

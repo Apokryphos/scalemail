@@ -6,13 +6,13 @@
 
 namespace ScaleMail
 {
-class AllyAi : public AiBehavior
+class BlobAi : public AiBehavior
 {
-	float mMoveCooldown;
-	float mMoveCooldownDuration;
+	std::optional<Entity> mTargetEntity;
+	glm::vec2 mMoveDirection;
 
 public:
-	AllyAi();
+	BlobAi(Entity entity);
 	virtual void think(World& world, float elapsedSeconds) override;
 };
 }

@@ -10,7 +10,7 @@ class VampireAi : public AiBehavior
 	float mTransformCooldownDuration;
 
 public:
-	VampireAi();
+	VampireAi(Entity entity);
 	virtual void think(World& world, float elapsedSeconds) override;
 };
 }

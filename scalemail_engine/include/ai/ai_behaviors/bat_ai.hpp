@@ -12,7 +12,7 @@ class BatAi : public AiBehavior
 	glm::vec2 mMoveDirection;
 
 public:
-	BatAi();
+	BatAi(Entity entity);
 	virtual void think(World& world, float elapsedSeconds) override;
 };
 }

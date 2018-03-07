@@ -1,4 +1,4 @@
-#include "ai/bat_ai.hpp"
+#include "ai/ai_behaviors/bat_ai.hpp"
 #include "ai_system.hpp"
 #include "actor_util.hpp"
 #include "world.hpp"
@@ -6,7 +6,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-BatAi::BatAi() {
+BatAi::BatAi(Entity entity) : AiBehavior(entity) {
 }
 
 //	============================================================================

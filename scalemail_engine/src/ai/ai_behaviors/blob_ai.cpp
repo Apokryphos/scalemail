@@ -1,4 +1,4 @@
-#include "ai/blob_ai.hpp"
+#include "ai/ai_behaviors/blob_ai.hpp"
 #include "ai_system.hpp"
 #include "actor_util.hpp"
 #include "math_util.hpp"
@@ -52,7 +52,7 @@ std::optional<Entity> getRandomLootInRange(World& world, const glm::vec2& positi
 }
 
 //	============================================================================
-BlobAi::BlobAi() {
+BlobAi::BlobAi(Entity entity) : AiBehavior(entity) {
 }
 
 //	============================================================================

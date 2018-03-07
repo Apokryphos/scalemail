@@ -11,14 +11,12 @@ class AiBehavior
 	Entity mEntity;
 
 public:
+	AiBehavior(Entity entity) : mEntity(entity) {}
+
 	virtual ~AiBehavior() {}
 
 	Entity getEntity() {
 		return mEntity;
-	}
-
-	void setEntity(Entity entity) {
-		mEntity = entity;
 	}
 
 	virtual void think(World& world, float elapsedSeconds) = 0;

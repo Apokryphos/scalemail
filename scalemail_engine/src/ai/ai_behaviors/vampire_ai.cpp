@@ -1,4 +1,4 @@
-#include "ai/vampire_ai.hpp"
+#include "ai/ai_behaviors/vampire_ai.hpp"
 #include "gun_system.hpp"
 #include "math_util.hpp"
 #include "physics_system.hpp"
@@ -13,7 +13,7 @@ namespace ScaleMail
 const float MIN_PLAYER_RANGE = 128.0f;
 
 //	============================================================================
-VampireAi::VampireAi() {
+VampireAi::VampireAi(Entity entity) : AiBehavior(entity) {
 	mTransformCooldown = 0.0f;
 	mTransformCooldownDuration = 3.0f;
 }

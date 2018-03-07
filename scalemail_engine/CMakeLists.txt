@@ -7,12 +7,24 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(SCALEMAIL_ENGINE_INCLUDE
-    include/ai/ally_ai.hpp
+    include/ai/ai_node_status.hpp
+    include/ai/ai_node.hpp
+    include/ai/ai_tree.hpp
+    include/ai/ai_whiteboard.hpp
     include/ai/bat_ai.hpp
     include/ai/blob_ai.hpp
     include/ai/skeleton_ai.hpp
     include/ai/skeleton_warrior_ai.hpp
     include/ai/vampire_ai.hpp
+    include/ai/ai_behaviors/ally_ai.hpp
+    include/ai/ai_nodes/composite_ai_node.hpp
+    include/ai/ai_nodes/cooldown_ai_node.hpp
+    include/ai/ai_nodes/decorator_ai_node.hpp
+    include/ai/ai_nodes/failure_ai_node.hpp
+    include/ai/ai_nodes/inverter_ai_node.hpp
+    include/ai/ai_nodes/random_move_direction_ai_node.hpp
+    include/ai/ai_nodes/sequence_ai_node.hpp
+    include/ai/ai_nodes/success_ai_node.hpp
     include/gui/gui.hpp
     include/gui/gui_screen.hpp
     include/gui/pause_gui_screen.hpp
@@ -108,12 +120,17 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
-    src/ai/ally_ai.cpp
-    src/ai/bat_ai.cpp
-    src/ai/blob_ai.cpp
-    src/ai/skeleton_ai.cpp
-    src/ai/skeleton_warrior_ai.cpp
-    src/ai/vampire_ai.cpp
+    src/ai/ai_node.cpp
+    src/ai/ai_tree.cpp
+    src/ai/ai_whiteboard.cpp
+    src/ai/ai_behaviors/ally_ai.cpp
+    src/ai/ai_behaviors/bat_ai.cpp
+    src/ai/ai_behaviors/blob_ai.cpp
+    src/ai/ai_behaviors/skeleton_ai.cpp
+    src/ai/ai_behaviors/skeleton_warrior_ai.cpp
+    src/ai/ai_behaviors/vampire_ai.cpp
+    src/ai/ai_nodes/random_move_direction_ai_node.cpp
+    src/ai/ai_nodes/sequence_ai_node.cpp
     src/entity_types/actor.cpp
     src/entity_types/bullet.cpp
     src/entity_types/door.cpp

@@ -28,6 +28,11 @@ void EntitySystem::addComponent(const Entity& entity) {
 }
 
 //	============================================================================
+bool EntitySystem::entityIsAlive(const Entity& entity) const {
+	return mEntityManager.isAlive(entity);
+}
+
+//	============================================================================
 void EntitySystem::garbageCollect() {
 	if (mComponentIndicesByEntity.size() > 0) {
 		unsigned aliveInRow = 0;

@@ -300,18 +300,24 @@ void World::loadMap(const std::string& mapName) {
 
 //  ============================================================================
 void World::update(float elapsedSeconds) {
-	mBulletSystem.simulate(*this, elapsedSeconds);
-
 	mAiSystem.update(*this, elapsedSeconds);
 
-	mPhysicsSystem.simulate(elapsedSeconds);
-	mFacingSystem.update(mPhysicsSystem, mSpriteSystem);
-	mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
-	mLightSystem.update(elapsedSeconds, mPhysicsSystem);
-
-	mPhysicsSystem.update();
+	mBulletSystem.simulate(*this, elapsedSeconds);
 
 	mGunSystem.update(*this, elapsedSeconds);
+
+	//	Simulate collisions
+	mPhysicsSystem.simulate(elapsedSeconds);
+
+	//	Update sprite facing using PhysicsSystem direction
+	mFacingSystem.update(mPhysicsSystem, mSpriteSystem);
+
+	//	Update positions
+	mPhysicsSystem.update();
+
+	mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
+
+	mLightSystem.update(elapsedSeconds, mPhysicsSystem);
 
 	mTriggerSystem.update(
 		mNameSystem,
@@ -326,10 +332,11 @@ void World::update(float elapsedSeconds) {
 
 	mHealthSystem.update(*this);
 
-	mExpireSystem.update(*this, elapsedSeconds);
+	mLootSystem.simulate(*this, elapsedSeconds);
 
 	mParticleSystem.update(mPhysicsSystem, elapsedSeconds);
 
-	mLootSystem.simulate(*this, elapsedSeconds);
+	//	Remove expired entities
+	mExpireSystem.update(*this, elapsedSeconds);
 }
 }

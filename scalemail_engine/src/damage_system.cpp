@@ -2,6 +2,7 @@
 #include "health_system.hpp"
 #include "sprite_effect_system.hpp"
 #include "vector_util.hpp"
+#include <algorithm>
 
 namespace ScaleMail
 {
@@ -19,6 +20,12 @@ DamageSystem::DamageSystem(EntityManager& entityManager, int maxComponents)
 //	============================================================================
 void DamageSystem::addDamage(const DamageComponent& cmpnt, const float damage) {
 	mData[cmpnt.index].damage += damage;
+}
+
+//	============================================================================
+void DamageSystem::addSourceEntity(const DamageComponent& cmpnt,
+								   const Entity& source) {
+	mData[cmpnt.index].sourceEntities.insert(source);
 }
 
 //	============================================================================
@@ -46,6 +53,20 @@ void DamageSystem::applyDamage(
 			}
 		}
 	}
+
+	//	Remove expired source entities
+	const size_t count = mData.size();
+	for (size_t c = 0; c < count; ++c) {
+		auto& sourceEntities = mData[c].sourceEntities;
+
+		for(auto it = std::begin(sourceEntities); it != std::end(sourceEntities);) {
+			if (!this->entityIsAlive(*it)) {
+				it = sourceEntities.erase(it);
+			} else {
+				++it;
+			}
+		}
+	}
 }
 
 //	============================================================================
@@ -66,5 +87,11 @@ DamageComponent DamageSystem::getComponent(const Entity& entity) const {
 //	============================================================================
 float DamageSystem::getDamage(const DamageComponent& cmpnt) const {
 	return mData[cmpnt.index].damage;
+}
+
+//	============================================================================
+const std::unordered_set<Entity>& DamageSystem::getSourceEntities(
+	const DamageComponent& cmpnt) {
+	return mData[cmpnt.index].sourceEntities;
 }
 }

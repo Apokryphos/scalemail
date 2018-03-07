@@ -30,7 +30,7 @@ void EntityManager::destroyEntity(const Entity& entity) {
 }
 
 //  ============================================================================
-bool EntityManager::isAlive(const Entity& entity) {
+bool EntityManager::isAlive(const Entity& entity) const {
 	return mGenerations[entity.index()] == entity.generation();
 }
 }

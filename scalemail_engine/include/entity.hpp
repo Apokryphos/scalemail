@@ -22,6 +22,10 @@ inline bool operator==(const Entity& entity1, const Entity& entity2) {
 inline bool operator!=(const Entity& entity1, const Entity& entity2) {
 	return entity1.id != entity2.id;
 }
+
+inline bool operator<(const Entity& entity1, const Entity& entity2) {
+	return entity1.id < entity2.id;
+}
 }
 
 namespace std

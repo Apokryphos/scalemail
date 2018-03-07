@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <random>
+#include <unordered_set>
 #include <vector>
 
 namespace ScaleMail
@@ -28,6 +29,15 @@ public:
 		return v[index];
 	}
 
+	template <typename T>
+	T getRandomElement(const std::unordered_set<T>& s) {
+		assert(s.size() > 0);
+
+		std::uniform_int_distribution<int> dist(0, s.size() - 1);
+		int index = dist(mEngine);
+
+		return *std::next(std::begin(s), index);
+	}
 
 	template <typename T>
 	T getRandomElement(const std::vector<T>& v) {

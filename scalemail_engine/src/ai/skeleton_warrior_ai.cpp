@@ -41,6 +41,17 @@ void SkeletonWarriorAi::think(World& world, [[maybe_unused]]float elapsedSeconds
 		Player* player = getRandomPlayerInRange(world, position, MIN_PLAYER_RANGE);
 		if (player != nullptr) {
 			mTargetEntity = player->entity;
+		} else {
+			//	Check if an entity damaged this entity
+			DamageSystem& damageSystem = world.getDamageSystem();
+			DamageComponent damageCmpnt = damageSystem.getComponent(entity);
+
+			const auto& sourceEntities = damageSystem.getSourceEntities(damageCmpnt);
+
+			if (sourceEntities.size() > 0) {
+				//	Target attacker
+				mTargetEntity = world.getRandom().getRandomElement(sourceEntities);
+			}
 		}
 	} else {
 		PhysicsComponent targetPhysicsCmpnt =

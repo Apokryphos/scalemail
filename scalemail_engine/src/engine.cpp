@@ -151,7 +151,7 @@ int startEngine() {
 
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
-	gameStateManager.activateIntroGameState();
+	gameStateManager.activateMainGameState();
 
 	double totalElapsedSeconds = 0;
 	double lastSeconds = 0;

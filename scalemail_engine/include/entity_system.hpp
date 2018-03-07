@@ -18,6 +18,7 @@ protected:
 
 	virtual void createComponent() = 0;
 	virtual void destroyComponent(int index) = 0;
+	bool entityIsAlive(const Entity& entity) const;
 	int getComponentIndexByEntity(const Entity& entity) const;
 	const Entity& getEntityByComponentIndex(const int index) const;
 

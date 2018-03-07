@@ -100,6 +100,7 @@ void BulletSystem::onEntityCollision(EntityCollision& collision) {
 					mDamageSystem->getComponent(collision.targetEntity);
 
 				mDamageSystem->addDamage(damageCmpnt, mDamage[cmpnt.index]);
+				mDamageSystem->addSourceEntity(damageCmpnt, mSourceEntity[cmpnt.index]);
 			}
 		} else {
 			//	Ignore source entity (i.e. entity that fired bullet)

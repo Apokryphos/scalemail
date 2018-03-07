@@ -18,6 +18,6 @@ public:
 	EntityManager();
 	Entity createEntity();
 	void destroyEntity(const Entity& entity);
-	bool isAlive(const Entity& entity);
+	bool isAlive(const Entity& entity) const;
 };
 }

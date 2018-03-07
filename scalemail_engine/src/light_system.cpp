@@ -26,7 +26,7 @@ LightSystem::LightSystem(EntityManager& entityManager, int maxComponents)
 	mGlowScale.reserve(maxComponents);
 	mPulse.reserve(maxComponents);
 	mPulseSize.reserve(maxComponents);
-	mTicks.reserve(0);
+	mTicks.reserve(maxComponents);
 }
 
 //	============================================================================

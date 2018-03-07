@@ -17,6 +17,11 @@ DamageSystem::DamageSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
+void DamageSystem::addDamage(const DamageComponent& cmpnt, const float damage) {
+	mData[cmpnt.index].damage += damage;
+}
+
+//	============================================================================
 void DamageSystem::applyDamage(
 	HealthSystem& healthSystem,
 	SpriteEffectSystem& spriteEffectSystem) {
@@ -61,10 +66,5 @@ DamageComponent DamageSystem::getComponent(const Entity& entity) const {
 //	============================================================================
 float DamageSystem::getDamage(const DamageComponent& cmpnt) const {
 	return mData[cmpnt.index].damage;
-}
-
-//	============================================================================
-void DamageSystem::setDamage(const DamageComponent& cmpnt, const float damage) {
-	mData[cmpnt.index].damage = damage;
 }
 }

@@ -99,7 +99,7 @@ void BulletSystem::onEntityCollision(EntityCollision& collision) {
 				DamageComponent damageCmpnt =
 					mDamageSystem->getComponent(collision.targetEntity);
 
-				mDamageSystem->setDamage(damageCmpnt, mDamage[cmpnt.index]);
+				mDamageSystem->addDamage(damageCmpnt, mDamage[cmpnt.index]);
 			}
 		} else {
 			//	Ignore source entity (i.e. entity that fired bullet)

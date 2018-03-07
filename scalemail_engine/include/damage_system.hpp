@@ -27,9 +27,9 @@ class DamageSystem : public EntitySystem
 
 public:
 	DamageSystem(EntityManager& entityManager, int maxComponents = 1000);
+	void addDamage(const DamageComponent& cmpnt, const float damage);
 	void applyDamage(HealthSystem& healthSystem, SpriteEffectSystem& spriteEffectSystem);
 	DamageComponent getComponent(const Entity& entity) const;
 	float getDamage(const DamageComponent& cmpnt) const;
-	void setDamage(const DamageComponent& cmpnt, const float damage);
 };
 }

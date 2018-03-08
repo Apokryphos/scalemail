@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ai/ai_tree.hpp"
 #include "ai_behavior.hpp"
 #include <glm/vec2.hpp>
 
@@ -9,6 +10,7 @@ class SkeletonAi : public AiBehavior
 {
 	Entity mTargetEntity;
 	glm::vec2 mMoveDirection;
+	AiTree mAiTree;
 
 public:
 	SkeletonAi(Entity entity);

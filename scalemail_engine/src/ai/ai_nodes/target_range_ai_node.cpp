@@ -49,7 +49,7 @@ AiNodeStatus TargetRangeAiNode::execute(World& world,
 
 		wb.addEntity(mTargetValueName, target.value());
 
-		return AiNodeStatus::RUNNING;
+		return AiNodeStatus::SUCCESS;
 	}
 
 	return AiNodeStatus::FAILURE;

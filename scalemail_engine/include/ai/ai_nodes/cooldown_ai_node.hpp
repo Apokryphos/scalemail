@@ -12,22 +12,9 @@ class CooldownAiNode : public AiNode
 	float mTicks;
 
 public:
-	CooldownAiNode(Entity& entity, AiTree* parentTree = nullptr, float duration = 0.0f)
-	: AiNode(entity, parentTree), mDuration(duration), mTicks(0) {
-	}
-
-	virtual AiNodeStatus execute(World& world, float elapsedSeconds) override {
-		mTicks -= elapsedSeconds;
-		if (mTicks <= 0.0f) {
-			mTicks = mDuration;
-			return AiNodeStatus::SUCCESS;
-		}
-
-		return AiNodeStatus::FAILURE;
-	}
-
-	void setDuration(float duration) {
-		mDuration = duration;
-	}
+	CooldownAiNode(Entity& entity, AiTree* parentTree = nullptr,
+				   float duration = 0.0f);
+	virtual AiNodeStatus execute(World& world, float elapsedSeconds) override;
+	void setDuration(float duration);
 };
 }

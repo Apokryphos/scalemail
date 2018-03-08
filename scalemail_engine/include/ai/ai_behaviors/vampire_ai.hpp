@@ -1,13 +1,13 @@
 #pragma once
 
+#include "ai/ai_tree.hpp"
 #include "ai_behavior.hpp"
 
 namespace ScaleMail
 {
 class VampireAi : public AiBehavior
 {
-	float mTransformCooldown;
-	float mTransformCooldownDuration;
+	AiTree mAiTree;
 
 public:
 	VampireAi(Entity entity);

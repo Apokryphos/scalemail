@@ -1,5 +1,4 @@
 #include "ai/ai_behaviors/skeleton_warrior_ai.hpp"
-#include "ai/ai_behaviors/skeleton_ai.hpp"
 #include "ai/ai_nodes/fire_at_target_ai_node.hpp"
 #include "ai/ai_nodes/seek_target_ai_node.hpp"
 #include "ai/ai_nodes/selector_ai_node.hpp"

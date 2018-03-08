@@ -1,73 +1,72 @@
 #include "ai/ai_behaviors/vampire_ai.hpp"
-#include "gun_system.hpp"
-#include "math_util.hpp"
-#include "physics_system.hpp"
-#include "player.hpp"
-#include "player_util.hpp"
-#include "world.hpp"
-#include <algorithm>
-#include <vector>
+#include "ai/ai_nodes/cooldown_ai_node.hpp"
+#include "ai/ai_nodes/entity_count_ai_node.hpp"
+#include "ai/ai_nodes/fire_at_target_ai_node.hpp"
+#include "ai/ai_nodes/random_move_direction_ai_node.hpp"
+#include "ai/ai_nodes/selector_ai_node.hpp"
+#include "ai/ai_nodes/sequence_ai_node.hpp"
+#include "ai/ai_nodes/success_ai_node.hpp"
+#include "ai/ai_nodes/target_attacker_ai_node.hpp"
+#include "ai/ai_nodes/target_range_ai_node.hpp"
 
 namespace ScaleMail
 {
 const float MIN_PLAYER_RANGE = 128.0f;
+static const float MOVE_DIRECTION_CHANGE_INTERVAL = 2.25f;
 
 //	============================================================================
-VampireAi::VampireAi(Entity entity) : AiBehavior(entity) {
-	mTransformCooldown = 0.0f;
-	mTransformCooldownDuration = 3.0f;
+VampireAi::VampireAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
+	auto rootNode = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	mAiTree.setRootNode(rootNode);
+
+	//	==================================================
+	//	Move in a random direction after cooldown period
+	//	==================================================
+	auto cooldown = std::make_shared<CooldownAiNode>(entity, &mAiTree);
+	cooldown->setDuration(MOVE_DIRECTION_CHANGE_INTERVAL);
+
+	auto randomMoveDirection =
+		std::make_shared<RandomMoveDirectionAiNode>(entity, &mAiTree);
+
+	auto randomMoveSuccess = std::make_shared<SuccessAiNode>(entity, &mAiTree);
+
+	auto randomMove =
+		std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(randomMove);
+	randomMove->addChildNode(cooldown);
+	randomMove->addChildNode(randomMoveDirection);
+	randomMove->addChildNode(randomMoveSuccess);
+
+	//	==================================================
+	//	Fire at entities
+	//	==================================================
+	//	Target entities that attack this entity
+	auto targetAttacker =
+		std::make_shared<TargetAttackerAiNode>(entity, &mAiTree);
+
+	auto hasTarget = std::make_shared<EntityCountAiNode>(entity, &mAiTree);
+	hasTarget->setGreaterThanOrEqualTo(1);
+
+	//	Target entities in range of this entity
+	auto targetFoes = std::make_shared<TargetRangeAiNode>(entity, &mAiTree);
+	targetFoes->setRange(MIN_PLAYER_RANGE);
+	targetFoes->setTargetTeamAlignment(TeamAlignment::FOE);
+
+	auto targetSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(targetSelector);
+	targetSelector->addChildNode(targetAttacker);
+	targetSelector->addChildNode(targetFoes);
+
+	//	Fire at target
+	auto fireAtTarget = std::make_shared<FireAtTargetAiNode>(entity, &mAiTree);
+
+	auto fireSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(fireSelector);
+	fireSelector->addChildNode(fireAtTarget);
 }
 
 //	============================================================================
 void VampireAi::think(World& world, float elapsedSeconds) {
-	const Entity entity = this->getEntity();
-
-	GunSystem& gunSystem = world.getGunSystem();
-	GunComponent gunCmpnt = gunSystem.getComponent(entity);
-
-	gunSystem.setFire(gunCmpnt, false);
-
-	mTransformCooldown -= elapsedSeconds;
-
-	if (mTransformCooldown > 0.0f) {
-		//	Fire at the nearest player
-		PhysicsSystem& physicsSystem = world.getPhysicsSystem();
-
-		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-		glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
-
-		Player* player =
-			getRandomPlayerInRange(world, position, MIN_PLAYER_RANGE);
-
-		if (player != nullptr) {
-			PhysicsComponent targetPhysicsCmpnt =
-				physicsSystem.getComponent(player->entity);
-
-			glm::vec2 targetPosition =
-				physicsSystem.getPosition(targetPhysicsCmpnt);
-
-			//	Fire bullets at player
-			gunSystem.setTarget(gunCmpnt, targetPosition);
-			gunSystem.setFire(gunCmpnt, true);
-		}
-	} else {
-		Random& random = world.getRandom();
-
-		// Pick random direction
-		glm::vec2 direction =
-			rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
-
-		AiSystem& aiSystem = world.getAiSystem();
-		AiComponent aiCmpnt = aiSystem.getComponent(entity);
-
-		aiSystem.setWander(aiCmpnt, true);
-
-		aiSystem.setMoveDirection(aiCmpnt, direction);
-
-		//	Transform into bats
-
-		//	Reset cooldown
-		mTransformCooldown = mTransformCooldownDuration;
-	}
+	mAiTree.execute(world, elapsedSeconds);
 }
 }

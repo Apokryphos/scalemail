@@ -4,7 +4,7 @@
 #include "ai/ai_behaviors/skeleton_ai.hpp"
 #include "ai/ai_behaviors/skeleton_warrior_ai.hpp"
 #include "ai/ai_behaviors/vampire_ai.hpp"
-#include "ai_behavior_factory.hpp"
+#include "ai/ai_behavior_factory.hpp"
 #include "string_util.hpp"
 
 namespace ScaleMail

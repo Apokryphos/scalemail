@@ -8,6 +8,7 @@ endif()
 
 set(SCALEMAIL_ENGINE_INCLUDE
     include/ai_behavior.hpp
+    include/ai/ai_behavior_factory.hpp
     include/ai/ai_node_status.hpp
     include/ai/ai_node.hpp
     include/ai/ai_tree.hpp
@@ -39,7 +40,6 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/gui/pause_gui_screen.hpp
     include/gui/player_hud_gui_screen.hpp
     include/actor_util.hpp
-    include/ai_behavior_factory.hpp
     include/ai_system.hpp
     include/ambient_light.hpp
     include/asset_manager.hpp
@@ -128,6 +128,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/world.hpp)
 
 set(SCALEMAIL_ENGINE_SOURCE
+    src/ai/ai_behavior_factory.cpp
     src/ai/ai_node.cpp
     src/ai/ai_tree.cpp
     src/ai/ai_whiteboard.cpp
@@ -164,7 +165,6 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/gui/gui_screen.cpp
     src/gui/pause_gui_screen.cpp
     src/gui/player_hud_gui_screen.cpp
-    src/ai_behavior_factory.cpp
     src/ai_system.cpp
     src/actor_util.cpp
     src/ambient_light.cpp

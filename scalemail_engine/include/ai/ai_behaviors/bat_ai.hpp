@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ai/ai_tree.hpp"
 #include "ai_behavior.hpp"
 #include <glm/vec2.hpp>
 #include <optional>
@@ -10,6 +11,7 @@ class BatAi : public AiBehavior
 {
 	std::optional<Entity> mTargetEntity;
 	glm::vec2 mMoveDirection;
+	AiTree mAiTree;
 
 public:
 	BatAi(Entity entity);

@@ -10,8 +10,7 @@ WanderAiNode::WanderAiNode(Entity& entity, AiTree* parentTree)
 }
 
 //	============================================================================
-AiNodeStatus WanderAiNode::execute(World& world,
-								   [[maybe_unused]]float elapsedSeconds) {
+AiNodeStatus WanderAiNode::execute(World& world) {
 	const Entity entity = this->getEntity();
 
 	if (!actorCanMove(entity, world)) {

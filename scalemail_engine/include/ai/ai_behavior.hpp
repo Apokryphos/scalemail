@@ -19,6 +19,6 @@ public:
 		return mEntity;
 	}
 
-	virtual void think(World& world, float elapsedSeconds) = 0;
+	virtual void think(World& world, double totalElapsedSeconds) = 0;
 };
 }

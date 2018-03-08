@@ -27,7 +27,7 @@ private:
 public:
 	EntityCountAiNode(Entity& entity, AiTree* parentTree,
 					  std::string valueName = "TARGET");
-	virtual AiNodeStatus execute(World& world, float elapsedSeconds) override;
+	virtual AiNodeStatus execute(World& world) override;
 	void setEqualTo(const int value);
 	void setGreaterThanOrEqualTo(const int value);
 	void setRange(const int min, const int max);

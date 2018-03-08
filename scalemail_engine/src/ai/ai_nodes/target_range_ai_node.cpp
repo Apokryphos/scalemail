@@ -12,13 +12,13 @@ TargetRangeAiNode::TargetRangeAiNode(Entity& entity, AiTree* parentTree,
 									 float range,
 									 TeamAlignment targetTeamAlignment,
 									 const std::string& targetValueName)
-: AiNode(entity, parentTree), mTargetTeamAlignment(targetTeamAlignment),
-  mRange(range), mTargetValueName(targetValueName) {
+: AiNode(entity, parentTree), mTargetType(TargetType::ACTOR),
+  mTargetTeamAlignment(targetTeamAlignment), mRange(range),
+  mTargetValueName(targetValueName) {
 }
 
 //	============================================================================
-AiNodeStatus TargetRangeAiNode::execute(World& world,
-									 [[maybe_unused]]float elapsedSeconds) {
+AiNodeStatus TargetRangeAiNode::execute(World& world) {
 	Entity entity = this->getEntity();
 
 	AiWhiteboard& wb = this->getWhiteboard();
@@ -36,12 +36,24 @@ AiNodeStatus TargetRangeAiNode::execute(World& world,
 	TeamSystem& teamSystem = world.getTeamSystem();
 	TeamComponent teamCmpnt = teamSystem.getComponent(entity);
 
-	std::vector<Entity> foes;
-	world.getTeamSystem().getEntitiesByTeamAlignment(
-		teamCmpnt, mTargetTeamAlignment, foes);
+	std::vector<Entity> entities;
+
+	switch (mTargetType) {
+		case TargetType::ACTOR:
+			world.getTeamSystem().getEntitiesByTeamAlignment(
+				teamCmpnt, mTargetTeamAlignment, entities);
+				break;
+
+		case TargetType::LOOT:
+			world.getLootSystem().getEntities(entities);
+				break;
+
+		default:
+			throw std::runtime_error("Case not implemented.");
+	}
 
 	std::vector<Entity> inRange;
-	getEntitiesInRange(foes, physicsSystem, position, mRange, inRange);
+	getEntitiesInRange(entities, physicsSystem, position, mRange, inRange);
 
 	if (inRange.size() > 0) {
 		std::optional<Entity> target =
@@ -63,6 +75,12 @@ void TargetRangeAiNode::setRange(float range) {
 //	============================================================================
 void TargetRangeAiNode::setTargetTeamAlignment(TeamAlignment teamAlignment) {
 	mTargetTeamAlignment = teamAlignment;
+}
+
+
+//	============================================================================
+void TargetRangeAiNode::setTargetType(const TargetType targetType) {
+	mTargetType = targetType;
 }
 
 //	============================================================================

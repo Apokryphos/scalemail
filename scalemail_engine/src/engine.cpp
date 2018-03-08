@@ -53,15 +53,17 @@ static void screenCapture() {
 
 //  ============================================================================
 static bool update(Game& game, World& world, GameState* gameState,
+				   double lastSeconds,
 				   double& accumulated) {
 	bool updated = false;
 	while (accumulated >= TIME_STEP) {
 		updated = true;
 		accumulated -= TIME_STEP;
+		lastSeconds += TIME_STEP;
 
 		addTransitionTime(TIME_STEP);
 		gameState->update(game, TIME_STEP);
-		world.update(TIME_STEP);
+		world.update(lastSeconds, TIME_STEP);
 
 		game.gui->update(TIME_STEP);
 
@@ -183,7 +185,7 @@ int startEngine() {
 			game.paused = false;
 
 			double step = game.devOptions.stepCount * TIME_STEP;
-			update(game, world, gameState, step);
+			update(game, world, gameState, lastSeconds, step);
 
 			game.paused = true;
 			game.devOptions.step = false;
@@ -193,7 +195,7 @@ int startEngine() {
 			accumulated += elapsedSeconds;
 			totalElapsedSeconds += elapsedSeconds;
 
-			updated = update(game, world, gameState, accumulated);
+			updated = update(game, world, gameState, lastSeconds, accumulated);
 		}
 
 		//	Only render after an update

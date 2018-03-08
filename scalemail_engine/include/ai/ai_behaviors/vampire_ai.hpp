@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ai/ai_tree.hpp"
-#include "ai_behavior.hpp"
+#include "ai/ai_behavior.hpp"
 
 namespace ScaleMail
 {
@@ -11,6 +11,6 @@ class VampireAi : public AiBehavior
 
 public:
 	VampireAi(Entity entity);
-	virtual void think(World& world, float elapsedSeconds) override;
+	virtual void think(World& world, double totalElapsedSeconds) override;
 };
 }

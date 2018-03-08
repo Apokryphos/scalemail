@@ -18,8 +18,7 @@ const std::string& targetValueName)
 }
 
 //	============================================================================
-AiNodeStatus FireAtTargetAiNode::execute(World& world,
-										 [[maybe_unused]]float elapsedSeconds) {
+AiNodeStatus FireAtTargetAiNode::execute(World& world) {
 	Entity entity = this->getEntity();
 
 	if (!actorCanFire(entity, world)) {

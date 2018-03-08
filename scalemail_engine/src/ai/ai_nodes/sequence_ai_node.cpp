@@ -17,40 +17,28 @@ void SequenceAiNode::activateNextNode() {
 }
 
 //	============================================================================
-AiNodeStatus SequenceAiNode::execute(World& world, float elapsedSeconds) {
+AiNodeStatus SequenceAiNode::execute(World& world) {
  	if (mCurrentNode == nullptr) {
 		this->activateNextNode();
 	}
 
 	if (mCurrentNode != nullptr) {
 		//	Execute current node
-		AiNodeStatus status = mCurrentNode->execute(world, elapsedSeconds);
+		AiNodeStatus status = mCurrentNode->execute(world);
 
 		if (status == AiNodeStatus::SUCCESS)	{
-			AiNodeStatus derivedStatus = this->onChildSuccess();
-
-			if (derivedStatus == AiNodeStatus::SUCCESS) {
-				mCurrentNode = nullptr;
-			}
-
-			return derivedStatus;
+			return this->onChildSuccess();
 		}
 
 		if (status == AiNodeStatus::FAILURE)	{
-			AiNodeStatus derivedStatus = this->onChildFailure();
-
-			if (derivedStatus == AiNodeStatus::SUCCESS) {
-				mCurrentNode = nullptr;
-			}
-
-			return derivedStatus;
+			return this->onChildFailure();
 		}
 
 		return AiNodeStatus::RUNNING;
 	}
 
-	//	Sequence failed
-	return AiNodeStatus::FAILURE;
+	//	Reached end of sequence
+	return AiNodeStatus::SUCCESS;
 }
 
 //	============================================================================
@@ -80,7 +68,9 @@ AiNode* SequenceAiNode::getNextNode() {
 
 //	============================================================================
 AiNodeStatus SequenceAiNode::onChildFailure() {
+	//	Restart at first node
 	mCurrentNode = nullptr;
+
 	return AiNodeStatus::FAILURE;
 }
 

@@ -1,4 +1,4 @@
-#include "ai_behavior.hpp"
+#include "ai/ai_behavior.hpp"
 #include "ai_system.hpp"
 #include "bullet_util.hpp"
 #include "damage_system.hpp"

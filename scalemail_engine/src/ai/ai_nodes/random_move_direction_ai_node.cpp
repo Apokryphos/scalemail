@@ -12,8 +12,7 @@ RandomMoveDirectionAiNode::RandomMoveDirectionAiNode(
 }
 
 //	============================================================================
-AiNodeStatus RandomMoveDirectionAiNode::execute(
-	World& world, [[maybe_unused]]float elapsedSeconds) {
+AiNodeStatus RandomMoveDirectionAiNode::execute(World& world) {
 	Entity entity = this->getEntity();
 
 	Random& random = world.getRandom();

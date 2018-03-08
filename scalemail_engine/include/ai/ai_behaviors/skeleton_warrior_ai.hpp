@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ai_behavior.hpp"
+#include "ai/ai_behavior.hpp"
 #include "ai/ai_tree.hpp"
 #include <glm/vec2.hpp>
 
@@ -14,6 +14,6 @@ class SkeletonWarriorAi : public AiBehavior
 
 public:
 	SkeletonWarriorAi(Entity entity);
-	virtual void think(World& world, float elapsedSeconds) override;
+	virtual void think(World& world, double totalElapsedSeconds) override;
 };
 }

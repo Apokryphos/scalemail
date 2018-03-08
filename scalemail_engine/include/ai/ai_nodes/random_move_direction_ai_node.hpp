@@ -8,6 +8,6 @@ class RandomMoveDirectionAiNode : public AiNode
 {
 public:
 	RandomMoveDirectionAiNode(Entity& entity, AiTree* parentTree = nullptr);
-	virtual AiNodeStatus execute(World& world, float elapsedSeconds) override;
+	virtual AiNodeStatus execute(World& world) override;
 };
 }

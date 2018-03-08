@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ai/ai_tree.hpp"
-#include "ai_behavior.hpp"
+#include "ai/ai_behavior.hpp"
 #include <glm/vec2.hpp>
 
 namespace ScaleMail
@@ -14,6 +14,6 @@ class SkeletonAi : public AiBehavior
 
 public:
 	SkeletonAi(Entity entity);
-	virtual void think(World& world, float elapsedSeconds) override;
+	virtual void think(World& world, double totalElapsedSeconds) override;
 };
 }

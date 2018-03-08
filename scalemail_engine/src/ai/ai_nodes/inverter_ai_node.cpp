@@ -8,13 +8,13 @@ InverterAiNode::InverterAiNode(Entity& entity, AiTree* parentTree)
 }
 
 //	============================================================================
-AiNodeStatus InverterAiNode::execute(World& world, float elapsedSeconds) {
+AiNodeStatus InverterAiNode::execute(World& world) {
 	if (!this->hasChildNode()) {
 		return AiNodeStatus::FAILURE;
 	}
 
 	AiNodeStatus status =
-		this->getChildNode()->execute(world, elapsedSeconds);
+		this->getChildNode()->execute(world);
 
 	switch (status) {
 		case AiNodeStatus::FAILURE:

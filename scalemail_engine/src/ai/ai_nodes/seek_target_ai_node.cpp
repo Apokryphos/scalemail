@@ -17,8 +17,7 @@ SeekTargetAiNode::SeekTargetAiNode(Entity& entity, AiTree* parentTree,
 }
 
 //	============================================================================
-AiNodeStatus SeekTargetAiNode::execute(World& world,
-									[[maybe_unused]]float elapsedSeconds) {
+AiNodeStatus SeekTargetAiNode::execute(World& world) {
 	Entity entity = this->getEntity();
 
 	if (!actorCanMove(entity, world)) {
@@ -29,22 +28,22 @@ AiNodeStatus SeekTargetAiNode::execute(World& world,
 
 	const std::vector<Entity>& targets = wb.getEntities(mTargetValueName);
 
+	AiSystem& aiSystem = world.getAiSystem();
+	AiComponent aiCmpnt = aiSystem.getComponent(entity);
+
 	if (targets.size() > 0) {
 		Random& random = world.getRandom();
 
 		std::optional<Entity> target =
 			random.getRandomOptionalElement(targets);
 
-		if (target.has_value() && actorIsAlive(target.value(), world)) {
+		if (target.has_value()) {
 			PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 
 			PhysicsComponent targetPhysicsCmpnt =
 				physicsSystem.getComponent(target.value());
 
 			glm::vec2 targetPosition = physicsSystem.getPosition(targetPhysicsCmpnt);
-
-			AiSystem& aiSystem = world.getAiSystem();
-			AiComponent aiCmpnt = aiSystem.getComponent(entity);
 
 			//	Set move direction towards target
 			aiSystem.setSeek(aiCmpnt, true);
@@ -53,6 +52,9 @@ AiNodeStatus SeekTargetAiNode::execute(World& world,
 			return AiNodeStatus::SUCCESS;
 		}
 	}
+
+	//	Stop seeking
+	aiSystem.setSeek(aiCmpnt, false);
 
 	return AiNodeStatus::FAILURE;
 }

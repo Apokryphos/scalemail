@@ -17,7 +17,7 @@ class AiNode
 public:
 	AiNode(Entity& entity, AiTree* parentTree = nullptr);
 	virtual ~AiNode() {};
-	virtual AiNodeStatus execute(World& world, float elapsedSeconds) = 0;
+	virtual AiNodeStatus execute(World& world) = 0;
 	Entity getEntity();
 	AiTree* getParentTree();
 	void setParentTree(AiTree* parentTree);

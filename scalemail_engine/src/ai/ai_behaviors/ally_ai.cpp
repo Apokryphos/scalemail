@@ -1,5 +1,6 @@
 #include "ai/ai_behaviors/ally_ai.hpp"
 #include "ai/ai_nodes/cooldown_ai_node.hpp"
+#include "ai/ai_nodes/entity_count_ai_node.hpp"
 #include "ai/ai_nodes/fire_at_target_ai_node.hpp"
 #include "ai/ai_nodes/random_move_direction_ai_node.hpp"
 #include "ai/ai_nodes/selector_ai_node.hpp"
@@ -10,7 +11,7 @@
 
 namespace ScaleMail
 {
-static const float MOVE_DIRECTION_CHANGE_INTERVAL = 2.5f;
+static const float MOVE_DIRECTION_CHANGE_INTERVAL = 1.75f;
 static const float MIN_VILLAIN_RANGE = 128.0f;
 
 //	============================================================================
@@ -28,7 +29,6 @@ AllyAi::AllyAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 		std::make_shared<RandomMoveDirectionAiNode>(entity, &mAiTree);
 
 	auto randomMove = std::make_shared<SequenceAiNode>(entity, &mAiTree);
-
 	rootNode->addChildNode(randomMove);
 	randomMove->addChildNode(cooldown);
 	randomMove->addChildNode(randomMoveDirection);
@@ -40,26 +40,30 @@ AllyAi::AllyAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	auto targetAttacker =
 		std::make_shared<TargetAttackerAiNode>(entity, &mAiTree);
 
+	auto hasTarget = std::make_shared<EntityCountAiNode>(entity, &mAiTree);
+	hasTarget->setGreaterThanOrEqualTo(1);
+
 	//	Target entities in range of this entity
 	auto targetFoes = std::make_shared<TargetRangeAiNode>(entity, &mAiTree);
 	targetFoes->setRange(MIN_VILLAIN_RANGE);
 	targetFoes->setTargetTeamAlignment(TeamAlignment::FOE);
 
 	auto targetSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	targetSelector->addChildNode(hasTarget);
 	targetSelector->addChildNode(targetAttacker);
 	targetSelector->addChildNode(targetFoes);
 
-	auto fireAtFoes = std::make_shared<FireAtTargetAiNode>(entity, &mAiTree);
+	//	Fire at target
+	auto fireAtTarget = std::make_shared<FireAtTargetAiNode>(entity, &mAiTree);
 
 	auto fireSequence = std::make_shared<SequenceAiNode>(entity, &mAiTree);
-
 	rootNode->addChildNode(fireSequence);
 	fireSequence->addChildNode(targetSelector);
-	fireSequence->addChildNode(fireAtFoes);
+	fireSequence->addChildNode(fireAtTarget);
 }
 
 //	============================================================================
-void AllyAi::think(World& world, float elapsedSeconds) {
-	mAiTree.execute(world, elapsedSeconds);
+void AllyAi::think(World& world, double totalElapsedSeconds) {
+	mAiTree.execute(world, totalElapsedSeconds);
 }
 }

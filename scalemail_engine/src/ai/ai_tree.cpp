@@ -5,15 +5,28 @@ namespace ScaleMail
 {
 //	============================================================================
 AiTree::AiTree(Entity entity, AiNode* rootNode)
-: mEntity(entity), mRootNode(rootNode) {
+: mTotalElapsedSeconds(0), mEntity(entity), mRootNode(rootNode) {
 }
 
 //	============================================================================
-void AiTree::execute(World& world, float elapsedSeconds) {
+void AiTree::execute(World& world, double totalElapsedSeconds) {
+	//	AI nodes don't update every frame so use the total elapsed time
+	mTotalElapsedSeconds = totalElapsedSeconds;
+
 	if (mRootNode != nullptr) {
 		mWhiteboard.removeDeadEntities(world);
-		mRootNode->execute(world, elapsedSeconds);
+		mRootNode->execute(world);
 	}
+}
+
+//	============================================================================
+double AiTree::getElapsedSeconds(double lastTick) const {
+	return mTotalElapsedSeconds - lastTick;
+}
+
+//	============================================================================
+double AiTree::getTotalElapsedSeconds() const {
+	return mTotalElapsedSeconds;
 }
 
 //	============================================================================

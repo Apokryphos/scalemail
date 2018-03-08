@@ -12,7 +12,7 @@ class FireAtTargetAiNode : public AiNode
 public:
 	FireAtTargetAiNode(Entity& entity, AiTree* parentTree = nullptr,
 					   const std::string& targetValueName = "TARGET");
-	virtual AiNodeStatus execute(World& world, float elapsedSeconds) override;
+	virtual AiNodeStatus execute(World& world) override;
 	void setTargetValueName(const std::string& name);
 };
 }

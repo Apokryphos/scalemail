@@ -13,7 +13,7 @@ BatAi::BatAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 }
 
 //	============================================================================
-void BatAi::think(World& world, [[maybe_unused]] float elapsedSeconds) {
-	mAiTree.execute(world, elapsedSeconds);
+void BatAi::think(World& world, double totalElapsedSeconds) {
+	mAiTree.execute(world, totalElapsedSeconds);
 }
 }

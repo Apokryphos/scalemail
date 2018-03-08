@@ -59,6 +59,7 @@ public:
 	void setSeek(const AiComponent& cmpnt, bool enabled);
 	void setSeekTarget(const AiComponent& cmpnt, const glm::vec2& target);
 	void setWander(const AiComponent& cmpnt, bool enabled);
-	void update(World& world, float elapsedSeconds);
+	void simulate(World& world);
+	void update(World& world, double totalElapsedSeconds);
 };
 }

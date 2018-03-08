@@ -98,6 +98,6 @@ public:
 	TriggerSystem& getTriggerSystem();
 	void initialize(AssetManager* assetManager);
 	void loadMap(const std::string& mapName);
-	void update(float elapsedSeconds);
+	void update(double totalElapsedSeconds, float elapsedSeconds);
 };
 }

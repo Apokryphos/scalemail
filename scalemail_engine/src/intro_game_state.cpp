@@ -161,8 +161,12 @@ void IntroGameState::updateState(World& world, Camera& camera,
 			if (mDoorsClosed) {
 				//	Unearth skeletons
 				for (const auto entity : mBuriedEntities) {
-					BuryComponent buryCmpnt = world.getBurySystem().getComponent(entity);
-					world.getBurySystem().rise(buryCmpnt, false);
+					BurySystem& burySystem = world.getBurySystem();
+
+					if (burySystem.hasComponent(entity)) {
+						BuryComponent buryCmpnt = burySystem.getComponent(entity);
+						world.getBurySystem().rise(buryCmpnt, false);
+					}
 				}
 			}
 		}

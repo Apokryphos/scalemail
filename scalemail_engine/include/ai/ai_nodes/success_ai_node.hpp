@@ -10,6 +10,6 @@ class SuccessAiNode : public AiNode
 {
 public:
 	SuccessAiNode(Entity& entity, AiTree* parentTree = nullptr);
-	AiNodeStatus execute(World& world, float elapsedSeconds);
+	AiNodeStatus execute(World& world);
 };
 }

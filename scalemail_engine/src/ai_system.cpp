@@ -1,4 +1,4 @@
-#include "ai_behavior.hpp"
+#include "ai/ai_behavior.hpp"
 #include "ai_system.hpp"
 #include "gl_headers.hpp"
 #include "vector_util.hpp"
@@ -203,7 +203,7 @@ void AiSystem::setWander(const AiComponent& cmpnt, bool enabled) {
 }
 
 //	============================================================================
-void AiSystem::update(World& world, float elapsedSeconds) {
+void AiSystem::update(World& world, double totalElapsedSeconds) {
 	if (!mEnabled) {
 		return;
 	}
@@ -212,7 +212,8 @@ void AiSystem::update(World& world, float elapsedSeconds) {
 	size_t count = mData.size();
 	for (size_t index = 0; index < count; ++index) {
 		for (auto& behavior : mData[index].behaviors) {
-			behavior.get()->think(world, elapsedSeconds);
+			//	AI nodes don't update every frame so use the total elapsed time
+			behavior.get()->think(world, totalElapsedSeconds);
 		}
 	}
 

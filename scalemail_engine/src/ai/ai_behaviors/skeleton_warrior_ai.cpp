@@ -47,7 +47,7 @@ SkeletonWarriorAi::SkeletonWarriorAi(Entity entity)
 }
 
 //	============================================================================
-void SkeletonWarriorAi::think(World& world, float elapsedSeconds) {
-	mAiTree.execute(world, elapsedSeconds);
+void SkeletonWarriorAi::think(World& world, double totalElapsedSeconds) {
+	mAiTree.execute(world, totalElapsedSeconds);
 }
 }

@@ -5,7 +5,6 @@
 #include "ai/ai_nodes/random_move_direction_ai_node.hpp"
 #include "ai/ai_nodes/selector_ai_node.hpp"
 #include "ai/ai_nodes/sequence_ai_node.hpp"
-#include "ai/ai_nodes/success_ai_node.hpp"
 #include "ai/ai_nodes/target_attacker_ai_node.hpp"
 #include "ai/ai_nodes/target_range_ai_node.hpp"
 
@@ -16,7 +15,7 @@ static const float MOVE_DIRECTION_CHANGE_INTERVAL = 2.25f;
 
 //	============================================================================
 VampireAi::VampireAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
-	auto rootNode = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto rootNode = std::make_shared<SelectorAiNode>(entity, &mAiTree);
 	mAiTree.setRootNode(rootNode);
 
 	//	==================================================
@@ -28,14 +27,10 @@ VampireAi::VampireAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	auto randomMoveDirection =
 		std::make_shared<RandomMoveDirectionAiNode>(entity, &mAiTree);
 
-	auto randomMoveSuccess = std::make_shared<SuccessAiNode>(entity, &mAiTree);
-
-	auto randomMove =
-		std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto randomMove = std::make_shared<SequenceAiNode>(entity, &mAiTree);
 	rootNode->addChildNode(randomMove);
 	randomMove->addChildNode(cooldown);
 	randomMove->addChildNode(randomMoveDirection);
-	randomMove->addChildNode(randomMoveSuccess);
 
 	//	==================================================
 	//	Fire at entities
@@ -53,20 +48,20 @@ VampireAi::VampireAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	targetFoes->setTargetTeamAlignment(TeamAlignment::FOE);
 
 	auto targetSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
-	rootNode->addChildNode(targetSelector);
 	targetSelector->addChildNode(targetAttacker);
 	targetSelector->addChildNode(targetFoes);
 
 	//	Fire at target
 	auto fireAtTarget = std::make_shared<FireAtTargetAiNode>(entity, &mAiTree);
 
-	auto fireSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
-	rootNode->addChildNode(fireSelector);
-	fireSelector->addChildNode(fireAtTarget);
+	auto fireSequence = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(fireSequence);
+	fireSequence->addChildNode(targetSelector);
+	fireSequence->addChildNode(fireAtTarget);
 }
 
 //	============================================================================
-void VampireAi::think(World& world, float elapsedSeconds) {
-	mAiTree.execute(world, elapsedSeconds);
+void VampireAi::think(World& world, double totalElapsedSeconds) {
+	mAiTree.execute(world, totalElapsedSeconds);
 }
 }

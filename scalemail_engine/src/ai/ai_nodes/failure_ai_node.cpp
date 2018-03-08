@@ -8,8 +8,7 @@ FailureAiNode::FailureAiNode(Entity& entity, AiTree* parentTree)
 }
 
 //	============================================================================
-AiNodeStatus FailureAiNode::execute([[maybe_unused]]World& world,
-									[[maybe_unused]]float elapsedSeconds) {
+AiNodeStatus FailureAiNode::execute([[maybe_unused]]World& world) {
 	return AiNodeStatus::FAILURE;
 }
 }

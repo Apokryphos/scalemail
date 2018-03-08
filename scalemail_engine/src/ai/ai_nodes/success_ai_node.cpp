@@ -8,8 +8,7 @@ SuccessAiNode::SuccessAiNode(Entity& entity, AiTree* parentTree)
 }
 
 //	============================================================================
-AiNodeStatus SuccessAiNode::execute([[maybe_unused]]World& world,
-									[[maybe_unused]]float elapsedSeconds) {
+AiNodeStatus SuccessAiNode::execute([[maybe_unused]]World& world) {
 	return AiNodeStatus::SUCCESS;
 }
 }

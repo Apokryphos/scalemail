@@ -15,8 +15,7 @@ const std::string& targetValueName)
 }
 
 //	============================================================================
-AiNodeStatus TargetAttackerAiNode::execute(World& world,
-									 [[maybe_unused]]float elapsedSeconds) {
+AiNodeStatus TargetAttackerAiNode::execute(World& world) {
 	Entity entity = this->getEntity();
 
 	AiWhiteboard& wb = this->getWhiteboard();

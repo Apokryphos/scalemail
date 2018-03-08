@@ -38,7 +38,7 @@ SkeletonAi::SkeletonAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 }
 
 //	============================================================================
-void SkeletonAi::think(World& world, float elapsedSeconds) {
-	mAiTree.execute(world, elapsedSeconds);
+void SkeletonAi::think(World& world, double totalElapsedSeconds) {
+	mAiTree.execute(world, totalElapsedSeconds);
 }
 }

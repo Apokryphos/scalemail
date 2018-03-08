@@ -299,8 +299,8 @@ void World::loadMap(const std::string& mapName) {
 }
 
 //  ============================================================================
-void World::update(float elapsedSeconds) {
-	mAiSystem.update(*this, elapsedSeconds);
+void World::update(double totalElapsedSeconds, float elapsedSeconds) {
+	mAiSystem.update(*this, totalElapsedSeconds);
 
 	mBulletSystem.simulate(*this, elapsedSeconds);
 

@@ -25,6 +25,8 @@ public:
 	TeamSystem(EntityManager& entityManager, int maxComponents = 1000);
 	TeamComponent getComponent(const Entity& entity) const;
 	void getEntitiesByTeam(const Team team, std::vector<Entity>& entities);
+	void getFoes(const TeamComponent& cmpnt, std::vector<Entity>& entities);
+	void getFoesByTeam(const Team team, std::vector<Entity>& entities);
 	Team getTeam(const TeamComponent& cmpnt) const;
 	void setTeam(const TeamComponent& cmpnt, const Team team);
 };

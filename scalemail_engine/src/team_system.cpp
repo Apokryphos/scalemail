@@ -68,6 +68,25 @@ void TeamSystem::getEntitiesByTeam(const Team team,
 	}
 }
 
+//	============================================================================
+void TeamSystem::getFoes(const TeamComponent& cmpnt,
+						 std::vector<Entity>& entities) {
+	return this->getFoesByTeam(mTeam[cmpnt.index], entities);
+}
+
+//	============================================================================
+void TeamSystem::getFoesByTeam(const Team team,
+							   std::vector<Entity>& entities) {
+	switch (team) {
+		case Team::PLAYER:
+			this->getEntitiesByTeam(Team::VILLAIN, entities);
+			break;
+
+		case Team::VILLAIN:
+			this->getEntitiesByTeam(Team::PLAYER, entities);
+			break;
+	}
+}
 
 //	============================================================================
 Team TeamSystem::getTeam(const TeamComponent& cmpnt) const {

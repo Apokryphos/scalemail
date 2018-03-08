@@ -29,6 +29,26 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	auto rootNode = std::make_shared<SelectorAiNode>(entity, &mAiTree);
 	mAiTree.setRootNode(rootNode);
 
+	//	Don't chase loot if at max capacity.
+	auto maxCarry = std::make_shared<FunctionAiNode>(entity, &mAiTree);
+	maxCarry->setFunction(
+		[](AiNode& aiNode, World& world) {
+			Entity entity = aiNode.getEntity();
+
+			InventorySystem& inventorySystem = world.getInventorySystem();
+
+			InventoryComponent inventoryCmpnt =
+				inventorySystem.getComponent(entity);
+
+			const int itemCount = inventorySystem.getItemCount(inventoryCmpnt);
+
+			return
+				itemCount < MAX_ITEM_CARRY ?
+				AiNodeStatus::SUCCESS :
+				AiNodeStatus::FAILURE;
+		}
+	);
+
 	auto hasTarget = std::make_shared<EntityCountAiNode>(entity, &mAiTree);
 	hasTarget->setGreaterThanOrEqualTo(1);
 
@@ -63,6 +83,7 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 
 	auto chaseLoot = std::make_shared<SequenceAiNode>(entity, &mAiTree);
 	rootNode->addChildNode(chaseLoot);
+	chaseLoot->addChildNode(maxCarry);
 	chaseLoot->addChildNode(targetSelector);
 	chaseLoot->addChildNode(speedUp);
 	chaseLoot->addChildNode(seekLoot);

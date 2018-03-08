@@ -16,7 +16,7 @@ mCountMin(1), mCountMax(1), mValueName(valueName) {
 }
 
 //	============================================================================
-AiNodeStatus EntityCountAiNode::execute(World& world,
+AiNodeStatus EntityCountAiNode::execute([[maybe_unused]]World& world,
 										[[maybe_unused]]float elapsedSeconds) {
 	AiWhiteboard& wb = this->getWhiteboard();
 

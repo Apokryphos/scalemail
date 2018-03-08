@@ -1,6 +1,8 @@
 #include "ai/ai_behaviors/blob_ai.hpp"
+#include "ai/ai_nodes/cooldown_ai_node.hpp"
 #include "ai/ai_nodes/entity_count_ai_node.hpp"
 #include "ai/ai_nodes/function_ai_node.hpp"
+#include "ai/ai_nodes/random_move_direction_ai_node.hpp"
 #include "ai/ai_nodes/seek_target_ai_node.hpp"
 #include "ai/ai_nodes/selector_ai_node.hpp"
 #include "ai/ai_nodes/sequence_ai_node.hpp"
@@ -19,10 +21,11 @@
 
 namespace ScaleMail
 {
-const int MAX_ITEM_CARRY = 3;
-const float MAX_LOOT_RANGE = 256.0f;
-const float NORMAL_SPEED = 16.0f;
-const float LOOT_CHASE_SPEED = 64.0f;
+static const int MAX_ITEM_CARRY = 3;
+static const float MAX_LOOT_RANGE = 256.0f;
+static const float NORMAL_SPEED = 16.0f;
+static const float LOOT_CHASE_SPEED = 64.0f;
+static const float MOVE_DIRECTION_CHANGE_INTERVAL = 2.25f;
 
 //	============================================================================
 BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
@@ -82,11 +85,31 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	auto seekLoot = std::make_shared<SeekTargetAiNode>(entity, &mAiTree);
 
 	auto chaseLoot = std::make_shared<SequenceAiNode>(entity, &mAiTree);
-	rootNode->addChildNode(chaseLoot);
 	chaseLoot->addChildNode(maxCarry);
 	chaseLoot->addChildNode(targetSelector);
 	chaseLoot->addChildNode(speedUp);
 	chaseLoot->addChildNode(seekLoot);
+
+	//	Stop seeking
+	auto stopSeek = std::make_shared<FunctionAiNode>(entity, &mAiTree);
+	stopSeek->setFunction(
+		[](AiNode& aiNode, World& world) {
+			Entity entity = aiNode.getEntity();
+
+			AiSystem& aiSystem = world.getAiSystem();
+
+			AiComponent aiCmpnt = aiSystem.getComponent(entity);
+
+			aiSystem.setSeek(aiCmpnt, false);
+
+			return AiNodeStatus::FAILURE;
+		}
+	);
+
+	auto chaseLootSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(chaseLootSelector);
+	chaseLootSelector->addChildNode(chaseLoot);
+	chaseLootSelector->addChildNode(stopSeek);
 
 	//	Decrease speed when wandering
 	auto speedDown = std::make_shared<FunctionAiNode>(entity, &mAiTree);
@@ -108,65 +131,29 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	//	Wander if there's no loot to chase
 	auto wander = std::make_shared<WanderAiNode>(entity, &mAiTree);
 
+	//	==================================================
+	//	Move in a random direction after cooldown period
+	//	==================================================
+	auto cooldown = std::make_shared<CooldownAiNode>(entity, &mAiTree);
+	cooldown->setDuration(MOVE_DIRECTION_CHANGE_INTERVAL);
+
+	auto randomMoveDirection =
+		std::make_shared<RandomMoveDirectionAiNode>(entity, &mAiTree);
+
+	auto randomMove = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(randomMove);
+	randomMove->addChildNode(cooldown);
+	randomMove->addChildNode(randomMoveDirection);
+
 	auto wanderSequence = std::make_shared<SequenceAiNode>(entity, &mAiTree);
 	rootNode->addChildNode(wanderSequence);
 	wanderSequence->addChildNode(speedDown);
 	wanderSequence->addChildNode(wander);
+	wanderSequence->addChildNode(randomMove);
 }
 
 //	============================================================================
 void BlobAi::think(World& world, double totalElapsedSeconds) {
 	mAiTree.execute(world, totalElapsedSeconds);
-
-	// const Entity entity = this->getEntity();
-
-	// if (!actorCanMove(entity, world)) {
-	// 	return;
-	// }
-
-	// PhysicsSystem& physicsSystem = world.getPhysicsSystem();
-	// PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	// glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
-
-	// InventorySystem& inventorySystem = world.getInventorySystem();
-	// InventoryComponent inventoryCmpnt = inventorySystem.getComponent(entity);
-
-	// //	Chase loot if inventory isn't full
-	// if (inventorySystem.getItemCount(inventoryCmpnt) < MAX_ITEM_CARRY) {
-	// 	if (!mTargetEntity.has_value() ||
-	// 		!world.getLootSystem().hasComponent(mTargetEntity.value())) {
-	// 		//	Assign a new target
-	// 		mTargetEntity = getRandomLootInRange(world, position, MAX_LOOT_RANGE);
-	// 	}
-
-	// 	if (mTargetEntity.has_value() &&
-	// 		world.getLootSystem().hasComponent(mTargetEntity.value())) {
-	// 		PhysicsComponent targetPhysicsCmpnt =
-	// 			physicsSystem.getComponent(mTargetEntity.value());
-	// 		glm::vec2 targetPosition = physicsSystem.getPosition(targetPhysicsCmpnt);
-
-	// 		//	Increase speed
-	// 		physicsSystem.setSpeed(physicsCmpnt, LOOT_CHASE_SPEED);
-
-	// 		//	Set move direction towards target
-	// 		AiSystem& aiSystem = world.getAiSystem();
-	// 		AiComponent aiCmpnt = aiSystem.getComponent(entity);
-	// 		aiSystem.setMoveDirection(aiCmpnt, targetPosition - position);
-
-	// 		//	Stop wandering
-	// 		aiSystem.setWander(aiCmpnt, false);
-
-	// 		//	Stop running AI
-	// 		return;
-	// 	}
-	// }
-
-	// //	Set speed to normal
-	// physicsSystem.setSpeed(physicsCmpnt, NORMAL_SPEED);
-
-	// //	Wander
-	// AiSystem& aiSystem = world.getAiSystem();
-	// AiComponent aiCmpnt = aiSystem.getComponent(entity);
-	// aiSystem.setWander(aiCmpnt, true);
 }
 }

@@ -2,6 +2,7 @@
 
 #include "entity_system.hpp"
 #include "team.hpp"
+#include "team_alignment.hpp"
 #include <vector>
 
 namespace ScaleMail
@@ -23,8 +24,15 @@ class TeamSystem : public EntitySystem
 
 public:
 	TeamSystem(EntityManager& entityManager, int maxComponents = 1000);
+	void getAlliesByTeam(const Team team, std::vector<Entity>& entities);
 	TeamComponent getComponent(const Entity& entity) const;
 	void getEntitiesByTeam(const Team team, std::vector<Entity>& entities);
+	void getEntitiesByTeamAlignment(const TeamComponent& cmpnt,
+									const TeamAlignment teamAlignment,
+									std::vector<Entity>& entities);
+	void getEntitiesByTeamAlignment(const Team team,
+									const TeamAlignment teamAlignment,
+									std::vector<Entity>& entities);
 	void getFoes(const TeamComponent& cmpnt, std::vector<Entity>& entities);
 	void getFoesByTeam(const Team team, std::vector<Entity>& entities);
 	Team getTeam(const TeamComponent& cmpnt) const;

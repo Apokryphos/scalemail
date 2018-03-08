@@ -7,6 +7,7 @@
 namespace ScaleMail
 {
 class AiNode;
+class World;
 
 class AiTree
 {
@@ -16,6 +17,7 @@ class AiTree
 
 public:
 	AiTree(Entity entity, AiNode* rootNode = nullptr);
+	void execute(World& world, float elapsedSeconds);
 	Entity getEntity();
 	AiNode* getRootNode();
 	AiWhiteboard& getWhiteboard();

@@ -1,70 +1,54 @@
 #include "ai/ai_behaviors/skeleton_warrior_ai.hpp"
-#include "ai_system.hpp"
+#include "ai/ai_behaviors/skeleton_ai.hpp"
+#include "ai/ai_nodes/fire_at_target_ai_node.hpp"
+#include "ai/ai_nodes/seek_target_ai_node.hpp"
+#include "ai/ai_nodes/selector_ai_node.hpp"
+#include "ai/ai_nodes/sequence_ai_node.hpp"
+#include "ai/ai_nodes/target_attacker_ai_node.hpp"
+#include "ai/ai_nodes/target_range_ai_node.hpp"
 #include "actor_util.hpp"
-#include "physics_system.hpp"
-#include "player.hpp"
-#include "player_util.hpp"
-#include "world.hpp"
-#include <algorithm>
-#include <vector>
 
 namespace ScaleMail
 {
-const float MIN_PLAYER_RANGE = 128.0f;
+static const float MIN_PLAYER_RANGE = 128.0f;
 
 //	============================================================================
-SkeletonWarriorAi::SkeletonWarriorAi(Entity entity) : AiBehavior(entity) {
+SkeletonWarriorAi::SkeletonWarriorAi(Entity entity)
+: AiBehavior(entity), mAiTree(entity) {
+	auto rootNode = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	mAiTree.setRootNode(rootNode);
+
+	//	Target entities that attack this entity
+	auto targetAttacker =
+		std::make_shared<TargetAttackerAiNode>(entity, &mAiTree);
+
+	//	Target entities in range of this entity
+	auto targetFoes = std::make_shared<TargetRangeAiNode>(entity, &mAiTree);
+	targetFoes->setRange(MIN_PLAYER_RANGE);
+	targetFoes->setTargetTeamAlignment(TeamAlignment::FOE);
+
+	auto targetSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(targetSelector);
+	targetSelector->addChildNode(targetAttacker);
+	targetSelector->addChildNode(targetFoes);
+
+	//	Fire at target
+	auto fireAtFoes = std::make_shared<FireAtTargetAiNode>(entity, &mAiTree);
+
+	auto fireSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(fireSelector);
+	fireSelector->addChildNode(fireAtFoes);
+
+	//	Chase target
+	auto seekFoe = std::make_shared<SeekTargetAiNode>(entity, &mAiTree);
+
+	auto seekSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	rootNode->addChildNode(seekSelector);
+	seekSelector->addChildNode(seekFoe);
 }
 
 //	============================================================================
-void SkeletonWarriorAi::think(World& world, [[maybe_unused]]float elapsedSeconds) {
-	const Entity entity = this->getEntity();
-
-	if (!actorCanMove(entity, world)) {
-		return;
-	}
-
-	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
-	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
-
-	GunSystem& gunSystem = world.getGunSystem();
-	GunComponent gunCmpnt = gunSystem.getComponent(entity);
-
-	gunSystem.setFire(gunCmpnt, false);
-
-	AiSystem& aiSystem = world.getAiSystem();
-	AiComponent aiCmpnt = aiSystem.getComponent(entity);
-
-	if (!actorIsAlive(mTargetEntity, world)) {
-		//	Assign a new target
-		Player* player = getRandomPlayerInRange(world, position, MIN_PLAYER_RANGE);
-		if (player != nullptr) {
-			mTargetEntity = player->entity;
-		} else {
-			//	Check if an entity damaged this entity
-			DamageSystem& damageSystem = world.getDamageSystem();
-			DamageComponent damageCmpnt = damageSystem.getComponent(entity);
-
-			const auto& sourceEntities = damageSystem.getSourceEntities(damageCmpnt);
-
-			if (sourceEntities.size() > 0) {
-				//	Target attacker
-				mTargetEntity = world.getRandom().getRandomElement(sourceEntities);
-			}
-		}
-	} else {
-		PhysicsComponent targetPhysicsCmpnt =
-			physicsSystem.getComponent(mTargetEntity);
-		glm::vec2 targetPosition = physicsSystem.getPosition(targetPhysicsCmpnt);
-
-		//	Set move direction towards target
-		aiSystem.setSeek(aiCmpnt, true);
-		aiSystem.setSeekTarget(aiCmpnt, targetPosition);
-
-		//	Fire at target
-		gunSystem.setTarget(gunCmpnt, targetPosition);
-		gunSystem.setFire(gunCmpnt, true);
-	}
+void SkeletonWarriorAi::think(World& world, float elapsedSeconds) {
+	mAiTree.execute(world, elapsedSeconds);
 }
 }

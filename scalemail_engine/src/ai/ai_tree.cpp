@@ -9,6 +9,14 @@ AiTree::AiTree(Entity entity, AiNode* rootNode)
 }
 
 //	============================================================================
+void AiTree::execute(World& world, float elapsedSeconds) {
+	if (mRootNode != nullptr) {
+		mWhiteboard.removeDeadEntities(world);
+		mRootNode->execute(world, elapsedSeconds);
+	}
+}
+
+//	============================================================================
 Entity AiTree::getEntity() {
 	return mEntity;
 }

@@ -1,11 +1,11 @@
 #include "ai/ai_behaviors/ally_ai.hpp"
 #include "ai/ai_nodes/cooldown_ai_node.hpp"
-#include "ai/ai_nodes/fire_at_foes_ai_node.hpp"
+#include "ai/ai_nodes/fire_at_target_ai_node.hpp"
 #include "ai/ai_nodes/random_move_direction_ai_node.hpp"
 #include "ai/ai_nodes/selector_ai_node.hpp"
 #include "ai/ai_nodes/sequence_ai_node.hpp"
-#include "gun_system.hpp"
-#include "world.hpp"
+#include "ai/ai_nodes/target_attacker_ai_node.hpp"
+#include "ai/ai_nodes/target_range_ai_node.hpp"
 #include <memory>
 
 namespace ScaleMail
@@ -15,47 +15,51 @@ static const float MIN_VILLAIN_RANGE = 128.0f;
 
 //	============================================================================
 AllyAi::AllyAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
+	auto rootNode = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	mAiTree.setRootNode(rootNode);
+
 	//	==================================================
 	//	Move in a random direction after cooldown period
 	//	==================================================
-	std::shared_ptr<CooldownAiNode> cooldown =
-		std::make_shared<CooldownAiNode>(entity, &mAiTree);
+	auto cooldown = std::make_shared<CooldownAiNode>(entity, &mAiTree);
+	cooldown->setDuration(MOVE_DIRECTION_CHANGE_INTERVAL);
 
-	std::shared_ptr<RandomMoveDirectionAiNode> randomMoveDirection =
+	auto randomMoveDirection =
 		std::make_shared<RandomMoveDirectionAiNode>(entity, &mAiTree);
 
-	std::shared_ptr<SequenceAiNode> randomMove =
-		std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto randomMove = std::make_shared<SequenceAiNode>(entity, &mAiTree);
 
+	rootNode->addChildNode(randomMove);
 	randomMove->addChildNode(cooldown);
 	randomMove->addChildNode(randomMoveDirection);
 
 	//	==================================================
 	//	Fire at foes
 	//	==================================================
-	std::shared_ptr<FireAtFoesAiNode> fireAtFoes =
-		std::make_shared<FireAtFoesAiNode>(entity, &mAiTree);
+	//	Target entities that attack this entity
+	auto targetAttacker =
+		std::make_shared<TargetAttackerAiNode>(entity, &mAiTree);
 
-	std::shared_ptr<SelectorAiNode> rootNode =
-		std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	//	Target entities in range of this entity
+	auto targetFoes = std::make_shared<TargetRangeAiNode>(entity, &mAiTree);
+	targetFoes->setRange(MIN_VILLAIN_RANGE);
+	targetFoes->setTargetTeamAlignment(TeamAlignment::FOE);
 
-	mAiTree.setRootNode(rootNode);
-	rootNode->addChildNode(randomMove);
-	rootNode->addChildNode(fireAtFoes);
+	auto targetSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	targetSelector->addChildNode(targetAttacker);
+	targetSelector->addChildNode(targetFoes);
 
-	cooldown->setDuration(MOVE_DIRECTION_CHANGE_INTERVAL);
-	fireAtFoes->setRange(MIN_VILLAIN_RANGE);
+	auto fireAtFoes = std::make_shared<FireAtTargetAiNode>(entity, &mAiTree);
+
+	auto fireSequence = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+
+	rootNode->addChildNode(fireSequence);
+	fireSequence->addChildNode(targetSelector);
+	fireSequence->addChildNode(fireAtFoes);
 }
 
 //	============================================================================
 void AllyAi::think(World& world, float elapsedSeconds) {
-	const Entity entity = this->getEntity();
-
-	GunSystem& gunSystem = world.getGunSystem();
-	GunComponent gunCmpnt = gunSystem.getComponent(entity);
-
-	gunSystem.setFire(gunCmpnt, false);
-
-	mAiTree.getRootNode()->execute(world, elapsedSeconds);
+	mAiTree.execute(world, elapsedSeconds);
 }
 }

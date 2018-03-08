@@ -49,6 +49,20 @@ void TeamSystem::destroyComponent(int index) {
 }
 
 //	============================================================================
+void TeamSystem::getAlliesByTeam(const Team team,
+								 std::vector<Entity>& entities) {
+	switch (team) {
+		case Team::VILLAIN:
+			this->getEntitiesByTeam(Team::VILLAIN, entities);
+			break;
+
+		case Team::PLAYER:
+			this->getEntitiesByTeam(Team::PLAYER, entities);
+			break;
+	}
+}
+
+//	============================================================================
 TeamComponent TeamSystem::getComponent(const Entity& entity) const {
 	return makeComponent(mComponentIndicesByEntity.at(entity));
 }
@@ -66,6 +80,34 @@ void TeamSystem::getEntitiesByTeam(const Team team,
 							mVillainEntities.end());
 			break;
 	}
+}
+
+//	============================================================================
+void TeamSystem::getEntitiesByTeamAlignment(const Team team,
+											const TeamAlignment teamAlignment,
+											std::vector<Entity>& entities) {
+	switch (teamAlignment) {
+		case TeamAlignment::ANY:
+			entities.insert(entities.begin(), mPlayerEntities.begin(),
+							mPlayerEntities.end());
+			entities.insert(entities.begin(), mVillainEntities.begin(),
+							mVillainEntities.end());
+			break;
+
+		case TeamAlignment::ALLY:
+			return this->getAlliesByTeam(team, entities);
+
+		case TeamAlignment::FOE:
+			return this->getFoesByTeam(team, entities);
+	}
+}
+
+//	============================================================================
+void TeamSystem::getEntitiesByTeamAlignment(const TeamComponent& cmpnt,
+											const TeamAlignment teamAlignment,
+											std::vector<Entity>& entities) {
+	return this->getEntitiesByTeamAlignment(
+		mTeam[cmpnt.index], teamAlignment, entities);
 }
 
 //	============================================================================

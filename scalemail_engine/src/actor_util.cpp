@@ -7,6 +7,21 @@
 namespace ScaleMail
 {
 //	============================================================================
+bool actorCanFire(const Entity& entity, World& world) {
+	//	Check if entity was recycled
+	if (!world.entityIsAlive(entity)) {
+		return false;
+	}
+
+	//	Must not be buried
+	if (entityIsBuried(entity, world.getBurySystem())) {
+		return false;
+	}
+
+	return true;
+}
+
+//	============================================================================
 bool actorCanMove(const Entity& entity, World& world) {
 	//	Check if entity was recycled
 	if (!world.entityIsAlive(entity)) {

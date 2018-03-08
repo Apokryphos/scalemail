@@ -24,6 +24,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/ai/ai_nodes/failure_ai_node.hpp
     include/ai/ai_nodes/inverter_ai_node.hpp
     include/ai/ai_nodes/random_move_direction_ai_node.hpp
+    include/ai/ai_nodes/seek_foe_ai_node.hpp
     include/ai/ai_nodes/selector_ai_node.hpp
     include/ai/ai_nodes/sequence_ai_node.hpp
     include/ai/ai_nodes/success_ai_node.hpp
@@ -133,6 +134,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ai_behaviors/vampire_ai.cpp
     src/ai/ai_nodes/random_move_direction_ai_node.cpp
     src/ai/ai_nodes/fire_at_foes_ai_node.cpp
+    src/ai/ai_nodes/seek_foe_ai_node.cpp
     src/ai/ai_nodes/selector_ai_node.cpp
     src/ai/ai_nodes/sequence_ai_node.cpp
     src/entity_types/actor.cpp

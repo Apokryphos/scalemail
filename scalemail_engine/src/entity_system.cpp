@@ -72,6 +72,13 @@ std::vector<Entity> EntitySystem::getEntities() const {
 }
 
 //	============================================================================
+void EntitySystem::getEntities(std::vector<Entity>& entities) const {
+	for(auto& p : mComponentIndicesByEntity) {
+		entities.push_back(p.first);
+	}
+}
+
+//	============================================================================
 const Entity& EntitySystem::getEntityByComponentIndex(const int index) const {
 	return mEntitiesByComponentIndices.at(index);
 }

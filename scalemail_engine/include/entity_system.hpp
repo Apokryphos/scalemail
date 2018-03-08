@@ -27,6 +27,7 @@ public:
 	void addComponent(const Entity& entity);
 	void garbageCollect();
 	std::vector<Entity> getEntities() const;
+	void getEntities(std::vector<Entity>& entities) const;
 	EntityManager& getEntityManager();
 	bool hasComponent(const Entity& entity) const;
 	const size_t maxComponents;

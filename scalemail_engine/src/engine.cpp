@@ -3,6 +3,7 @@
 #include "asset_manager.hpp"
 #include "camera.hpp"
 #include "cursor.hpp"
+#include "engine_start_options.hpp"
 #include "game.hpp"
 #include "game_state_manager.hpp"
 #include "gl_headers.hpp"
@@ -74,7 +75,7 @@ static bool update(Game& game, World& world, GameState* gameState,
 }
 
 //  ============================================================================
-int startEngine() {
+int startEngine(EngineStartOptions startOptions) {
 	glfwSetErrorCallback(errorCallback);
 
 	if (!glfwInit()) {
@@ -129,9 +130,10 @@ int startEngine() {
 	World world;
 	world.initialize(&assetManager);
 
-	world.loadMap("map1");
-	// world.loadMap("test_map");
-	// world.loadMap("test_map2");
+	std::string mapName =
+		startOptions.mapName.empty() ? "map1" : startOptions.mapName;
+
+	world.loadMap(mapName);
 
 	buildAmbientLights();
 
@@ -153,7 +155,12 @@ int startEngine() {
 
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
-	gameStateManager.activateMainGameState();
+
+	if (startOptions.skipIntro) {
+		gameStateManager.activateMainGameState();
+	} else {
+		gameStateManager.activateIntroGameState();
+	}
 
 	double totalElapsedSeconds = 0;
 	double lastSeconds = 0;

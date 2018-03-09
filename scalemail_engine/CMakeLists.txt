@@ -58,6 +58,7 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/direction.hpp
     include/door_system.hpp
     include/ease.hpp
+    include/engine_start_options.hpp
     include/entity_collision.hpp
     include/entity_manager.hpp
     include/entity_system.hpp
@@ -231,6 +232,7 @@ set(SCALEMAIL_ENGINE_SOURCE
 
 add_library(${PROJECT_NAME} ${SCALEMAIL_ENGINE_SOURCE} ${SCALEMAIL_ENGINE_SOURCE})
 include_directories(include)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} glad glfw glm lodepng TmxMapLib)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLM_ENABLE_EXPERIMENTAL)

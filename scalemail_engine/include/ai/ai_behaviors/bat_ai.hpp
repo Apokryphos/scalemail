@@ -9,8 +9,6 @@ namespace ScaleMail
 {
 class BatAi : public AiBehavior
 {
-	std::optional<Entity> mTargetEntity;
-	glm::vec2 mMoveDirection;
 	AiTree mAiTree;
 
 public:

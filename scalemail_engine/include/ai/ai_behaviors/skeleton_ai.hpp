@@ -8,8 +8,6 @@ namespace ScaleMail
 {
 class SkeletonAi : public AiBehavior
 {
-	Entity mTargetEntity;
-	glm::vec2 mMoveDirection;
 	AiTree mAiTree;
 
 public:

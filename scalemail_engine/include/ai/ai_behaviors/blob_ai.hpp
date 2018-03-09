@@ -9,8 +9,6 @@ namespace ScaleMail
 {
 class BlobAi : public AiBehavior
 {
-	std::optional<Entity> mTargetEntity;
-	glm::vec2 mMoveDirection;
 	AiTree mAiTree;
 
 public:

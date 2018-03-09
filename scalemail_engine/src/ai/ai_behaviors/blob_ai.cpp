@@ -10,6 +10,7 @@
 #include "ai/ai_nodes/wander_ai_node.hpp"
 #include "ai_system.hpp"
 #include "actor_util.hpp"
+#include "inventory_system.hpp"
 #include "math_util.hpp"
 #include "physics_system.hpp"
 #include "player.hpp"

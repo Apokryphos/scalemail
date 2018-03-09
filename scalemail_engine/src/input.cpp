@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "gl_headers.hpp"
 #include "input_state.hpp"
+#include "player.hpp"
 #include "transition.hpp"
 #include "world.hpp"
 #include <algorithm>

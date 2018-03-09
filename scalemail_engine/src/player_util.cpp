@@ -1,5 +1,6 @@
 #include "player.hpp"
 #include "physics_system.hpp"
+#include "random.hpp"
 #include "world.hpp"
 #include <glm/vec2.hpp>
 #include <glm/gtx/norm.hpp>

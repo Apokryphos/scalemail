@@ -1,5 +1,7 @@
 #include "ai/ai_nodes/random_move_direction_ai_node.hpp"
+#include "ai_system.hpp"
 #include "math_util.hpp"
+#include "random.hpp"
 #include "world.hpp"
 #include <glm/vec2.hpp>
 

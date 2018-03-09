@@ -1,4 +1,6 @@
 #include "entity_types.hpp"
+#include "light_system.hpp"
+#include "particle_system.hpp"
 #include "world.hpp"
 
 namespace ScaleMail

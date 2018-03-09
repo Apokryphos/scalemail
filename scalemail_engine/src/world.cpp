@@ -1,208 +1,283 @@
+#include "ai/ai_behavior_factory.hpp"
+#include "ai_system.hpp"
+#include "bullet_system.hpp"
 #include "bullet_util.hpp"
+#include "bury_system.hpp"
+#include "damage_system.hpp"
 #include "direction.hpp"
+#include "door_system.hpp"
+#include "entity_manager.hpp"
 #include "entity_types.hpp"
 #include "entity_util.hpp"
+#include "expire_system.hpp"
+#include "facing_system.hpp"
+#include "gun_system.hpp"
+#include "health_system.hpp"
+#include "inventory_system.hpp"
+#include "light_system.hpp"
+#include "loot_system.hpp"
 #include "map.hpp"
 #include "map_load.hpp"
 #include "math_util.hpp"
+#include "name_system.hpp"
+#include "particle_system.hpp"
+#include "physics_system.hpp"
+#include "player.hpp"
+#include "prefab_factory.hpp"
+#include "random.hpp"
 #include "sprite.hpp"
+#include "sprite_system.hpp"
+#include "sprite_effect_system.hpp"
+#include "team_system.hpp"
+#include "trigger_system.hpp"
 #include "world.hpp"
 
 namespace ScaleMail
 {
 //  ============================================================================
-World::World() :
-	mAiSystem(mEntityManager),		mBulletSystem(mEntityManager),
-	mBurySystem(mEntityManager),	mDamageSystem(mEntityManager),
-	mDoorSystem(mEntityManager),	mExpireSystem(mEntityManager),
-	mFacingSystem(mEntityManager),	mGunSystem(mEntityManager),
-	mHealthSystem(mEntityManager),	mInventorySystem(mEntityManager),
-	mLightSystem(mEntityManager),	mLootSystem(mEntityManager),
-	mNameSystem(mEntityManager),	mParticleSystem(mEntityManager),
-	mPhysicsSystem(mEntityManager, 10000),
-	mSpriteEffectSystem(mEntityManager),
-	mSpriteSystem(mEntityManager),	mTeamSystem(mEntityManager),
-	mTriggerSystem(mEntityManager) {
-	mPlayers.reserve(4);
-	mPlayers.emplace_back("Player1");
-	mPlayers.emplace_back("Player2");
-	mPlayers.emplace_back("Player3");
-	mPlayers.emplace_back("Player4");
+class World::WorldImpl
+{
+public:
+	AiBehaviorFactory aiBehaviorFactory;
+	std::vector<Player> players;
+	PrefabFactory prefabFactory;
+	Random random;
+};
 
-	mPhysicsSystem.addEntityCollisionCallback(
-		std::bind(&BulletSystem::onEntityCollision, &mBulletSystem,
+//  ============================================================================
+class World::WorldSystems
+{
+public:
+	WorldSystems()
+	:	aiSystem(entityManager),
+		bulletSystem(entityManager),
+		burySystem(entityManager),
+		damageSystem(entityManager),
+		doorSystem(entityManager),
+		expireSystem(entityManager),
+		facingSystem(entityManager),
+		gunSystem(entityManager),
+		healthSystem(entityManager),
+		inventorySystem(entityManager),
+		lightSystem(entityManager),
+		lootSystem(entityManager),
+		nameSystem(entityManager),
+		particleSystem(entityManager),
+		physicsSystem(entityManager, 10000),
+		spriteSystem(entityManager),
+		spriteEffectSystem(entityManager),
+		teamSystem(entityManager),
+		triggerSystem(entityManager) {
+	}
+
+	EntityManager entityManager;
+	AiSystem aiSystem;
+	BulletSystem bulletSystem;
+	BurySystem burySystem;
+	DamageSystem damageSystem;
+	DoorSystem doorSystem;
+	ExpireSystem expireSystem;
+	FacingSystem facingSystem;
+	GunSystem gunSystem;
+	HealthSystem healthSystem;
+	InventorySystem inventorySystem;
+	LightSystem lightSystem;
+	LootSystem lootSystem;
+	NameSystem nameSystem;
+	ParticleSystem particleSystem;
+	PhysicsSystem physicsSystem;
+	SpriteSystem spriteSystem;
+	SpriteEffectSystem spriteEffectSystem;
+	TeamSystem teamSystem;
+	TriggerSystem triggerSystem;
+};
+
+//  ============================================================================
+World::World() : mImpl(std::make_unique<WorldImpl>()),
+				 mSystems(std::make_unique<WorldSystems>()) {
+	mImpl->players.reserve(4);
+	mImpl->players.emplace_back("Player1");
+	mImpl->players.emplace_back("Player2");
+	mImpl->players.emplace_back("Player3");
+	mImpl->players.emplace_back("Player4");
+
+	mSystems->physicsSystem.addEntityCollisionCallback(
+		std::bind(&BulletSystem::onEntityCollision, &mSystems->bulletSystem,
 				  std::placeholders::_1));
 
-	mPhysicsSystem.addStaticCollisionCallback(
-		std::bind(&BulletSystem::onStaticCollision, &mBulletSystem,
+	mSystems->physicsSystem.addStaticCollisionCallback(
+		std::bind(&BulletSystem::onStaticCollision, &mSystems->bulletSystem,
 				  std::placeholders::_1));
 
-	mPhysicsSystem.addEntityCollisionCallback(
-		std::bind(&LootSystem::onEntityCollision, &mLootSystem,
+	mSystems->physicsSystem.addEntityCollisionCallback(
+		std::bind(&LootSystem::onEntityCollision, &mSystems->lootSystem,
 				  std::placeholders::_1));
 }
 
 //  ============================================================================
+World::~World() = default;
+
+//  ============================================================================
 Entity World::createEntity() {
-	return mEntityManager.createEntity();
+	return mSystems->entityManager.createEntity();
 }
 
 //  ============================================================================
 void World::destroyEntity(Entity entity) {
-	if (mAiSystem.hasComponent(entity)) {
-		mAiSystem.removeComponent(entity);
+	if (mSystems->aiSystem.hasComponent(entity)) {
+		mSystems->aiSystem.removeComponent(entity);
 	}
 
-	if (mBulletSystem.hasComponent(entity)) {
-		mBulletSystem.removeComponent(entity);
+	if (mSystems->bulletSystem.hasComponent(entity)) {
+		mSystems->bulletSystem.removeComponent(entity);
 	}
 
-	if (mBurySystem.hasComponent(entity)) {
-		mBurySystem.removeComponent(entity);
+	if (mSystems->burySystem.hasComponent(entity)) {
+		mSystems->burySystem.removeComponent(entity);
 	}
 
-	if (mDamageSystem.hasComponent(entity)) {
-		mDamageSystem.removeComponent(entity);
+	if (mSystems->damageSystem.hasComponent(entity)) {
+		mSystems->damageSystem.removeComponent(entity);
 	}
 
-	if (mDoorSystem.hasComponent(entity)) {
-		mDoorSystem.removeComponent(entity);
+	if (mSystems->doorSystem.hasComponent(entity)) {
+		mSystems->doorSystem.removeComponent(entity);
 	}
 
-	if (mExpireSystem.hasComponent(entity)) {
-		mExpireSystem.removeComponent(entity);
+	if (mSystems->expireSystem.hasComponent(entity)) {
+		mSystems->expireSystem.removeComponent(entity);
 	}
 
-	if (mFacingSystem.hasComponent(entity)) {
-		mFacingSystem.removeComponent(entity);
+	if (mSystems->facingSystem.hasComponent(entity)) {
+		mSystems->facingSystem.removeComponent(entity);
 	}
 
-	if (mGunSystem.hasComponent(entity)) {
-		mGunSystem.removeComponent(entity);
+	if (mSystems->gunSystem.hasComponent(entity)) {
+		mSystems->gunSystem.removeComponent(entity);
 	}
 
-	if (mHealthSystem.hasComponent(entity)) {
-		mHealthSystem.removeComponent(entity);
+	if (mSystems->healthSystem.hasComponent(entity)) {
+		mSystems->healthSystem.removeComponent(entity);
 	}
 
-	if (mInventorySystem.hasComponent(entity)) {
-		mInventorySystem.removeComponent(entity);
+	if (mSystems->inventorySystem.hasComponent(entity)) {
+		mSystems->inventorySystem.removeComponent(entity);
 	}
 
-	if (mLightSystem.hasComponent(entity)) {
-		mLightSystem.removeComponent(entity);
+	if (mSystems->lightSystem.hasComponent(entity)) {
+		mSystems->lightSystem.removeComponent(entity);
 	}
 
-	if (mLootSystem.hasComponent(entity)) {
-		mLootSystem.removeComponent(entity);
+	if (mSystems->lootSystem.hasComponent(entity)) {
+		mSystems->lootSystem.removeComponent(entity);
 	}
 
-	if (mNameSystem.hasComponent(entity)) {
-		mNameSystem.removeComponent(entity);
+	if (mSystems->nameSystem.hasComponent(entity)) {
+		mSystems->nameSystem.removeComponent(entity);
 	}
 
-	if (mParticleSystem.hasComponent(entity)) {
-		mParticleSystem.removeComponent(entity);
+	if (mSystems->particleSystem.hasComponent(entity)) {
+		mSystems->particleSystem.removeComponent(entity);
 	}
 
-	if (mPhysicsSystem.hasComponent(entity)) {
-		mPhysicsSystem.removeComponent(entity);
+	if (mSystems->physicsSystem.hasComponent(entity)) {
+		mSystems->physicsSystem.removeComponent(entity);
 	}
 
-	if (mSpriteSystem.hasComponent(entity)) {
-		mSpriteSystem.removeComponent(entity);
+	if (mSystems->spriteSystem.hasComponent(entity)) {
+		mSystems->spriteSystem.removeComponent(entity);
 	}
 
-	if (mSpriteEffectSystem.hasComponent(entity)) {
-		mSpriteEffectSystem.removeComponent(entity);
+	if (mSystems->spriteEffectSystem.hasComponent(entity)) {
+		mSystems->spriteEffectSystem.removeComponent(entity);
 	}
 
-	if (mTeamSystem.hasComponent(entity)) {
-		mTeamSystem.removeComponent(entity);
+	if (mSystems->teamSystem.hasComponent(entity)) {
+		mSystems->teamSystem.removeComponent(entity);
 	}
 
-	if (mTriggerSystem.hasComponent(entity)) {
-		mTriggerSystem.removeComponent(entity);
+	if (mSystems->triggerSystem.hasComponent(entity)) {
+		mSystems->triggerSystem.removeComponent(entity);
 	}
 
-	mEntityManager.destroyEntity(entity);
+	mSystems->entityManager.destroyEntity(entity);
 }
 
 //  ============================================================================
 AiBehaviorFactory& World::getAiBehaviorFactory() {
-	return mAiBehaviorFactory;
+	return mImpl->aiBehaviorFactory;
 }
 
 //  ============================================================================
 AiSystem& World::getAiSystem() {
-	return mAiSystem;
+	return mSystems->aiSystem;
 }
 
 //  ============================================================================
 BulletSystem& World::getBulletSystem() {
-	return mBulletSystem;
+	return mSystems->bulletSystem;
 }
 
 //  ============================================================================
 BurySystem& World::getBurySystem() {
-	return mBurySystem;
+	return mSystems->burySystem;
 }
 
 //  ============================================================================
 DamageSystem& World::getDamageSystem() {
-	return mDamageSystem;
+	return mSystems->damageSystem;
 }
 
 //  ============================================================================
 DoorSystem& World::getDoorSystem() {
-	return mDoorSystem;
+	return mSystems->doorSystem;
 }
 
 //  ============================================================================
 ExpireSystem& World::getExpireSystem() {
-	return mExpireSystem;
+	return mSystems->expireSystem;
 }
 
 //  ============================================================================
 FacingSystem& World::getFacingSystem() {
-	return mFacingSystem;
+	return mSystems->facingSystem;
 }
 
 //  ============================================================================
 GunSystem& World::getGunSystem() {
-	return mGunSystem;
+	return mSystems->gunSystem;
 }
 
 //  ============================================================================
 HealthSystem& World::getHealthSystem() {
-	return mHealthSystem;
+	return mSystems->healthSystem;
 }
 
 //  ============================================================================
 InventorySystem& World::getInventorySystem() {
-	return mInventorySystem;
+	return mSystems->inventorySystem;
 }
 
 //  ============================================================================
 LightSystem& World::getLightSystem() {
-	return mLightSystem;
+	return mSystems->lightSystem;
 }
 
 //  ============================================================================
 LootSystem& World::getLootSystem() {
-	return mLootSystem;
+	return mSystems->lootSystem;
 }
 
 //  ============================================================================
 ParticleSystem& World::getParticleSystem() {
-	return mParticleSystem;
+	return mSystems->particleSystem;
 }
 
 //  ============================================================================
 std::vector<Player*> World::getPlayers() {
 	std::vector<Player*> players;
 
-	for (Player& player : mPlayers) {
+	for (Player& player : mImpl->players) {
 		players.push_back(&player);
 	}
 
@@ -211,7 +286,7 @@ std::vector<Player*> World::getPlayers() {
 
 //  ============================================================================
 PrefabFactory& World::getPrefabFactory() {
-	return mPrefabFactory;
+	return mImpl->prefabFactory;
 }
 
 //  ============================================================================
@@ -221,53 +296,55 @@ Map* World::getMap() {
 
 //  ============================================================================
 NameSystem& World::getNameSystem() {
-	return mNameSystem;
+	return mSystems->nameSystem;
 }
 
 //  ============================================================================
 PhysicsSystem& World::getPhysicsSystem() {
-	return mPhysicsSystem;
+	return mSystems->physicsSystem;
 }
 
 //  ============================================================================
 Random& World::getRandom() {
-	return mRandom;
+	return mImpl->random;
 }
 
 //  ============================================================================
 SpriteEffectSystem& World::getSpriteEffectSystem() {
-	return mSpriteEffectSystem;
+	return mSystems->spriteEffectSystem;
 }
 
 //  ============================================================================
 SpriteSystem& World::getSpriteSystem() {
-	return mSpriteSystem;
+	return mSystems->spriteSystem;
 }
 
 //  ============================================================================
 TeamSystem& World::getTeamSystem() {
-	return mTeamSystem;
+	return mSystems->teamSystem;
 }
 
 //  ============================================================================
 TriggerSystem& World::getTriggerSystem() {
-	return mTriggerSystem;
+	return mSystems->triggerSystem;
 }
 
 //  ============================================================================
 void World::initialize(AssetManager* assetManager) {
-	mSpriteSystem.initialize(assetManager);
-	mLightSystem.initialize(*assetManager);
-	mDoorSystem.initialize(mPhysicsSystem, mSpriteSystem);
-	mBulletSystem.initialize(mDamageSystem);
-	mBurySystem.initialize(mRandom, mPhysicsSystem, mSpriteSystem);
-	mParticleSystem.initialize(mRandom);
-	mLootSystem.initialize(mInventorySystem);
+	mSystems->spriteSystem.initialize(assetManager);
+	mSystems->lightSystem.initialize(*assetManager);
+	mSystems->doorSystem.initialize(mSystems->physicsSystem,
+									mSystems->spriteSystem);
+	mSystems->bulletSystem.initialize(mSystems->damageSystem);
+	mSystems->burySystem.initialize(mImpl->random, mSystems->physicsSystem,
+									mSystems->spriteSystem);
+	mSystems->particleSystem.initialize(mImpl->random);
+	mSystems->lootSystem.initialize(mSystems->inventorySystem);
 }
 
 //  ============================================================================
 bool World::entityIsAlive(const Entity& entity) {
-	return mEntityManager.isAlive(entity);
+	return mSystems->entityManager.isAlive(entity);
 }
 
 //  ============================================================================
@@ -277,9 +354,9 @@ void World::loadMap(const std::string& mapName) {
 	std::vector<PlayerStart> playerStarts = mMap->getPlayerStarts();
 
 	assert(playerStarts.size() == 4);
-	assert(mPlayers.size() == 4);
+	assert(mImpl->players.size() == 4);
 
-	for (size_t p = 0; p < mPlayers.size(); ++p) {
+	for (size_t p = 0; p < mImpl->players.size(); ++p) {
 		PlayerStart& playerStart = playerStarts[p];
 
 		Entity entity = createPlayerActor(
@@ -289,11 +366,13 @@ void World::loadMap(const std::string& mapName) {
 			playerStart.facing,
 			"Player" + (p + 1));
 
-		mPlayers[p].entity = entity;
+		mImpl->players[p].entity = entity;
 
 		//	HACK: Add ally AI to other players for testing
 		if (p > 0) {
-			addAiBehavior("ally", entity, mAiSystem, mAiBehaviorFactory);
+			addAiBehavior("ally", entity, mSystems->aiSystem,
+						  mImpl->aiBehaviorFactory);
+
 			addPrefab("ally", entity, *this);
 		}
 	}
@@ -301,43 +380,43 @@ void World::loadMap(const std::string& mapName) {
 
 //  ============================================================================
 void World::update(double totalElapsedSeconds, float elapsedSeconds) {
-	mAiSystem.update(*this, totalElapsedSeconds);
+	mSystems->aiSystem.update(*this, totalElapsedSeconds);
 
-	mBulletSystem.simulate(*this, elapsedSeconds);
+	mSystems->bulletSystem.simulate(*this, elapsedSeconds);
 
-	mGunSystem.update(*this, elapsedSeconds);
+	mSystems->gunSystem.update(*this, elapsedSeconds);
 
 	//	Simulate collisions
-	mPhysicsSystem.simulate(elapsedSeconds);
+	mSystems->physicsSystem.simulate(elapsedSeconds);
 
 	//	Update sprite facing using PhysicsSystem direction
-	mFacingSystem.update(mPhysicsSystem, mSpriteSystem);
+	mSystems->facingSystem.update(mSystems->physicsSystem, mSystems->spriteSystem);
 
 	//	Update positions
-	mPhysicsSystem.update();
+	mSystems->physicsSystem.update();
 
-	mSpriteSystem.update(elapsedSeconds, mPhysicsSystem);
+	mSystems->spriteSystem.update(elapsedSeconds, mSystems->physicsSystem);
 
-	mLightSystem.update(elapsedSeconds, mPhysicsSystem);
+	mSystems->lightSystem.update(elapsedSeconds, mSystems->physicsSystem);
 
-	mTriggerSystem.update(
-		mNameSystem,
-		mPhysicsSystem,
-		mDoorSystem);
+	mSystems->triggerSystem.update(
+		mSystems->nameSystem,
+		mSystems->physicsSystem,
+		mSystems->doorSystem);
 
-	mDamageSystem.applyDamage(mHealthSystem, mSpriteEffectSystem);
+	mSystems->damageSystem.applyDamage(mSystems->healthSystem, mSystems->spriteEffectSystem);
 
-	mSpriteEffectSystem.update(elapsedSeconds, mSpriteSystem);
+	mSystems->spriteEffectSystem.update(elapsedSeconds, mSystems->spriteSystem);
 
-	mBurySystem.update(elapsedSeconds);
+	mSystems->burySystem.update(elapsedSeconds);
 
-	mHealthSystem.update(*this);
+	mSystems->healthSystem.update(*this);
 
-	mLootSystem.simulate(*this, elapsedSeconds);
+	mSystems->lootSystem.simulate(*this, elapsedSeconds);
 
-	mParticleSystem.update(mPhysicsSystem, elapsedSeconds);
+	mSystems->particleSystem.update(mSystems->physicsSystem, elapsedSeconds);
 
 	//	Remove expired entities
-	mExpireSystem.update(*this, elapsedSeconds);
+	mSystems->expireSystem.update(*this, elapsedSeconds);
 }
 }

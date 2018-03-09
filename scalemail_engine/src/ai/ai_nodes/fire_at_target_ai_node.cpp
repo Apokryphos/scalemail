@@ -5,6 +5,7 @@
 #include "gun_system.hpp"
 #include "math_util.hpp"
 #include "physics_system.hpp"
+#include "random.hpp"
 #include "world.hpp"
 #include <glm/vec2.hpp>
 #include <algorithm>

@@ -1,4 +1,5 @@
 #include "gui/gui.hpp"
+#include "ai_system.hpp"
 #include "ambient_light.hpp"
 #include "asset_manager.hpp"
 #include "blend.hpp"
@@ -12,9 +13,12 @@
 #include "map_render.hpp"
 #include "mesh.hpp"
 #include "light.hpp"
-#include "sprite.hpp"
 #include "quad_shader.hpp"
+#include "particle_system.hpp"
+#include "physics_system.hpp"
+#include "sprite.hpp"
 #include "transition.hpp"
+#include "trigger_system.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtx/transform2.hpp>

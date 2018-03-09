@@ -1,5 +1,6 @@
 #include "ai/ai_nodes/wander_ai_node.hpp"
 #include "actor_util.hpp"
+#include "ai_system.hpp"
 #include "world.hpp"
 
 namespace ScaleMail

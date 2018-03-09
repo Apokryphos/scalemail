@@ -1,6 +1,8 @@
 #include "ai/ai_behavior.hpp"
 #include "ai_system.hpp"
 #include "gl_headers.hpp"
+#include "physics_system.hpp"
+#include "random.hpp"
 #include "vector_util.hpp"
 #include "vertex_data.hpp"
 #include "world.hpp"

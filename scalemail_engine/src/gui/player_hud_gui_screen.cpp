@@ -2,6 +2,8 @@
 #include "asset_manager.hpp"
 #include "camera.hpp"
 #include "game.hpp"
+#include "health_system.hpp"
+#include "player.hpp"
 #include "sprite_batch.hpp"
 #include "world.hpp"
 #include <glm/mat4x4.hpp>

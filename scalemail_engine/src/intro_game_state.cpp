@@ -1,3 +1,5 @@
+#include "ai_system.hpp"
+#include "bury_system.hpp"
 #include "camera.hpp"
 #include "door_system.hpp"
 #include "ease.hpp"
@@ -8,6 +10,7 @@
 #include "intro_game_state.hpp"
 #include "map.hpp"
 #include "name_system.hpp"
+#include "physics_system.hpp"
 #include "transition.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>

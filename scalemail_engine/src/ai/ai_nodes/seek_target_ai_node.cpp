@@ -1,9 +1,11 @@
 #include "ai/ai_nodes/seek_target_ai_node.hpp"
 #include "ai/ai_whiteboard.hpp"
 #include "actor_util.hpp"
+#include "ai_system.hpp"
 #include "entity_util.hpp"
 #include "math_util.hpp"
 #include "physics_system.hpp"
+#include "random.hpp"
 #include "world.hpp"
 #include <glm/vec2.hpp>
 #include <algorithm>

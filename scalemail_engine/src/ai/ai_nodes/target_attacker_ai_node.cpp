@@ -2,6 +2,7 @@
 #include "ai/ai_whiteboard.hpp"
 #include "entity_util.hpp"
 #include "damage_system.hpp"
+#include "random.hpp"
 #include "world.hpp"
 #include <glm/vec2.hpp>
 #include <algorithm>

@@ -1,5 +1,6 @@
 #include "entity_collision.hpp"
 #include "health_system.hpp"
+#include "inventory_system.hpp"
 #include "loot_system.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"

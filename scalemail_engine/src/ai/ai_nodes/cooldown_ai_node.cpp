@@ -1,5 +1,6 @@
 #include "ai/ai_nodes/cooldown_ai_node.hpp"
 #include "ai/ai_tree.hpp"
+#include "random.hpp"
 #include "world.hpp"
 #include <algorithm>
 

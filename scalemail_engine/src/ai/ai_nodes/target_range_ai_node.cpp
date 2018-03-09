@@ -1,6 +1,10 @@
 #include "ai/ai_nodes/target_range_ai_node.hpp"
 #include "ai/ai_whiteboard.hpp"
 #include "entity_util.hpp"
+#include "loot_system.hpp"
+#include "physics_system.hpp"
+#include "random.hpp"
+#include "team_system.hpp"
 #include "world.hpp"
 #include <glm/vec2.hpp>
 #include <algorithm>

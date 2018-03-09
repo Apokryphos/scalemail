@@ -6,6 +6,7 @@
 #include "facing_system.hpp"
 #include "gun_system.hpp"
 #include "health_system.hpp"
+#include "inventory_system.hpp"
 #include "name_system.hpp"
 #include "physics_system.hpp"
 #include "sprite_effect_system.hpp"

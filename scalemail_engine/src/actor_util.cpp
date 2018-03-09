@@ -2,6 +2,7 @@
 #include "entity_util.hpp"
 #include "bury_system.hpp"
 #include "health_system.hpp"
+#include "physics_system.hpp"
 #include "world.hpp"
 
 namespace ScaleMail

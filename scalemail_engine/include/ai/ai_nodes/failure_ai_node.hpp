@@ -9,7 +9,7 @@ class World;
 class FailureAiNode : public AiNode
 {
 public:
-	FailureAiNode(Entity& entity, AiTree* parentTree = nullptr);
+	FailureAiNode(Entity& entity, AiTree& parentTree);
 	virtual AiNodeStatus execute(World& world) override;
 };
 }

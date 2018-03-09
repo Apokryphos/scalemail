@@ -9,7 +9,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-EntityCountAiNode::EntityCountAiNode(Entity& entity, AiTree* parentTree,
+EntityCountAiNode::EntityCountAiNode(Entity& entity, AiTree& parentTree,
 									 std::string valueName)
 : AiNode(entity, parentTree), mCompareType(CompareType::GREATER_THAN_OR_EQUAL),
 mCountMin(1), mCountMax(1), mValueName(valueName) {

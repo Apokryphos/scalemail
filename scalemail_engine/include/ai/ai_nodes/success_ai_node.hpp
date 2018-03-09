@@ -9,7 +9,7 @@ class World;
 class SuccessAiNode : public AiNode
 {
 public:
-	SuccessAiNode(Entity& entity, AiTree* parentTree = nullptr);
+	SuccessAiNode(Entity& entity, AiTree& parentTree);
 	AiNodeStatus execute(World& world);
 };
 }

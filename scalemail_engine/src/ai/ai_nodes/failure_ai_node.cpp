@@ -3,7 +3,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-FailureAiNode::FailureAiNode(Entity& entity, AiTree* parentTree)
+FailureAiNode::FailureAiNode(Entity& entity, AiTree& parentTree)
 : AiNode(entity, parentTree) {
 }
 

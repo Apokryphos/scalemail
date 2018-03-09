@@ -25,7 +25,7 @@ private:
 	std::string mValueName;
 
 public:
-	EntityCountAiNode(Entity& entity, AiTree* parentTree,
+	EntityCountAiNode(Entity& entity, AiTree& parentTree,
 					  std::string valueName = "TARGET");
 	virtual AiNodeStatus execute(World& world) override;
 	void setEqualTo(const int value);

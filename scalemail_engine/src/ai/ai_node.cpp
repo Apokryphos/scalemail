@@ -4,7 +4,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-AiNode::AiNode(Entity& entity, AiTree* parentTree)
+AiNode::AiNode(Entity& entity, AiTree& parentTree)
 : mParentTree(parentTree), mEntity(entity) {
 }
 
@@ -14,17 +14,12 @@ Entity AiNode::getEntity() {
 }
 
 //	============================================================================
-AiTree* AiNode::getParentTree() {
+AiTree& AiNode::getParentTree() {
 	return mParentTree;
 }
 
 //	============================================================================
-void AiNode::setParentTree(AiTree* parentTree) {
-	mParentTree = parentTree;
-}
-
-//	============================================================================
 AiWhiteboard& AiNode::getWhiteboard() {
-	return mParentTree->getWhiteboard();
+	return mParentTree.getWhiteboard();
 }
 }

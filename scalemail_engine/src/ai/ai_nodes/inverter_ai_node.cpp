@@ -3,7 +3,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-InverterAiNode::InverterAiNode(Entity& entity, AiTree* parentTree)
+InverterAiNode::InverterAiNode(Entity& entity, AiTree& parentTree)
 : DecoratorAiNode(entity, parentTree) {
 }
 

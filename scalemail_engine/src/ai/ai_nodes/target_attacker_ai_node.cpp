@@ -9,7 +9,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-TargetAttackerAiNode::TargetAttackerAiNode(Entity& entity, AiTree* parentTree,
+TargetAttackerAiNode::TargetAttackerAiNode(Entity& entity, AiTree& parentTree,
 const std::string& targetValueName)
 : AiNode(entity, parentTree), mTargetValueName(targetValueName) {
 }

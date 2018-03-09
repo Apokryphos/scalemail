@@ -3,7 +3,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-SelectorAiNode::SelectorAiNode(Entity& entity, AiTree* parentTree)
+SelectorAiNode::SelectorAiNode(Entity& entity, AiTree& parentTree)
 : SequenceAiNode(entity, parentTree) {
 }
 

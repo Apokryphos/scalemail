@@ -11,7 +11,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-SeekTargetAiNode::SeekTargetAiNode(Entity& entity, AiTree* parentTree,
+SeekTargetAiNode::SeekTargetAiNode(Entity& entity, AiTree& parentTree,
 								   const std::string& targetValueName)
 : AiNode(entity, parentTree), mTargetValueName(targetValueName) {
 }

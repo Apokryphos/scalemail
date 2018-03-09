@@ -7,7 +7,7 @@ namespace ScaleMail
 class WanderAiNode : public AiNode
 {
 public:
-	WanderAiNode(Entity& entity, AiTree* parentTree = nullptr);
+	WanderAiNode(Entity& entity, AiTree& parentTree);
 	virtual AiNodeStatus execute(World& world) override;
 };
 }

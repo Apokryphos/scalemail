@@ -7,7 +7,7 @@ namespace ScaleMail
 {
 //	============================================================================
 RandomMoveDirectionAiNode::RandomMoveDirectionAiNode(
-	Entity& entity, AiTree* parentTree)
+	Entity& entity, AiTree& parentTree)
 : AiNode(entity, parentTree) {
 }
 

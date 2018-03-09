@@ -29,11 +29,11 @@ static const float MOVE_DIRECTION_CHANGE_INTERVAL = 2.25f;
 
 //	============================================================================
 BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
-	auto rootNode = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	auto rootNode = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	mAiTree.setRootNode(rootNode);
 
 	//	Don't chase loot if at max capacity.
-	auto maxCarry = std::make_shared<FunctionAiNode>(entity, &mAiTree);
+	auto maxCarry = std::make_shared<FunctionAiNode>(entity, mAiTree);
 	maxCarry->setFunction(
 		[](AiNode& aiNode, World& world) {
 			Entity entity = aiNode.getEntity();
@@ -52,20 +52,20 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 		}
 	);
 
-	auto hasTarget = std::make_shared<EntityCountAiNode>(entity, &mAiTree);
+	auto hasTarget = std::make_shared<EntityCountAiNode>(entity, mAiTree);
 	hasTarget->setGreaterThanOrEqualTo(1);
 
 	//	Target loot in range of this entity
-	auto targetLoot = std::make_shared<TargetRangeAiNode>(entity, &mAiTree);
+	auto targetLoot = std::make_shared<TargetRangeAiNode>(entity, mAiTree);
 	targetLoot->setRange(MAX_LOOT_RANGE);
 	targetLoot->setTargetType(TargetType::LOOT);
 
-	auto targetSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	auto targetSelector = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	targetSelector->addChildNode(hasTarget);
 	targetSelector->addChildNode(targetLoot);
 
 	//	Increase speed when chasing loot
-	auto speedUp = std::make_shared<FunctionAiNode>(entity, &mAiTree);
+	auto speedUp = std::make_shared<FunctionAiNode>(entity, mAiTree);
 	speedUp->setFunction(
 		[](AiNode& aiNode, World& world) {
 			Entity entity = aiNode.getEntity();
@@ -82,16 +82,16 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	);
 
 	//	Seek loot target
-	auto seekLoot = std::make_shared<SeekTargetAiNode>(entity, &mAiTree);
+	auto seekLoot = std::make_shared<SeekTargetAiNode>(entity, mAiTree);
 
-	auto chaseLoot = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto chaseLoot = std::make_shared<SequenceAiNode>(entity, mAiTree);
 	chaseLoot->addChildNode(maxCarry);
 	chaseLoot->addChildNode(targetSelector);
 	chaseLoot->addChildNode(speedUp);
 	chaseLoot->addChildNode(seekLoot);
 
 	//	Stop seeking
-	auto stopSeek = std::make_shared<FunctionAiNode>(entity, &mAiTree);
+	auto stopSeek = std::make_shared<FunctionAiNode>(entity, mAiTree);
 	stopSeek->setFunction(
 		[](AiNode& aiNode, World& world) {
 			Entity entity = aiNode.getEntity();
@@ -106,13 +106,13 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 		}
 	);
 
-	auto chaseLootSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	auto chaseLootSelector = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	rootNode->addChildNode(chaseLootSelector);
 	chaseLootSelector->addChildNode(chaseLoot);
 	chaseLootSelector->addChildNode(stopSeek);
 
 	//	Decrease speed when wandering
-	auto speedDown = std::make_shared<FunctionAiNode>(entity, &mAiTree);
+	auto speedDown = std::make_shared<FunctionAiNode>(entity, mAiTree);
 	speedDown->setFunction(
 		[](AiNode& aiNode, World& world) {
 			Entity entity = aiNode.getEntity();
@@ -129,22 +129,22 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	);
 
 	//	Wander if there's no loot to chase
-	auto wander = std::make_shared<WanderAiNode>(entity, &mAiTree);
+	auto wander = std::make_shared<WanderAiNode>(entity, mAiTree);
 
 	//	==================================================
 	//	Move in a random direction after cooldown period
 	//	==================================================
-	auto cooldown = std::make_shared<CooldownAiNode>(entity, &mAiTree);
+	auto cooldown = std::make_shared<CooldownAiNode>(entity, mAiTree);
 	cooldown->setDuration(MOVE_DIRECTION_CHANGE_INTERVAL);
 
 	auto randomMoveDirection =
-		std::make_shared<RandomMoveDirectionAiNode>(entity, &mAiTree);
+		std::make_shared<RandomMoveDirectionAiNode>(entity, mAiTree);
 
-	auto randomMove = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto randomMove = std::make_shared<SequenceAiNode>(entity, mAiTree);
 	randomMove->addChildNode(cooldown);
 	randomMove->addChildNode(randomMoveDirection);
 
-	auto wanderSequence = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto wanderSequence = std::make_shared<SequenceAiNode>(entity, mAiTree);
 	rootNode->addChildNode(wanderSequence);
 	wanderSequence->addChildNode(speedDown);
 	wanderSequence->addChildNode(wander);

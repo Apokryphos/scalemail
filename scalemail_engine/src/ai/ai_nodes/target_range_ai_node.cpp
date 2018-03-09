@@ -8,7 +8,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-TargetRangeAiNode::TargetRangeAiNode(Entity& entity, AiTree* parentTree,
+TargetRangeAiNode::TargetRangeAiNode(Entity& entity, AiTree& parentTree,
 									 float range,
 									 TeamAlignment targetTeamAlignment,
 									 const std::string& targetValueName)

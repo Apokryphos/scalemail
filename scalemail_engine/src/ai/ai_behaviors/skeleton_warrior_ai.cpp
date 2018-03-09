@@ -14,34 +14,34 @@ static const float MIN_PLAYER_RANGE = 128.0f;
 //	============================================================================
 SkeletonWarriorAi::SkeletonWarriorAi(Entity entity)
 : AiBehavior(entity), mAiTree(entity) {
-	auto rootNode = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto rootNode = std::make_shared<SequenceAiNode>(entity, mAiTree);
 	mAiTree.setRootNode(rootNode);
 
 	//	Target entities that attack this entity
 	auto targetAttacker =
-		std::make_shared<TargetAttackerAiNode>(entity, &mAiTree);
+		std::make_shared<TargetAttackerAiNode>(entity, mAiTree);
 
 	//	Target entities in range of this entity
-	auto targetFoes = std::make_shared<TargetRangeAiNode>(entity, &mAiTree);
+	auto targetFoes = std::make_shared<TargetRangeAiNode>(entity, mAiTree);
 	targetFoes->setRange(MIN_PLAYER_RANGE);
 	targetFoes->setTargetTeamAlignment(TeamAlignment::FOE);
 
-	auto targetSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	auto targetSelector = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	rootNode->addChildNode(targetSelector);
 	targetSelector->addChildNode(targetAttacker);
 	targetSelector->addChildNode(targetFoes);
 
 	//	Fire at target
-	auto fireAtFoes = std::make_shared<FireAtTargetAiNode>(entity, &mAiTree);
+	auto fireAtFoes = std::make_shared<FireAtTargetAiNode>(entity, mAiTree);
 
-	auto fireSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	auto fireSelector = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	rootNode->addChildNode(fireSelector);
 	fireSelector->addChildNode(fireAtFoes);
 
 	//	Chase target
-	auto seekFoe = std::make_shared<SeekTargetAiNode>(entity, &mAiTree);
+	auto seekFoe = std::make_shared<SeekTargetAiNode>(entity, mAiTree);
 
-	auto seekSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	auto seekSelector = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	rootNode->addChildNode(seekSelector);
 	seekSelector->addChildNode(seekFoe);
 }

@@ -10,7 +10,7 @@ class FunctionAiNode : public AiNode
 	std::function<AiNodeStatus(AiNode&, World&)> mFunction;
 
 public:
-	FunctionAiNode(Entity& entity, AiTree* parentTree = nullptr);
+	FunctionAiNode(Entity& entity, AiTree& parentTree);
 	virtual AiNodeStatus execute(World& world) override;
 	void setFunction(std::function<AiNodeStatus(AiNode&, World&)> func);
 };

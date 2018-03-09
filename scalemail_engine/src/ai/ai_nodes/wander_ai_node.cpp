@@ -5,7 +5,7 @@
 namespace ScaleMail
 {
 //	============================================================================
-WanderAiNode::WanderAiNode(Entity& entity, AiTree* parentTree)
+WanderAiNode::WanderAiNode(Entity& entity, AiTree& parentTree)
 : AiNode(entity, parentTree) {
 }
 

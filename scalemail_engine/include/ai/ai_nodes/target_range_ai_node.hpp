@@ -21,7 +21,7 @@ private:
 	std::string mTargetValueName;
 
 public:
-	TargetRangeAiNode(Entity& entity, AiTree* parentTree = nullptr,
+	TargetRangeAiNode(Entity& entity, AiTree& parentTree,
 					  float range = 64.0f,
 					  TeamAlignment targetTeamAlignment = TeamAlignment::FOE,
 					  const std::string& targetValueName = "TARGET");

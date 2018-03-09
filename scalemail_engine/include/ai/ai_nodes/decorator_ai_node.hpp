@@ -9,7 +9,7 @@ class DecoratorAiNode : public AiNode
 	AiNode* mChildNode;
 
 public:
-	DecoratorAiNode(Entity& entity, AiTree* parentTree = nullptr);
+	DecoratorAiNode(Entity& entity, AiTree& parentTree);
 	AiNode* getChildNode();
 	bool hasChildNode() const;
 	void setChildNode(AiNode* node);

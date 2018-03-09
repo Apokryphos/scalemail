@@ -9,7 +9,7 @@ class World;
 class InverterAiNode : public DecoratorAiNode
 {
 public:
-	InverterAiNode(Entity& entity, AiTree* parentTree = nullptr);
+	InverterAiNode(Entity& entity, AiTree& parentTree);
 	virtual AiNodeStatus execute(World& world) override;
 };
 }

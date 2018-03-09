@@ -17,7 +17,7 @@ protected:
 	void setCurrentNode(AiNode* node);
 
 public:
-	SequenceAiNode(Entity& entity, AiTree* parentTree = nullptr);
+	SequenceAiNode(Entity& entity, AiTree& parentTree);
 	virtual AiNodeStatus execute(World& world) override;
 };
 }

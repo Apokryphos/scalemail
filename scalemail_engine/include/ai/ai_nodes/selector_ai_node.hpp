@@ -11,6 +11,6 @@ protected:
 	virtual AiNodeStatus onChildSuccess() override;
 
 public:
-	SelectorAiNode(Entity& entity, AiTree* parentTree = nullptr);
+	SelectorAiNode(Entity& entity, AiTree& parentTree);
 };
 }

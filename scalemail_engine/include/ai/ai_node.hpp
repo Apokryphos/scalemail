@@ -11,16 +11,15 @@ class World;
 
 class AiNode
 {
-	AiTree* mParentTree;
+	AiTree& mParentTree;
 	Entity mEntity;
 
 public:
-	AiNode(Entity& entity, AiTree* parentTree = nullptr);
+	AiNode(Entity& entity, AiTree& parentTree);
 	virtual ~AiNode() {};
 	virtual AiNodeStatus execute(World& world) = 0;
 	Entity getEntity();
-	AiTree* getParentTree();
-	void setParentTree(AiTree* parentTree);
+	AiTree& getParentTree();
 	AiWhiteboard& getWhiteboard();
 };
 }

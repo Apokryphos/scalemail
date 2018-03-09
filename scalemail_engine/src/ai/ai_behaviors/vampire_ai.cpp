@@ -15,19 +15,19 @@ static const float MOVE_DIRECTION_CHANGE_INTERVAL = 2.25f;
 
 //	============================================================================
 VampireAi::VampireAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
-	auto rootNode = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	auto rootNode = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	mAiTree.setRootNode(rootNode);
 
 	//	==================================================
 	//	Move in a random direction after cooldown period
 	//	==================================================
-	auto cooldown = std::make_shared<CooldownAiNode>(entity, &mAiTree);
+	auto cooldown = std::make_shared<CooldownAiNode>(entity, mAiTree);
 	cooldown->setDuration(MOVE_DIRECTION_CHANGE_INTERVAL);
 
 	auto randomMoveDirection =
-		std::make_shared<RandomMoveDirectionAiNode>(entity, &mAiTree);
+		std::make_shared<RandomMoveDirectionAiNode>(entity, mAiTree);
 
-	auto randomMove = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto randomMove = std::make_shared<SequenceAiNode>(entity, mAiTree);
 	rootNode->addChildNode(randomMove);
 	randomMove->addChildNode(cooldown);
 	randomMove->addChildNode(randomMoveDirection);
@@ -37,24 +37,24 @@ VampireAi::VampireAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	//	==================================================
 	//	Target entities that attack this entity
 	auto targetAttacker =
-		std::make_shared<TargetAttackerAiNode>(entity, &mAiTree);
+		std::make_shared<TargetAttackerAiNode>(entity, mAiTree);
 
-	auto hasTarget = std::make_shared<EntityCountAiNode>(entity, &mAiTree);
+	auto hasTarget = std::make_shared<EntityCountAiNode>(entity, mAiTree);
 	hasTarget->setGreaterThanOrEqualTo(1);
 
 	//	Target entities in range of this entity
-	auto targetFoes = std::make_shared<TargetRangeAiNode>(entity, &mAiTree);
+	auto targetFoes = std::make_shared<TargetRangeAiNode>(entity, mAiTree);
 	targetFoes->setRange(MIN_PLAYER_RANGE);
 	targetFoes->setTargetTeamAlignment(TeamAlignment::FOE);
 
-	auto targetSelector = std::make_shared<SelectorAiNode>(entity, &mAiTree);
+	auto targetSelector = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	targetSelector->addChildNode(targetAttacker);
 	targetSelector->addChildNode(targetFoes);
 
 	//	Fire at target
-	auto fireAtTarget = std::make_shared<FireAtTargetAiNode>(entity, &mAiTree);
+	auto fireAtTarget = std::make_shared<FireAtTargetAiNode>(entity, mAiTree);
 
-	auto fireSequence = std::make_shared<SequenceAiNode>(entity, &mAiTree);
+	auto fireSequence = std::make_shared<SequenceAiNode>(entity, mAiTree);
 	rootNode->addChildNode(fireSequence);
 	fireSequence->addChildNode(targetSelector);
 	fireSequence->addChildNode(fireAtTarget);

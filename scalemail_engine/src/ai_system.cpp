@@ -9,6 +9,12 @@
 
 namespace ScaleMail
 {
+//	Distance ahead of character to detect obstacles
+static const float AVOID_DISTANCE = 16.0f;
+
+//	Amount to scale obstacle radius for purpose of avoidance
+static const float AVOID_MAX_FORCE = 64.0f;
+
 static const float OBSTACLE_SCALE = 1.5f;
 
 //	============================================================================
@@ -49,29 +55,47 @@ AiSystem::AiSystem(EntityManager& entityManager, int maxComponents)
 }
 
 //	============================================================================
+void AiSystem::addStaticActorObstacle(const float x, const float y,
+									  const float width, const float height) {
+	this->addObstacle(x, y, width, height, true);
+}
+
+//	============================================================================
+void AiSystem::addStaticObstacle(const float x, const float y,
+								 const float width,	const float height) {
+	this->addObstacle(x, y, width, height, false);
+}
+
+//	============================================================================
 void AiSystem::addBehavior(const AiComponent& cmpnt,
 						   std::shared_ptr<AiBehavior> behavior) {
 	mData[cmpnt.index].behaviors.push_back(behavior);
 }
 
 //	============================================================================
-void AiSystem::addObstacle(const glm::vec2& position, const float radius) {
+void AiSystem::addObstacle(const glm::vec2& position, const float radius,
+						   bool actorObstacle) {
 	Obstacle obstacle = {};
 	obstacle.position = position;
 	obstacle.radius = radius;
 
-	mObstacles.push_back(obstacle);
+	if (actorObstacle) {
+		mStaticActorObstacles.push_back(obstacle);
+	} else {
+		mStaticObstacles.push_back(obstacle);
+	}
 }
 
 //	============================================================================
 void AiSystem::addObstacle(const float x, const float y, const float width,
-						   const float height) {
+						   const float height, bool actorObstacle) {
 	const float MAX_RADIUS = 8.0f;
 
 	//	Square and less than max radius
 	if (width == height && width * 0.5f <= MAX_RADIUS) {
 		const float radius = width * 0.5f;
-		this->addObstacle(glm::vec2(x + radius, y + radius), radius);
+		this->addObstacle(glm::vec2(x + radius, y + radius), radius,
+						  actorObstacle);
 		return;
 	}
 
@@ -88,7 +112,7 @@ void AiSystem::addObstacle(const float x, const float y, const float width,
 				glm::vec2(
 					x + radius + cx * radius * 2.0f,
 					y + radius + cy * radius * 2.0f),
-				radius);
+				radius, actorObstacle);
 		}
 	}
 
@@ -102,7 +126,7 @@ void AiSystem::addObstacle(const float x, const float y, const float width,
 				glm::vec2(
 					x + width - radius,
 					y + radius + cy * radius * 2.0f),
-				radius);
+				radius, actorObstacle);
 		}
 	}
 
@@ -113,7 +137,7 @@ void AiSystem::addObstacle(const float x, const float y, const float width,
 				glm::vec2(
 					x + radius + cx * radius * 2.0f,
 					y + height - radius),
-				radius);
+				radius, actorObstacle);
 		}
 	}
 
@@ -121,8 +145,36 @@ void AiSystem::addObstacle(const float x, const float y, const float width,
 	if (xPartial && yPartial) {
 		this->addObstacle(
 			glm::vec2(x + width - radius, y + height - radius),
-			radius);
+			radius, actorObstacle);
 	}
+}
+
+//	============================================================================
+glm::vec2 AiSystem::calculateAvoidForce(std::vector<Obstacle>& obstacles,
+										glm::vec2 position,
+										glm::vec2 velocity) {
+	glm::vec2 avoid(0.0f);
+
+	glm::vec2 ahead = position + normalizeVec2(velocity) * AVOID_DISTANCE;
+	glm::vec2 ahead2 = position + normalizeVec2(velocity) * AVOID_DISTANCE * 0.5f;
+
+	const size_t obstacleCount = obstacles.size();
+	for (size_t index = 0; index < obstacleCount; ++index) {
+		const float radius =
+			(obstacles[index].radius * OBSTACLE_SCALE) *
+			(obstacles[index].radius * OBSTACLE_SCALE);
+
+		const float distance = glm::length2(ahead - obstacles[index].position);
+		const float distance2 = glm::length2(ahead2 - obstacles[index].position);
+
+		if (distance <= radius || distance2 <= radius) {
+			glm::vec2 force = position - obstacles[index].position;
+			force = normalizeVec2(force) * AVOID_MAX_FORCE;
+			avoid += force;
+		}
+	}
+
+	return avoid;
 }
 
 //	============================================================================
@@ -133,16 +185,33 @@ void AiSystem::createComponent() {
 //	============================================================================
 void AiSystem::drawDebug(std::vector<float>& lineVertexData) {
 	const int lineCount = 16;
-	const glm::vec4 obstacleColor = glm::vec4(0.25f, 0.75f, 1.0f, 1.0f);
+	const glm::vec4 actorObstacleColor = glm::vec4(0.25f, 0.75f, 1.0f, 1.0f);
+	const glm::vec4 staticObstacleColor = glm::vec4(1.0f, 0.75f, 0.25f, 1.0f);
 	const glm::vec4 obstacleScaledColor = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
-	for (const auto& obstacle : mObstacles) {
+	for (const auto& obstacle : mStaticActorObstacles) {
 		addCircleVertexData(
 			lineVertexData,
 			lineCount,
 			obstacle.position,
 			obstacle.radius,
-			obstacleColor);
+			actorObstacleColor);
+
+		addCircleVertexData(
+			lineVertexData,
+			lineCount,
+			obstacle.position,
+			obstacle.radius * OBSTACLE_SCALE,
+			obstacleScaledColor);
+	}
+
+	for (const auto& obstacle : mStaticObstacles) {
+		addCircleVertexData(
+			lineVertexData,
+			lineCount,
+			obstacle.position,
+			obstacle.radius,
+			staticObstacleColor);
 
 		addCircleVertexData(
 			lineVertexData,
@@ -250,6 +319,7 @@ void AiSystem::update(World& world, double totalElapsedSeconds) {
 					glm::vec2(WANDER_CIRCLE_RADIUS, 0.0f),
 					mData[index].wanderAngle);
 
+			//	Save force value for debugging
 			mData[index].wanderForce = circleCenter + displacement;
 
 			physicsSystem.addForce(physicsCmpnt, mData[index].wanderForce);
@@ -264,17 +334,12 @@ void AiSystem::update(World& world, double totalElapsedSeconds) {
 			glm::vec2 v =
 				normalizeVec2(mData[index].seekTarget - position) * speed;
 
+			//	Save force value for debugging
 			mData[index].seekForce = v - velocity;
 
 			physicsSystem.addForce(physicsCmpnt, mData[index].seekForce);
 		}
 	}
-
-	//	Amount to scale obstacle radius for purpose of avoidance
-	const float AVOID_MAX_FORCE = 64.0f;
-
-	//	Distance ahead of character to detect obstacles
-	const float AVOID_DISTANCE = 16.0f;
 
 	for (auto& p : mEntitiesByComponentIndices) {
 		const size_t index = p.first;
@@ -287,36 +352,27 @@ void AiSystem::update(World& world, double totalElapsedSeconds) {
 		//	Save position for debugging
 		mData[index].position = position;
 
-		glm::vec2 ahead = position + normalizeVec2(velocity) * AVOID_DISTANCE;
-
-		glm::vec2 ahead2 = position + normalizeVec2(velocity) * AVOID_DISTANCE * 0.5f;
-
-		bool collision = false;
+		bool ignoreActorObstacles =
+			physicsSystem.getIgnoreActorCollisions(physicsCmpnt);
 
 		//	Avoid obstacles
-		glm::vec2 avoid(0.0f);
-		const size_t obstacleCount = mObstacles.size();
-		for (size_t index = 0; index < obstacleCount; ++index) {
-			const float radius =
-				(mObstacles[index].radius * OBSTACLE_SCALE) *
-				(mObstacles[index].radius * OBSTACLE_SCALE);
+		glm::vec2 actorObstacleAvoid = ignoreActorObstacles ?
+			glm::vec2(0.0f) :
+			this->calculateAvoidForce(mStaticActorObstacles, position, velocity);
 
-			const float distance = glm::length2(ahead - mObstacles[index].position);
-			const float distance2 = glm::length2(ahead2 - mObstacles[index].position);
+		glm::vec2 staticObstacleAvoid =
+			this->calculateAvoidForce(mStaticObstacles, position, velocity);
 
-			if (distance <= radius || distance2 <= radius) {
-				glm::vec2 force = position - mObstacles[index].position;
-				force = normalizeVec2(force) * AVOID_MAX_FORCE;
-				avoid += force;
-				collision = true;
-			}
-		}
+		glm::vec2 avoid = actorObstacleAvoid + staticObstacleAvoid;
+
+		bool collision = glm::length2(avoid) != 0.0f;
 
 		if (collision) {
 			mData[index].moveDirection =
 				rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
 		}
 
+		//	Save force value for debugging
 		mData[index].avoidForce = avoid;
 
 		//	Set forces

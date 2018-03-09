@@ -26,6 +26,7 @@ PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 	mSpeed.reserve(maxComponents);
 	mForce.reserve(maxComponents);
 	mVelocity.reserve(maxComponents);
+	mIgnoreActorCollisions.reserve(maxComponents);
 }
 
 //	============================================================================
@@ -127,6 +128,7 @@ void PhysicsSystem::createComponent() {
 	mSpeed.emplace_back(64.0f);
 	mForce.emplace_back(0.0f);
 	mVelocity.emplace_back(0.0f);
+	mIgnoreActorCollisions.emplace_back(false);
 }
 
 //	============================================================================
@@ -138,6 +140,7 @@ void PhysicsSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mSpeed, index);
 	swapWithLastElementAndRemove(mForce, index);
 	swapWithLastElementAndRemove(mVelocity, index);
+	swapWithLastElementAndRemove(mIgnoreActorCollisions, index);
 }
 
 //	============================================================================
@@ -191,6 +194,12 @@ std::vector<TriggerCollision> PhysicsSystem::getEntityIntersections(
 }
 
 //	============================================================================
+bool PhysicsSystem::getIgnoreActorCollisions(
+	const PhysicsComponent& cmpnt) const {
+	return mIgnoreActorCollisions[cmpnt.index];
+}
+
+//	============================================================================
 glm::vec2 PhysicsSystem::getPosition(const PhysicsComponent& cmpnt) const {
 	return mPosition[cmpnt.index];
 }
@@ -224,6 +233,12 @@ void PhysicsSystem::setDirection(const PhysicsComponent& cmpnt,
 	} else {
 		mDirection[cmpnt.index] = direction;
 	}
+}
+
+//	============================================================================
+void PhysicsSystem::setIgnoreActorCollisions(const PhysicsComponent& cmpnt,
+											 const bool ignore) {
+	mIgnoreActorCollisions[cmpnt.index] = ignore;
 }
 
 //	============================================================================
@@ -303,6 +318,7 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 
 	std::vector<CollisionTest> actorTests;
 	std::vector<CollisionTest> bulletTests;
+	std::vector<CollisionTest> ghostTests;
 	std::vector<CollisionTest> playerActorTests;
 	std::vector<CollisionTest> playerBulletTests;
 
@@ -332,7 +348,11 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 		switch (mGroup[index]) {
 			case CollisionGroup::ACTOR: {
 				if (isMoving) {
-					actorTests.push_back(test);
+					if (mIgnoreActorCollisions[index]) {
+						ghostTests.push_back(test);
+					} else {
+						actorTests.push_back(test);
+					}
 				}
 
 				vsActorTests.push_back(test);
@@ -387,7 +407,7 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	//	--------------------
 	//	TEST PLAYER ACTORS |
 	//	--------------------
-	//	VS static obstacles
+	//	VS actor obstacles
 	processStaticCollisions(playerActorTests, actorObstacles, mStaticCollisions);
 
 	//	VS entities
@@ -396,11 +416,20 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	//	-------------
 	//	TEST ACTORS |
 	//	-------------
-	//	VS static obstacles
+	//	VS actor obstacles
 	processStaticCollisions(actorTests, actorObstacles, mStaticCollisions);
 
 	//	VS entities
 	processEntityCollisions(actorTests, vsActorTests, mEntityCollisions, false);
+
+	//	-------------
+	//	TEST GHOSTS |
+	//	-------------
+	//	VS static obstacles
+	processStaticCollisions(ghostTests, mStaticObstacles, mStaticCollisions);
+
+	//	VS entities
+	processEntityCollisions(ghostTests, vsActorTests, mEntityCollisions, false);
 
 	//	--------------
 	//	TEST BULLETS |

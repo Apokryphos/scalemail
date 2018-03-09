@@ -13,12 +13,13 @@ set(SCALEMAIL_ENGINE_INCLUDE
     include/ai/ai_node.hpp
     include/ai/ai_tree.hpp
     include/ai/ai_whiteboard.hpp
-    include/ai/bat_ai.hpp
-    include/ai/blob_ai.hpp
-    include/ai/skeleton_ai.hpp
-    include/ai/skeleton_warrior_ai.hpp
-    include/ai/vampire_ai.hpp
     include/ai/ai_behaviors/ally_ai.hpp
+    include/ai/ai_behaviors/bat_ai.hpp
+    include/ai/ai_behaviors/blob_ai.hpp
+    include/ai/ai_behaviors/skeleton_ai.hpp
+    include/ai/ai_behaviors/skeleton_warrior_ai.hpp
+    include/ai/ai_behaviors/vampire_ai.hpp
+    include/ai/ai_behaviors/wisp_ai.hpp
     include/ai/ai_nodes/composite_ai_node.hpp
     include/ai/ai_nodes/cooldown_ai_node.hpp
     include/ai/ai_nodes/decorator_ai_node.hpp
@@ -139,6 +140,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ai_behaviors/skeleton_ai.cpp
     src/ai/ai_behaviors/skeleton_warrior_ai.cpp
     src/ai/ai_behaviors/vampire_ai.cpp
+    src/ai/ai_behaviors/wisp_ai.cpp
     src/ai/ai_nodes/cooldown_ai_node.cpp
     src/ai/ai_nodes/composite_ai_node.cpp
     src/ai/ai_nodes/decorator_ai_node.cpp

@@ -4,6 +4,7 @@
 #include "ai/ai_behaviors/skeleton_ai.hpp"
 #include "ai/ai_behaviors/skeleton_warrior_ai.hpp"
 #include "ai/ai_behaviors/vampire_ai.hpp"
+#include "ai/ai_behaviors/wisp_ai.hpp"
 #include "ai/ai_behavior_factory.hpp"
 #include "string_util.hpp"
 
@@ -26,6 +27,8 @@ std::shared_ptr<AiBehavior> AiBehaviorFactory::createAiBehavior(
 		return std::make_shared<SkeletonWarriorAi>(entity);
 	} else if (name == "vampire") {
 		return std::make_shared<VampireAi>(entity);
+	} else if (name == "wisp") {
+		return std::make_shared<WispAi>(entity);
 	}
 
 	return nullptr;

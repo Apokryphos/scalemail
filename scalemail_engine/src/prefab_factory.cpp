@@ -104,6 +104,53 @@ static void buildVampire(Entity entity, World& world) {
 }
 
 //  ============================================================================
+static void buildWisp(Entity entity, World& world) {
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	physicsSystem.setIgnoreActorCollisions(physicsCmpnt, true);
+	physicsSystem.setSpeed(physicsCmpnt, 20.0f);
+
+	GunSystem& gunSystem = world.getGunSystem();
+	GunComponent gunCmpnt = gunSystem.getComponent(entity);
+	gunSystem.setCooldownDuration(gunCmpnt, 0.5f);
+
+	LightSystem& lightSystem = world.getLightSystem();
+	lightSystem.addComponent(entity);
+	LightComponent lightCmpnt = lightSystem.getComponent(entity);
+
+	glm::vec4 lightColor = getBulletLightColor(0);
+
+	lightSystem.setOffset(lightCmpnt, glm::vec2(0, -2.0f));
+	lightSystem.setColor(lightCmpnt, lightColor);
+	lightSystem.setGlowSize(lightCmpnt, glm::vec2(8.0f));
+	lightSystem.setSize(lightCmpnt, glm::vec2(64.0f));
+	lightSystem.setPulse(lightCmpnt, 8);
+	lightSystem.setPulseSize(lightCmpnt, 4);
+
+	ParticleSystem& particleSystem = world.getParticleSystem();
+	particleSystem.addComponent(entity);
+
+	ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
+
+	ParticleComponentData emitter = {};
+	emitter.life = 1.6f;
+	emitter.decay = 1.0f;
+	emitter.duration = 1.0f;
+	emitter.emitCount = 4;
+	emitter.interval = 0.16f;
+	emitter.minSize = 0.5f;
+	emitter.maxSize = 2.0f;
+	emitter.minSpeed = 4.0f;
+	emitter.maxSpeed = 8.0f;
+	emitter.spread = 0.349066f;
+	emitter.direction = glm::vec3(0.0f, -1.0f, 2.0f);
+	emitter.color = lightColor;
+	emitter.width = 4.0f;
+
+	particleSystem.setData(particleCmpnt, emitter);
+}
+
+//  ============================================================================
 void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 								World& world) {
 	prefabName = toLowercase(prefabName);
@@ -120,6 +167,8 @@ void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 		buildSkeletonWarrior(entity, world);
 	} else if (prefabName == "vampire") {
 		buildVampire(entity, world);
+	} else if (prefabName == "wisp") {
+		buildWisp(entity, world);
 	} else if (prefabName == "health_potion") {
 		buildHealthPotion(entity, world);
 	}

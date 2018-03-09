@@ -39,19 +39,27 @@ class AiSystem : public EntitySystem
 
 	bool mEnabled;
 
-	std::vector<Obstacle> mObstacles;
+	std::vector<Obstacle> mStaticObstacles;
+	std::vector<Obstacle> mStaticActorObstacles;
 	std::vector<AiComponentData> mData;
 
+	void addObstacle(const glm::vec2& position, const float radius,
+					 bool actorObstacle);
+	void addObstacle(const float x, const float y, const float width,
+					 const float height, bool actorObstacle);
+	glm::vec2 calculateAvoidForce(std::vector<Obstacle>& obstacles,
+								  glm::vec2 position, glm::vec2 velocity);
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
 
 public:
 	AiSystem(EntityManager& entityManager, int maxComponents = 1000);
+	void addStaticActorObstacle(const float x, const float y,
+								const float width, const float height);
+	void addStaticObstacle(const float x, const float y, const float width,
+					 	   const float height);
 	void addBehavior(const AiComponent& cmpnt,
 					 std::shared_ptr<AiBehavior> behavior);
-	void addObstacle(const glm::vec2& position, const float radius);
-	void addObstacle(const float x, const float y, const float width,
-					 const float height);
 	void drawDebug(std::vector<float>& lineVertexData);
 	void enable(bool enabled);
 	AiComponent getComponent(const Entity& entity) const;

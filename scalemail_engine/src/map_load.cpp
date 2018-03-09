@@ -416,7 +416,7 @@ static void processActorCollisionObject(World& world,
 
 	world.getPhysicsSystem().addStaticActorObstacle(x, y, width, height);
 
-	world.getAiSystem().addObstacle(x, y, width, height);
+	world.getAiSystem().addStaticActorObstacle(x, y, width, height);
 }
 
 //  ============================================================================
@@ -466,7 +466,7 @@ static void processCollisionObject(World& world,
 
 	world.getPhysicsSystem().addStaticObstacle(x, y, width, height);
 
-	world.getAiSystem().addObstacle(x, y, width, height);
+	world.getAiSystem().addStaticObstacle(x, y, width, height);
 }
 
 //  ============================================================================

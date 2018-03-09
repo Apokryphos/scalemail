@@ -1,4 +1,4 @@
-#include "ai/ai_behaviors/bat_ai.hpp"
+#include "ai/ai_behaviors/wisp_ai.hpp"
 #include "ai/ai_nodes/cooldown_ai_node.hpp"
 #include "ai/ai_nodes/random_move_direction_ai_node.hpp"
 #include "ai/ai_nodes/selector_ai_node.hpp"
@@ -11,7 +11,7 @@ static const double MOVE_DIRECTION_CHANGE_INTERVAL_MIN = 1.0;
 static const double MOVE_DIRECTION_CHANGE_INTERVAL_MAX = 3.0;
 
 //	============================================================================
-BatAi::BatAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
+WispAi::WispAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	auto rootNode = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	mAiTree.setRootNode(rootNode);
 
@@ -38,7 +38,7 @@ BatAi::BatAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 }
 
 //	============================================================================
-void BatAi::think(World& world, double totalElapsedSeconds) {
+void WispAi::think(World& world, double totalElapsedSeconds) {
 	mAiTree.execute(world, totalElapsedSeconds);
 }
 }

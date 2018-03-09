@@ -19,6 +19,7 @@ struct PhysicsComponent {
 
 class PhysicsSystem : public EntitySystem
 {
+	std::vector<bool> mIgnoreActorCollisions;
 	std::vector<CollisionGroup> mGroup;
 	std::vector<glm::vec2> mDirection;
 	std::vector<glm::vec2> mPosition;
@@ -55,6 +56,7 @@ public:
 	glm::vec2 getDirection(const PhysicsComponent& cmpnt) const;
 	std::vector<TriggerCollision> getEntityIntersections(
 		const std::vector<Trigger>& triggers) const;
+	bool getIgnoreActorCollisions(const PhysicsComponent& cmpnt) const;
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
 	float getRadius(const PhysicsComponent& cmpnt) const;
 	float getSpeed(const PhysicsComponent& cmpnt) const;
@@ -62,6 +64,8 @@ public:
 	void setCollisionGroup(const PhysicsComponent& cmpnt,
 						   const CollisionGroup group);
 	void setDirection(const PhysicsComponent& cmpnt, const glm::vec2 direction);
+  	void setIgnoreActorCollisions(const PhysicsComponent& cmpnt,
+	  							  const bool ignore);
   	void setPosition(const PhysicsComponent& cmpnt, const glm::vec2 position);
 	void setRadius(const PhysicsComponent& cmpnt, const float radius);
 	void setSpeed(const PhysicsComponent& cmpnt, const float speed);

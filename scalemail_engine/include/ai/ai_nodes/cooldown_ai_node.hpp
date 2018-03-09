@@ -14,10 +14,9 @@ class CooldownAiNode : public AiNode
 	double mLastTicks;
 
 public:
-	CooldownAiNode(Entity& entity, AiTree& parentTree,
-				   const double duration = 0);
+	CooldownAiNode(Entity& entity, AiTree& parentTree, double duration = 0);
 	virtual AiNodeStatus execute(World& world) override;
-	void setDuration(const double duration);
-	void setRandomDuration(const double min, const double max);
+	void setDuration(double duration);
+	void setRandomDuration(double min, double max);
 };
 }

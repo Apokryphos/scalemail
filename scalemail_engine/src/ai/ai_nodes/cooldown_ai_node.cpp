@@ -7,7 +7,7 @@ namespace ScaleMail
 {
 //	============================================================================
 CooldownAiNode::CooldownAiNode(Entity& entity, AiTree& parentTree,
-							   const double duration)
+							   double duration)
 : AiNode(entity, parentTree), mDurationMin(0), mDurationMax(0), mTicks(0),
   mLastTicks(0) {
 	this->setDuration(duration);

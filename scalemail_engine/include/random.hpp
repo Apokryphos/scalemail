@@ -50,6 +50,10 @@ public:
 		return v[index];
 	}
 
+	double nextDouble(double min, double max) {
+		return std::uniform_real_distribution<double>(min, max)(mEngine);
+	}
+
 	float nextFloat(float min, float max) {
 		return static_cast<float>(std::uniform_real_distribution<double>(min, max)(mEngine));
 	}

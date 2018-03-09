@@ -30,13 +30,13 @@ double AiTree::getTotalElapsedSeconds() const {
 }
 
 //	============================================================================
-Entity AiTree::getEntity() {
+Entity AiTree::getEntity() const {
 	return mEntity;
 }
 
 //	============================================================================
-AiNode* AiTree::getRootNode() {
-	return mRootNode.get();
+std::shared_ptr<AiNode> AiTree::getRootNode() {
+	return mRootNode;
 }
 
 //	============================================================================

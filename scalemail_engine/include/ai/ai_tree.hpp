@@ -22,8 +22,8 @@ public:
 	AiTree& operator=(const AiTree&) = delete;
 	void execute(World& world, double totalElapsedSeconds);
 	double getElapsedSeconds(double lastTick) const;
-	Entity getEntity();
-	AiNode* getRootNode();
+	Entity getEntity() const;
+	std::shared_ptr<AiNode> getRootNode();
 	double getTotalElapsedSeconds() const;
 	AiWhiteboard& getWhiteboard();
 	void setRootNode(std::shared_ptr<AiNode> node);

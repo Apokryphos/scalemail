@@ -24,6 +24,6 @@ public:
 	int getEntityCount(const std::string& name) const;
 	float getFloatValue(const std::string& name, float defaultValue) const;
 	void removeDeadEntities(World& world);
-	void setFloatValue(const std::string& name, float value);
+	void setFloatValue(const std::string& name, const float value);
 };
 }

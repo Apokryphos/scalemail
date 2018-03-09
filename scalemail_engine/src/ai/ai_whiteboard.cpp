@@ -66,7 +66,7 @@ void AiWhiteboard::removeDeadEntities(World& world) {
 }
 
 //	============================================================================
-void AiWhiteboard::setFloatValue(const std::string& name, float value) {
+void AiWhiteboard::setFloatValue(const std::string& name, const float value) {
 	mFloatValues[name] = value;
 }
 }

@@ -27,7 +27,7 @@ public:
 					  const std::string& targetValueName = "TARGET");
 	virtual AiNodeStatus execute(World& world) override;
 	void setRange(float range);
-	void setTargetTeamAlignment(TeamAlignment teamAlignment);
+	void setTargetTeamAlignment(const TeamAlignment teamAlignment);
 	void setTargetType(const TargetType targetType);
 	void setTargetValueName(const std::string& name);
 };

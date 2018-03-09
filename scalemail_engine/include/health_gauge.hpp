@@ -14,14 +14,14 @@ public:
 	HealthGauge(const HealthGauge&) = delete;
 	HealthGauge& operator=(const HealthGauge&) = delete;
 
-	HealthGauge(HealthGauge&& other) :
-		mMax(other.mMax),
-		mValue(other.mValue) {
+	HealthGauge(HealthGauge&& rhs) :
+		mMax(rhs.mMax),
+		mValue(rhs.mValue) {
 	}
 
-	HealthGauge& operator=(HealthGauge&& other) {
-		mMax = other.mMax;
-		mValue = other.mValue;
+	HealthGauge& operator=(HealthGauge&& rhs) {
+		mMax = rhs.mMax;
+		mValue = rhs.mValue;
 		return *this;
 	}
 

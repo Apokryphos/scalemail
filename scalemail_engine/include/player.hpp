@@ -16,16 +16,16 @@ public:
 	Player(const Player&) = delete;
 	Player& operator=(const Player&) = delete;
 
-	Player(Player&& player) :
-		entity(std::move(player.entity)),
-		inputState(std::move(player.inputState)),
-		name(std::move(player.name)) {
+	Player(Player&& rhs) :
+		entity(std::move(rhs.entity)),
+		inputState(std::move(rhs.inputState)),
+		name(std::move(rhs.name)) {
 	}
 
-	Player& operator=(Player&& player) {
-		entity = std::move(player.entity);
-		inputState = std::move(player.inputState);
-		name = std::move(player.name);
+	Player& operator=(Player&& rhs) {
+		entity = std::move(rhs.entity);
+		inputState = std::move(rhs.inputState);
+		name = std::move(rhs.name);
 		return *this;
 	}
 

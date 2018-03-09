@@ -13,8 +13,8 @@ class CompositeAiNode : public AiNode
 public:
 	CompositeAiNode(Entity& entity, AiTree& parentTree);
 	void addChildNode(std::shared_ptr<AiNode> node);
-	void addChildNodes(std::vector<std::shared_ptr<AiNode>> nodes);
+	void addChildNodes(const std::vector<std::shared_ptr<AiNode>>& nodes);
 	bool hasChildNodes() const;
-	std::vector<std::shared_ptr<AiNode>> getChildNodes();
+	std::vector<std::shared_ptr<AiNode>>& getChildNodes();
 };
 }

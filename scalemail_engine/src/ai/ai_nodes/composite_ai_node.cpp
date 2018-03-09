@@ -15,7 +15,8 @@ void CompositeAiNode::addChildNode(std::shared_ptr<AiNode> node) {
 }
 
 //	============================================================================
-void CompositeAiNode::addChildNodes(std::vector<std::shared_ptr<AiNode>> nodes) {
+void CompositeAiNode::addChildNodes(
+	const std::vector<std::shared_ptr<AiNode>>& nodes) {
 	for (auto node : nodes) {
 		this->addChildNode(node);
 	}
@@ -27,7 +28,7 @@ bool CompositeAiNode::hasChildNodes() const {
 }
 
 //	============================================================================
-std::vector<std::shared_ptr<AiNode>> CompositeAiNode::getChildNodes() {
+std::vector<std::shared_ptr<AiNode>>& CompositeAiNode::getChildNodes() {
 	return mChildNodes;
 }
 }

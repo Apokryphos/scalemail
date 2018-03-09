@@ -8,7 +8,7 @@ DecoratorAiNode::DecoratorAiNode(Entity& entity, AiTree& parentTree)
 }
 
 //	============================================================================
-AiNode* DecoratorAiNode::getChildNode() {
+std::shared_ptr<AiNode> DecoratorAiNode::getChildNode() {
 	return mChildNode;
 }
 
@@ -18,7 +18,7 @@ bool DecoratorAiNode::hasChildNode() const {
 }
 
 //	============================================================================
-void DecoratorAiNode::setChildNode(AiNode* node) {
+void DecoratorAiNode::setChildNode(std::shared_ptr<AiNode> node) {
 	mChildNode = node;
 }
 }

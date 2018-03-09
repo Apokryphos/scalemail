@@ -69,14 +69,13 @@ AiNodeStatus TargetRangeAiNode::execute(World& world) {
 
 //	============================================================================
 void TargetRangeAiNode::setRange(float range) {
-	mRange = range;
+	mRange = std::max(0.0f, range);
 }
 
 //	============================================================================
-void TargetRangeAiNode::setTargetTeamAlignment(TeamAlignment teamAlignment) {
+void TargetRangeAiNode::setTargetTeamAlignment(const TeamAlignment teamAlignment) {
 	mTargetTeamAlignment = teamAlignment;
 }
-
 
 //	============================================================================
 void TargetRangeAiNode::setTargetType(const TargetType targetType) {

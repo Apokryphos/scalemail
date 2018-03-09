@@ -7,6 +7,7 @@
 #include "ai/ai_nodes/sequence_ai_node.hpp"
 #include "ai/ai_nodes/target_attacker_ai_node.hpp"
 #include "ai/ai_nodes/target_range_ai_node.hpp"
+#include "ai/ai_nodes/wander_ai_node.hpp"
 #include <memory>
 
 namespace ScaleMail
@@ -28,10 +29,15 @@ AllyAi::AllyAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	auto randomMoveDirection =
 		std::make_shared<RandomMoveDirectionAiNode>(entity, mAiTree);
 
+	//	Wander to add variation to movement
+	auto wander =
+		std::make_shared<WanderAiNode>(entity, mAiTree);
+
 	auto randomMove = std::make_shared<SequenceAiNode>(entity, mAiTree);
 	rootNode->addChildNode(randomMove);
 	randomMove->addChildNode(cooldown);
 	randomMove->addChildNode(randomMoveDirection);
+	randomMove->addChildNode(wander);
 
 	//	==================================================
 	//	Fire at foes

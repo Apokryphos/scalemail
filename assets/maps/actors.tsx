@@ -2836,25 +2836,33 @@
  <tile id="460">
   <properties>
    <property name="ActorIndex" type="int" value="59"/>
+   <property name="Ai" value="wisp"/>
    <property name="Facing" value="east"/>
+   <property name="Prefab" value="wisp"/>
   </properties>
  </tile>
  <tile id="461">
   <properties>
    <property name="ActorIndex" type="int" value="59"/>
+   <property name="Ai" value="wisp"/>
    <property name="Facing" value="south"/>
+   <property name="Prefab" value="wisp"/>
   </properties>
  </tile>
  <tile id="462">
   <properties>
    <property name="ActorIndex" type="int" value="59"/>
+   <property name="Ai" value="wisp"/>
    <property name="Facing" value="north"/>
+   <property name="Prefab" value="wisp"/>
   </properties>
  </tile>
  <tile id="463">
   <properties>
    <property name="ActorIndex" type="int" value="59"/>
+   <property name="Ai" value="wisp"/>
    <property name="Facing" value="west"/>
+   <property name="Prefab" value="wisp"/>
   </properties>
  </tile>
  <tile id="464">
@@ -2940,25 +2948,33 @@
  <tile id="476">
   <properties>
    <property name="ActorIndex" type="int" value="59"/>
+   <property name="Ai" value="wisp"/>
    <property name="Facing" value="east"/>
+   <property name="Prefab" value="wisp"/>
   </properties>
  </tile>
  <tile id="477">
   <properties>
    <property name="ActorIndex" type="int" value="59"/>
+   <property name="Ai" value="wisp"/>
    <property name="Facing" value="south"/>
+   <property name="Prefab" value="wisp"/>
   </properties>
  </tile>
  <tile id="478">
   <properties>
    <property name="ActorIndex" type="int" value="59"/>
+   <property name="Ai" value="wisp"/>
    <property name="Facing" value="north"/>
+   <property name="Prefab" value="wisp"/>
   </properties>
  </tile>
  <tile id="479">
   <properties>
    <property name="ActorIndex" type="int" value="59"/>
+   <property name="Ai" value="wisp"/>
    <property name="Facing" value="west"/>
+   <property name="Prefab" value="wisp"/>
   </properties>
  </tile>
  <tile id="480">

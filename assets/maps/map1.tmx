@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="80" height="88" tilewidth="16" tileheight="16" nextobjectid="347">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="80" height="88" tilewidth="16" tileheight="16" nextobjectid="350">
  <properties>
   <property name="CollisionLayer" type="int" value="0"/>
  </properties>
@@ -768,13 +768,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="IntroCamera" visible="0">
+ <objectgroup name="IntroCamera">
   <object id="292" name="IntroCameraBounds" type="CameraBounds" x="0" y="0" width="256" height="1280"/>
   <object id="293" name="IntroCameraPath" type="CameraPath" x="128" y="0">
    <polyline points="0,0 0,1280"/>
   </object>
  </objectgroup>
- <objectgroup name="PlayerCamera" visible="0">
+ <objectgroup name="PlayerCamera">
   <properties>
    <property name="CameraLayer" type="bool" value="true"/>
   </properties>
@@ -785,7 +785,7 @@
   <object id="289" type="CameraBounds" x="0" y="272" width="256" height="208"/>
   <object id="320" type="CameraBounds" x="512" y="1136" width="192" height="208"/>
  </objectgroup>
- <objectgroup name="Ambient Light" visible="0">
+ <objectgroup name="Ambient Light">
   <object id="229" type="AmbientLight" x="0" y="0" width="256" height="272">
    <properties>
     <property name="Color" type="color" value="#ff135165"/>
@@ -817,7 +817,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="Triggers" visible="0">
+ <objectgroup name="Triggers">
   <object id="239" name="Door Trigger" type="Trigger" x="96" y="1008" width="48" height="48">
    <properties>
     <property name="TargetName" value="introDoor"/>
@@ -931,7 +931,7 @@
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup name="Villains" visible="0">
+ <objectgroup name="Villains">
   <object id="66" name="Skeleton" type="Villain" gid="456" x="130" y="1153" width="16" height="16">
    <properties>
     <property name="Buried" type="bool" value="true"/>
@@ -985,6 +985,9 @@
   <object id="317" name="Skeleton" type="Villain" gid="439" x="464" y="1214" width="16" height="16"/>
   <object id="332" name="Skeleton" type="Villain" gid="435" x="417" y="1207" width="16" height="16"/>
   <object id="333" name="Skeleton" type="Villain" gid="433" x="466" y="1199" width="16" height="16"/>
+  <object id="347" name="Wisp" type="Villain" gid="765" x="367" y="1311" width="8" height="8"/>
+  <object id="348" name="Wisp" type="Villain" gid="765" x="454" y="1288" width="8" height="8"/>
+  <object id="349" name="Wisp" type="Villain" gid="765" x="381" y="1188" width="8" height="8"/>
  </objectgroup>
  <objectgroup name="Heroes">
   <object id="62" name="PlayerStart" type="PlayerStart" gid="354" x="116" y="1084" width="16" height="16"/>

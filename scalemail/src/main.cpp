@@ -15,7 +15,7 @@ static EngineStartOptions processCommandLineArguments(int argc, char* argv[]) {
 
 		std::string cmd(argv[c]);
 
-		if (cmd == "-map" && argsLeft >= 1) {
+		if ((cmd == "-m" || cmd == "--map") && argsLeft >= 1) {
 			startOptions.mapName = std::string(argv[c + 1]);
 
 			//	Skip intro if map is specified
@@ -24,7 +24,7 @@ static EngineStartOptions processCommandLineArguments(int argc, char* argv[]) {
 			argsUsed = 1;
 		}
 
-		if (cmd == "-skipintro") {
+		if (cmd == "-s" || cmd == "--skipintro") {
 			startOptions.skipIntro = true;
 		}
 

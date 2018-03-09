@@ -141,7 +141,6 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 		std::make_shared<RandomMoveDirectionAiNode>(entity, &mAiTree);
 
 	auto randomMove = std::make_shared<SequenceAiNode>(entity, &mAiTree);
-	rootNode->addChildNode(randomMove);
 	randomMove->addChildNode(cooldown);
 	randomMove->addChildNode(randomMoveDirection);
 

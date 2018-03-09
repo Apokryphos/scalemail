@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 namespace ScaleMail
 {
 class HealthGauge
@@ -9,6 +11,20 @@ class HealthGauge
 
 public:
 	HealthGauge(float max = 100);
+	HealthGauge(const HealthGauge&) = delete;
+	HealthGauge& operator=(const HealthGauge&) = delete;
+
+	HealthGauge(HealthGauge&& other) :
+		mMax(other.mMax),
+		mValue(other.mValue) {
+	}
+
+	HealthGauge& operator=(HealthGauge&& other) {
+		mMax = other.mMax;
+		mValue = other.mValue;
+		return *this;
+	}
+
 	void add(float amount);
 	void fill();
 	float getMax() const;

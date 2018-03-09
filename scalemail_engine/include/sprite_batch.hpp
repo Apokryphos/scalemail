@@ -61,6 +61,8 @@ class SpriteBatch
 
 public:
 	SpriteBatch();
+	SpriteBatch(const SpriteBatch&) = delete;
+	SpriteBatch& operator=(const SpriteBatch&) = delete;
 
 	void begin();
 

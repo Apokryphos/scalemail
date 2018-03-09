@@ -11,14 +11,9 @@ static const float PI_OVER_TWO = 1.57079632679f;
 static const float TWO_PI = 6.28318530718f;
 
 //  ============================================================================
-static inline int clamp( const int value, const int min, const int max ) {
-	return std::max<int>( min, std::min<int>( value, max ) );
-}
-
-//  ============================================================================
-static inline float clamp(
-	const float value, const float min, const float max ) {
-	return std::max<float>( min, std::min<float>( value, max ) );
+template <typename T>
+static inline T clamp(const T value, const T min, const T max) {
+	return std::max<T>(min, std::min<T>(value, max));
 }
 
 //  ============================================================================

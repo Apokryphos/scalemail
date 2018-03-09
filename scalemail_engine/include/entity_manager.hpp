@@ -14,8 +14,9 @@ class EntityManager
 	std::vector<unsigned> mGenerations;
 
 public:
-
 	EntityManager();
+	EntityManager(const EntityManager&) = delete;
+	EntityManager& operator=(const EntityManager&) = delete;
 	Entity createEntity();
 	void destroyEntity(const Entity& entity);
 	bool isAlive(const Entity& entity) const;

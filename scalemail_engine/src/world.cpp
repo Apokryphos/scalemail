@@ -23,6 +23,7 @@ World::World() :
 	mSpriteEffectSystem(mEntityManager),
 	mSpriteSystem(mEntityManager),	mTeamSystem(mEntityManager),
 	mTriggerSystem(mEntityManager) {
+	mPlayers.reserve(4);
 	mPlayers.emplace_back("Player1");
 	mPlayers.emplace_back("Player2");
 	mPlayers.emplace_back("Player3");

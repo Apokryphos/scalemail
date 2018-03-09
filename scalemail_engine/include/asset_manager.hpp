@@ -32,6 +32,9 @@ class AssetManager
 	std::map<int, Texture> mTexturesById;
 
 public:
+	AssetManager() = default;
+	AssetManager(const AssetManager&) = delete;
+	AssetManager& operator=(const AssetManager&) = delete;
 	QuadShader getColorQuadShader();
 	FadeShader getFadeShader();
 	Mesh getQuadMesh();

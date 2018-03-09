@@ -18,6 +18,8 @@ class AiTree
 
 public:
 	AiTree(Entity entity, AiNode* rootNode = nullptr);
+	AiTree(const AiTree&) = delete;
+	AiTree& operator=(const AiTree&) = delete;
 	void execute(World& world, double totalElapsedSeconds);
 	double getElapsedSeconds(double lastTick) const;
 	Entity getEntity();

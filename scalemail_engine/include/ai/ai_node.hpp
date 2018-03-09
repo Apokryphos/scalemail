@@ -16,6 +16,8 @@ class AiNode
 
 public:
 	AiNode(Entity& entity, AiTree& parentTree);
+	AiNode(const AiNode&) = delete;
+	AiNode& operator=(const AiNode&) = delete;
 	virtual ~AiNode() {};
 	virtual AiNodeStatus execute(World& world) = 0;
 	Entity getEntity();

@@ -13,6 +13,22 @@ public:
 		inputState = {};
 	}
 
+	Player(const Player&) = delete;
+	Player& operator=(const Player&) = delete;
+
+	Player(Player&& player) :
+		entity(std::move(player.entity)),
+		inputState(std::move(player.inputState)),
+		name(std::move(player.name)) {
+	}
+
+	Player& operator=(Player&& player) {
+		entity = std::move(player.entity);
+		inputState = std::move(player.inputState);
+		name = std::move(player.name);
+		return *this;
+	}
+
 	Entity entity;
 	InputState inputState;
 	std::string name;

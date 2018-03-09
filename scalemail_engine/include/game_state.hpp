@@ -12,6 +12,8 @@ class GameState
 
 public:
 	GameState(GameStateManager& gameStateManager);
+	GameState(const GameState&) = delete;
+	GameState& operator=(const GameState&) = delete;
 	virtual void activate(Game& game) = 0;
 	virtual void draw(const Game& game, Camera& camera) = 0;
 	GameStateManager& getGameStateManager();

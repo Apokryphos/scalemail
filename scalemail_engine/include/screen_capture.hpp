@@ -15,6 +15,8 @@ class ScreenCapture
 public:
 	ScreenCapture();
 	~ScreenCapture();
+	ScreenCapture(const ScreenCapture&) = delete;
+	ScreenCapture& operator=(const ScreenCapture&) = delete;
 	void captureFrame();
 	void initialize(GLFWwindow* window);
 	bool isCapturing() const;

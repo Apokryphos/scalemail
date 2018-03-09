@@ -20,6 +20,8 @@ class Camera
 
 public:
 	Camera(float width, float height, float zoom = 2.0f);
+	Camera(const Camera&) = delete;
+	Camera& operator=(const Camera&) = delete;
 	Rectangle getBounds() const;
 	glm::vec2 getPosition() const;
 	glm::mat4 getProjection() const;

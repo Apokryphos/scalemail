@@ -12,6 +12,8 @@ class AiBehavior
 
 public:
 	AiBehavior(Entity entity) : mEntity(entity) {}
+	AiBehavior(const AiBehavior&) = delete;
+	AiBehavior& operator=(const AiBehavior&) = delete;
 
 	virtual ~AiBehavior() {}
 

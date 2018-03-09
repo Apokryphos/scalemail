@@ -18,6 +18,9 @@ public:
 		mEngine = std::mt19937(seed);
 	}
 
+	Random(const Random&) = delete;
+	Random& operator=(const Random&) = delete;
+
 	template <typename T>
 	std::optional<T> getRandomOptionalElement(const std::vector<T>& v) {
 		if (v.size() == 0) {

@@ -11,6 +11,9 @@ class AiBehavior;
 class AiBehaviorFactory
 {
 public:
+	AiBehaviorFactory() = default;
+	AiBehaviorFactory(const AiBehaviorFactory&) = delete;
+	AiBehaviorFactory& operator=(const AiBehaviorFactory&) = delete;
 	std::shared_ptr<AiBehavior> createAiBehavior(std::string name, Entity entity);
 };
 }

@@ -46,6 +46,8 @@ class Map
 public:
 	Map(const int width, const int height, const int tileWidth,
 		const int tileHeight);
+	Map(const Map&) = delete;
+	Map& operator=(const Map&) = delete;
 	void addCamera(const MapCamera& mapCamera);
 	const MapCamera* getCamera(const std::string name) const;
 	int getHeight() const;

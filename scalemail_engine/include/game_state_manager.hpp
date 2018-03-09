@@ -19,6 +19,8 @@ class GameStateManager
 
 public:
 	GameStateManager();
+	GameStateManager(const GameStateManager&) = delete;
+	GameStateManager& operator=(const GameStateManager&) = delete;
 	void activateIntroGameState();
 	void activateMainGameState();
 	GameState* getActiveGameState();

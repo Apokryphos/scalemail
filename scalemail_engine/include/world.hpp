@@ -69,6 +69,8 @@ class World
 
 public:
 	World();
+	World(const World&) = delete;
+	World& operator=(const World&) = delete;
 	Entity createEntity();
 	void destroyEntity(Entity entity);
 	bool entityIsAlive(const Entity& entity);

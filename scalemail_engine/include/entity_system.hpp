@@ -24,6 +24,8 @@ protected:
 
 public:
 	EntitySystem(EntityManager& entityManager, unsigned int maxComponents);
+	EntitySystem(const EntitySystem&) = delete;
+	EntitySystem& operator=(const EntitySystem&) = delete;
 	void addComponent(const Entity& entity);
 	void garbageCollect();
 	std::vector<Entity> getEntities() const;

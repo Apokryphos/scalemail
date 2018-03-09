@@ -22,7 +22,7 @@ static void dropLoot(World& world, const Entity& entity) {
 		return;
 	}
 
-	PhysicsSystem physicsSystem = world.getPhysicsSystem();
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 	glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 

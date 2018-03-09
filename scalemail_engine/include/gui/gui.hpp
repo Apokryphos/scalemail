@@ -16,6 +16,9 @@ class Gui
 	SpriteBatch mSpriteBatch;
 
 public:
+	Gui() = default;
+	Gui(const Gui&) = delete;
+	Gui& operator=(const Gui&) = delete;
 	void draw(Game& game);
 	void initialize(AssetManager& assetManager);
 	void showPlayerHud(bool visible);

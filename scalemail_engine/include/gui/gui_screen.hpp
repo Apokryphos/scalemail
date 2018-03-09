@@ -17,6 +17,8 @@ protected:
 
 public:
 	GuiScreen();
+	GuiScreen(const GuiScreen&) = delete;
+	GuiScreen& operator=(const GuiScreen&) = delete;
 	void drawScreen(Game& game, SpriteBatch& spriteBatch);
 	bool getVisible() const;
 	virtual void initialize(AssetManager& assetManager) = 0;

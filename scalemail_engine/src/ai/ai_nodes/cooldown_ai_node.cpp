@@ -1,12 +1,16 @@
 #include "ai/ai_nodes/cooldown_ai_node.hpp"
 #include "ai/ai_tree.hpp"
+#include "world.hpp"
+#include <algorithm>
 
 namespace ScaleMail
 {
 //	============================================================================
 CooldownAiNode::CooldownAiNode(Entity& entity, AiTree& parentTree,
-							   const float duration)
-: AiNode(entity, parentTree), mDuration(duration), mTicks(0), mLastTicks(0) {
+							   const double duration)
+: AiNode(entity, parentTree), mDurationMin(0), mDurationMax(0), mTicks(0),
+  mLastTicks(0) {
+	this->setDuration(duration);
 }
 
 //	============================================================================
@@ -19,7 +23,10 @@ AiNodeStatus CooldownAiNode::execute([[maybe_unused]]World& world) {
 
 	mTicks -= elapsedSeconds;
 	if (mTicks <= 0) {
-		mTicks = mDuration;
+		double duration =
+			world.getRandom().nextDouble(mDurationMin, mDurationMax);
+
+		mTicks = duration;
 		return AiNodeStatus::SUCCESS;
 	}
 
@@ -27,7 +34,15 @@ AiNodeStatus CooldownAiNode::execute([[maybe_unused]]World& world) {
 }
 
 //	============================================================================
-void CooldownAiNode::setDuration(const float duration) {
-	mDuration = duration;
+void CooldownAiNode::setDuration(double duration) {
+	duration = std::max(0.0, duration);
+	mDurationMin = duration;
+	mDurationMax = duration;
+}
+
+//	============================================================================
+void CooldownAiNode::setRandomDuration(double min, double max) {
+	mDurationMin = std::max(min, 0.0);
+	mDurationMax = std::max(0.0, max);
 }
 }

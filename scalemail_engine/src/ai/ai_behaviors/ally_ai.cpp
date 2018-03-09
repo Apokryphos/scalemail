@@ -12,7 +12,8 @@
 
 namespace ScaleMail
 {
-static const float MOVE_DIRECTION_CHANGE_INTERVAL = 1.75f;
+static const double MOVE_DIRECTION_CHANGE_INTERVAL_MIN = 1.0;
+static const double MOVE_DIRECTION_CHANGE_INTERVAL_MAX = 3.0;
 static const float MIN_VILLAIN_RANGE = 128.0f;
 
 //	============================================================================
@@ -24,7 +25,9 @@ AllyAi::AllyAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	//	Move in a random direction after cooldown period
 	//	==================================================
 	auto cooldown = std::make_shared<CooldownAiNode>(entity, mAiTree);
-	cooldown->setDuration(MOVE_DIRECTION_CHANGE_INTERVAL);
+	cooldown->setRandomDuration(
+		MOVE_DIRECTION_CHANGE_INTERVAL_MIN,
+		MOVE_DIRECTION_CHANGE_INTERVAL_MAX);
 
 	auto randomMoveDirection =
 		std::make_shared<RandomMoveDirectionAiNode>(entity, mAiTree);

@@ -8,14 +8,16 @@ class World;
 
 class CooldownAiNode : public AiNode
 {
-	double mDuration;
+	double mDurationMin;
+	double mDurationMax;
 	double mTicks;
 	double mLastTicks;
 
 public:
 	CooldownAiNode(Entity& entity, AiTree& parentTree,
-				   float duration = 0.0f);
+				   const double duration = 0);
 	virtual AiNodeStatus execute(World& world) override;
-	void setDuration(float duration);
+	void setDuration(const double duration);
+	void setRandomDuration(const double min, const double max);
 };
 }

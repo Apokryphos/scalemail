@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game_window.hpp"
+#include "render_options.hpp"
 #include "shader_version.hpp"
 
 namespace ScaleMail
@@ -19,13 +20,6 @@ struct DevOptions
 	bool hideGui;
 	bool step;
 	int stepCount;
-};
-
-struct RenderOptions
-{
-	ShaderVersion shaderVersion;
-	bool fboSupported;
-	bool lightsEnabled;
 };
 
 struct Game

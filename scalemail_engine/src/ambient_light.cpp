@@ -1,3 +1,4 @@
+#include "ambient_light.hpp"
 #include "camera.hpp"
 #include "mesh.hpp"
 #include "vertex_data.hpp"
@@ -8,12 +9,6 @@
 
 namespace ScaleMail
 {
-struct AmbientLight
-{
-	glm::vec4 color;
-	glm::vec4 rect;
-};
-
 static const unsigned int LIGHT_MESH_ELEMENT_COUNT = COLOR_QUAD_ELEMENT_COUNT;
 
 static Mesh ambientLightMesh;

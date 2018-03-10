@@ -15,6 +15,11 @@ void Map::addCamera(const MapCamera& mapCamera) {
 }
 
 //  ============================================================================
+const std::vector<AmbientLight>& Map::getAmbientLights() const {
+	return mAmbientLights;
+}
+
+//  ============================================================================
 const MapCamera* Map::getCamera(const std::string name) const {
 	for (const MapCamera& camera : mCameras) {
 		if (camera.name == name) {
@@ -57,6 +62,11 @@ bool Map::pointInBounds(const glm::vec2& point) {
 		point.y >= 0 &&
 		point.x <= mWidth * mTileWidth &&
 		point.y <= mHeight * mTileHeight;
+}
+
+//  ============================================================================
+void Map::setAmbientLights(std::vector<AmbientLight>& ambientLights) {
+	mAmbientLights = ambientLights;
 }
 
 //  ============================================================================

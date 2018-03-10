@@ -5,6 +5,7 @@
 #include "quad_shader.hpp"
 #include "line_shader.hpp"
 #include "mesh.hpp"
+#include "shader_version.hpp"
 #include "sprite_shader.hpp"
 #include "texture.hpp"
 #include "tile_shader.hpp"
@@ -49,7 +50,7 @@ public:
 	Tileset getTileset(const std::string textureName);
 	TileShader getTileShader();
 	Texture getTextureById(const int textureId);
-	void initialize();
+	void initialize(const ShaderVersion shaderVersion);
 	Texture loadTexture(const std::string textureName);
 	Texture loadTexture(
 		const std::string textureName,

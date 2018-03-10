@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game_window.hpp"
+#include "shader_version.hpp"
 
 namespace ScaleMail
 {
@@ -22,6 +23,7 @@ struct DevOptions
 
 struct RenderOptions
 {
+	ShaderVersion shaderVersion;
 	bool fboSupported;
 	bool lightsEnabled;
 };

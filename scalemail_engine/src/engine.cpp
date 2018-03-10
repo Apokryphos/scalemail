@@ -131,19 +131,22 @@ int startEngine(EngineStartOptions startOptions) {
 
 	if (majorVersion >= 3 && minorVersion >= 3) {
 		//	OpenGL 3.3 - GLSL 330
+		renderOptions.shaderVersion = ShaderVersion::SHADER_VERSION_330;
 		renderOptions.fboSupported = true;
 		renderOptions.lightsEnabled = true;
 
 		std::cout << "Using GLSL 330 shaders." << std::endl;
 	} else {
 		//	OpenGL 2.1 - GLSL 120
+		renderOptions.shaderVersion = ShaderVersion::SHADER_VERSION_120;
+
 		std::cout << "Using GLSL 120 shaders." << std::endl;
 	}
 
 	loadCursor(window);
 
 	AssetManager assetManager;
-	assetManager.initialize();
+	assetManager.initialize(renderOptions.shaderVersion);
 
 	initializeRender(assetManager, renderOptions);
 

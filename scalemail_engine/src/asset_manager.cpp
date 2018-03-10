@@ -68,8 +68,19 @@ Texture AssetManager::getTextureById(const int textureId) {
 }
 
 //  ============================================================================
-void AssetManager::initialize() {
-	mShaderPath = "assets/shaders/330/";
+void AssetManager::initialize(const ShaderVersion shaderVersion) {
+	switch (shaderVersion) {
+		case ShaderVersion::SHADER_VERSION_120:
+			mShaderPath = "assets/shaders/120/";
+			break;
+
+		case ShaderVersion::SHADER_VERSION_330:
+			mShaderPath = "assets/shaders/330/";
+			break;
+
+		default:
+			throw std::runtime_error("Case not implemented.");
+	}
 
 	mMissingTexture = this->loadTexture("checker");
 

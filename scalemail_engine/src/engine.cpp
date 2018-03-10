@@ -84,9 +84,8 @@ int startEngine(EngineStartOptions startOptions) {
 		return -1;
 	}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
 	const int screenWidth = 1024;
 	const int screenHeight = 1024;
@@ -120,12 +119,33 @@ int startEngine(EngineStartOptions startOptions) {
 	glfwSwapInterval(0);
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
+	RenderOptions renderOptions = {};
+
+	const int majorVersion =
+		glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR);
+
+	const int minorVersion =
+		glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR);
+
+	std::cout << "OpenGL v" << majorVersion << "." << minorVersion << std::endl;
+
+	if (majorVersion >= 3 && minorVersion >= 3) {
+		//	OpenGL 3.3 - GLSL 330
+		renderOptions.fboSupported = true;
+		renderOptions.lightsEnabled = true;
+
+		std::cout << "Using GLSL 330 shaders." << std::endl;
+	} else {
+		//	OpenGL 2.1 - GLSL 120
+		std::cout << "Using GLSL 120 shaders." << std::endl;
+	}
+
 	loadCursor(window);
 
 	AssetManager assetManager;
 	assetManager.initialize();
 
-	initializeRender(assetManager);
+	initializeRender(assetManager, renderOptions);
 
 	//  Load map after all other initialize functions
 	World world;
@@ -145,6 +165,7 @@ int startEngine(EngineStartOptions startOptions) {
 	Game game = {};
 	game.devOptions.enabled = true;
 	game.devOptions.stepCount = 1;
+	game.renderOptions = renderOptions;
 	game.camera = &camera;
 	game.gameWindow.window = window;
 	game.gui = &gui;

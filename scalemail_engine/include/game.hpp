@@ -20,6 +20,12 @@ struct DevOptions
 	int stepCount;
 };
 
+struct RenderOptions
+{
+	bool fboSupported;
+	bool lightsEnabled;
+};
+
 struct Game
 {
 	bool cameraFollow;
@@ -30,6 +36,7 @@ struct Game
 	double speed;
 
 	DevOptions devOptions;
+	RenderOptions renderOptions;
 
 	Camera* camera;
 	GameWindow gameWindow;

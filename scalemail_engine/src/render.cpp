@@ -34,7 +34,8 @@ static QuadShader colorQuadShader;
 static QuadShader particleShader;
 
 //	============================================================================
-void initializeRender(AssetManager& assetManager) {
+void initializeRender(AssetManager& assetManager,
+					  RenderOptions& renderOptions) {
 	quadMesh = assetManager.getQuadMesh();
 	colorQuadShader = assetManager.getColorQuadShader();
 	particleShader = assetManager.getParticleShader();
@@ -45,10 +46,13 @@ void initializeRender(AssetManager& assetManager) {
 
 	initializeFont(assetManager);
 	initializeTransition(assetManager);
-	initializeLight(assetManager);
 	initializeSprites(assetManager);
 	initializeMapMesh(assetManager);
 	initializeAmbientLights();
+
+	if (renderOptions.fboSupported) {
+		initializeLight(assetManager);
+	}
 }
 
 //	============================================================================
@@ -165,7 +169,9 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	blendNone();
 	glDisable(GL_DEPTH_TEST);
 
-	renderLight(gameWindow, camera, world.getLightSystem());
+	if (game.renderOptions.lightsEnabled) {
+		renderLight(gameWindow, camera, world.getLightSystem());
+	}
 
 	renderTransition();
 

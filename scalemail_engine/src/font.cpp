@@ -171,7 +171,7 @@ void renderText(const GameWindow& gameWindow) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 
-	updateMesh(mesh, fontVertexData);
+	setMeshVertexData(mesh, fontVertexData);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, gameWindow.width, gameWindow.height);

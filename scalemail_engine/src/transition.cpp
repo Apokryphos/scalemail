@@ -30,42 +30,14 @@ static Mesh mesh;
 
 static FadeShader fadeShader;
 
-static const struct
-{
-	float x, y;
-} quadVertices[6] = {
-	{  1.0f, -1.0f, },
-	{  1.0f,  1.0f, },
-	{ -1.0f, -1.0f, },
-	{  1.0f,  1.0f, },
-	{ -1.0f,  1.0f, },
-	{ -1.0f, -1.0f, }
+static const std::vector<float> FADE_QUAD_VERTEX_DATA = {
+	 1.0f, -1.0f,
+	 1.0f,  1.0f,
+	-1.0f, -1.0f,
+	 1.0f,  1.0f,
+	-1.0f,  1.0f,
+	-1.0f, -1.0f
 };
-
-//  ============================================================================
-bool initFadeQuadMesh(Mesh& mesh) {
-	glGenVertexArrays(1, &mesh.vao);
-	glGenBuffers(1, &mesh.vbo);
-
-	mesh.elementCount = 2;
-	mesh.vertexCount = 6;
-	mesh.vertexBufferSize = sizeof(quadVertices);
-
-	glBindVertexArray(mesh.vao);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices,
-				 GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * 2, (void*) 0);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	return true;
-}
 
 //	============================================================================
 void transitionFadeIn() {
@@ -124,10 +96,12 @@ void addTransitionTime(float elapsedSeconds) {
 }
 
 //	============================================================================
-void initializeTransition(AssetManager& assetManager) {
-	initFadeQuadMesh(mesh);
-
+void initializeTransition(AssetManager& assetManager,
+						  const RenderOptions& renderOptions) {
 	fadeShader = assetManager.getFadeShader();
+
+	initMesh(mesh, VertexDefinition::POSITION2, renderOptions);
+	setMeshVertexData(mesh, FADE_QUAD_VERTEX_DATA);
 }
 
 //	============================================================================
@@ -143,8 +117,6 @@ void renderTransition() {
 	glUniform1f(fadeShader.fadeProgressLocation, progress);
 	glUniform3fv(fadeShader.fadeColorLocation, 1, &fadeColor[0]);
 
-	glBindVertexArray(mesh.vao);
-	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
-	glBindVertexArray(0);
+	drawMesh(mesh);
 }
 }

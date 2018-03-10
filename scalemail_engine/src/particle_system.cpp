@@ -111,7 +111,7 @@ void ParticleSystem::buildVertexData() {
 		mVertexData.emplace_back(mColorA[index]);
 	}
 
-	updateMesh(mMesh, mVertexData);
+	setMeshVertexData(mMesh, mVertexData);
 }
 
 //	============================================================================

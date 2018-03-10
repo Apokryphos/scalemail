@@ -45,7 +45,7 @@ void initializeRender(AssetManager& assetManager,
 	debugLineVertexData.reserve(500000);
 
 	initializeFont(assetManager);
-	initializeTransition(assetManager);
+	initializeTransition(assetManager, renderOptions);
 	initializeSprites(assetManager);
 	initializeMapMesh(assetManager);
 	initializeAmbientLights();
@@ -115,7 +115,7 @@ void renderDebug(Game& game, Camera& camera) {
 		if (debugLineVertexData.size() > 0) {
 			const glm::mat4 mvp = camera.getProjection() * camera.getView();
 
-			updateMesh(debugLineMesh, debugLineVertexData);
+			setMeshVertexData(debugLineMesh, debugLineVertexData);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glUseProgram(debugLineShader.id);

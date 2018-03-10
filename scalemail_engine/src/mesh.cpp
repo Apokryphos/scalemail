@@ -1,4 +1,5 @@
 #include "mesh.hpp"
+#include "render_options.hpp"
 #include "vertex_attrib.hpp"
 #include "vertex_definition.hpp"
 #include <cassert>
@@ -48,6 +49,7 @@ void enableMeshVertexAttribPointers(const Mesh& mesh) {
 	if (mesh.vao != 0) {
 		glBindVertexArray(mesh.vao);
 	} else {
+		glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 		enableVertexAttributes(mesh.vertexDefinition);
 		setVertexAttributePointers(mesh.vertexDefinition);
 	}
@@ -58,6 +60,42 @@ void drawMesh(const Mesh& mesh) {
 	enableMeshVertexAttribPointers(mesh);
 	glDrawArrays(mesh.primitive, 0, mesh.vertexCount);
 	disableMeshVertexAttribPointers(mesh);
+	glBindVertexArray(0);
+}
+
+//  ============================================================================
+bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
+			  const RenderOptions& renderOptions) {
+	if (renderOptions.vaoSupported) {
+		glGenVertexArrays(1, &mesh.vao);
+	} else {
+		mesh.vao = 0;
+	}
+
+	glGenBuffers(1, &mesh.vbo);
+
+	mesh.elementCount = getVertexDefinitionElementCount(vertexDefinition);
+	mesh.primitive = GL_TRIANGLES;
+	mesh.vertexCount = 0;
+	mesh.vertexBufferSize = 0;
+	mesh.vertexDefinition = vertexDefinition;
+
+	if (renderOptions.vaoSupported) {
+		glBindVertexArray(mesh.vao);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, NULL, GL_STATIC_DRAW);
+
+	if (renderOptions.vaoSupported) {
+		enableVertexAttributes(vertexDefinition);
+		setVertexAttributePointers(vertexDefinition);
+		glBindVertexArray(0);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return true;
 }
 
 //  ============================================================================
@@ -201,7 +239,7 @@ bool initLineMesh(Mesh& mesh, const std::vector<float>& vertexData) {
 }
 
 //  ============================================================================
-void updateMesh(Mesh& mesh, const std::vector<float>& vertexData) {
+void setMeshVertexData(Mesh& mesh, const std::vector<float>& vertexData) {
 	if (vertexData.size() == 0) {
 		mesh.vertexCount = 0;
 		return;
@@ -211,18 +249,20 @@ void updateMesh(Mesh& mesh, const std::vector<float>& vertexData) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 
-	if (vertexData.size() > mesh.vertexBufferSize) {
-		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float),
+	const size_t bufferSize = vertexData.size() * sizeof(float);
+
+	if (bufferSize > mesh.vertexBufferSize) {
+		glBufferData(GL_ARRAY_BUFFER, bufferSize,
 					 &vertexData[0], GL_STATIC_DRAW);
 
-		mesh.vertexBufferSize = vertexData.size();
+		mesh.vertexBufferSize = bufferSize;
 
 		std::cout << "Mesh buffer reallocated." << std::endl;
 	} else {
 		glBufferSubData(
 			GL_ARRAY_BUFFER,
 			0,
-			vertexData.size() * sizeof(float),
+			bufferSize,
 			&vertexData[0]);
 	}
 

@@ -29,7 +29,7 @@ void buildAmbientLights(const std::vector<AmbientLight>& lights) {
 		addQuadVertexData(ambientLightVertexData, position, size, light.color);
 	}
 
-	updateMesh(ambientLightMesh, ambientLightVertexData);
+	setMeshVertexData(ambientLightMesh, ambientLightVertexData);
 }
 
 //  ============================================================================

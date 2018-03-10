@@ -13,7 +13,7 @@ void setVertexAttributePointers(const VertexDefinition def);
 inline void floatVertexAttribPointer(GLuint index, GLint size,
 									 int elementCount, size_t offset) {
 	glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * elementCount,
+						  sizeof(GLfloat) * elementCount,
 						  (void*)(sizeof(float) * offset));
 }
 }

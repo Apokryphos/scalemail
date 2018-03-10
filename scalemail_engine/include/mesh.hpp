@@ -1,11 +1,14 @@
 #pragma once
 
 #include "gl_headers.hpp"
+#include "vertex_definition.hpp"
 #include <vector>
 
 namespace ScaleMail
 {
 struct Mesh {
+	VertexDefinition vertexDefinition;
+	GLenum primitive;
 	GLuint vao;
 	GLuint vbo;
 	unsigned int elementCount;

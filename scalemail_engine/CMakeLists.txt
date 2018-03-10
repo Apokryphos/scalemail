@@ -106,6 +106,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/transition.cpp
     src/trigger_system.cpp
     src/tiny_font.cpp
+    src/vertex_attrib.cpp
     src/vertex_data.cpp
     src/world.cpp)
 

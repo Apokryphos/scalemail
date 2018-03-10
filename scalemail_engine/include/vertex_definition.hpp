@@ -18,6 +18,9 @@ enum class VertexDefinition
 
 	POSITION2_TEXTURE2,
 
+	//	Particles
+	POSITION3_COLOR4,
+
 	//	Tiles
 	POSITION3_TEXTURE2,
 
@@ -32,6 +35,7 @@ inline int getVertexDefinitionAttributeCount(const VertexDefinition def) {
 			return 1;
 
 		case VertexDefinition::POSITION2_COLOR4:
+		case VertexDefinition::POSITION3_COLOR4:
 		case VertexDefinition::POSITION2_TEXTURE2:
 		case VertexDefinition::POSITION3_TEXTURE2:
 			return 2;
@@ -59,6 +63,9 @@ inline int getVertexDefinitionElementCount(const VertexDefinition def) {
 
 		case VertexDefinition::POSITION2_COLOR4:
 			return 6;
+
+		case VertexDefinition::POSITION3_COLOR4:
+			return 7;
 
 		case VertexDefinition::POSITION2_COLOR4_TEXTURE2:
 			return 8;

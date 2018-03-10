@@ -1,4 +1,6 @@
 #include "mesh.hpp"
+#include "vertex_attrib.hpp"
+#include "vertex_definition.hpp"
 #include <cassert>
 #include <iostream>
 #include <vector>
@@ -33,13 +35,41 @@ static const struct
 namespace ScaleMail
 {
 //  ============================================================================
+void disableMeshVertexAttribPointers(const Mesh& mesh) {
+	if (mesh.vao != 0) {
+		glBindVertexArray(0);
+	} else {
+		disableVertexAttributes(mesh.vertexDefinition);
+	}
+}
+
+//  ============================================================================
+void enableMeshVertexAttribPointers(const Mesh& mesh) {
+	if (mesh.vao != 0) {
+		glBindVertexArray(mesh.vao);
+	} else {
+		enableVertexAttributes(mesh.vertexDefinition);
+		setVertexAttributePointers(mesh.vertexDefinition);
+	}
+}
+
+//  ============================================================================
+void drawMesh(const Mesh& mesh) {
+	enableMeshVertexAttribPointers(mesh);
+	glDrawArrays(mesh.primitive, 0, mesh.vertexCount);
+	disableMeshVertexAttribPointers(mesh);
+}
+
+//  ============================================================================
 bool initColorQuadMesh(Mesh& mesh) {
 	glGenVertexArrays(1, &mesh.vao);
 	glGenBuffers(1, &mesh.vbo);
 
 	mesh.elementCount = COLOR_QUAD_ELEMENT_COUNT;
+	mesh.primitive = GL_TRIANGLES;
 	mesh.vertexCount = 6;
 	mesh.vertexBufferSize = sizeof(colorQuadVertices);
+	mesh.vertexDefinition = VertexDefinition::POSITION2_COLOR4;
 
 	glBindVertexArray(mesh.vao);
 
@@ -70,6 +100,8 @@ bool initPositionColorMesh(Mesh& mesh, size_t vertexCapacity) {
 	const unsigned int ELEMENT_COUNT = 7;
 
 	mesh.elementCount = ELEMENT_COUNT;
+	mesh.primitive = GL_TRIANGLES;
+	mesh.vertexDefinition = VertexDefinition::POSITION3_COLOR4;
 	mesh.vertexCount = 0;
 	mesh.vertexBufferSize = vertexCapacity * ELEMENT_COUNT;
 
@@ -99,8 +131,10 @@ bool initQuadMesh(Mesh& mesh) {
 	glGenBuffers(1, &mesh.vbo);
 
 	mesh.elementCount = QUAD_MESH_ELEMENT_COUNT;
+	mesh.primitive = GL_TRIANGLES;
 	mesh.vertexCount = 6;
 	mesh.vertexBufferSize = sizeof(quadVertices);
+	mesh.vertexDefinition = VertexDefinition::POSITION2_COLOR4_TEXTURE2;
 
 	glBindVertexArray(mesh.vao);
 
@@ -134,8 +168,10 @@ bool initLineMesh(Mesh& mesh, const std::vector<float>& vertexData) {
 	glGenBuffers(1, &mesh.vbo);
 
 	mesh.elementCount = LINE_MESH_ELEMENT_COUNT;
+	mesh.primitive = GL_TRIANGLES;
 	mesh.vertexCount = 0;
 	mesh.vertexBufferSize = 0;
+	mesh.vertexDefinition = VertexDefinition::POSITION2_COLOR4;
 
 	glBindVertexArray(mesh.vao);
 

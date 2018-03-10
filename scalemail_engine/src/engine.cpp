@@ -9,6 +9,7 @@
 #include "gl_headers.hpp"
 #include "input.hpp"
 #include "input_state.hpp"
+#include "map.hpp"
 #include "map_render.hpp"
 #include "render.hpp"
 #include "screen_capture.hpp"
@@ -135,7 +136,7 @@ int startEngine(EngineStartOptions startOptions) {
 
 	world.loadMap(mapName);
 
-	buildAmbientLights();
+	buildAmbientLights(world.getMap()->getAmbientLights());
 
 	Camera camera(screenWidth, screenHeight, cameraZoom);
 

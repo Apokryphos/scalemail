@@ -51,6 +51,9 @@ struct TileLayerData
 
 struct MapData
 {
+	std::vector<AmbientLight> ambientLights;
+	std::vector<MapCamera> mapCameras;
+	std::vector<PlayerStart> playerStarts;
 	std::vector<TileLayerData> tileLayers;
 };
 
@@ -424,7 +427,8 @@ static void processActorCollisionObject(World& world,
 }
 
 //  ============================================================================
-static void processAmbientLightObject(const TmxMapLib::Object& object) {
+static void processAmbientLightObject(const TmxMapLib::Object& object,
+									  MapData& mapData) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 	const float width = object.GetWidth();
@@ -433,7 +437,7 @@ static void processAmbientLightObject(const TmxMapLib::Object& object) {
 	glm::vec4 color =
 		hexToVec4(object.GetPropertySet().GetValue("Color", "#FFFFFF"));
 
-	addAmbientLight(color, glm::vec4(x, y, width, height));
+	mapData.ambientLights.push_back({color, glm::vec4(x, y, width, height)});
 }
 
 //  ============================================================================
@@ -704,9 +708,9 @@ static void processTriggerObject(World& world,
 static void processObject(World& world,
 						  const TmxMapLib::Object& object,
 						  const TmxMapLib::Map& tmxMap,
+						  MapData& mapData,
 						  std::vector<Rectangle>& cameraBounds,
-						  std::vector<MapCameraPath>& cameraPaths,
-						  std::vector<PlayerStart>& playerStarts) {
+						  std::vector<MapCameraPath>& cameraPaths) {
 	const std::string type = toLowercase(object.GetType());
 
 	if (object.GetObjectType() == TmxMapLib::ObjectType::Ellipse) {
@@ -731,7 +735,7 @@ static void processObject(World& world,
 		} else if (type == "playerstart") {
 			PlayerStart playerStart;
 			if (processPlayerStartObject(object, tmxMap, playerStart)) {
-				playerStarts.push_back(playerStart);
+				mapData.playerStarts.push_back(playerStart);
 			}
 		} else if (type == "torch") {
 			processTorchObject(world, object, tmxMap);
@@ -744,7 +748,7 @@ static void processObject(World& world,
 		} else if (type == "actorcollision") {
 			processActorCollisionObject(world, object);
 		} else if (type == "ambientlight") {
-			processAmbientLightObject(object);
+			processAmbientLightObject(object, mapData);
 		} else if (type == "camerabounds") {
 			cameraBounds.push_back(processCameraBoundsObject(object));
 		} else if (type == "trigger") {
@@ -759,15 +763,13 @@ static void processObject(World& world,
 
 //  ============================================================================
 static void processObjects(const TmxMapLib::Map tmxMap, World& world,
-						   std::vector<MapCamera>& mapCameras,
-						   std::vector<PlayerStart>& playerStarts) {
+						   MapData& mapData) {
 	for (const auto& objectGroup : tmxMap.GetObjectGroups()) {
 		std::vector<Rectangle> cameraBounds;
 		std::vector<MapCameraPath> cameraPaths;
 
 		for (const auto& object : objectGroup.GetObjects()) {
-			processObject(world, object, tmxMap, cameraBounds, cameraPaths,
-						  playerStarts);
+			processObject(world, object, tmxMap, mapData, cameraBounds, cameraPaths);
 		}
 
 		if (cameraBounds.size() > 0 || cameraPaths.size() > 0) {
@@ -776,7 +778,7 @@ static void processObjects(const TmxMapLib::Map tmxMap, World& world,
 			mapCamera.bounds = cameraBounds;
 			mapCamera.paths = cameraPaths;
 
-			mapCameras.push_back(mapCamera);
+			mapData.mapCameras.push_back(mapCamera);
 		}
 	}
 }
@@ -788,12 +790,6 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 	TmxMapLib::Map tmxMap = TmxMapLib::Map(filename);
 
 	initializeLayers(tmxMap.GetHeight() * tmxMap.GetTileHeight());
-
-	std::vector<MapCamera> mapCameras;
-	std::vector<PlayerStart> playerStarts;
-	processObjects(tmxMap, world, mapCameras, playerStarts);
-
-	std::vector<TileLayerData> tileLayerDatas;
 
 	MapData mapData;
 
@@ -826,6 +822,8 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 		++layerIndex;
 	}
 
+	processObjects(tmxMap, world, mapData);
+
 	MapMesh mapMesh;
 	buildMapMesh(mapData, mapMesh);
 
@@ -836,9 +834,10 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 
 	map->mapMesh = mapMesh;
 
-	map->setPlayerStarts(playerStarts);
+	map->setAmbientLights(mapData.ambientLights);
+	map->setPlayerStarts(mapData.playerStarts);
 
-	for (const MapCamera& mapCamera : mapCameras) {
+	for (const MapCamera& mapCamera : mapData.mapCameras) {
 		map->addCamera(mapCamera);
 	}
 

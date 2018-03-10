@@ -24,6 +24,10 @@ static EngineStartOptions processCommandLineArguments(int argc, char* argv[]) {
 			argsUsed = 1;
 		}
 
+		if (cmd == "-o" || cmd == "--opengl2") {
+			startOptions.openGl2 = true;
+		}
+
 		if (cmd == "-s" || cmd == "--skipintro") {
 			startOptions.skipIntro = true;
 		}

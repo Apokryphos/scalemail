@@ -4,6 +4,7 @@
 
 struct EngineStartOptions
 {
+	bool openGl2;
 	bool skipIntro;
 	std::string mapName;
 };

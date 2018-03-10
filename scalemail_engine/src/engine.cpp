@@ -129,7 +129,11 @@ int startEngine(EngineStartOptions startOptions) {
 
 	std::cout << "OpenGL v" << majorVersion << "." << minorVersion << std::endl;
 
-	if (majorVersion >= 3 && minorVersion >= 3) {
+	if (startOptions.openGl2) {
+		std::cout << "Forcing OpenGL 2.1 usage." << std::endl;
+	}
+
+	if (!startOptions.openGl2 && majorVersion >= 3 && minorVersion >= 3) {
 		//	OpenGL 3.3 - GLSL 330
 		renderOptions.shaderVersion = ShaderVersion::SHADER_VERSION_330;
 		renderOptions.fboSupported = true;

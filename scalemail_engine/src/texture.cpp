@@ -77,7 +77,8 @@ bool loadPngTexture(const std::string& filename, Texture& texture) {
 		GL_UNSIGNED_BYTE,
 		&image[0]);
 
-	glGenerateMipmap(GL_TEXTURE_2D);
+	//	OpenGL Version 3.0 onwards
+	// glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 

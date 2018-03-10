@@ -28,8 +28,12 @@ class AssetManager
 	SpriteShader mSpriteShader;
 	TileShader mTileShader;
 
+	std::string mShaderPath;
+
 	std::map<std::string, Texture> mTexturesByPath;
 	std::map<int, Texture> mTexturesById;
+
+	void loadShader(GLuint& shaderId, const std::string& shaderName);
 
 public:
 	AssetManager() = default;

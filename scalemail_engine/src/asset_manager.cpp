@@ -69,6 +69,8 @@ Texture AssetManager::getTextureById(const int textureId) {
 
 //  ============================================================================
 void AssetManager::initialize() {
+	mShaderPath = "assets/shaders/330/";
+
 	mMissingTexture = this->loadTexture("checker");
 
 	this->loadTexture("dirt_mask", "dirt");
@@ -77,38 +79,42 @@ void AssetManager::initialize() {
 
 	initQuadMesh(mQuadMesh);
 
-	initShaderProgram("assets/shaders/fade.vert", "assets/shaders/fade.frag",
-					  mFadeShader.id);
+	this->loadShader(mColorQuadShader.id, "color");
+	mColorQuadShader.mvpLocation =
+		glGetUniformLocation(mColorQuadShader.id, "MVP");
+
+	this->loadShader(mFadeShader.id, "fade");
 	mFadeShader.fadeColorLocation =
 		glGetUniformLocation(mFadeShader.id, "fadeColor");
 	mFadeShader.fadeProgressLocation =
 		glGetUniformLocation(mFadeShader.id, "fadeProgress");
 
-	initShaderProgram("assets/shaders/flat.vert", "assets/shaders/flat.frag",
-					  mQuadShader.id);
+	this->loadShader(mQuadShader.id, "flat");
 	mQuadShader.mvpLocation = glGetUniformLocation(mQuadShader.id, "MVP");
 
-	initShaderProgram("assets/shaders/color.vert", "assets/shaders/color.frag",
-					  mColorQuadShader.id);
-	mColorQuadShader.mvpLocation = glGetUniformLocation(mColorQuadShader.id, "MVP");
-
-	initShaderProgram("assets/shaders/line.vert", "assets/shaders/line.frag",
-					  mLineShader.id);
+	this->loadShader(mLineShader.id, "line");
 	mLineShader.mvpLocation = glGetUniformLocation(mLineShader.id, "MVP");
 
-	initShaderProgram("assets/shaders/particle.vert", "assets/shaders/particle.frag",
-					  mParticleShader.id);
-	mParticleShader.mvpLocation = glGetUniformLocation(mParticleShader.id, "MVP");
+	this->loadShader(mParticleShader.id, "particle");
+	mParticleShader.mvpLocation =
+		glGetUniformLocation(mParticleShader.id, "MVP");
 
-	initShaderProgram("assets/shaders/sprite.vert", "assets/shaders/sprite.frag",
-					  mSpriteShader.id);
+	this->loadShader(mSpriteShader.id, "sprite");
 	mSpriteShader.mvpLocation = glGetUniformLocation(mSpriteShader.id, "MVP");
-	mSpriteShader.alphaLocation = glGetUniformLocation(mSpriteShader.id, "alpha");
+	mSpriteShader.alphaLocation =
+		glGetUniformLocation(mSpriteShader.id, "alpha");
 
-	initShaderProgram("assets/shaders/tile.vert", "assets/shaders/tile.frag",
-					  mTileShader.id);
+	this->loadShader(mTileShader.id, "tile");
 	mTileShader.mvpLocation = glGetUniformLocation(mTileShader.id, "MVP");
 	mTileShader.timeLocation = glGetUniformLocation(mTileShader.id, "time");
+}
+
+//  ============================================================================
+void AssetManager::loadShader(GLuint& shaderId, const std::string& shaderName) {
+	initShaderProgram(
+		mShaderPath + shaderName + ".vert",
+		mShaderPath + shaderName + ".frag",
+		shaderId);
 }
 
 //  ============================================================================

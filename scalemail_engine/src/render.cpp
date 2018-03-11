@@ -138,8 +138,10 @@ void renderParticles(World& world, Camera& camera) {
 
 	glUseProgram(particleShader.id);
 	glUniformMatrix4fv(particleShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-	glBindVertexArray(mesh.vao);
-	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
+
+	drawMesh(mesh);
+	// glBindVertexArray(mesh.vao);
+	// glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
 }
 
 //	============================================================================

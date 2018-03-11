@@ -156,7 +156,7 @@ int startEngine(EngineStartOptions startOptions) {
 
 	//  Load map after all other initialize functions
 	World world;
-	world.initialize(&assetManager);
+	world.initialize(&assetManager, renderOptions);
 
 	std::string mapName =
 		startOptions.mapName.empty() ? "map1" : startOptions.mapName;

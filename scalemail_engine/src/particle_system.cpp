@@ -3,6 +3,7 @@
 #include "particle_system.hpp"
 #include "physics_system.hpp"
 #include "random.hpp"
+#include "render_options.hpp"
 #include "vector_util.hpp"
 
 namespace ScaleMail
@@ -135,11 +136,13 @@ Mesh& ParticleSystem::getMesh() {
 }
 
 //	============================================================================
-void ParticleSystem::initialize(Random& random) {
+void ParticleSystem::initialize(Random& random,
+								const RenderOptions& renderOptions) {
 	mRandom = &random;
 
 	//	Six vertices for every particle quad
-	initPositionColorMesh(mMesh, 6 * PARTICLE_RESERVE);
+	initMesh(mMesh, VertexDefinition::POSITION3_COLOR4, renderOptions,
+			 6 * PARTICLE_RESERVE);
 }
 
 //	============================================================================

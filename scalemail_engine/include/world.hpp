@@ -28,6 +28,7 @@ class PhysicsSystem;
 class Player;
 class PrefabFactory;
 class Random;
+struct RenderOptions;
 class SpriteSystem;
 class SpriteEffectSystem;
 class TeamSystem;
@@ -75,7 +76,7 @@ public:
 	SpriteEffectSystem& getSpriteEffectSystem();
 	TeamSystem& getTeamSystem();
 	TriggerSystem& getTriggerSystem();
-	void initialize(AssetManager* assetManager);
+	void initialize(AssetManager* assetManager, const RenderOptions& renderOptions);
 	void loadMap(const std::string& mapName);
 	void update(double totalElapsedSeconds, float elapsedSeconds);
 };

@@ -13,6 +13,7 @@ struct Entity;
 class EntityManager;
 class PhysicsSystem;
 class Random;
+struct RenderOptions;
 
 struct ParticleComponent {
 	ParticleComponent(const int index) { this->index = index; }
@@ -79,7 +80,7 @@ public:
 	void buildVertexData();
 	ParticleComponent getComponent(const Entity& entity) const;
 	Mesh& getMesh();
-	void initialize(Random& random);
+	void initialize(Random& random, const RenderOptions& renderOptions);
 	void setData(const ParticleComponent& cmpnt, const ParticleComponentData& data);
 	void update(PhysicsSystem& physicsSystem, float elapsedSeconds);
 };

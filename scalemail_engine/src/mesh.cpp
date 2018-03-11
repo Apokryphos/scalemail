@@ -52,7 +52,8 @@ void drawMesh(const Mesh& mesh) {
 
 //  ============================================================================
 bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
-			  const RenderOptions& renderOptions) {
+			  const RenderOptions& renderOptions,
+			  size_t vertexCapacity) {
 	if (renderOptions.vaoSupported) {
 		glGenVertexArrays(1, &mesh.vao);
 	} else {
@@ -61,10 +62,14 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 
 	glGenBuffers(1, &mesh.vbo);
 
-	mesh.elementCount = getVertexDefinitionElementCount(vertexDefinition);
+	const int elementCount = getVertexDefinitionElementCount(vertexDefinition);
+
+	const size_t bufferSize = vertexCapacity * elementCount * sizeof(float);
+
+	mesh.elementCount = elementCount;
 	mesh.primitive = GL_TRIANGLES;
 	mesh.vertexCount = 0;
-	mesh.vertexBufferSize = 0;
+	mesh.vertexBufferSize = bufferSize;
 	mesh.vertexDefinition = vertexDefinition;
 
 	if (renderOptions.vaoSupported) {
@@ -72,7 +77,7 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, NULL, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, bufferSize, NULL, GL_STATIC_DRAW);
 
 	if (renderOptions.vaoSupported) {
 		enableVertexAttributes(vertexDefinition);
@@ -86,37 +91,37 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 }
 
 //  ============================================================================
-bool initPositionColorMesh(Mesh& mesh, size_t vertexCapacity) {
-	glGenVertexArrays(1, &mesh.vao);
-	glGenBuffers(1, &mesh.vbo);
+// bool initPositionColorMesh(Mesh& mesh, size_t vertexCapacity) {
+// 	glGenVertexArrays(1, &mesh.vao);
+// 	glGenBuffers(1, &mesh.vbo);
 
-	const unsigned int ELEMENT_COUNT = 7;
+// 	const unsigned int ELEMENT_COUNT = 7;
 
-	mesh.elementCount = ELEMENT_COUNT;
-	mesh.primitive = GL_TRIANGLES;
-	mesh.vertexDefinition = VertexDefinition::POSITION3_COLOR4;
-	mesh.vertexCount = 0;
-	mesh.vertexBufferSize = vertexCapacity * ELEMENT_COUNT;
+// 	mesh.elementCount = ELEMENT_COUNT;
+// 	mesh.primitive = GL_TRIANGLES;
+// 	mesh.vertexDefinition = VertexDefinition::POSITION3_COLOR4;
+// 	mesh.vertexCount = 0;
+// 	mesh.vertexBufferSize = vertexCapacity * ELEMENT_COUNT;
 
-	glBindVertexArray(mesh.vao);
+// 	glBindVertexArray(mesh.vao);
 
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, mesh.vertexBufferSize, NULL, GL_STATIC_DRAW);
+// 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+// 	glBufferData(GL_ARRAY_BUFFER, mesh.vertexBufferSize, NULL, GL_STATIC_DRAW);
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * ELEMENT_COUNT, (void*) 0);
+// 	glEnableVertexAttribArray(0);
+// 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+// 						  sizeof(float) * ELEMENT_COUNT, (void*) 0);
 
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * ELEMENT_COUNT,
-						  (void*) (sizeof(float) * 3));
+// 	glEnableVertexAttribArray(1);
+// 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
+// 						  sizeof(float) * ELEMENT_COUNT,
+// 						  (void*) (sizeof(float) * 3));
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+// 	glBindVertexArray(0);
+// 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	return true;
-}
+// 	return true;
+// }
 
 //  ============================================================================
 bool initQuadMesh(Mesh& mesh) {

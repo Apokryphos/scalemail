@@ -25,6 +25,7 @@
 #include "player.hpp"
 #include "prefab_factory.hpp"
 #include "random.hpp"
+#include "render_options.hpp"
 #include "sprite.hpp"
 #include "sprite_system.hpp"
 #include "sprite_effect_system.hpp"
@@ -330,7 +331,8 @@ TriggerSystem& World::getTriggerSystem() {
 }
 
 //  ============================================================================
-void World::initialize(AssetManager* assetManager) {
+void World::initialize(AssetManager* assetManager,
+					   const RenderOptions& renderOptions) {
 	mSystems->spriteSystem.initialize(assetManager);
 	mSystems->lightSystem.initialize(*assetManager);
 	mSystems->doorSystem.initialize(mSystems->physicsSystem,
@@ -338,7 +340,7 @@ void World::initialize(AssetManager* assetManager) {
 	mSystems->bulletSystem.initialize(mSystems->damageSystem);
 	mSystems->burySystem.initialize(mImpl->random, mSystems->physicsSystem,
 									mSystems->spriteSystem);
-	mSystems->particleSystem.initialize(mImpl->random);
+	mSystems->particleSystem.initialize(mImpl->random, renderOptions);
 	mSystems->lootSystem.initialize(mSystems->inventorySystem);
 }
 

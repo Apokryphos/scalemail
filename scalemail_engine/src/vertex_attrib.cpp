@@ -39,8 +39,8 @@ void setVertexAttributePointers(const VertexDefinition def) {
 			break;
 
 		case VertexDefinition::POSITION3_COLOR4:
-			floatVertexAttribPointer(0, 3, 5, 0);
-			floatVertexAttribPointer(1, 4, 5, 3);
+			floatVertexAttribPointer(0, 3, 7, 0);
+			floatVertexAttribPointer(1, 4, 7, 3);
 			break;
 
 		case VertexDefinition::POSITION3_TEXTURE2:

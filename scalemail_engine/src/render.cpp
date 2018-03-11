@@ -84,8 +84,7 @@ void updateStencilBuffer(Camera& camera) {
 	//	Draw camera bounds quad
 	glUseProgram(colorQuadShader.id);
 	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-	glBindVertexArray(quadMesh.vao);
-	glDrawArrays(GL_TRIANGLES, 0, quadMesh.vertexCount);
+	drawMesh(quadMesh);
 
 	//	Disable writes stencil buffer
 	glStencilFunc(GL_EQUAL, 1, 0xFF);
@@ -124,8 +123,6 @@ void renderDebug(Game& game, Camera& camera) {
 			glUniformMatrix4fv(debugLineShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
 
 			drawMesh(debugLineMesh);
-			// glBindVertexArray(debugLineMesh.vao);
-			// glDrawArrays(GL_LINES, 0, debugLineMesh.vertexCount);
 		}
 	}
 }
@@ -144,8 +141,6 @@ void renderParticles(World& world, Camera& camera) {
 	glUniformMatrix4fv(particleShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
 
 	drawMesh(mesh);
-	// glBindVertexArray(mesh.vao);
-	// glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
 }
 
 //	============================================================================

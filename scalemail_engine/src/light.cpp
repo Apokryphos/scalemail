@@ -155,15 +155,17 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 	glUseProgram(quadShader.id);
 	glUniformMatrix4fv(quadShader.mvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
 	glBindTexture(GL_TEXTURE_2D, fboATexture);
-	glBindVertexArray(quadMesh.vao);
-	glDrawArrays(GL_TRIANGLES, 0, quadMesh.vertexCount);
+
+	enableMeshVertexAttribPointers(quadMesh);
+	glDrawArrays(quadMesh.primitive, 0, quadMesh.vertexCount);
 
 	//  Draw lights from FBO B to screen
 	blendModulate();
 	glBindTexture(GL_TEXTURE_2D, fboBTexture);
-	glDrawArrays(GL_TRIANGLES, 0, quadMesh.vertexCount);
+	glDrawArrays(quadMesh.primitive, 0, quadMesh.vertexCount);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	disableMeshVertexAttribPointers(quadMesh);
 }
 }

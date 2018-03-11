@@ -5,6 +5,15 @@
 
 namespace ScaleMail
 {
+static const std::vector<float> QUAD_VERTEX_DATA = {
+	 1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f, 1.0f, 0.0f,
+	 1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f, 1.0f, 1.0f,
+	-1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f, 0.0f, 0.0f,
+	 1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f, 1.0f, 1.0f,
+	-1.0f,  1.0f, 1.f, 1.f, 1.f, 1.f, 0.0f, 1.0f,
+	-1.0f, -1.0f, 1.f, 1.f, 1.f, 1.f, 0.0f, 0.0f
+};
+
 //  ============================================================================
 static std::string getTexturePath(std::string textureName) {
 	return "assets/textures/" + textureName + ".png";
@@ -89,7 +98,9 @@ void AssetManager::initialize(const RenderOptions& renderOptions) {
 	this->loadTexture("fx_mask", "fx");
 	this->loadTexture("world_mask", "world");
 
-	initQuadMesh(mQuadMesh);
+	initMesh(mQuadMesh, VertexDefinition::POSITION2_COLOR4_TEXTURE2,
+			 renderOptions);
+	setMeshVertexData(mQuadMesh, QUAD_VERTEX_DATA);
 
 	this->loadShader(mColorQuadShader.id, "color");
 	mColorQuadShader.mvpLocation =

@@ -42,6 +42,7 @@ public:
 	AiBehaviorFactory aiBehaviorFactory;
 	std::vector<Player> players;
 	PrefabFactory prefabFactory;
+	RenderOptions renderOptions;
 	Random random;
 };
 
@@ -333,6 +334,8 @@ TriggerSystem& World::getTriggerSystem() {
 //  ============================================================================
 void World::initialize(AssetManager* assetManager,
 					   const RenderOptions& renderOptions) {
+	mImpl->renderOptions = renderOptions;
+
 	mSystems->spriteSystem.initialize(assetManager);
 	mSystems->lightSystem.initialize(*assetManager);
 	mSystems->doorSystem.initialize(mSystems->physicsSystem,
@@ -351,7 +354,8 @@ bool World::entityIsAlive(const Entity& entity) {
 
 //  ============================================================================
 void World::loadMap(const std::string& mapName) {
-	mMap = ScaleMail::loadMap("assets/maps/" + mapName + ".tmx", *this);
+	mMap = ScaleMail::loadMap("assets/maps/" + mapName + ".tmx", *this,
+							  mImpl->renderOptions);
 
 	std::vector<PlayerStart> playerStarts = mMap->getPlayerStarts();
 

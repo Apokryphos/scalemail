@@ -44,23 +44,20 @@ void renderMap(const Map& map, const Camera& camera,
 	const Mesh& mesh = map.mapMesh.staticMesh;
 	if (mesh.vertexCount > 0) {
 		blendNone();
-		glBindVertexArray(mesh.vao);
-		glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
+		drawMesh(mesh);
 	}
 
 	const Mesh& alphaMesh = map.mapMesh.alphaMesh;
 	if (alphaMesh.vertexCount > 0) {
 		blendAlpha();
-		glBindVertexArray(alphaMesh.vao);
-		glDrawArrays(GL_TRIANGLES, 0, alphaMesh.vertexCount);
+		drawMesh(alphaMesh);
 	}
 
 	glEnable(GL_DEPTH_TEST);
 	const Mesh& animMesh = map.mapMesh.animatedMeshes[tileFrame];
 	if (animMesh.vertexCount > 0) {
 		blendAlpha();
-		glBindVertexArray(animMesh.vao);
-		glDrawArrays(GL_TRIANGLES, 0, animMesh.vertexCount);
+		drawMesh(animMesh);
 	}
 
 	const Mesh& scrollMesh = map.mapMesh.scrollMeshes[tileFrame];
@@ -68,12 +65,11 @@ void renderMap(const Map& map, const Camera& camera,
 		blendNone();
 		glUniform1f(tileShader.timeLocation, totalElapsedSeconds * 0.5f);
 		glBindTexture(GL_TEXTURE_2D, horzScrollTexture.id);
-		glBindVertexArray(scrollMesh.vao);
-		glDrawArrays(GL_TRIANGLES, 0, scrollMesh.vertexCount);
+		drawMesh(scrollMesh);
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindVertexArray(0);
+	disableMeshVertexAttribPointers(mesh);
 }
 
 //	============================================================================

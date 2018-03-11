@@ -226,37 +226,15 @@ static glm::vec4 hexToVec4(std::string input) {
 }
 
 //  ============================================================================
-static void createTileMeshBuffer(Mesh& mesh, std::vector<float>& meshVertexData) {
-	glGenVertexArrays(1, &mesh.vao);
-	glGenBuffers(1, &mesh.vbo);
-
-	const int elementCount = 5;
-
-	mesh.vertexCount = meshVertexData.size() / elementCount;
-	mesh.vertexBufferSize = meshVertexData.size();
-
-	glBindVertexArray(mesh.vao);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-
-	size_t vertexDataSize = sizeof(float) * meshVertexData.size();
-
-	glBufferData(GL_ARRAY_BUFFER, vertexDataSize,
-				 &meshVertexData[0], GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * elementCount, (void*) 0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * elementCount, (void*) (sizeof(float) * 3));
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+static void createTileMeshBuffer(Mesh& mesh, std::vector<float>& meshVertexData,
+								 const RenderOptions& renderOptions) {
+	initMesh(mesh, VertexDefinition::POSITION3_TEXTURE2, renderOptions);
+	setMeshVertexData(mesh, meshVertexData);
 }
 
 //  ============================================================================
-static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
+static void buildMapMesh(MapData& mapData, MapMesh& mapMesh,
+						 const RenderOptions& renderOptions) {
 	std::vector<float> staticVertexData;
 	std::vector<float> alphaVertexData;
 	std::vector<float> frame1VertexData;
@@ -341,12 +319,12 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh) {
 	Mesh scrollFrame1Mesh;
 	Mesh scrollFrame2Mesh;
 
-	createTileMeshBuffer(alphaMesh, alphaVertexData);
-	createTileMeshBuffer(staticMesh, staticVertexData);
-	createTileMeshBuffer(frame1Mesh, frame1VertexData);
-	createTileMeshBuffer(frame2Mesh, frame2VertexData);
-	createTileMeshBuffer(scrollFrame1Mesh, scrollFrame1VertexData);
-	createTileMeshBuffer(scrollFrame2Mesh, scrollFrame2VertexData);
+	createTileMeshBuffer(alphaMesh, alphaVertexData, renderOptions);
+	createTileMeshBuffer(staticMesh, staticVertexData, renderOptions);
+	createTileMeshBuffer(frame1Mesh, frame1VertexData, renderOptions);
+	createTileMeshBuffer(frame2Mesh, frame2VertexData, renderOptions);
+	createTileMeshBuffer(scrollFrame1Mesh, scrollFrame1VertexData, renderOptions);
+	createTileMeshBuffer(scrollFrame2Mesh, scrollFrame2VertexData, renderOptions);
 
 	mapMesh.alphaMesh = alphaMesh;
 	mapMesh.staticMesh = staticMesh;
@@ -784,7 +762,8 @@ static void processObjects(const TmxMapLib::Map tmxMap, World& world,
 }
 
 //  ============================================================================
-std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
+std::shared_ptr<Map> loadMap(const std::string filename, World& world,
+							 const RenderOptions& renderOptions) {
 	world.getPhysicsSystem().clearStaticObstacles();
 
 	TmxMapLib::Map tmxMap = TmxMapLib::Map(filename);
@@ -825,7 +804,7 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world) {
 	processObjects(tmxMap, world, mapData);
 
 	MapMesh mapMesh;
-	buildMapMesh(mapData, mapMesh);
+	buildMapMesh(mapData, mapMesh, renderOptions);
 
 	std::shared_ptr<Map> map =
 		std::make_shared<Map>(

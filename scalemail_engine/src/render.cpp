@@ -41,8 +41,10 @@ void initializeRender(AssetManager& assetManager,
 	particleShader = assetManager.getParticleShader();
 
 	debugLineShader = assetManager.getLineShader();
-	initLineMesh(debugLineMesh, {});
-	debugLineVertexData.reserve(500000);
+	// initLineMesh(debugLineMesh, {});
+	initMesh(debugLineMesh, VertexDefinition::POSITION2_COLOR4, renderOptions,
+			 5000, GL_LINES);
+	debugLineVertexData.reserve(5000);
 
 	initializeFont(assetManager, renderOptions);
 	initializeTransition(assetManager, renderOptions);
@@ -120,8 +122,10 @@ void renderDebug(Game& game, Camera& camera) {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glUseProgram(debugLineShader.id);
 			glUniformMatrix4fv(debugLineShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-			glBindVertexArray(debugLineMesh.vao);
-			glDrawArrays(GL_LINES, 0, debugLineMesh.vertexCount);
+
+			drawMesh(debugLineMesh);
+			// glBindVertexArray(debugLineMesh.vao);
+			// glDrawArrays(GL_LINES, 0, debugLineMesh.vertexCount);
 		}
 	}
 }

@@ -53,7 +53,8 @@ void drawMesh(const Mesh& mesh) {
 //  ============================================================================
 bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 			  const RenderOptions& renderOptions,
-			  size_t vertexCapacity) {
+			  size_t vertexCapacity,
+			  GLenum primitive) {
 	if (renderOptions.vaoSupported) {
 		glGenVertexArrays(1, &mesh.vao);
 	} else {
@@ -67,7 +68,7 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 	const size_t bufferSize = vertexCapacity * elementCount * sizeof(float);
 
 	mesh.elementCount = elementCount;
-	mesh.primitive = GL_TRIANGLES;
+	mesh.primitive = primitive;
 	mesh.vertexCount = 0;
 	mesh.vertexBufferSize = bufferSize;
 	mesh.vertexDefinition = vertexDefinition;
@@ -120,44 +121,6 @@ bool initQuadMesh(Mesh& mesh) {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
 						  sizeof(float) * QUAD_MESH_ELEMENT_COUNT,
 						  (void*) (sizeof(float) * 6));
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	return true;
-}
-
-//  ============================================================================
-bool initLineMesh(Mesh& mesh, const std::vector<float>& vertexData) {
-	glGenVertexArrays(1, &mesh.vao);
-	glGenBuffers(1, &mesh.vbo);
-
-	mesh.elementCount = LINE_MESH_ELEMENT_COUNT;
-	mesh.primitive = GL_TRIANGLES;
-	mesh.vertexCount = 0;
-	mesh.vertexBufferSize = 0;
-	mesh.vertexDefinition = VertexDefinition::POSITION2_COLOR4;
-
-	glBindVertexArray(mesh.vao);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-
-	if (vertexData.size() > 0) {
-		mesh.vertexCount = vertexData.size() / LINE_MESH_ELEMENT_COUNT;
-		mesh.vertexBufferSize = vertexData.size();
-
-		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float),
-					&vertexData[0], GL_STATIC_DRAW);
-	}
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * LINE_MESH_ELEMENT_COUNT, (void*) 0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
-						  sizeof(float) * LINE_MESH_ELEMENT_COUNT,
-						  (void*) (sizeof(float) * 2));
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

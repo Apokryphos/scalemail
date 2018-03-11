@@ -105,53 +105,53 @@ void SpriteBatch::buildQuadVertexData(
 		vertexData[v++] = position[s].x + size[s].x * quadA.x;
 		vertexData[v++] = position[s].y + size[s].y * quadA.y;
 		vertexData[v++] = position[s].z;
-		//	UV
-		vertexData[v++] = 0.0f;
-		vertexData[v++] = 1.0f;
 		//	Color
 		vertexData[v++] = color[s].r;
 		vertexData[v++] = color[s].g;
 		vertexData[v++] = color[s].b;
 		vertexData[v++] = color[s].a;
+		//	UV
+		vertexData[v++] = 0.0f;
+		vertexData[v++] = 1.0f;
 
 		//	Position
 		vertexData[v++] = position[s].x + size[s].x * quadB.x;
 		vertexData[v++] = position[s].y + size[s].y * quadB.y;
 		vertexData[v++] = position[s].z;
-		//	UV
-		vertexData[v++] = 0.0f;
-		vertexData[v++] = 0.0f;
 		//	Color
 		vertexData[v++] = color[s].r;
 		vertexData[v++] = color[s].g;
 		vertexData[v++] = color[s].b;
 		vertexData[v++] = color[s].a;
+		//	UV
+		vertexData[v++] = 0.0f;
+		vertexData[v++] = 0.0f;
 
 		//	Position
 		vertexData[v++] = position[s].x + size[s].x * quadC.x;
 		vertexData[v++] = position[s].y + size[s].y * quadC.y;
 		vertexData[v++] = position[s].z;
-		//	UV
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 0.0f;
 		//	Color
 		vertexData[v++] = color[s].r;
 		vertexData[v++] = color[s].g;
 		vertexData[v++] = color[s].b;
 		vertexData[v++] = color[s].a;
+		//	UV
+		vertexData[v++] = 1.0f;
+		vertexData[v++] = 0.0f;
 
 		//	Position
 		vertexData[v++] = position[s].x + size[s].x * quadD.x;
 		vertexData[v++] = position[s].y + size[s].y * quadD.y;
 		vertexData[v++] = position[s].z;
-		//	UV
-		vertexData[v++] = 1.0f;
-		vertexData[v++] = 1.0f;
 		//	Color
 		vertexData[v++] = color[s].r;
 		vertexData[v++] = color[s].g;
 		vertexData[v++] = color[s].b;
 		vertexData[v++] = color[s].a;
+		//	UV
+		vertexData[v++] = 1.0f;
+		vertexData[v++] = 1.0f;
 
 		//	Indices
 		indexData[e++] = vertex;
@@ -225,53 +225,53 @@ void SpriteBatch::buildTileVertexData(
 	vertexData[v++] = position.x + size.x * quadA.x;
 	vertexData[v++] = position.y + size.y * quadA.y;
 	vertexData[v++] = 0.0f;
-	//	UV
-	vertexData[v++] = uv1.x;
-	vertexData[v++] = uv2.y;
 	//	Color
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
+	//	UV
+	vertexData[v++] = uv1.x;
+	vertexData[v++] = uv2.y;
 
 	//	Position
 	vertexData[v++] = position.x + size.x * quadB.x;
 	vertexData[v++] = position.y + size.y * quadB.y;
 	vertexData[v++] = 0.0f;
-	//	UV
-	vertexData[v++] = uv1.x;
-	vertexData[v++] = uv1.y;
 	//	Color
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
+	//	UV
+	vertexData[v++] = uv1.x;
+	vertexData[v++] = uv1.y;
 
 	//	Position
 	vertexData[v++] = position.x + size.x * quadC.x;
 	vertexData[v++] = position.y + size.y * quadC.y;
 	vertexData[v++] = 0.0f;
-	//	UV
-	vertexData[v++] = uv2.x;
-	vertexData[v++] = uv1.y;
 	//	Color
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
+	//	UV
+	vertexData[v++] = uv2.x;
+	vertexData[v++] = uv1.y;
 
 	//	Position
 	vertexData[v++] = position.x + size.x * quadD.x;
 	vertexData[v++] = position.y + size.y * quadD.y;
 	vertexData[v++] = 0.0f;
-	//	UV
-	vertexData[v++] = uv2.x;
-	vertexData[v++] = uv2.y;
 	//	Color
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
+	//	UV
+	vertexData[v++] = uv2.x;
+	vertexData[v++] = uv2.y;
 
 	indexData[e++] = vertex;
 	indexData[e++] = vertex + 1;
@@ -362,53 +362,53 @@ void SpriteBatch::buildSpriteVertexData(
 		vertexData[v++] = positionX[s] + sizeX[s] * quadA.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadA.y;
 		vertexData[v++] = positionZ[s] * sizeY[s] * quadA.z;
-		//	UV
-		vertexData[v++] = texU1[s];
-		vertexData[v++] = texV2[s];
 		//	Color
 		vertexData[v++] = colorR[s];
 		vertexData[v++] = colorG[s];
 		vertexData[v++] = colorB[s];
 		vertexData[v++] = colorA[s];
+		//	UV
+		vertexData[v++] = texU1[s];
+		vertexData[v++] = texV2[s];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadB.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadB.y;
 		vertexData[v++] = positionZ[s] * sizeY[s] * quadB.z;
-		//	UV
-		vertexData[v++] = texU1[s];
-		vertexData[v++] = texV1[s];
 		//	Color
 		vertexData[v++] = colorR[s];
 		vertexData[v++] = colorG[s];
 		vertexData[v++] = colorB[s];
 		vertexData[v++] = colorA[s];
+		//	UV
+		vertexData[v++] = texU1[s];
+		vertexData[v++] = texV1[s];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadC.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadC.y;
 		vertexData[v++] = positionZ[s] * sizeY[s] * quadC.z;
-		//	UV
-		vertexData[v++] = texU2[s];
-		vertexData[v++] = texV1[s];
 		//	Color
 		vertexData[v++] = colorR[s];
 		vertexData[v++] = colorG[s];
 		vertexData[v++] = colorB[s];
 		vertexData[v++] = colorA[s];
+		//	UV
+		vertexData[v++] = texU2[s];
+		vertexData[v++] = texV1[s];
 
 		//	Position
 		vertexData[v++] = positionX[s] + sizeX[s] * quadD.x;
 		vertexData[v++] = positionY[s] + sizeY[s] * quadD.y;
 		vertexData[v++] = positionZ[s] * sizeY[s] * quadD.z;
-		//	UV
-		vertexData[v++] = texU2[s];
-		vertexData[v++] = texV2[s];
 		//	Color
 		vertexData[v++] = colorR[s];
 		vertexData[v++] = colorG[s];
 		vertexData[v++] = colorB[s];
 		vertexData[v++] = colorA[s];
+		//	UV
+		vertexData[v++] = texU2[s];
+		vertexData[v++] = texV2[s];
 
 		indexData[e++] = vertex;
 		indexData[e++] = vertex + 1;
@@ -453,14 +453,17 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 			sizeof(GLfloat)),
 		NULL,
 		GL_STREAM_DRAW);
+
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(
-		1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+		1, 4, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(
-		2, 4, GL_FLOAT, GL_FALSE, stride, (void*)(5 * sizeof(float)));
+		2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(7 * sizeof(float)));
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

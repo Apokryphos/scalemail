@@ -35,7 +35,6 @@ void renderMap(const Map& map, const Camera& camera,
 
 	glEnable(GL_DEPTH_TEST);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glUseProgram(tileShader.id);
 	glUniform1f(tileShader.timeLocation, 0);
 	glUniformMatrix4fv(tileShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);

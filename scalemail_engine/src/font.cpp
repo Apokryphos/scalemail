@@ -174,7 +174,6 @@ void renderText(const GameWindow& gameWindow) {
 
 	setMeshVertexData(mesh, fontVertexData);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, gameWindow.width, gameWindow.height);
 
 	glUseProgram(quadShader.id);

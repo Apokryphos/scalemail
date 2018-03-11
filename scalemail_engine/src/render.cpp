@@ -118,7 +118,6 @@ void renderDebug(Game& game, Camera& camera) {
 
 			setMeshVertexData(debugLineMesh, debugLineVertexData);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glUseProgram(debugLineShader.id);
 			glUniformMatrix4fv(debugLineShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
 
@@ -149,7 +148,10 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	GameWindow& gameWindow = game.gameWindow;
 	GLFWwindow* window = gameWindow.window;
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	if (game.renderOptions.fboSupported) {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	glfwGetFramebufferSize(window, &gameWindow.width, &gameWindow.height);
 
 	glViewport(0, 0, gameWindow.width, gameWindow.height);
@@ -172,6 +174,7 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 
 	if (game.renderOptions.lightsEnabled) {
 		renderLight(gameWindow, camera, world.getLightSystem());
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	renderTransition();

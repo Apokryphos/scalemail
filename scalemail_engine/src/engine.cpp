@@ -87,9 +87,9 @@ int startEngine(EngineStartOptions startOptions) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-	const int screenWidth = 1024;
-	const int screenHeight = 1024;
-	const float cameraZoom = 4.0f;
+	const int screenWidth = startOptions.screenWidth;
+	const int screenHeight = startOptions.screenHeight;
+	const float cameraZoom = (screenWidth / 256.0f);
 
 	GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "ScaleMail",
 										  NULL, NULL);

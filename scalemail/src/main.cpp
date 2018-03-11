@@ -5,6 +5,8 @@ using namespace ScaleMail;
 //  ============================================================================
 static EngineStartOptions processCommandLineArguments(int argc, char* argv[]) {
 	EngineStartOptions startOptions = {};
+	startOptions.screenWidth = 1024;
+	startOptions.screenHeight = 1024;
 
 	int c = 1;
 
@@ -14,6 +16,12 @@ static EngineStartOptions processCommandLineArguments(int argc, char* argv[]) {
 		int argsUsed = 0;
 
 		std::string cmd(argv[c]);
+
+		if ((cmd == "-h" || cmd == "--height") && argsLeft >= 1) {
+			startOptions.screenHeight = std::stoi(std::string(argv[c + 1]));
+
+			argsUsed = 1;
+		}
 
 		if ((cmd == "-m" || cmd == "--map") && argsLeft >= 1) {
 			startOptions.mapName = std::string(argv[c + 1]);
@@ -30,6 +38,12 @@ static EngineStartOptions processCommandLineArguments(int argc, char* argv[]) {
 
 		if (cmd == "-s" || cmd == "--skipintro") {
 			startOptions.skipIntro = true;
+		}
+
+		if ((cmd == "-w" || cmd == "--width") && argsLeft >= 1) {
+			startOptions.screenWidth = std::stoi(std::string(argv[c + 1]));
+
+			argsUsed = 1;
 		}
 
 		c += 1 + argsUsed;

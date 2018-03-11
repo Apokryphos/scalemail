@@ -2,9 +2,9 @@
 
 uniform mat4 MVP;
 
-attribute in vec3 vPos;
-attribute in vec4 vCol;
-attribute in vec2 vTex;
+attribute vec3 vPos;
+attribute vec4 vCol;
+attribute vec2 vTex;
 
 varying vec4 color;
 varying vec2 texCoord;

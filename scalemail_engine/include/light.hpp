@@ -6,7 +6,10 @@ class AssetManager;
 class Camera;
 struct GameWindow;
 class LightSystem;
+struct RenderOptions;
 
-void initializeLight(AssetManager& assetManager);
-void renderLight(GameWindow& gameWindow, Camera& camera, LightSystem& lightSystem);
+void initializeLight(AssetManager& assetManager,
+					 const RenderOptions& renderOptions);
+void renderLight(GameWindow& gameWindow, Camera& camera,
+				 LightSystem& lightSystem);
 }

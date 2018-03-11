@@ -55,14 +55,15 @@ static void destroyFramebuffer(GLuint& fbo, GLuint& fboTexture) {
 }
 
 //  ============================================================================
-void initializeLight(AssetManager& assetManager) {
+void initializeLight(AssetManager& assetManager,
+					 const RenderOptions& renderOptions) {
 	quadShader = assetManager.getQuadShader();
 	colorQuadShader = assetManager.getColorQuadShader();
 
 	quadMesh = assetManager.getQuadMesh();
 
-	lightSpriteBatch.initialize(assetManager);
-	glowSpriteBatch.initialize(assetManager);
+	lightSpriteBatch.initialize(assetManager, renderOptions);
+	glowSpriteBatch.initialize(assetManager, renderOptions);
 
 	lightTexture = assetManager.loadTexture("light");
 

@@ -71,7 +71,8 @@ void setSpriteAnimation(SpriteAnimation& animation,
 }
 
 //  ============================================================================
-void initializeSprites(AssetManager& assetManager) {
+void initializeSprites(AssetManager& assetManager,
+					   const RenderOptions& renderOptions) {
 	assetManager.loadTexture("world");
 	assetManager.loadTexture("actors");
 	assetManager.loadTexture("fx");
@@ -81,7 +82,7 @@ void initializeSprites(AssetManager& assetManager) {
 	assetManager.loadTexture("actors_mask");
 	assetManager.loadTexture("items_mask");
 
-	spriteBatch.initialize(assetManager);
+	spriteBatch.initialize(assetManager, renderOptions);
 }
 
 //  ============================================================================

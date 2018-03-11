@@ -17,8 +17,9 @@ void Gui::draw(Game& game) {
 }
 
 //	============================================================================
-void Gui::initialize(AssetManager& assetManager) {
-	mSpriteBatch.initialize(assetManager);
+void Gui::initialize(AssetManager& assetManager,
+					 const RenderOptions& renderOptions) {
+	mSpriteBatch.initialize(assetManager, renderOptions);
 	mPauseGuiScreen.initialize(assetManager);
 	mPlayerHudGuiScreen.initialize(assetManager);
 }

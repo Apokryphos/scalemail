@@ -48,12 +48,12 @@ void initializeRender(AssetManager& assetManager,
 
 	initializeFont(assetManager, renderOptions);
 	initializeTransition(assetManager, renderOptions);
-	initializeSprites(assetManager);
+	initializeSprites(assetManager, renderOptions);
 	initializeMapMesh(assetManager);
 	initializeAmbientLights(renderOptions);
 
 	if (renderOptions.fboSupported) {
-		initializeLight(assetManager);
+		initializeLight(assetManager, renderOptions);
 	}
 }
 

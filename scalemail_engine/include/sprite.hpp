@@ -10,6 +10,7 @@ namespace ScaleMail
 {
 class AssetManager;
 class Camera;
+struct RenderOptions;
 class SpriteSystem;
 class SpriteEffectSystem;
 
@@ -23,7 +24,8 @@ struct Sprite {
 };
 
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
-void initializeSprites(AssetManager& assetManager);
+void initializeSprites(AssetManager& assetManager,
+					   const RenderOptions& renderOptions);
 void renderSprites(
 	SpriteSystem& spriteSystem,
 	SpriteEffectSystem& spriteEffectSystem,

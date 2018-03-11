@@ -9,6 +9,7 @@
 namespace ScaleMail
 {
 class AssetManager;
+struct RenderOptions;
 class Tileset;
 
 class SpriteBatch
@@ -93,7 +94,8 @@ public:
 		const glm::vec2& size, bool alpha);
 
 	void end();
-	void initialize(AssetManager& assetManager);
+	void initialize(AssetManager& assetManager,
+					const RenderOptions& renderOptions);
 	void setAlpha(float alpha);
 	void render(const glm::mat4& transform);
 };

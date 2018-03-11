@@ -1,6 +1,7 @@
 #include "asset_manager.hpp"
 #include "gl_headers.hpp"
 #include "math_util.hpp"
+#include "render_options.hpp"
 #include "sprite_batch.hpp"
 #include "texture.hpp"
 #include <glm/gtc/type_ptr.hpp>
@@ -29,6 +30,27 @@ static const glm::vec2 gTileVertices[] = {
 	glm::vec2( 1.0f, 1.0f),
 	glm::vec2( 1.0f, 0.0f),
 };
+
+//	===========================================================================
+static void disableVertexAttributes() {
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+}
+
+//	===========================================================================
+static void enableVertexAttributes(const GLsizei stride) {
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(
+		1, 4, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(
+		2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(7 * sizeof(float)));
+}
 
 //	===========================================================================
 SpriteBatch::SpriteBatch() {}
@@ -424,17 +446,25 @@ void SpriteBatch::buildSpriteVertexData(
 void SpriteBatch::end() {}
 
 //	===========================================================================
-void SpriteBatch::initialize(AssetManager& assetManager) {
+void SpriteBatch::initialize(AssetManager& assetManager,
+							 const RenderOptions& renderOptions) {
 	const GLsizei stride =
 		static_cast<GLsizei>(VertexElementCount * sizeof(GLfloat));
 
 	mShader = assetManager.getSpriteShader();
 
-	glGenVertexArrays(1, &mVao);
+	if (renderOptions.vaoSupported) {
+		glGenVertexArrays(1, &mVao);
+	} else {
+		mVao = 0;
+	}
+
 	glGenBuffers(1, &mVertexBuffer);
 	glGenBuffers(1, &mIndexBuffer);
 
-	glBindVertexArray(mVao);
+	if (renderOptions.vaoSupported) {
+		glBindVertexArray(mVao);
+	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
 	glBufferData(
@@ -454,20 +484,27 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 		NULL,
 		GL_STREAM_DRAW);
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+	enableVertexAttributes(stride);
 
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(
-		1, 4, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+	// glEnableVertexAttribArray(0);
+	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
 
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(
-		2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(7 * sizeof(float)));
+	// glEnableVertexAttribArray(1);
+	// glVertexAttribPointer(
+	// 	1, 4, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
 
-	glBindVertexArray(0);
+	// glEnableVertexAttribArray(2);
+	// glVertexAttribPointer(
+	// 	2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(7 * sizeof(float)));
+
+	if (renderOptions.vaoSupported) {
+		glBindVertexArray(0);
+	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	disableVertexAttributes();
 }
 
 //	===========================================================================
@@ -476,7 +513,16 @@ void SpriteBatch::render(const glm::mat4& transform) {
 	glUniformMatrix4fv(mShader.mvpLocation, 1, GL_FALSE, &transform[0][0]);
 	glUniform1f(mShader.alphaLocation, mAlpha);
 
-	glBindVertexArray(mVao);
+	const GLsizei stride =
+		static_cast<GLsizei>(VertexElementCount * sizeof(GLfloat));
+
+	if (mVao != 0) {
+		glBindVertexArray(mVao);
+	} else {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+		enableVertexAttributes(stride);
+	}
 
 	//	Orphan buffer (or reallocate if too small)
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -498,7 +544,12 @@ void SpriteBatch::render(const glm::mat4& transform) {
 	this->renderBatches(mBatchByTexture, false);
 	this->renderBatches(mAlphaBatchByTexture, true);
 
-	glBindVertexArray(0);
+	if (mVao != 0) {
+		glBindVertexArray(0);
+	} else {
+		disableVertexAttributes();
+	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

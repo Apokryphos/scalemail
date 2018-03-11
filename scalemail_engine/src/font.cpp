@@ -64,8 +64,9 @@ void drawCenterText(const glm::vec2 position, const std::string& text,
 }
 
 //	============================================================================
-void initializeFont(AssetManager& assetManager) {
-	initQuadMesh(mesh);
+void initializeFont(AssetManager& assetManager,
+					const RenderOptions& renderOptions) {
+	initMesh(mesh, VertexDefinition::POSITION2_COLOR4_TEXTURE2, renderOptions);
 
 	fontTexture = assetManager.loadTexture("font");
 
@@ -180,9 +181,7 @@ void renderText(const GameWindow& gameWindow) {
 	glUniformMatrix4fv(quadShader.mvpLocation, 1, GL_FALSE, &projection[0][0]);
 
 	glBindTexture(GL_TEXTURE_2D, fontTexture.id);
-	glBindVertexArray(mesh.vao);
-	glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
-	glBindVertexArray(0);
+	drawMesh(mesh);
 
 	drawTextData.resize(0);
 	fontVertexData.resize(0);

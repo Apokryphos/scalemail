@@ -1,4 +1,5 @@
 #include "asset_manager.hpp"
+#include "render_options.hpp"
 #include "shader.hpp"
 #include <iostream>
 
@@ -68,8 +69,8 @@ Texture AssetManager::getTextureById(const int textureId) {
 }
 
 //  ============================================================================
-void AssetManager::initialize(const ShaderVersion shaderVersion) {
-	switch (shaderVersion) {
+void AssetManager::initialize(const RenderOptions& renderOptions) {
+	switch (renderOptions.shaderVersion) {
 		case ShaderVersion::SHADER_VERSION_120:
 			mShaderPath = "assets/shaders/120/";
 			break;

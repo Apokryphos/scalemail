@@ -150,7 +150,7 @@ int startEngine(EngineStartOptions startOptions) {
 	loadCursor(window);
 
 	AssetManager assetManager;
-	assetManager.initialize(renderOptions.shaderVersion);
+	assetManager.initialize(renderOptions);
 
 	initializeRender(assetManager, renderOptions);
 

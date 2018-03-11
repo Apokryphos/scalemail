@@ -91,39 +91,6 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 }
 
 //  ============================================================================
-// bool initPositionColorMesh(Mesh& mesh, size_t vertexCapacity) {
-// 	glGenVertexArrays(1, &mesh.vao);
-// 	glGenBuffers(1, &mesh.vbo);
-
-// 	const unsigned int ELEMENT_COUNT = 7;
-
-// 	mesh.elementCount = ELEMENT_COUNT;
-// 	mesh.primitive = GL_TRIANGLES;
-// 	mesh.vertexDefinition = VertexDefinition::POSITION3_COLOR4;
-// 	mesh.vertexCount = 0;
-// 	mesh.vertexBufferSize = vertexCapacity * ELEMENT_COUNT;
-
-// 	glBindVertexArray(mesh.vao);
-
-// 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-// 	glBufferData(GL_ARRAY_BUFFER, mesh.vertexBufferSize, NULL, GL_STATIC_DRAW);
-
-// 	glEnableVertexAttribArray(0);
-// 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-// 						  sizeof(float) * ELEMENT_COUNT, (void*) 0);
-
-// 	glEnableVertexAttribArray(1);
-// 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
-// 						  sizeof(float) * ELEMENT_COUNT,
-// 						  (void*) (sizeof(float) * 3));
-
-// 	glBindVertexArray(0);
-// 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-// 	return true;
-// }
-
-//  ============================================================================
 bool initQuadMesh(Mesh& mesh) {
 	glGenVertexArrays(1, &mesh.vao);
 	glGenBuffers(1, &mesh.vbo);

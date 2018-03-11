@@ -25,7 +25,6 @@ static const unsigned int QUAD_MESH_ELEMENT_COUNT = 8;
 void drawMesh(const Mesh& mesh);
 bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 			  const RenderOptions& renderOptions);
-bool initColorQuadMesh(Mesh& mesh);
 bool initPositionColorMesh(Mesh& mesh, size_t vertexCapacity);
 bool initQuadMesh(Mesh& mesh);
 bool initLineMesh(Mesh& mesh, const std::vector<float>& vertexData);

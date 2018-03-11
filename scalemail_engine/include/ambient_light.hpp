@@ -5,6 +5,8 @@
 
 namespace ScaleMail
 {
+struct RenderOptions;
+
 struct AmbientLight
 {
 	glm::vec4 color;
@@ -13,5 +15,5 @@ struct AmbientLight
 
 void buildAmbientLights(const std::vector<AmbientLight>& lights);
 void drawAmbientLights();
-void initializeAmbientLights();
+void initializeAmbientLights(const RenderOptions& renderOptions);
 }

@@ -1,6 +1,7 @@
 #include "ambient_light.hpp"
 #include "camera.hpp"
 #include "mesh.hpp"
+#include "render_options.hpp"
 #include "vertex_data.hpp"
 #include "world.hpp"
 #include <glm/vec4.hpp>
@@ -8,14 +9,13 @@
 
 namespace ScaleMail
 {
-static const unsigned int LIGHT_MESH_ELEMENT_COUNT = COLOR_QUAD_ELEMENT_COUNT;
-
 static Mesh ambientLightMesh;
 static std::vector<float> ambientLightVertexData;
 
 //  ============================================================================
-void initializeAmbientLights() {
-	initColorQuadMesh(ambientLightMesh);
+void initializeAmbientLights(const RenderOptions& renderOptions) {
+	initMesh(ambientLightMesh, VertexDefinition::POSITION2_COLOR4,
+			 renderOptions);
 }
 
 //  ============================================================================
@@ -34,7 +34,6 @@ void buildAmbientLights(const std::vector<AmbientLight>& lights) {
 
 //  ============================================================================
 void drawAmbientLights() {
-	glBindVertexArray(ambientLightMesh.vao);
-	glDrawArrays(GL_TRIANGLES, 0, ambientLightMesh.vertexCount);
+	drawMesh(ambientLightMesh);
 }
 }

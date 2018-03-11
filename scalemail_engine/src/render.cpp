@@ -48,7 +48,7 @@ void initializeRender(AssetManager& assetManager,
 	initializeTransition(assetManager, renderOptions);
 	initializeSprites(assetManager);
 	initializeMapMesh(assetManager);
-	initializeAmbientLights();
+	initializeAmbientLights(renderOptions);
 
 	if (renderOptions.fboSupported) {
 		initializeLight(assetManager);

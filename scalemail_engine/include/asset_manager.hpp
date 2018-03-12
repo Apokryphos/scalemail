@@ -5,6 +5,7 @@
 #include "quad_shader.hpp"
 #include "line_shader.hpp"
 #include "mesh.hpp"
+#include "render_caps.hpp"
 #include "sprite_shader.hpp"
 #include "texture.hpp"
 #include "tile_shader.hpp"
@@ -18,6 +19,8 @@ struct RenderOptions;
 
 class AssetManager
 {
+	RenderCaps mRenderCaps;
+
 	Texture mMissingTexture;
 
 	Mesh mQuadMesh;
@@ -51,7 +54,8 @@ public:
 	Tileset getTileset(const std::string textureName);
 	TileShader getTileShader();
 	Texture getTextureById(const int textureId);
-	void initialize(const RenderOptions& renderOptions);
+	void initialize(const RenderCaps& renderCaps,
+					const RenderOptions& renderOptions);
 	Texture loadTexture(const std::string textureName);
 	Texture loadTexture(
 		const std::string textureName,

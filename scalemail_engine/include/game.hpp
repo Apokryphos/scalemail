@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game_window.hpp"
+#include "render_caps.hpp"
 #include "render_options.hpp"
 #include "shader_version.hpp"
 
@@ -32,6 +33,7 @@ struct Game
 	double speed;
 
 	DevOptions devOptions;
+	RenderCaps renderCaps;
 	RenderOptions renderOptions;
 
 	Camera* camera;

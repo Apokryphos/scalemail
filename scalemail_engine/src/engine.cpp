@@ -119,6 +119,7 @@ int startEngine(EngineStartOptions startOptions) {
 	glfwSwapInterval(0);
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
+	RenderCaps renderCaps = {};
 	RenderOptions renderOptions = {};
 
 	const int majorVersion =
@@ -135,6 +136,9 @@ int startEngine(EngineStartOptions startOptions) {
 
 	if (!startOptions.openGl2 && majorVersion >= 3 && minorVersion >= 3) {
 		//	OpenGL 3.3 - GLSL 330
+		renderCaps.shaderVersion = ShaderVersion::SHADER_VERSION_330;
+		renderCaps.fboSupported = true;
+
 		renderOptions.shaderVersion = ShaderVersion::SHADER_VERSION_330;
 		renderOptions.fboSupported = true;
 		renderOptions.lightsEnabled = true;
@@ -142,6 +146,7 @@ int startEngine(EngineStartOptions startOptions) {
 		std::cout << "Using GLSL 330 shaders." << std::endl;
 	} else {
 		//	OpenGL 2.1 - GLSL 120
+		renderCaps.shaderVersion = ShaderVersion::SHADER_VERSION_120;
 		renderOptions.shaderVersion = ShaderVersion::SHADER_VERSION_120;
 
 		std::cout << "Using GLSL 120 shaders." << std::endl;
@@ -150,7 +155,7 @@ int startEngine(EngineStartOptions startOptions) {
 	loadCursor(window);
 
 	AssetManager assetManager;
-	assetManager.initialize(renderOptions);
+	assetManager.initialize(renderCaps, renderOptions);
 
 	initializeRender(assetManager, renderOptions);
 
@@ -172,6 +177,7 @@ int startEngine(EngineStartOptions startOptions) {
 	Game game = {};
 	game.devOptions.enabled = true;
 	game.devOptions.stepCount = 1;
+	game.renderCaps = renderCaps;
 	game.renderOptions = renderOptions;
 	game.camera = &camera;
 	game.gameWindow.window = window;

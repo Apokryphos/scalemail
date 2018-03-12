@@ -78,7 +78,10 @@ Texture AssetManager::getTextureById(const int textureId) {
 }
 
 //  ============================================================================
-void AssetManager::initialize(const RenderOptions& renderOptions) {
+void AssetManager::initialize(const RenderCaps& renderCaps,
+							  const RenderOptions& renderOptions) {
+	mRenderCaps = renderCaps;
+
 	switch (renderOptions.shaderVersion) {
 		case ShaderVersion::SHADER_VERSION_120:
 			mShaderPath = "assets/shaders/120/";

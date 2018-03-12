@@ -47,7 +47,7 @@ void initializeRender(AssetManager& assetManager,
 	debugLineVertexData.reserve(5000);
 
 	initializeFont(assetManager, renderOptions);
-	initializeTransition(assetManager, renderOptions);
+	initializeTransition(assetManager);
 	initializeSprites(assetManager, renderOptions);
 	initializeMapMesh(assetManager);
 	initializeAmbientLights(renderOptions);

@@ -136,6 +136,12 @@ void AssetManager::initialize(const RenderCaps& renderCaps,
 }
 
 //  ============================================================================
+void AssetManager::initializeMesh(Mesh& mesh,
+								  const VertexDefinition& vertexDefinition) {
+	initMesh(mesh, vertexDefinition, mRenderCaps.vaoSupported);
+}
+
+//  ============================================================================
 void AssetManager::loadShader(GLuint& shaderId, const std::string& shaderName) {
 	initShaderProgram(
 		mShaderPath + shaderName + ".vert",

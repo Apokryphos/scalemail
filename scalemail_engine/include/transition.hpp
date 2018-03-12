@@ -3,7 +3,6 @@
 namespace ScaleMail
 {
 class AssetManager;
-struct RenderOptions;
 
 enum class TransitionState {
 	NONE,
@@ -13,8 +12,7 @@ enum class TransitionState {
 };
 
 void addTransitionTime(float elapsedSeconds);
-void initializeTransition(AssetManager& assetManager,
-						  const RenderOptions& renderOptions);
+void initializeTransition(AssetManager& assetManager);
 void renderTransition();
 void setTransitionState(TransitionState state);
 void setTransitionDuration(float duration);

@@ -25,6 +25,10 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 			  const RenderOptions& renderOptions,
 			  size_t vertexCapacity = 6,
 			  GLenum primitive = GL_TRIANGLES);
+bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
+			  bool vaoSupported,
+			  size_t vertexCapacity = 6,
+			  GLenum primitive = GL_TRIANGLES);
 bool initQuadMesh(Mesh& mesh);
 void setMeshVertexData(Mesh& mesh, const std::vector<float>& vertexData);
 }

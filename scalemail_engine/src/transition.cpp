@@ -96,11 +96,9 @@ void addTransitionTime(float elapsedSeconds) {
 }
 
 //	============================================================================
-void initializeTransition(AssetManager& assetManager,
-						  const RenderOptions& renderOptions) {
+void initializeTransition(AssetManager& assetManager) {
 	fadeShader = assetManager.getFadeShader();
-
-	initMesh(mesh, VertexDefinition::POSITION2, renderOptions);
+	assetManager.initializeMesh(mesh, VertexDefinition::POSITION2);
 	setMeshVertexData(mesh, FADE_QUAD_VERTEX_DATA);
 }
 

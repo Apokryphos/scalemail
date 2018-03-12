@@ -38,10 +38,10 @@ void drawMesh(const Mesh& mesh) {
 
 //  ============================================================================
 bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
-			  const RenderOptions& renderOptions,
+			  bool vaoSupported,
 			  size_t vertexCapacity,
 			  GLenum primitive) {
-	if (renderOptions.vaoSupported) {
+	if (vaoSupported) {
 		glGenVertexArrays(1, &mesh.vao);
 	} else {
 		mesh.vao = 0;
@@ -59,14 +59,14 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 	mesh.vertexBufferSize = bufferSize;
 	mesh.vertexDefinition = vertexDefinition;
 
-	if (renderOptions.vaoSupported) {
+	if (vaoSupported) {
 		glBindVertexArray(mesh.vao);
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 	glBufferData(GL_ARRAY_BUFFER, bufferSize, NULL, GL_STATIC_DRAW);
 
-	if (renderOptions.vaoSupported) {
+	if (vaoSupported) {
 		enableVertexAttributes(vertexDefinition);
 		setVertexAttributePointers(vertexDefinition);
 		glBindVertexArray(0);
@@ -75,6 +75,15 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return true;
+}
+
+//  ============================================================================
+bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
+			  const RenderOptions& renderOptions,
+			  size_t vertexCapacity,
+			  GLenum primitive) {
+	initMesh(mesh, vertexDefinition, renderOptions.vaoSupported,
+			 vertexCapacity, primitive);
 }
 
 //  ============================================================================

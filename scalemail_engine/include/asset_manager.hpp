@@ -10,6 +10,7 @@
 #include "texture.hpp"
 #include "tile_shader.hpp"
 #include "tileset.hpp"
+#include "vertex_definition.hpp"
 #include <map>
 #include <string>
 
@@ -56,6 +57,8 @@ public:
 	Texture getTextureById(const int textureId);
 	void initialize(const RenderCaps& renderCaps,
 					const RenderOptions& renderOptions);
+	void initializeMesh(Mesh& mesh,
+						const VertexDefinition& vertexDefinition);
 	Texture loadTexture(const std::string textureName);
 	Texture loadTexture(
 		const std::string textureName,

@@ -78,15 +78,6 @@ bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 }
 
 //  ============================================================================
-bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
-			  const RenderOptions& renderOptions,
-			  size_t vertexCapacity,
-			  GLenum primitive) {
-	initMesh(mesh, vertexDefinition, renderOptions.vaoSupported,
-			 vertexCapacity, primitive);
-}
-
-//  ============================================================================
 void setMeshVertexData(Mesh& mesh, const std::vector<float>& vertexData) {
 	if (vertexData.size() == 0) {
 		mesh.vertexCount = 0;

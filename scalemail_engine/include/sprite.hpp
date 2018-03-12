@@ -10,7 +10,6 @@ namespace ScaleMail
 {
 class AssetManager;
 class Camera;
-struct RenderOptions;
 class SpriteSystem;
 class SpriteEffectSystem;
 

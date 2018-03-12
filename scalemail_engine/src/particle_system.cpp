@@ -1,3 +1,4 @@
+#include "asset_manager.hpp"
 #include "color_util.hpp"
 #include "math_util.hpp"
 #include "particle_system.hpp"
@@ -136,13 +137,13 @@ Mesh& ParticleSystem::getMesh() {
 }
 
 //	============================================================================
-void ParticleSystem::initialize(Random& random,
-								const RenderOptions& renderOptions) {
+void ParticleSystem::initialize(const AssetManager& assetManager,
+								Random& random) {
 	mRandom = &random;
 
 	//	Six vertices for every particle quad
-	initMesh(mMesh, VertexDefinition::POSITION3_COLOR4, renderOptions,
-			 6 * PARTICLE_RESERVE);
+	assetManager.initializeMesh(mMesh, VertexDefinition::POSITION3_COLOR4,
+								6 * PARTICLE_RESERVE);
 }
 
 //	============================================================================

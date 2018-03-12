@@ -343,7 +343,7 @@ void World::initialize(AssetManager* assetManager,
 	mSystems->bulletSystem.initialize(mSystems->damageSystem);
 	mSystems->burySystem.initialize(mImpl->random, mSystems->physicsSystem,
 									mSystems->spriteSystem);
-	mSystems->particleSystem.initialize(mImpl->random, renderOptions);
+	mSystems->particleSystem.initialize(*assetManager, mImpl->random);
 	mSystems->lootSystem.initialize(mSystems->inventorySystem);
 }
 

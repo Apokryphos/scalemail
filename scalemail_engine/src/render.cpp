@@ -48,7 +48,7 @@ void initializeRender(AssetManager& assetManager,
 
 	initializeFont(assetManager);
 	initializeTransition(assetManager);
-	initializeSprites(assetManager, renderOptions);
+	initializeSprites(assetManager);
 	initializeMapMesh(assetManager);
 	initializeAmbientLights(renderOptions);
 

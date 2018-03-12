@@ -51,6 +51,7 @@ public:
 	QuadShader getQuadShader();
 	LineShader getLineShader();
 	QuadShader getParticleShader();
+	const RenderCaps& getRenderCaps() const;
 	SpriteShader getSpriteShader();
 	Tileset getTileset(const std::string textureName);
 	TileShader getTileShader();

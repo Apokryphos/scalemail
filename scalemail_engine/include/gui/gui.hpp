@@ -8,7 +8,6 @@ namespace ScaleMail
 {
 class AssetManager;
 class Game;
-struct RenderOptions;
 
 class Gui
 {
@@ -21,7 +20,7 @@ public:
 	Gui(const Gui&) = delete;
 	Gui& operator=(const Gui&) = delete;
 	void draw(Game& game);
-	void initialize(AssetManager& assetManager, const RenderOptions& renderOptions);
+	void initialize(AssetManager& assetManager);
 	void showPlayerHud(bool visible);
 	void update(float elapsedSeconds);
 };

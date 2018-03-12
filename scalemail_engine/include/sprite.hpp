@@ -24,8 +24,7 @@ struct Sprite {
 };
 
 void getActorSpriteAnimation(const int actorIndex, SpriteAnimation& anim);
-void initializeSprites(AssetManager& assetManager,
-					   const RenderOptions& renderOptions);
+void initializeSprites(AssetManager& assetManager);
 void renderSprites(
 	SpriteSystem& spriteSystem,
 	SpriteEffectSystem& spriteEffectSystem,

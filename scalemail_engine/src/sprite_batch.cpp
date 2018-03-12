@@ -1,7 +1,6 @@
 #include "asset_manager.hpp"
 #include "gl_headers.hpp"
 #include "math_util.hpp"
-#include "render_options.hpp"
 #include "sprite_batch.hpp"
 #include "texture.hpp"
 #include <glm/gtc/type_ptr.hpp>
@@ -446,14 +445,15 @@ void SpriteBatch::buildSpriteVertexData(
 void SpriteBatch::end() {}
 
 //	===========================================================================
-void SpriteBatch::initialize(AssetManager& assetManager,
-							 const RenderOptions& renderOptions) {
+void SpriteBatch::initialize(AssetManager& assetManager) {
 	const GLsizei stride =
 		static_cast<GLsizei>(VertexElementCount * sizeof(GLfloat));
 
 	mShader = assetManager.getSpriteShader();
 
-	if (renderOptions.vaoSupported) {
+	const bool vaoSupported = assetManager.getRenderCaps().vaoSupported;
+
+	if (vaoSupported) {
 		glGenVertexArrays(1, &mVao);
 	} else {
 		mVao = 0;
@@ -462,7 +462,7 @@ void SpriteBatch::initialize(AssetManager& assetManager,
 	glGenBuffers(1, &mVertexBuffer);
 	glGenBuffers(1, &mIndexBuffer);
 
-	if (renderOptions.vaoSupported) {
+	if (vaoSupported) {
 		glBindVertexArray(mVao);
 	}
 
@@ -497,7 +497,7 @@ void SpriteBatch::initialize(AssetManager& assetManager,
 	// glVertexAttribPointer(
 	// 	2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(7 * sizeof(float)));
 
-	if (renderOptions.vaoSupported) {
+	if (vaoSupported) {
 		glBindVertexArray(0);
 	}
 

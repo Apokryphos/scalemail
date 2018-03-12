@@ -186,7 +186,7 @@ int startEngine(EngineStartOptions startOptions) {
 	game.world = &world;
 	glfwSetWindowUserPointer(window, &game);
 
-	gui.initialize(assetManager, renderOptions);
+	gui.initialize(assetManager);
 
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);

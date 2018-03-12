@@ -50,6 +50,11 @@ QuadShader AssetManager::getParticleShader() {
 }
 
 //  ============================================================================
+const RenderCaps& AssetManager::getRenderCaps() const {
+	return mRenderCaps;
+}
+
+//  ============================================================================
 SpriteShader AssetManager::getSpriteShader() {
 	return mSpriteShader;
 }

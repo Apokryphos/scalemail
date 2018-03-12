@@ -212,8 +212,8 @@ void SpriteSystem::calculateTextureCoords(int componentIndex) {
 }
 
 //	============================================================================
-void SpriteSystem::initialize(AssetManager* assetManager) {
-	mAssetManager = assetManager;
+void SpriteSystem::initialize(AssetManager& assetManager) {
+	mAssetManager = &assetManager;
 }
 
 //	============================================================================

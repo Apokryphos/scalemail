@@ -28,7 +28,6 @@ class PhysicsSystem;
 class Player;
 class PrefabFactory;
 class Random;
-struct RenderOptions;
 class SpriteSystem;
 class SpriteEffectSystem;
 class TeamSystem;
@@ -39,6 +38,8 @@ class World
 private:
 	class WorldImpl;
 	class WorldSystems;
+
+	AssetManager* mAssetManager;
 
 	std::unique_ptr<WorldImpl> mImpl;
 	std::unique_ptr<WorldSystems> mSystems;
@@ -76,7 +77,7 @@ public:
 	SpriteEffectSystem& getSpriteEffectSystem();
 	TeamSystem& getTeamSystem();
 	TriggerSystem& getTriggerSystem();
-	void initialize(AssetManager* assetManager, const RenderOptions& renderOptions);
+	void initialize(AssetManager& assetManager);
 	void loadMap(const std::string& mapName);
 	void update(double totalElapsedSeconds, float elapsedSeconds);
 };

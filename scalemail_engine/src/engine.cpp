@@ -155,13 +155,13 @@ int startEngine(EngineStartOptions startOptions) {
 	loadCursor(window);
 
 	AssetManager assetManager;
-	assetManager.initialize(renderCaps, renderOptions);
+	assetManager.initialize(renderCaps);
 
 	initializeRender(assetManager);
 
 	//  Load map after all other initialize functions
 	World world;
-	world.initialize(&assetManager, renderOptions);
+	world.initialize(assetManager);
 
 	std::string mapName =
 		startOptions.mapName.empty() ? "map1" : startOptions.mapName;

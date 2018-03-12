@@ -83,11 +83,10 @@ Texture AssetManager::getTextureById(const int textureId) {
 }
 
 //  ============================================================================
-void AssetManager::initialize(const RenderCaps& renderCaps,
-							  const RenderOptions& renderOptions) {
+void AssetManager::initialize(const RenderCaps& renderCaps) {
 	mRenderCaps = renderCaps;
 
-	switch (renderOptions.shaderVersion) {
+	switch (renderCaps.shaderVersion) {
 		case ShaderVersion::SHADER_VERSION_120:
 			mShaderPath = "assets/shaders/120/";
 			break;
@@ -107,7 +106,7 @@ void AssetManager::initialize(const RenderCaps& renderCaps,
 	this->loadTexture("world_mask", "world");
 
 	initMesh(mQuadMesh, VertexDefinition::POSITION2_COLOR4_TEXTURE2,
-			 renderOptions);
+			 renderCaps.vaoSupported);
 	setMeshVertexData(mQuadMesh, QUAD_VERTEX_DATA);
 
 	this->loadShader(mColorQuadShader.id, "color");

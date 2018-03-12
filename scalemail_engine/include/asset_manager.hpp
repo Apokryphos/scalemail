@@ -16,8 +16,6 @@
 
 namespace ScaleMail
 {
-struct RenderOptions;
-
 class AssetManager
 {
 	RenderCaps mRenderCaps;
@@ -56,8 +54,7 @@ public:
 	Tileset getTileset(const std::string textureName);
 	TileShader getTileShader();
 	Texture getTextureById(const int textureId);
-	void initialize(const RenderCaps& renderCaps,
-					const RenderOptions& renderOptions);
+	void initialize(const RenderCaps& renderCaps);
 	void initializeMesh(Mesh& mesh,
 						const VertexDefinition& vertexDefinition,
 						size_t vertexCapacity = 6,

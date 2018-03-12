@@ -99,7 +99,7 @@ public:
 	glm::ivec4 getSourceRect(const SpriteComponent& cmpnt) const;
 	int getTextureId(const SpriteComponent& cmpnt) const;
 	int getTilesetId(const SpriteComponent& cmpnt) const;
-	void initialize(AssetManager* assetManager);
+	void initialize(AssetManager& assetManager);
 	void setActorIndex(const SpriteComponent& cmpnt, const int actorIndex);
 	void setAlpha(const SpriteComponent& cmpnt, const bool alpha);
 	void setAnimationDuration(const SpriteComponent& cmpnt,

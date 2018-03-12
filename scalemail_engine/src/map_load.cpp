@@ -1,5 +1,6 @@
 #include "ai_system.hpp"
 #include "ambient_light.hpp"
+#include "asset_manager.hpp"
 #include "direction_util.hpp"
 #include "entity_util.hpp"
 #include "entity_types.hpp"
@@ -227,14 +228,14 @@ static glm::vec4 hexToVec4(std::string input) {
 
 //  ============================================================================
 static void createTileMeshBuffer(Mesh& mesh, std::vector<float>& meshVertexData,
-								 const RenderOptions& renderOptions) {
-	initMesh(mesh, VertexDefinition::POSITION3_TEXTURE2, renderOptions);
+								 const AssetManager& assetManager) {
+	assetManager.initializeMesh(mesh, VertexDefinition::POSITION3_TEXTURE2);
 	setMeshVertexData(mesh, meshVertexData);
 }
 
 //  ============================================================================
 static void buildMapMesh(MapData& mapData, MapMesh& mapMesh,
-						 const RenderOptions& renderOptions) {
+						 const AssetManager& assetManager) {
 	std::vector<float> staticVertexData;
 	std::vector<float> alphaVertexData;
 	std::vector<float> frame1VertexData;
@@ -319,12 +320,12 @@ static void buildMapMesh(MapData& mapData, MapMesh& mapMesh,
 	Mesh scrollFrame1Mesh;
 	Mesh scrollFrame2Mesh;
 
-	createTileMeshBuffer(alphaMesh, alphaVertexData, renderOptions);
-	createTileMeshBuffer(staticMesh, staticVertexData, renderOptions);
-	createTileMeshBuffer(frame1Mesh, frame1VertexData, renderOptions);
-	createTileMeshBuffer(frame2Mesh, frame2VertexData, renderOptions);
-	createTileMeshBuffer(scrollFrame1Mesh, scrollFrame1VertexData, renderOptions);
-	createTileMeshBuffer(scrollFrame2Mesh, scrollFrame2VertexData, renderOptions);
+	createTileMeshBuffer(alphaMesh, alphaVertexData, assetManager);
+	createTileMeshBuffer(staticMesh, staticVertexData, assetManager);
+	createTileMeshBuffer(frame1Mesh, frame1VertexData, assetManager);
+	createTileMeshBuffer(frame2Mesh, frame2VertexData, assetManager);
+	createTileMeshBuffer(scrollFrame1Mesh, scrollFrame1VertexData, assetManager);
+	createTileMeshBuffer(scrollFrame2Mesh, scrollFrame2VertexData, assetManager);
 
 	mapMesh.alphaMesh = alphaMesh;
 	mapMesh.staticMesh = staticMesh;
@@ -763,7 +764,7 @@ static void processObjects(const TmxMapLib::Map tmxMap, World& world,
 
 //  ============================================================================
 std::shared_ptr<Map> loadMap(const std::string filename, World& world,
-							 const RenderOptions& renderOptions) {
+							 const AssetManager& assetManager) {
 	world.getPhysicsSystem().clearStaticObstacles();
 
 	TmxMapLib::Map tmxMap = TmxMapLib::Map(filename);
@@ -804,7 +805,7 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world,
 	processObjects(tmxMap, world, mapData);
 
 	MapMesh mapMesh;
-	buildMapMesh(mapData, mapMesh, renderOptions);
+	buildMapMesh(mapData, mapMesh, assetManager);
 
 	std::shared_ptr<Map> map =
 		std::make_shared<Map>(

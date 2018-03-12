@@ -1,5 +1,6 @@
 #include "ai/ai_behavior_factory.hpp"
 #include "ai_system.hpp"
+#include "asset_manager.hpp"
 #include "bullet_system.hpp"
 #include "bullet_util.hpp"
 #include "bury_system.hpp"
@@ -25,7 +26,6 @@
 #include "player.hpp"
 #include "prefab_factory.hpp"
 #include "random.hpp"
-#include "render_options.hpp"
 #include "sprite.hpp"
 #include "sprite_system.hpp"
 #include "sprite_effect_system.hpp"
@@ -42,7 +42,6 @@ public:
 	AiBehaviorFactory aiBehaviorFactory;
 	std::vector<Player> players;
 	PrefabFactory prefabFactory;
-	RenderOptions renderOptions;
 	Random random;
 };
 
@@ -332,18 +331,17 @@ TriggerSystem& World::getTriggerSystem() {
 }
 
 //  ============================================================================
-void World::initialize(AssetManager* assetManager,
-					   const RenderOptions& renderOptions) {
-	mImpl->renderOptions = renderOptions;
+void World::initialize(AssetManager& assetManager) {
+	mAssetManager = &assetManager;
 
 	mSystems->spriteSystem.initialize(assetManager);
-	mSystems->lightSystem.initialize(*assetManager);
+	mSystems->lightSystem.initialize(assetManager);
 	mSystems->doorSystem.initialize(mSystems->physicsSystem,
 									mSystems->spriteSystem);
 	mSystems->bulletSystem.initialize(mSystems->damageSystem);
 	mSystems->burySystem.initialize(mImpl->random, mSystems->physicsSystem,
 									mSystems->spriteSystem);
-	mSystems->particleSystem.initialize(*assetManager, mImpl->random);
+	mSystems->particleSystem.initialize(assetManager, mImpl->random);
 	mSystems->lootSystem.initialize(mSystems->inventorySystem);
 }
 
@@ -355,7 +353,7 @@ bool World::entityIsAlive(const Entity& entity) {
 //  ============================================================================
 void World::loadMap(const std::string& mapName) {
 	mMap = ScaleMail::loadMap("assets/maps/" + mapName + ".tmx", *this,
-							  mImpl->renderOptions);
+							  *mAssetManager);
 
 	std::vector<PlayerStart> playerStarts = mMap->getPlayerStarts();
 

@@ -64,9 +64,9 @@ void drawCenterText(const glm::vec2 position, const std::string& text,
 }
 
 //	============================================================================
-void initializeFont(AssetManager& assetManager,
-					const RenderOptions& renderOptions) {
-	initMesh(mesh, VertexDefinition::POSITION2_COLOR4_TEXTURE2, renderOptions);
+void initializeFont(AssetManager& assetManager) {
+	assetManager.initializeMesh(mesh,
+								VertexDefinition::POSITION2_COLOR4_TEXTURE2);
 
 	fontTexture = assetManager.loadTexture("font");
 

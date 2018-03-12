@@ -139,15 +139,12 @@ int startEngine(EngineStartOptions startOptions) {
 		renderCaps.shaderVersion = ShaderVersion::SHADER_VERSION_330;
 		renderCaps.fboSupported = true;
 
-		renderOptions.shaderVersion = ShaderVersion::SHADER_VERSION_330;
-		renderOptions.fboSupported = true;
 		renderOptions.lightsEnabled = true;
 
 		std::cout << "Using GLSL 330 shaders." << std::endl;
 	} else {
 		//	OpenGL 2.1 - GLSL 120
 		renderCaps.shaderVersion = ShaderVersion::SHADER_VERSION_120;
-		renderOptions.shaderVersion = ShaderVersion::SHADER_VERSION_120;
 
 		std::cout << "Using GLSL 120 shaders." << std::endl;
 	}

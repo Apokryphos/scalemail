@@ -55,8 +55,7 @@ static void destroyFramebuffer(GLuint& fbo, GLuint& fboTexture) {
 }
 
 //  ============================================================================
-void initializeLight(AssetManager& assetManager,
-					 const RenderOptions& renderOptions) {
+void initializeLight(AssetManager& assetManager) {
 	quadShader = assetManager.getQuadShader();
 	colorQuadShader = assetManager.getColorQuadShader();
 

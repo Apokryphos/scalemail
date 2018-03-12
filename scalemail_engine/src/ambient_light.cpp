@@ -1,4 +1,5 @@
 #include "ambient_light.hpp"
+#include "asset_manager.hpp"
 #include "camera.hpp"
 #include "mesh.hpp"
 #include "render_options.hpp"
@@ -13,9 +14,9 @@ static Mesh ambientLightMesh;
 static std::vector<float> ambientLightVertexData;
 
 //  ============================================================================
-void initializeAmbientLights(const RenderOptions& renderOptions) {
-	initMesh(ambientLightMesh, VertexDefinition::POSITION2_COLOR4,
-			 renderOptions);
+void initializeAmbientLights(const AssetManager& assetManager) {
+	assetManager.initializeMesh(ambientLightMesh,
+								VertexDefinition::POSITION2_COLOR4);
 }
 
 //  ============================================================================

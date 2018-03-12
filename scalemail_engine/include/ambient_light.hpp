@@ -5,7 +5,7 @@
 
 namespace ScaleMail
 {
-struct RenderOptions;
+struct AssetManager;
 
 struct AmbientLight
 {
@@ -15,5 +15,5 @@ struct AmbientLight
 
 void buildAmbientLights(const std::vector<AmbientLight>& lights);
 void drawAmbientLights();
-void initializeAmbientLights(const RenderOptions& renderOptions);
+void initializeAmbientLights(const AssetManager& assetManager);
 }

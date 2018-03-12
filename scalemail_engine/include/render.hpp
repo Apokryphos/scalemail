@@ -9,10 +9,8 @@ class Camera;
 class Game;
 class GameState;
 class World;
-struct RenderOptions;
 
-void initializeRender(AssetManager& assetManager,
-					  RenderOptions& renderOptions);
+void initializeRender(AssetManager& assetManager);
 void render(Game& game, World& world, Camera& camera, GameState& gameState,
 			float totalElapsedSeconds);
 }

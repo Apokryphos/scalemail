@@ -34,26 +34,27 @@ static QuadShader colorQuadShader;
 static QuadShader particleShader;
 
 //	============================================================================
-void initializeRender(AssetManager& assetManager,
-					  RenderOptions& renderOptions) {
+void initializeRender(AssetManager& assetManager) {
 	quadMesh = assetManager.getQuadMesh();
 	colorQuadShader = assetManager.getColorQuadShader();
 	particleShader = assetManager.getParticleShader();
 
 	debugLineShader = assetManager.getLineShader();
-	// initLineMesh(debugLineMesh, {});
-	initMesh(debugLineMesh, VertexDefinition::POSITION2_COLOR4, renderOptions,
-			 5000, GL_LINES);
+	assetManager.initializeMesh(
+		debugLineMesh,
+		VertexDefinition::POSITION2_COLOR4,
+		5000,
+		GL_LINES);
 	debugLineVertexData.reserve(5000);
 
 	initializeFont(assetManager);
 	initializeTransition(assetManager);
 	initializeSprites(assetManager);
 	initializeMapMesh(assetManager);
-	initializeAmbientLights(renderOptions);
+	initializeAmbientLights(assetManager);
 
-	if (renderOptions.fboSupported) {
-		initializeLight(assetManager, renderOptions);
+	if (assetManager.getRenderCaps().fboSupported) {
+		initializeLight(assetManager);
 	}
 }
 
@@ -148,7 +149,7 @@ void render(Game& game, World& world, Camera& camera, GameState& gameState,
 	GameWindow& gameWindow = game.gameWindow;
 	GLFWwindow* window = gameWindow.window;
 
-	if (game.renderOptions.fboSupported) {
+	if (game.renderCaps.fboSupported) {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

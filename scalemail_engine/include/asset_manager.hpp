@@ -59,7 +59,9 @@ public:
 	void initialize(const RenderCaps& renderCaps,
 					const RenderOptions& renderOptions);
 	void initializeMesh(Mesh& mesh,
-						const VertexDefinition& vertexDefinition);
+						const VertexDefinition& vertexDefinition,
+						size_t vertexCapacity = 6,
+						GLenum primitive = GL_TRIANGLES) const;
 	Texture loadTexture(const std::string textureName);
 	Texture loadTexture(
 		const std::string textureName,

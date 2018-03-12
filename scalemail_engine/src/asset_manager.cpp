@@ -142,8 +142,11 @@ void AssetManager::initialize(const RenderCaps& renderCaps,
 
 //  ============================================================================
 void AssetManager::initializeMesh(Mesh& mesh,
-								  const VertexDefinition& vertexDefinition) {
-	initMesh(mesh, vertexDefinition, mRenderCaps.vaoSupported);
+								  const VertexDefinition& vertexDefinition,
+								  size_t vertexCapacity,
+								  GLenum primitive) const {
+	initMesh(mesh, vertexDefinition, mRenderCaps.vaoSupported, vertexCapacity,
+			primitive);
 }
 
 //  ============================================================================

@@ -157,7 +157,7 @@ int startEngine(EngineStartOptions startOptions) {
 	AssetManager assetManager;
 	assetManager.initialize(renderCaps, renderOptions);
 
-	initializeRender(assetManager, renderOptions);
+	initializeRender(assetManager);
 
 	//  Load map after all other initialize functions
 	World world;

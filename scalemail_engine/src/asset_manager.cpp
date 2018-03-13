@@ -105,8 +105,9 @@ void AssetManager::initialize(const RenderCaps& renderCaps) {
 	this->loadTexture("fx_mask", "fx");
 	this->loadTexture("world_mask", "world");
 
-	initMesh(mQuadMesh, VertexDefinition::POSITION2_COLOR4_TEXTURE2,
-			 renderCaps.vaoSupported);
+	ScaleMail::initializeMesh(mQuadMesh,
+							  VertexDefinition::POSITION2_COLOR4_TEXTURE2,
+							  renderCaps.vaoSupported);
 	setMeshVertexData(mQuadMesh, QUAD_VERTEX_DATA);
 
 	this->loadShader(mColorQuadShader.id, "color");
@@ -144,8 +145,8 @@ void AssetManager::initializeMesh(Mesh& mesh,
 								  const VertexDefinition& vertexDefinition,
 								  size_t vertexCapacity,
 								  GLenum primitive) const {
-	initMesh(mesh, vertexDefinition, mRenderCaps.vaoSupported, vertexCapacity,
-			primitive);
+	ScaleMail::initializeMesh(mesh, vertexDefinition, mRenderCaps.vaoSupported,
+							  vertexCapacity, primitive);
 }
 
 //  ============================================================================

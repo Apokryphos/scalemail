@@ -37,7 +37,7 @@ void drawMesh(const Mesh& mesh) {
 }
 
 //  ============================================================================
-bool initMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
+bool initializeMesh(Mesh& mesh, const VertexDefinition vertexDefinition,
 			  bool vaoSupported,
 			  size_t vertexCapacity,
 			  GLenum primitive) {

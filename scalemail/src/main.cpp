@@ -5,8 +5,6 @@ using namespace ScaleMail;
 //  ============================================================================
 static EngineStartOptions processCommandLineArguments(int argc, char* argv[]) {
 	EngineStartOptions startOptions = {};
-	startOptions.screenWidth = 1024;
-	startOptions.screenHeight = 1024;
 
 	int c = 1;
 

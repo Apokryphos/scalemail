@@ -87,12 +87,25 @@ int startEngine(EngineStartOptions startOptions) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-	const int screenWidth = startOptions.screenWidth;
-	const int screenHeight = startOptions.screenHeight;
-	const float cameraZoom = (screenWidth / 256.0f);
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-	GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "ScaleMail",
-										  NULL, NULL);
+	const int screenWidth =
+		startOptions.screenWidth > 0 ?
+		startOptions.screenWidth :
+		mode->width;
+
+	const int screenHeight =
+		startOptions.screenHeight > 0 ?
+		startOptions.screenHeight :
+		mode->height;
+
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+	GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight,
+										  "ScaleMail", NULL, NULL);
 
 	if (!window) {
 		std::cerr << "GLFW failed to create window." << std::endl;
@@ -102,6 +115,19 @@ int startEngine(EngineStartOptions startOptions) {
 
 	glfwSetWindowSizeLimits(window, screenWidth, screenHeight,
 							screenWidth, screenHeight);
+
+	int left = 0;
+	int top = 0;
+	int right = 0;
+	int bottom = 0;
+	glfwGetWindowFrameSize(window, &left, &top, &right, &bottom);
+
+	const int sh = screenWidth - left - right;
+	const int sv = screenHeight - top - bottom;
+	const int screenSize = std::min(sh, sv);
+
+	const float cz = screenSize / 256.0f;
+	const float cameraZoom = static_cast<int>(cz * 2) / 2.0f;
 
 	capture.initialize(window);
 

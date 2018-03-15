@@ -50,12 +50,21 @@ struct TileLayerData
 	std::vector<TileData> tiles;
 };
 
+struct TilesetData
+{
+	int firstGid;
+	int tileWidth;
+	int tileHeight;
+	std::string textureName;
+};
+
 struct MapData
 {
 	std::vector<AmbientLight> ambientLights;
 	std::vector<MapCamera> mapCameras;
 	std::vector<PlayerStart> playerStarts;
 	std::vector<TileLayerData> tileLayers;
+	std::vector<TilesetData> tilesets;
 };
 
 static const glm::vec2 gQuadVertices[] =
@@ -73,6 +82,33 @@ static void buryEntity(const TmxMapLib::Object& object, const Entity& entity,
 		buryEntity(entity, world.getBurySystem(), true,
 			world.getRandom().nextFloat(4.0f, 5.0f), true);
 	}
+}
+
+//  ============================================================================
+static std::string getTilesetImageName(const TmxMapLib::Tileset& tileset) {
+	std::string filename = tileset.GetImage().GetSource();
+
+	const size_t lastSlashIndex = filename.find_last_of("\\/");
+	if (std::string::npos != lastSlashIndex) {
+		filename.erase(0, lastSlashIndex + 1);
+	}
+
+	const size_t periodIndex = filename.rfind('.');
+	if (std::string::npos != periodIndex) {
+		filename.erase(periodIndex);
+	}
+
+	return filename;
+}
+
+//  ============================================================================
+static TilesetData getTilesetData(const TmxMapLib::Tileset& tileset) {
+	TilesetData tilesetData = {};
+	tilesetData.firstGid = tileset.GetFirstGid();
+	tilesetData.tileWidth = tileset.GetTileWidth();
+	tilesetData.tileHeight = tileset.GetTileHeight();
+	tilesetData.textureName = getTilesetImageName(tileset);
+	return tilesetData;
 }
 
 //  ============================================================================
@@ -772,6 +808,11 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world,
 	initializeLayers(tmxMap.GetHeight() * tmxMap.GetTileHeight());
 
 	MapData mapData;
+
+	for (const auto& tileset : tmxMap.GetTilesets()) {
+		TilesetData tilesetData = getTilesetData(tileset);
+		mapData.tilesets.push_back(tilesetData);
+	}
 
 	int layerIndex = 0;
 	for (const auto& tileLayer : tmxMap.GetTileLayers()) {

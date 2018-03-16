@@ -14,8 +14,8 @@
  </tile>
  <tile id="1">
   <properties>
-   <property name="EvenTilesetId" type="int" value="1"/>
-   <property name="OddTilesetId" type="int" value="0"/>
+   <property name="EvenTilesetId" type="int" value="0"/>
+   <property name="OddTilesetId" type="int" value="1"/>
    <property name="Scroll" type="bool" value="true"/>
   </properties>
   <animation>
@@ -36,8 +36,8 @@
  </tile>
  <tile id="3">
   <properties>
-   <property name="EvenTilesetId" type="int" value="3"/>
-   <property name="OddTilesetId" type="int" value="2"/>
+   <property name="EvenTilesetId" type="int" value="2"/>
+   <property name="OddTilesetId" type="int" value="3"/>
    <property name="Scroll" type="bool" value="true"/>
   </properties>
   <animation>
@@ -58,8 +58,8 @@
  </tile>
  <tile id="5">
   <properties>
-   <property name="EvenTilesetId" type="int" value="5"/>
-   <property name="OddTilesetId" type="int" value="4"/>
+   <property name="EvenTilesetId" type="int" value="4"/>
+   <property name="OddTilesetId" type="int" value="5"/>
    <property name="Scroll" type="bool" value="true"/>
   </properties>
   <animation>
@@ -80,8 +80,8 @@
  </tile>
  <tile id="7">
   <properties>
-   <property name="EvenTilesetId" type="int" value="7"/>
-   <property name="OddTilesetId" type="int" value="6"/>
+   <property name="EvenTilesetId" type="int" value="6"/>
+   <property name="OddTilesetId" type="int" value="7"/>
    <property name="Scroll" type="bool" value="true"/>
   </properties>
   <animation>
@@ -102,8 +102,8 @@
  </tile>
  <tile id="9">
   <properties>
-   <property name="EvenTilesetId" type="int" value="9"/>
-   <property name="OddTilesetId" type="int" value="8"/>
+   <property name="EvenTilesetId" type="int" value="8"/>
+   <property name="OddTilesetId" type="int" value="9"/>
    <property name="Scroll" type="bool" value="true"/>
   </properties>
   <animation>
@@ -124,8 +124,8 @@
  </tile>
  <tile id="11">
   <properties>
-   <property name="EvenTilesetId" type="int" value="11"/>
-   <property name="OddTilesetId" type="int" value="10"/>
+   <property name="EvenTilesetId" type="int" value="10"/>
+   <property name="OddTilesetId" type="int" value="11"/>
    <property name="Scroll" type="bool" value="true"/>
   </properties>
   <animation>
@@ -146,8 +146,8 @@
  </tile>
  <tile id="13">
   <properties>
-   <property name="EvenTilesetId" type="int" value="13"/>
-   <property name="OddTilesetId" type="int" value="12"/>
+   <property name="EvenTilesetId" type="int" value="12"/>
+   <property name="OddTilesetId" type="int" value="13"/>
    <property name="Scroll" type="bool" value="true"/>
   </properties>
   <animation>
@@ -168,8 +168,8 @@
  </tile>
  <tile id="15">
   <properties>
-   <property name="EvenTilesetId" type="int" value="15"/>
-   <property name="OddTilesetId" type="int" value="14"/>
+   <property name="EvenTilesetId" type="int" value="14"/>
+   <property name="OddTilesetId" type="int" value="15"/>
    <property name="Scroll" type="bool" value="true"/>
   </properties>
   <animation>

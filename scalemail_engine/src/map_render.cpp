@@ -36,39 +36,39 @@ void renderMap(const Map& map, const Camera& camera,
 	glEnable(GL_DEPTH_TEST);
 
 	glUseProgram(tileShader.id);
-	glUniform1f(tileShader.timeLocation, 0);
 	glUniformMatrix4fv(tileShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-	glBindTexture(GL_TEXTURE_2D, worldTexture.id);
 
-	const Mesh& mesh = map.mapMesh.staticMesh;
-	if (mesh.vertexCount > 0) {
-		blendNone();
-		drawMesh(mesh);
-	}
+	const auto& mapModel = map.getMapModel();
+	const auto& mapMeshes = mapModel.getMapMeshes();
 
-	const Mesh& alphaMesh = map.mapMesh.alphaMesh;
-	if (alphaMesh.vertexCount > 0) {
-		blendAlpha();
-		drawMesh(alphaMesh);
-	}
+	for (const auto& mapMesh : mapMeshes) {
+		const Mesh& mesh = mapMesh.mesh;
 
-	glEnable(GL_DEPTH_TEST);
-	const Mesh& animMesh = map.mapMesh.animatedMeshes[tileFrame];
-	if (animMesh.vertexCount > 0) {
-		blendAlpha();
-		drawMesh(animMesh);
-	}
+		if (mesh.vertexCount > 0) {
+			if (mapMesh.animated &&
+				mapMesh.frame != tileFrame) {
+				continue;
+			}
 
-	const Mesh& scrollMesh = map.mapMesh.scrollMeshes[tileFrame];
-	if (scrollMesh.vertexCount > 0) {
-		blendNone();
-		glUniform1f(tileShader.timeLocation, totalElapsedSeconds * 0.5f);
-		glBindTexture(GL_TEXTURE_2D, horzScrollTexture.id);
-		drawMesh(scrollMesh);
+			if (mapMesh.alpha) {
+				blendAlpha();
+			} else {
+				blendNone();
+			}
+
+			if (mapMesh.scroll) {
+				glUniform1f(tileShader.timeLocation, totalElapsedSeconds * 0.5f);
+			} else {
+				glUniform1f(tileShader.timeLocation, 0);
+			}
+
+			glBindTexture(GL_TEXTURE_2D, mapMesh.textureId);
+
+			drawMesh(mesh);
+		}
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	disableMeshVertexAttribPointers(mesh);
 }
 
 //	============================================================================

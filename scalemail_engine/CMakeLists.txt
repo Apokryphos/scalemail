@@ -86,6 +86,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/map.cpp
     src/map_load.cpp
     src/map_mesh.cpp
+    src/map_model.cpp
     src/map_render.cpp
     src/name_system.cpp
     src/particle_system.cpp

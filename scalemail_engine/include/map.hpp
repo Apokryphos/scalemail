@@ -2,21 +2,16 @@
 
 #include "ambient_light.hpp"
 #include "direction.hpp"
+#include "map_mesh.hpp"
+#include "map_model.hpp"
 #include "mesh.hpp"
 #include "rectangle.hpp"
 #include <glm/vec2.hpp>
 #include <string>
+#include <vector>
 
 namespace ScaleMail
 {
-struct MapMesh
-{
-	Mesh staticMesh;
-	Mesh alphaMesh;
-	Mesh animatedMeshes[2];
-	Mesh scrollMeshes[2];
-};
-
 struct PlayerStart
 {
 	int actorIndex;
@@ -40,6 +35,7 @@ class Map
 	int mHeight;
 	int mTileWidth;
 	int mTileHeight;
+	MapModel mMapModel;
 
 	std::vector<MapCamera> mCameras;
 	std::vector<PlayerStart> mPlayerStarts;
@@ -47,7 +43,7 @@ class Map
 
 public:
 	Map(const int width, const int height, const int tileWidth,
-		const int tileHeight);
+		const int tileHeight, const MapModel mapModel);
 	Map(const Map&) = delete;
 	Map& operator=(const Map&) = delete;
 	void addCamera(const MapCamera& mapCamera);
@@ -58,7 +54,7 @@ public:
 	int getTileHeight() const;
 	int getTileWidth() const;
 	int getWidth() const;
-	MapMesh mapMesh;
+	const MapModel& getMapModel() const;
 	bool pointInBounds(const glm::vec2& point);
 	void setAmbientLights(std::vector<AmbientLight>& ambientLights);
 	void setPlayerStarts(const std::vector<PlayerStart> playerStarts);

@@ -6,6 +6,7 @@ set(OUTPUT_DIR ${CMAKE_BINARY_DIR}/scalemail/assets)
 
 configure_file(maps/actors.tsx ${OUTPUT_DIR}/maps/actors.tsx COPYONLY)
 configure_file(maps/map1.tmx ${OUTPUT_DIR}/maps/map1.tmx COPYONLY)
+configure_file(maps/h_scroll.tsx ${OUTPUT_DIR}/maps/h_scroll.tsx COPYONLY)
 configure_file(maps/items.tsx ${OUTPUT_DIR}/maps/items.tsx COPYONLY)
 configure_file(maps/test_map.tmx ${OUTPUT_DIR}/maps/test_map.tmx COPYONLY)
 configure_file(maps/test_map2.tmx ${OUTPUT_DIR}/maps/test_map2.tmx COPYONLY)

@@ -263,7 +263,6 @@
  </tile>
  <tile id="140">
   <properties>
-   <property name="AliasTilesetId" type="int" value="0"/>
    <property name="EvenTilesetId" type="int" value="140"/>
    <property name="OddTilesetId" type="int" value="141"/>
   </properties>
@@ -274,7 +273,6 @@
  </tile>
  <tile id="141">
   <properties>
-   <property name="AliasTilesetId" type="int" value="1"/>
    <property name="EvenTilesetId" type="int" value="141"/>
    <property name="OddTilesetId" type="int" value="140"/>
   </properties>
@@ -285,7 +283,6 @@
  </tile>
  <tile id="142">
   <properties>
-   <property name="AliasTilesetId" type="int" value="2"/>
    <property name="EvenTilesetId" type="int" value="142"/>
    <property name="OddTilesetId" type="int" value="143"/>
   </properties>
@@ -296,7 +293,6 @@
  </tile>
  <tile id="143">
   <properties>
-   <property name="AliasTilesetId" type="int" value="3"/>
    <property name="EvenTilesetId" type="int" value="143"/>
    <property name="OddTilesetId" type="int" value="142"/>
   </properties>
@@ -307,7 +303,6 @@
  </tile>
  <tile id="146">
   <properties>
-   <property name="AliasTilesetId" type="int" value="8"/>
    <property name="EvenTilesetId" type="int" value="146"/>
    <property name="OddTilesetId" type="int" value="147"/>
   </properties>
@@ -318,7 +313,6 @@
  </tile>
  <tile id="147">
   <properties>
-   <property name="AliasTilesetId" type="int" value="9"/>
    <property name="EvenTilesetId" type="int" value="147"/>
    <property name="OddTilesetId" type="int" value="146"/>
   </properties>
@@ -329,7 +323,6 @@
  </tile>
  <tile id="148">
   <properties>
-   <property name="AliasTilesetId" type="int" value="10"/>
    <property name="EvenTilesetId" type="int" value="148"/>
    <property name="OddTilesetId" type="int" value="149"/>
   </properties>
@@ -340,7 +333,6 @@
  </tile>
  <tile id="149">
   <properties>
-   <property name="AliasTilesetId" type="int" value="11"/>
    <property name="EvenTilesetId" type="int" value="149"/>
    <property name="OddTilesetId" type="int" value="148"/>
   </properties>
@@ -351,7 +343,6 @@
  </tile>
  <tile id="152">
   <properties>
-   <property name="AliasTilesetId" type="int" value="4"/>
    <property name="EvenTilesetId" type="int" value="152"/>
    <property name="OddTilesetId" type="int" value="153"/>
   </properties>
@@ -362,7 +353,6 @@
  </tile>
  <tile id="153">
   <properties>
-   <property name="AliasTilesetId" type="int" value="5"/>
    <property name="EvenTilesetId" type="int" value="153"/>
    <property name="OddTilesetId" type="int" value="152"/>
   </properties>
@@ -373,7 +363,6 @@
  </tile>
  <tile id="154">
   <properties>
-   <property name="AliasTilesetId" type="int" value="6"/>
    <property name="EvenTilesetId" type="int" value="154"/>
    <property name="OddTilesetId" type="int" value="155"/>
   </properties>
@@ -384,7 +373,6 @@
  </tile>
  <tile id="155">
   <properties>
-   <property name="AliasTilesetId" type="int" value="7"/>
    <property name="EvenTilesetId" type="int" value="155"/>
    <property name="OddTilesetId" type="int" value="154"/>
   </properties>
@@ -395,7 +383,6 @@
  </tile>
  <tile id="156">
   <properties>
-   <property name="AliasTilesetId" type="int" value="12"/>
    <property name="EvenTilesetId" type="int" value="156"/>
    <property name="OddTilesetId" type="int" value="157"/>
   </properties>
@@ -406,7 +393,6 @@
  </tile>
  <tile id="157">
   <properties>
-   <property name="AliasTilesetId" type="int" value="13"/>
    <property name="EvenTilesetId" type="int" value="157"/>
    <property name="OddTilesetId" type="int" value="156"/>
   </properties>
@@ -417,7 +403,6 @@
  </tile>
  <tile id="158">
   <properties>
-   <property name="AliasTilesetId" type="int" value="14"/>
    <property name="EvenTilesetId" type="int" value="158"/>
    <property name="OddTilesetId" type="int" value="159"/>
   </properties>
@@ -428,7 +413,6 @@
  </tile>
  <tile id="159">
   <properties>
-   <property name="AliasTilesetId" type="int" value="15"/>
    <property name="EvenTilesetId" type="int" value="159"/>
    <property name="OddTilesetId" type="int" value="158"/>
   </properties>

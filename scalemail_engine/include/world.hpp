@@ -12,6 +12,7 @@ class AiSystem;
 class AssetManager;
 class BulletSystem;
 class BurySystem;
+class CameraSystem;
 class DamageSystem;
 class DoorSystem;
 class ExpireSystem;
@@ -57,6 +58,7 @@ public:
 	AiSystem& getAiSystem();
 	BulletSystem& getBulletSystem();
 	BurySystem& getBurySystem();
+	CameraSystem& getCameraSystem();
 	DamageSystem& getDamageSystem();
 	DoorSystem& getDoorSystem();
 	ExpireSystem& getExpireSystem();

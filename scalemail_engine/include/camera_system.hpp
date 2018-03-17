@@ -7,6 +7,7 @@
 namespace ScaleMail
 {
 struct Entity;
+class PhysicsSystem;
 
 struct CameraComponent {
 	CameraComponent(const int index) { this->index = index; }
@@ -15,6 +16,7 @@ struct CameraComponent {
 
 struct CameraComponentData {
 	Camera camera;
+	Entity targetEntity;
 };
 
 class CameraSystem : public EntitySystem
@@ -30,6 +32,6 @@ public:
 	CameraSystem(EntityManager& entityManager, int maxComponents = 10000);
 	CameraComponent getComponent(const Entity& entity) const;
 	const Camera& getCamera(const CameraComponent& cmpnt) const;
-	void update(float elapsedSeconds);
+	void update(PhysicsSystem& physicsSystem, float elapsedSeconds);
 };
 }

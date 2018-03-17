@@ -1,4 +1,5 @@
 #include "camera_system.hpp"
+#include "physics_system.hpp"
 #include "vector_util.hpp"
 
 namespace ScaleMail
@@ -36,7 +37,27 @@ const Camera& CameraSystem::getCamera(const CameraComponent& cmpnt) const {
 }
 
 //  ============================================================================
-void CameraSystem::update(float elapsedSeconds) {
+void CameraSystem::update(PhysicsSystem& physicsSystem, float elapsedSeconds) {
+	for (const auto& p : mEntitiesByComponentIndices) {
+		const size_t index = p.first;
+		const Entity& entity = p.second;
 
+		CameraComponentData& data = mData[index];
+
+		if (!physicsSystem.hasComponent(data.targetEntity)) {
+			continue;
+		}
+
+		const PhysicsComponent targetPhysicsCmpnt =
+			physicsSystem.getComponent(data.targetEntity);
+
+		const glm::vec2 position =
+			physicsSystem.getPosition(targetPhysicsCmpnt);
+
+		const PhysicsComponent cameraPhysicsCmpnt =
+			physicsSystem.getComponent(entity);
+
+		physicsSystem.setPosition(cameraPhysicsCmpnt, position);
+	}
 }
 }

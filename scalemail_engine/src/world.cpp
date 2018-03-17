@@ -4,6 +4,7 @@
 #include "bullet_system.hpp"
 #include "bullet_util.hpp"
 #include "bury_system.hpp"
+#include "camera_system.hpp"
 #include "damage_system.hpp"
 #include "direction.hpp"
 #include "door_system.hpp"
@@ -53,6 +54,7 @@ public:
 	:	aiSystem(entityManager),
 		bulletSystem(entityManager),
 		burySystem(entityManager),
+		cameraSystem(entityManager),
 		damageSystem(entityManager),
 		doorSystem(entityManager),
 		expireSystem(entityManager),
@@ -75,6 +77,7 @@ public:
 	AiSystem aiSystem;
 	BulletSystem bulletSystem;
 	BurySystem burySystem;
+	CameraSystem cameraSystem;
 	DamageSystem damageSystem;
 	DoorSystem doorSystem;
 	ExpireSystem expireSystem;
@@ -222,6 +225,11 @@ BulletSystem& World::getBulletSystem() {
 //  ============================================================================
 BurySystem& World::getBurySystem() {
 	return mSystems->burySystem;
+}
+
+//  ============================================================================
+CameraSystem& World::getCameraSystem() {
+	return mSystems->cameraSystem;
 }
 
 //  ============================================================================
@@ -389,6 +397,8 @@ void World::update(double totalElapsedSeconds, float elapsedSeconds) {
 	mSystems->bulletSystem.simulate(*this, elapsedSeconds);
 
 	mSystems->gunSystem.update(*this, elapsedSeconds);
+
+	mSystems->cameraSystem.update(mSystems->physicsSystem, elapsedSeconds);
 
 	//	Simulate collisions
 	mSystems->physicsSystem.simulate(elapsedSeconds);

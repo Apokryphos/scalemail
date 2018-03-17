@@ -19,9 +19,9 @@ class Camera
 	void calculateProjection();
 
 public:
-	Camera(float width, float height, float zoom = 2.0f);
-	Camera(const Camera&) = delete;
-	Camera& operator=(const Camera&) = delete;
+	Camera(float width = 256.0f, float height = 256.0f, float zoom = 2.0f);
+	// Camera(const Camera&) = delete;
+	// Camera& operator=(const Camera&) = delete;
 	Rectangle getBounds() const;
 	glm::vec2 getPosition() const;
 	glm::mat4 getProjection() const;

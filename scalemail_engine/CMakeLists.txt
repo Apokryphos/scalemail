@@ -54,6 +54,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/bullet_util.cpp
     src/bury_system.cpp
     src/camera.cpp
+    src/camera_system.cpp
     src/collision.cpp
     src/collision_test.cpp
     src/cursor.cpp

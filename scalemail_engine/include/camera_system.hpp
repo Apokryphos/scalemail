@@ -47,9 +47,7 @@ protected:
 	virtual void destroyComponent(int index) override;
 	void initializeFollowEntity(const CameraComponent& cmpnt);
 	void initializeFollowPath(const CameraComponent& cmpnt);
-	void updateCameraBounds(const Entity& cameraEntity,
-							const glm::vec2& position,
-							CameraComponentData& data);
+	void updateBounds(const glm::vec2& position, CameraComponentData& data);
 	void updateFixed(World& world, const Entity& cameraEntity,
 					 CameraComponentData& data);
 	void updateFollowEntity(World& world, const Entity& cameraEntity,

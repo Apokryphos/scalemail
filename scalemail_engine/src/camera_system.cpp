@@ -77,7 +77,7 @@ void CameraSystem::initializeFollowEntity(const CameraComponent& cmpnt) {
 	const PhysicsComponent cameraPhysicsCmpnt =
 		physicsSystem.getComponent(cameraEntity);
 
-	this->updateCameraBounds(cameraEntity, position, data);
+	this->updateBounds(position, data);
 
 	physicsSystem.setPosition(cameraPhysicsCmpnt, position);
 
@@ -105,7 +105,7 @@ void CameraSystem::initializeFollowPath(const CameraComponent& cmpnt) {
 	const PhysicsComponent cameraPhysicsCmpnt =
 		physicsSystem.getComponent(cameraEntity);
 
-	this->updateCameraBounds(cameraEntity, start, data);
+	this->updateBounds(start, data);
 
 	data.camera.setPosition(start);
 }
@@ -177,9 +177,8 @@ void CameraSystem::update(float elapsedSeconds) {
 }
 
 //  ============================================================================
-void CameraSystem::updateCameraBounds(const Entity& cameraEntity,
-									  const glm::vec2& position,
-									  CameraComponentData& data) {
+void CameraSystem::updateBounds(const glm::vec2& position,
+								CameraComponentData& data) {
 	const std::vector<Rectangle>& bounds = data.bounds;
 
 	if (bounds.size() == 0) {
@@ -209,7 +208,7 @@ void CameraSystem::updateFixed(World& world, const Entity& cameraEntity,
 
 	const glm::vec2 position = physicsSystem.getPosition(cameraPhysicsCmpnt);
 
-	this->updateCameraBounds(cameraEntity, position, data);
+	this->updateBounds(position, data);
 }
 
 //  ============================================================================
@@ -233,7 +232,7 @@ void CameraSystem::updateFollowEntity(World& world, const Entity& cameraEntity,
 	const glm::vec2 position =
 		physicsSystem.getPosition(cameraPhysicsCmpnt);
 
-	this->updateCameraBounds(cameraEntity, position, data);
+	this->updateBounds(position, data);
 
 	const glm::vec2 direction = normalize(targetPosition - position);
 
@@ -267,7 +266,7 @@ void CameraSystem::updateFollowPath(World& world, const Entity& cameraEntity,
 
 	physicsSystem.setDirection(cameraPhysicsCmpnt, direction);
 
-	this->updateCameraBounds(cameraEntity, position, data);
+	this->updateBounds(position, data);
 
 	data.camera.setPosition(position);
 }

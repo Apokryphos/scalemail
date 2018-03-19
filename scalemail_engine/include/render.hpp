@@ -5,12 +5,11 @@
 namespace ScaleMail
 {
 class AssetManager;
-class Camera;
 class Game;
 class GameState;
 class World;
 
 void initializeRender(AssetManager& assetManager);
-void render(Game& game, World& world, Camera& camera, GameState& gameState,
+void render(Game& game, World& world, GameState& gameState,
 			float totalElapsedSeconds);
 }

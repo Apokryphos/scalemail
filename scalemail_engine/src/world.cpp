@@ -50,11 +50,11 @@ public:
 class World::WorldSystems
 {
 public:
-	WorldSystems()
+	WorldSystems(World& world)
 	:	aiSystem(entityManager),
 		bulletSystem(entityManager),
 		burySystem(entityManager),
-		cameraSystem(entityManager),
+		cameraSystem(world, entityManager),
 		damageSystem(entityManager),
 		doorSystem(entityManager),
 		expireSystem(entityManager),
@@ -98,7 +98,7 @@ public:
 
 //  ============================================================================
 World::World() : mImpl(std::make_unique<WorldImpl>()),
-				 mSystems(std::make_unique<WorldSystems>()) {
+				 mSystems(std::make_unique<WorldSystems>(*this)) {
 	mImpl->players.reserve(4);
 	mImpl->players.emplace_back("Player1");
 	mImpl->players.emplace_back("Player2");
@@ -398,7 +398,7 @@ void World::update(double totalElapsedSeconds, float elapsedSeconds) {
 
 	mSystems->gunSystem.update(*this, elapsedSeconds);
 
-	mSystems->cameraSystem.update(mSystems->physicsSystem, elapsedSeconds);
+	mSystems->cameraSystem.update(elapsedSeconds);
 
 	//	Simulate collisions
 	mSystems->physicsSystem.simulate(elapsedSeconds);

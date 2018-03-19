@@ -144,8 +144,15 @@ void renderParticles(World& world, Camera& camera) {
 }
 
 //	============================================================================
-void render(Game& game, World& world, Camera& camera, GameState& gameState,
+void render(Game& game, World& world, GameState& gameState,
 			float totalElapsedSeconds) {
+	if (game.camera == nullptr) {
+		return;
+	}
+
+	Camera& camera = *game.camera;
+
+
 	GameWindow& gameWindow = game.gameWindow;
 	GLFWwindow* window = gameWindow.window;
 

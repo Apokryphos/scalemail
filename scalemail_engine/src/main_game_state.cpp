@@ -3,6 +3,7 @@
 #include "ambient_light.hpp"
 #include "bury_system.hpp"
 #include "camera.hpp"
+#include "camera_system.hpp"
 #include "game.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
@@ -23,41 +24,23 @@
 namespace ScaleMail
 {
 //	============================================================================
-static void updateCameraPosition(Game& game) {
-	World* world = game.world;
-	Map* map = world->getMap();
-	Camera* camera = game.camera;
+void getPlayerCamera(World& world, Entity& cameraEntity, Camera*& camera) {
+	camera = nullptr;
 
-	if (map != nullptr && camera != nullptr) {
-		std::vector<Player*> players = world->getPlayers();
+	NameSystem& nameSystem = world.getNameSystem();
 
-		if (game.cameraFollow && players.size() > 0) {
-			//	Camera follows first player
-			PhysicsSystem& physicsSystem = world->getPhysicsSystem();
-			PhysicsComponent physicsCmpnt = physicsSystem.getComponent(players[0]->entity);
-			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+	auto cameraEntities = nameSystem.getEntitiesByName("PlayerCamera");
 
-			std::vector<Rectangle> cameraBounds;
+	//	Intro camera
+	if (cameraEntities.size() > 0) {
+		cameraEntity = cameraEntities[0];
 
-			const MapCamera* mapCamera = map->getCamera("PlayerCamera");
+		CameraSystem& cameraSystem = world.getCameraSystem();
 
-			if (mapCamera != nullptr) {
-				cameraBounds = mapCamera->bounds;
-			}
+		const CameraComponent cameraCmpnt =
+			cameraSystem.getComponent(cameraEntity);
 
-			auto findBounds = std::find_if(cameraBounds.begin(), cameraBounds.end(),
-				[position](const Rectangle& b) -> bool {
-					return b.contains(position);
-				}
-			);
-
-			if (findBounds != cameraBounds.end()) {
-				Rectangle bounds = *findBounds;
-				camera->setBounds(bounds);
-			}
-
-			camera->setPosition(position);
-		}
+		camera = &(cameraSystem.getCamera(cameraCmpnt));
 	}
 }
 
@@ -68,12 +51,28 @@ MainGameState::MainGameState(GameStateManager& gameStateManager) :
 
 //	============================================================================
 void MainGameState::activate(Game& game) {
+	World& world = *game.world;
+
 	game.cameraFollow = true;
-	updateCameraPosition(game);
+
+	Camera* camera = nullptr;
+	Entity cameraEntity;
+	getPlayerCamera(world, cameraEntity, camera);
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+
+	if (cameraSystem.hasComponent(cameraEntity)) {
+		game.camera = camera;
+
+		const CameraComponent cameraCmpnt =
+			cameraSystem.getComponent(cameraEntity);
+
+		Entity playerEntity = world.getPlayers()[0]->entity;
+
+		cameraSystem.followEntity(cameraCmpnt, playerEntity);
+	}
 
 	game.gui->showPlayerHud(true);
-
-	World& world = *game.world;
 
 	//	Unearth skeletons
 	NameSystem& nameSystem = world.getNameSystem();
@@ -106,8 +105,6 @@ void MainGameState::initialize([[maybe_unused]] Game& game) {
 void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 	Camera& camera = *game.camera;
 	World& world = *game.world;
-
-	updateCameraPosition(game);
 
 	std::vector<Player*> players = world.getPlayers();
 

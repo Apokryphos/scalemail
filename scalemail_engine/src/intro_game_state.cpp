@@ -1,6 +1,7 @@
 #include "ai_system.hpp"
 #include "bury_system.hpp"
 #include "camera.hpp"
+#include "camera_system.hpp"
 #include "door_system.hpp"
 #include "ease.hpp"
 #include "font.hpp"
@@ -25,46 +26,43 @@ const float STATE4_DURATION = 15.0f;
 const float STATE5_DURATION = 1.0f;
 
 //	============================================================================
+void getIntroCamera(World& world, Entity& cameraEntity, Camera*& camera) {
+	camera = nullptr;
+
+	NameSystem& nameSystem = world.getNameSystem();
+
+	auto cameraEntities = nameSystem.getEntitiesByName("IntroCamera");
+
+	//	Intro camera
+	if (cameraEntities.size() > 0) {
+		cameraEntity = cameraEntities[0];
+
+		CameraSystem& cameraSystem = world.getCameraSystem();
+
+		const CameraComponent cameraCmpnt =
+			cameraSystem.getComponent(cameraEntity);
+
+		camera = &(cameraSystem.getCamera(cameraCmpnt));
+	}
+}
+
+//	============================================================================
 IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
 	GameState(gameStateManager), mDoorsClosed(false), mIntroState(0),
-	mIntroTicks(0.0f), mTextAlpha(0.0f), mCameraStartY(0.0f),
-	mCameraEndY(0.0f) {
+	mIntroTicks(0.0f), mTextAlpha(0.0f) {
 }
 
 //	============================================================================
 void IntroGameState::activate(Game& game) {
 	setTransitionState(TransitionState::FADED_OUT);
 
-	const MapCamera* introCamera =
-		game.world->getMap()->getCamera("IntroCamera");
-
-	assert(introCamera != nullptr);
-	assert(introCamera->bounds.size() == 1);
-	assert(introCamera->paths.size() == 1);
-
-	const Rectangle& bounds = introCamera->bounds[0];
-
-	//	Camera path should stretch from top to bottom of bounds
-	const MapCameraPath& path = introCamera->paths[0];
-
-	assert(path.points.size() == 2);
-
-	Camera& camera = *game.camera;
-
-	//	Set bounds before position so camera position will be
-	//	adjusted to fit in bounds
-	camera.setBounds(bounds);
-
-	//	Use bounds adjusted camera position for end position
-	camera.setPosition(glm::vec2(path.points[1].y, path.points[1].y));
-	mCameraEndY = camera.getPosition().y;
-
-	//	Use bounds adjusted camera position for start
-	//	This will also set the camera to the correct initial position
-	camera.setPosition(glm::vec2(path.points[0].x, path.points[0].y));
-	mCameraStartY = camera.getPosition().y;
-
 	World& world = *game.world;
+
+	Camera* camera;
+	Entity cameraEntity;
+	getIntroCamera(world, cameraEntity, camera);
+	game.camera = camera;
+
 	NameSystem& nameSystem = world.getNameSystem();
 	mDoorEntities = nameSystem.getEntitiesByName("introDoor");
 	mBuriedEntities = nameSystem.getEntitiesByName("Skeleton");
@@ -129,6 +127,19 @@ void IntroGameState::updateState(World& world, Camera& camera,
 		mTextAlpha = 1.0f;
 		if (mIntroTicks >= STATE3_DURATION) {
 			mIntroTicks = 0;
+
+			//	Start camera pan
+			Camera* camera;
+			Entity cameraEntity;
+			getIntroCamera(world, cameraEntity, camera);
+
+			CameraSystem& cameraSystem = world.getCameraSystem();
+
+			CameraComponent cameraCmpnt =
+				cameraSystem.getComponent(cameraEntity);
+
+			cameraSystem.setMode(cameraCmpnt, CameraMode::FOLLOW_PATH);
+
 			++mIntroState;
 		}
 		break;
@@ -139,13 +150,15 @@ void IntroGameState::updateState(World& world, Camera& camera,
 		mIntroTicks += elapsedSeconds;
 		mTextAlpha = 1 - easeOutCubic(mIntroTicks, 0, 1, STATE2_DURATION);
 
-		glm::vec2 position;
+		glm::vec2 position(0.0f);
 
-		position.y = easeInOutSine(
-			mIntroTicks,
-			mCameraStartY,
-			mCameraEndY - mCameraStartY,
-			STATE4_DURATION);
+		Camera* camera;
+		Entity cameraEntity;
+		getIntroCamera(world, cameraEntity, camera);
+
+		if (camera != nullptr) {
+			position = camera->getPosition();
+		}
 
 		//	Close doors as camera Y position passes them
 		if (!mDoorsClosed) {
@@ -174,11 +187,18 @@ void IntroGameState::updateState(World& world, Camera& camera,
 			}
 		}
 
-		camera.setPosition(position);
-
 		if (mIntroTicks >= STATE4_DURATION) {
 			mIntroTicks = 0;
-			camera.setPosition(glm::vec2(0, mCameraEndY));
+
+			if (camera != nullptr) {
+				CameraSystem& cameraSystem = world.getCameraSystem();
+
+				CameraComponent cameraCmpnt =
+					cameraSystem.getComponent(cameraEntity);
+
+				cameraSystem.setMode(cameraCmpnt, CameraMode::FIXED);
+			}
+
 			++mIntroState;
 		}
 		break;

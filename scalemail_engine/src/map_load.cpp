@@ -1,6 +1,7 @@
 #include "ai_system.hpp"
 #include "ambient_light.hpp"
 #include "asset_manager.hpp"
+#include "camera_system.hpp"
 #include "direction_util.hpp"
 #include "entity_util.hpp"
 #include "entity_types.hpp"
@@ -11,6 +12,8 @@
 #include "map.hpp"
 #include "map_mesh.hpp"
 #include "mesh.hpp"
+#include "name_system.hpp"
+#include "path.hpp"
 #include "particle_system.hpp"
 #include "physics_system.hpp"
 #include "random.hpp"
@@ -63,7 +66,6 @@ struct TilesetData
 struct MapData
 {
 	std::vector<AmbientLight> ambientLights;
-	std::vector<MapCamera> mapCameras;
 	std::vector<PlayerStart> playerStarts;
 	std::vector<TileLayerData> tileLayers;
 	std::vector<TilesetData> tilesets;
@@ -84,6 +86,35 @@ static void buryEntity(const TmxMapLib::Object& object, const Entity& entity,
 		buryEntity(entity, world.getBurySystem(), true,
 			world.getRandom().nextFloat(4.0f, 5.0f), true);
 	}
+}
+
+//  ============================================================================
+static void	createCamera(World& world, const std::string& name,
+						 std::vector<Rectangle>& bounds,
+						 std::vector<Path>& paths) {
+	Entity entity = world.createEntity();
+
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	physicsSystem.addComponent(entity);
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	physicsSystem.setAcceleration(physicsCmpnt, 2.33f);
+	physicsSystem.setRadius(physicsCmpnt, 0.0f);
+	physicsSystem.setSpeed(physicsCmpnt, 128.0f);
+
+	//	Set name
+	NameSystem& nameSystem = world.getNameSystem();
+	nameSystem.addComponent(entity);
+	NameComponent nameCmpnt = nameSystem.getComponent(entity);
+	nameSystem.setName(nameCmpnt, name);
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+	cameraSystem.addComponent(entity);
+
+	const CameraComponent cameraCmpnt = cameraSystem.getComponent(entity);
+
+	//	Set bounds
+	cameraSystem.setBounds(cameraCmpnt, bounds);
+	cameraSystem.setPaths(cameraCmpnt, paths);
 }
 
 //  ============================================================================
@@ -499,11 +530,11 @@ static Rectangle processCameraBoundsObject(const TmxMapLib::Object& object) {
 }
 
 //  ============================================================================
-static MapCameraPath processCameraPathObject(const TmxMapLib::Object& object) {
+static Path processCameraPathObject(const TmxMapLib::Object& object) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 
-	MapCameraPath path = {};
+	Path path = {};
 
 	for (const auto& point : object.GetPoints()) {
 		path.points.push_back(glm::vec2(x + point.X, y + point.Y));
@@ -769,7 +800,7 @@ static void processObject(World& world,
 						  const TmxMapLib::Map& tmxMap,
 						  MapData& mapData,
 						  std::vector<Rectangle>& cameraBounds,
-						  std::vector<MapCameraPath>& cameraPaths) {
+						  std::vector<Path>& cameraPaths) {
 	const std::string type = toLowercase(object.GetType());
 
 	if (object.GetObjectType() == TmxMapLib::ObjectType::Ellipse) {
@@ -825,19 +856,16 @@ static void processObjects(const TmxMapLib::Map tmxMap, World& world,
 						   MapData& mapData) {
 	for (const auto& objectGroup : tmxMap.GetObjectGroups()) {
 		std::vector<Rectangle> cameraBounds;
-		std::vector<MapCameraPath> cameraPaths;
+		std::vector<Path> cameraPaths;
 
 		for (const auto& object : objectGroup.GetObjects()) {
-			processObject(world, object, tmxMap, mapData, cameraBounds, cameraPaths);
+			processObject(world, object, tmxMap, mapData, cameraBounds,
+						  cameraPaths);
 		}
 
 		if (cameraBounds.size() > 0 || cameraPaths.size() > 0) {
-			MapCamera mapCamera = {};
-			mapCamera.name = objectGroup.GetName();
-			mapCamera.bounds = cameraBounds;
-			mapCamera.paths = cameraPaths;
-
-			mapData.mapCameras.push_back(mapCamera);
+			createCamera(world, objectGroup.GetName(), cameraBounds,
+						 cameraPaths);
 		}
 	}
 }
@@ -904,10 +932,6 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world,
 
 	map->setAmbientLights(mapData.ambientLights);
 	map->setPlayerStarts(mapData.playerStarts);
-
-	for (const MapCamera& mapCamera : mapData.mapCameras) {
-		map->addCamera(mapCamera);
-	}
 
 	return map;
 }

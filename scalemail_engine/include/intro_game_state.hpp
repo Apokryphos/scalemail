@@ -14,8 +14,6 @@ class IntroGameState : public GameState
 	int mIntroState;
 	float mIntroTicks;
 	float mTextAlpha;
-	float mCameraStartY;
-	float mCameraEndY;
 
 	std::vector<Entity> mDoorEntities;
 	std::vector<Entity> mBuriedEntities;

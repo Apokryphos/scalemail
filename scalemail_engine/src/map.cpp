@@ -10,24 +10,8 @@ Map::Map(const int width, const int height, const int tileWidth,
 }
 
 //  ============================================================================
-void Map::addCamera(const MapCamera& mapCamera) {
-	mCameras.push_back(mapCamera);
-}
-
-//  ============================================================================
 const std::vector<AmbientLight>& Map::getAmbientLights() const {
 	return mAmbientLights;
-}
-
-//  ============================================================================
-const MapCamera* Map::getCamera(const std::string name) const {
-	for (const MapCamera& camera : mCameras) {
-		if (camera.name == name) {
-			return &camera;
-		}
-	}
-
-	return nullptr;
 }
 
 //  ============================================================================

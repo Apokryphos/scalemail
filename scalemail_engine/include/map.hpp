@@ -19,16 +19,6 @@ struct PlayerStart
 	glm::vec2 position;
 };
 
-struct MapCameraPath {
-	std::vector<glm::vec2> points;
-};
-
-struct MapCamera {
-	std::string name;
-	std::vector<Rectangle> bounds;
-	std::vector<MapCameraPath> paths;
-};
-
 class Map
 {
 	int mWidth;
@@ -37,7 +27,6 @@ class Map
 	int mTileHeight;
 	MapModel mMapModel;
 
-	std::vector<MapCamera> mCameras;
 	std::vector<PlayerStart> mPlayerStarts;
 	std::vector<AmbientLight> mAmbientLights;
 
@@ -46,9 +35,7 @@ public:
 		const int tileHeight, const MapModel mapModel);
 	Map(const Map&) = delete;
 	Map& operator=(const Map&) = delete;
-	void addCamera(const MapCamera& mapCamera);
 	const std::vector<AmbientLight>& getAmbientLights() const;
-	const MapCamera* getCamera(const std::string name) const;
 	int getHeight() const;
 	std::vector<PlayerStart> getPlayerStarts() const;
 	int getTileHeight() const;

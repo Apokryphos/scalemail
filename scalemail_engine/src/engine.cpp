@@ -2,6 +2,7 @@
 #include "ambient_light.hpp"
 #include "asset_manager.hpp"
 #include "camera.hpp"
+#include "camera_system.hpp"
 #include "cursor.hpp"
 #include "engine_start_options.hpp"
 #include "game.hpp"
@@ -182,18 +183,19 @@ int startEngine(EngineStartOptions startOptions) {
 
 	initializeRender(assetManager);
 
-	//  Load map after all other initialize functions
 	World world;
 	world.initialize(assetManager);
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+	cameraSystem.setCameraDefaults(screenWidth, screenHeight, cameraZoom);
 
 	std::string mapName =
 		startOptions.mapName.empty() ? "map1" : startOptions.mapName;
 
+	//  Load map after all other initialize functions
 	world.loadMap(mapName);
 
 	buildAmbientLights(world.getMap()->getAmbientLights());
-
-	Camera camera(screenWidth, screenHeight, cameraZoom);
 
 	Gui gui;
 
@@ -202,7 +204,6 @@ int startEngine(EngineStartOptions startOptions) {
 	game.devOptions.stepCount = 1;
 	game.renderCaps = renderCaps;
 	game.renderOptions = renderOptions;
-	game.camera = &camera;
 	game.gameWindow.window = window;
 	game.gui = &gui;
 	game.speed = 1.0;
@@ -232,13 +233,15 @@ int startEngine(EngineStartOptions startOptions) {
 		lastSeconds = seconds;
 		seconds = glfwGetTime();
 
-		camera.setDevMode(game.devOptions.camera3d);
+		if (game.camera != nullptr) {
+			game.camera->setDevMode(game.devOptions.camera3d);
+		}
 
 		GameState* gameState = gameStateManager.getActiveGameState();
 
 		//	If paused, render frame and continue loop
 		if (game.paused && !game.devOptions.step) {
-			render(game, world, camera, *gameState, totalElapsedSeconds);
+			render(game, world, *gameState, totalElapsedSeconds);
 			continue;
 		}
 
@@ -265,7 +268,7 @@ int startEngine(EngineStartOptions startOptions) {
 
 		//	Only render after an update
 		if (updated) {
-			render(game, world, camera, *gameState, totalElapsedSeconds);
+			render(game, world, *gameState, totalElapsedSeconds);
 			screenCapture();
 		}
 	}

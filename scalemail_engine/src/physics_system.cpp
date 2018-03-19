@@ -1,6 +1,7 @@
 #include "camera.hpp"
 #include "collision.hpp"
 #include "collision_test.hpp"
+#include "ease.hpp"
 #include "math_util.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
@@ -23,6 +24,10 @@ PhysicsSystem::PhysicsSystem(EntityManager& entityManager, int maxComponents)
 	mDirection.reserve(maxComponents);
 	mPosition.reserve(maxComponents);
 	mRadius.reserve(maxComponents);
+	mAcceleration.reserve(maxComponents);
+	mAccelerationTicks.reserve(maxComponents);
+	mAccelerationDuration.reserve(maxComponents);
+	mMaxSpeed.reserve(maxComponents);
 	mSpeed.reserve(maxComponents);
 	mForce.reserve(maxComponents);
 	mVelocity.reserve(maxComponents);
@@ -125,7 +130,11 @@ void PhysicsSystem::createComponent() {
 	mDirection.emplace_back(0.0f);
 	mPosition.emplace_back(0.0f);
 	mRadius.emplace_back(0.0f);
+	mAcceleration.emplace_back(0.0f);
+	mAccelerationTicks.emplace_back(0.0f);
+	mAccelerationDuration.emplace_back(0.0f);
 	mSpeed.emplace_back(64.0f);
+	mMaxSpeed.emplace_back(64.0f);
 	mForce.emplace_back(0.0f);
 	mVelocity.emplace_back(0.0f);
 	mIgnoreActorCollisions.emplace_back(false);
@@ -137,7 +146,11 @@ void PhysicsSystem::destroyComponent(int index) {
 	swapWithLastElementAndRemove(mDirection, index);
 	swapWithLastElementAndRemove(mPosition, index);
 	swapWithLastElementAndRemove(mRadius, index);
+	swapWithLastElementAndRemove(mAcceleration, index);
+	swapWithLastElementAndRemove(mAccelerationDuration, index);
+	swapWithLastElementAndRemove(mAccelerationTicks, index);
 	swapWithLastElementAndRemove(mSpeed, index);
+	swapWithLastElementAndRemove(mMaxSpeed, index);
 	swapWithLastElementAndRemove(mForce, index);
 	swapWithLastElementAndRemove(mVelocity, index);
 	swapWithLastElementAndRemove(mIgnoreActorCollisions, index);
@@ -220,6 +233,12 @@ glm::vec2 PhysicsSystem::getVelocity(const PhysicsComponent& cmpnt) const {
 }
 
 //	============================================================================
+void PhysicsSystem::setAcceleration(const PhysicsComponent& cmpnt,
+									float acceleration) {
+	mAccelerationDuration[cmpnt.index] = std::max(acceleration, 0.0f);
+}
+
+//	============================================================================
 void PhysicsSystem::setCollisionGroup(const PhysicsComponent& cmpnt,
 								 	   const CollisionGroup group) {
 	mGroup[cmpnt.index] = group;
@@ -228,10 +247,18 @@ void PhysicsSystem::setCollisionGroup(const PhysicsComponent& cmpnt,
 //	============================================================================
 void PhysicsSystem::setDirection(const PhysicsComponent& cmpnt,
 								 const glm::vec2 direction) {
-	if (glm::length2(direction) != 0.0f) {
+	const float d = glm::length2(direction);
+
+	if (d != 0.0f) {
 		mDirection[cmpnt.index] = glm::normalize(direction);
 	} else {
 		mDirection[cmpnt.index] = direction;
+	}
+
+	if (d > 0.0f) {
+		mAcceleration[cmpnt.index] = 1.0f;
+	} else {
+		mAcceleration[cmpnt.index] = -1.0f;
 	}
 }
 
@@ -256,7 +283,7 @@ void PhysicsSystem::setRadius(const PhysicsComponent& cmpnt,
 //	============================================================================
 void PhysicsSystem::setSpeed(const PhysicsComponent& cmpnt,
 							 const float speed) {
-	mSpeed[cmpnt.index] = speed;
+	mMaxSpeed[cmpnt.index] = speed;
 }
 
 //	============================================================================
@@ -299,8 +326,28 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 	mEntityCollisions.resize(0);
 	mStaticCollisions.resize(0);
 
+	const size_t count = mPosition.size();
+
+	//	Calculate speed
+	for (size_t index = 0; index < count; ++index) {
+		if (mAccelerationDuration[index] == 0.0f) {
+			mSpeed[index] = mMaxSpeed[index];
+			continue;
+		}
+
+		mAccelerationTicks[index] += mAcceleration[index] * elapsedSeconds;
+
+		mAccelerationTicks[index] = clamp(
+			mAccelerationTicks[index], 0.0f, mAccelerationDuration[index]);
+
+		mSpeed[index] = easeInOutCubic(
+			mAccelerationTicks[index],
+			0.0f,
+			mMaxSpeed[index],
+			mAccelerationDuration[index]);
+	}
+
 	//	Calculate velocities
-	size_t count = mPosition.size();
 	for (size_t index = 0; index < count; ++index) {
 		glm::vec2 velocity =
 			mDirection[index] * mSpeed[index];

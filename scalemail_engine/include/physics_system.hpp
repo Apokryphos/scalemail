@@ -26,7 +26,11 @@ class PhysicsSystem : public EntitySystem
 	std::vector<glm::vec2> mForce;
 	std::vector<glm::vec2> mVelocity;
 	std::vector<float> mRadius;
+	std::vector<float> mAcceleration;
+	std::vector<float> mAccelerationDuration;
+	std::vector<float> mAccelerationTicks;
 	std::vector<float> mSpeed;
+	std::vector<float> mMaxSpeed;
 
 	std::vector<glm::vec4> mStaticObstacles;
 	std::vector<glm::vec4> mStaticActorObstacles;
@@ -61,6 +65,7 @@ public:
 	float getRadius(const PhysicsComponent& cmpnt) const;
 	float getSpeed(const PhysicsComponent& cmpnt) const;
 	glm::vec2 getVelocity(const PhysicsComponent& cmpnt) const;
+	void setAcceleration(const PhysicsComponent& cmpnt, float acceleration);
 	void setCollisionGroup(const PhysicsComponent& cmpnt,
 						   const CollisionGroup group);
 	void setDirection(const PhysicsComponent& cmpnt, const glm::vec2 direction);

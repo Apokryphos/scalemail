@@ -108,6 +108,8 @@ void CameraSystem::initializeFollowPath(const CameraComponent& cmpnt) {
 	this->updateBounds(start, data);
 
 	data.camera.setPosition(start);
+
+	physicsSystem.setPosition(cameraPhysicsCmpnt, data.camera.getPosition());
 }
 
 //  ============================================================================

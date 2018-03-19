@@ -47,6 +47,36 @@ void getIntroCamera(World& world, Entity& cameraEntity, Camera*& camera) {
 }
 
 //	============================================================================
+static void initializeIntroCameraPan(World& world) {
+	Camera* camera;
+	Entity cameraEntity;
+	getIntroCamera(world, cameraEntity, camera);
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+
+	CameraComponent cameraCmpnt =
+		cameraSystem.getComponent(cameraEntity);
+
+	cameraSystem.setMode(cameraCmpnt, CameraMode::FOLLOW_PATH);
+
+	cameraSystem.setMode(cameraCmpnt, CameraMode::FIXED);
+}
+
+//	============================================================================
+static void startIntroCameraPan(World& world) {
+	Camera* camera;
+	Entity cameraEntity;
+	getIntroCamera(world, cameraEntity, camera);
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+
+	CameraComponent cameraCmpnt =
+		cameraSystem.getComponent(cameraEntity);
+
+	cameraSystem.setMode(cameraCmpnt, CameraMode::FOLLOW_PATH);
+}
+
+//	============================================================================
 IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
 	GameState(gameStateManager), mDoorsClosed(false), mIntroState(0),
 	mIntroTicks(0.0f), mTextAlpha(0.0f) {
@@ -106,6 +136,7 @@ void IntroGameState::updateState(World& world, Camera& camera,
 		mIntroTicks += elapsedSeconds;
 		if (mIntroTicks >= STATE1_DURATION) {
 			mIntroTicks = 0;
+			initializeIntroCameraPan(world);
 			++mIntroState;
 		}
 		break;
@@ -127,19 +158,7 @@ void IntroGameState::updateState(World& world, Camera& camera,
 		mTextAlpha = 1.0f;
 		if (mIntroTicks >= STATE3_DURATION) {
 			mIntroTicks = 0;
-
-			//	Start camera pan
-			Camera* camera;
-			Entity cameraEntity;
-			getIntroCamera(world, cameraEntity, camera);
-
-			CameraSystem& cameraSystem = world.getCameraSystem();
-
-			CameraComponent cameraCmpnt =
-				cameraSystem.getComponent(cameraEntity);
-
-			cameraSystem.setMode(cameraCmpnt, CameraMode::FOLLOW_PATH);
-
+			startIntroCameraPan(world);
 			++mIntroState;
 		}
 		break;

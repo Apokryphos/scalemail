@@ -4,6 +4,7 @@
 
 struct EngineStartOptions
 {
+	bool fullscreen;
 	bool openGl2;
 	bool skipIntro;
 	int screenHeight;

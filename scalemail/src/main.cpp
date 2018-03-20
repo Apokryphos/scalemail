@@ -15,6 +15,10 @@ static EngineStartOptions processCommandLineArguments(int argc, char* argv[]) {
 
 		std::string cmd(argv[c]);
 
+		if ((cmd == "-f" || cmd == "--fullscreen")) {
+			startOptions.fullscreen = true;
+		}
+
 		if ((cmd == "-h" || cmd == "--height") && argsLeft >= 1) {
 			startOptions.screenHeight = std::stoi(std::string(argv[c + 1]));
 

@@ -18,7 +18,7 @@ class IntroGameState : public GameState
 	std::vector<Entity> mDoorEntities;
 	std::vector<Entity> mBuriedEntities;
 
-	void updateState(World& world, Camera& camera, float elapsedSeconds);
+	void updateState(World& world, float elapsedSeconds);
 
 public:
 	IntroGameState(GameStateManager& gameStateManager);

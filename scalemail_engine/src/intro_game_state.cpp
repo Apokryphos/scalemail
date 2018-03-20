@@ -133,12 +133,11 @@ void IntroGameState::initialize(Game& game) {
 
 //	============================================================================
 void IntroGameState::update(Game& game, float elapsedSeconds) {
-	this->updateState(*game.world, *game.camera, elapsedSeconds);
+	this->updateState(*game.world, elapsedSeconds);
 }
 
 //	============================================================================
-void IntroGameState::updateState(World& world, Camera& camera,
-								 float elapsedSeconds) {
+void IntroGameState::updateState(World& world, float elapsedSeconds) {
 	switch (mIntroState) {
 	//  Pause before fading title in
 	case 0:

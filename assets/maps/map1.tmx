@@ -812,12 +812,12 @@
     <property name="Color" type="color" value="#ff24100a"/>
    </properties>
   </object>
-  <object id="231" type="AmbientLight" x="272" y="1056" width="256" height="268">
+  <object id="231" type="AmbientLight" x="272" y="1072" width="256" height="256">
    <properties>
     <property name="Color" type="color" value="#ff25373b"/>
    </properties>
   </object>
-  <object id="238" type="AmbientLight" x="336" y="496" width="176" height="560">
+  <object id="238" type="AmbientLight" x="336" y="496" width="176" height="576">
    <properties>
     <property name="Color" type="color" value="#ff1f2a2e"/>
    </properties>

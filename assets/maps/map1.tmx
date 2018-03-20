@@ -1097,15 +1097,14 @@
   <object id="217" type="Collision" x="488" y="473" width="8" height="7"/>
   <object id="218" type="Collision" x="402" y="118" width="12" height="9"/>
   <object id="219" type="ActorCollision" x="302" y="1234" width="4" height="28"/>
-  <object id="220" type="ActorCollision" x="256" y="384" width="48" height="48"/>
-  <object id="221" type="ActorCollision" x="304" y="400" width="112" height="48"/>
+  <object id="220" type="ActorCollision" x="256" y="384" width="48" height="16"/>
+  <object id="221" type="ActorCollision" x="288" y="400" width="128" height="48"/>
   <object id="222" type="ActorCollision" x="336" y="448" width="64" height="16"/>
   <object id="223" type="ActorCollision" x="368" y="384" width="48" height="16"/>
-  <object id="224" type="ActorCollision" x="288" y="432" width="16" height="16"/>
-  <object id="225" type="ActorCollision" x="432" y="400" width="128" height="48"/>
+  <object id="225" type="ActorCollision" x="432" y="400" width="64" height="48"/>
   <object id="226" type="ActorCollision" x="512" y="448" width="48" height="16"/>
   <object id="227" type="ActorCollision" x="432" y="384" width="16" height="16"/>
-  <object id="228" type="ActorCollision" x="496" y="384" width="64" height="16"/>
+  <object id="228" type="ActorCollision" x="496" y="384" width="64" height="64"/>
   <object id="236" type="Collision" x="0" y="288" width="16" height="208"/>
   <object id="237" type="Collision" x="720" y="288" width="16" height="208"/>
   <object id="245" type="ActorCollision" x="640" y="1330" width="112" height="54"/>
@@ -1152,7 +1151,7 @@
   <object id="359" type="ActorCollision" x="96" y="368" width="64" height="16"/>
   <object id="360" type="ActorCollision" x="64" y="448" width="48" height="16"/>
   <object id="361" type="ActorCollision" x="192" y="432" width="32" height="16"/>
-  <object id="362" type="ActorCollision" x="192" y="400" width="64" height="32"/>
+  <object id="362" type="ActorCollision" x="192" y="400" width="96" height="32"/>
   <object id="363" type="Collision" x="704" y="432" width="16" height="56"/>
   <object id="364" type="ActorCollision" x="640" y="288" width="80" height="144"/>
   <object id="365" type="ActorCollision" x="560" y="368" width="80" height="80"/>

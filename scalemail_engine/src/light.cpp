@@ -88,7 +88,9 @@ int getMinFramebufferSize(GLFWwindow* window) {
 //  ============================================================================
 void renderLight(GameWindow& gameWindow, Camera& camera,
 				 LightSystem& lightSystem) {
-	const int minFrameBufferSize = getMinFramebufferSize(gameWindow.window);
+	const int minFrameBufferSize =
+		getMinFramebufferSize(gameWindow.getGlfwWindow());
+
 	if (fboSize != minFrameBufferSize) {
 		fboSize = minFrameBufferSize;
 		destroyFramebuffer(fboA, fboATexture);
@@ -108,8 +110,8 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 		0.0f, 1.0f);
 
 	const glm::mat4 screenProjection = glm::ortho(
-		0.0f, (float)gameWindow.width,
-		(float)gameWindow.height, 0.0f,
+		0.0f, (float)gameWindow.getWidth(),
+		(float)gameWindow.getHeight(), 0.0f,
 		0.0f, 1.0f);
 
 	const glm::mat4 lightMvp = fboProjection * camera.getTransform();
@@ -151,7 +153,7 @@ void renderLight(GameWindow& gameWindow, Camera& camera,
 	//  Draw lights from FBO A to screen
 	blendAdditive();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, gameWindow.width, gameWindow.height);
+	glViewport(0, 0, gameWindow.getWidth(), gameWindow.getHeight());
 	glUseProgram(quadShader.id);
 	glUniformMatrix4fv(quadShader.mvpLocation, 1, GL_FALSE, &screenMvp[0][0]);
 	glBindTexture(GL_TEXTURE_2D, fboATexture);

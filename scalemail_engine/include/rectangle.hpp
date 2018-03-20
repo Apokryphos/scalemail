@@ -65,5 +65,13 @@ struct Rectangle
 	float getTop() const  {
 		return y;
 	}
+
+	bool intersects(const Rectangle& rect) {
+		return
+			x          <= rect.x + rect.width &&
+			x + width  >= rect.x &&
+			y          <= rect.y + rect.height &&
+			y + height >= rect.y;
+	}
 };
 }

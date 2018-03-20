@@ -28,6 +28,7 @@ struct Game
 	bool cameraFollow;
 	bool drawAi;
 	bool drawCollision;
+	bool fullscreen;
 	bool paused;
 	bool quit;
 	double speed;

@@ -89,35 +89,6 @@ static void buryEntity(const TmxMapLib::Object& object, const Entity& entity,
 }
 
 //  ============================================================================
-static void	createCamera(World& world, const std::string& name,
-						 std::vector<Rectangle>& bounds,
-						 std::vector<Path>& paths) {
-	Entity entity = world.createEntity();
-
-	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
-	physicsSystem.addComponent(entity);
-	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	physicsSystem.setAcceleration(physicsCmpnt, 2.33f);
-	physicsSystem.setRadius(physicsCmpnt, 0.0f);
-	physicsSystem.setSpeed(physicsCmpnt, 128.0f);
-
-	//	Set name
-	NameSystem& nameSystem = world.getNameSystem();
-	nameSystem.addComponent(entity);
-	NameComponent nameCmpnt = nameSystem.getComponent(entity);
-	nameSystem.setName(nameCmpnt, name);
-
-	CameraSystem& cameraSystem = world.getCameraSystem();
-	cameraSystem.addComponent(entity);
-
-	const CameraComponent cameraCmpnt = cameraSystem.getComponent(entity);
-
-	//	Set bounds
-	cameraSystem.setBounds(cameraCmpnt, bounds);
-	cameraSystem.setPaths(cameraCmpnt, paths);
-}
-
-//  ============================================================================
 //	Get the tileset image source name without the path and extension
 static std::string getTilesetImageName(const TmxMapLib::Tileset& tileset) {
 	std::string filename = tileset.GetImage().GetSource();
@@ -520,17 +491,22 @@ static void processAmbientLightObject(const TmxMapLib::Object& object,
 }
 
 //  ============================================================================
-static Rectangle processCameraBoundsObject(const TmxMapLib::Object& object) {
+static void processCameraBoundsObject(World& world,
+									  const TmxMapLib::Object& object) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 	const float width = object.GetWidth();
 	const float height = object.GetHeight();
 
-	return Rectangle(x, y, width, height);
+	const bool visited = object.GetPropertySet().GetBoolValue("Visited", false);
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+	cameraSystem.addBounds(Rectangle(x, y, width, height), visited);
 }
 
 //  ============================================================================
-static Path processCameraPathObject(const TmxMapLib::Object& object) {
+static void processCameraPathObject(World& world,
+									const TmxMapLib::Object& object) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 
@@ -540,7 +516,8 @@ static Path processCameraPathObject(const TmxMapLib::Object& object) {
 		path.points.push_back(glm::vec2(x + point.X, y + point.Y));
 	}
 
-	return path;
+	CameraSystem& cameraSystem = world.getCameraSystem();
+	cameraSystem.addPath(object.GetName(), path);
 }
 
 //  ============================================================================
@@ -798,9 +775,7 @@ static void processTriggerObject(World& world,
 static void processObject(World& world,
 						  const TmxMapLib::Object& object,
 						  const TmxMapLib::Map& tmxMap,
-						  MapData& mapData,
-						  std::vector<Rectangle>& cameraBounds,
-						  std::vector<Path>& cameraPaths) {
+						  MapData& mapData) {
 	const std::string type = toLowercase(object.GetType());
 
 	if (object.GetObjectType() == TmxMapLib::ObjectType::Ellipse) {
@@ -840,13 +815,13 @@ static void processObject(World& world,
 		} else if (type == "ambientlight") {
 			processAmbientLightObject(object, mapData);
 		} else if (type == "camerabounds") {
-			cameraBounds.push_back(processCameraBoundsObject(object));
+			processCameraBoundsObject(world, object);
 		} else if (type == "trigger") {
 			processTriggerObject(world, object);
 		}
 	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Polyline) {
 		if (type == "camerapath") {
-			cameraPaths.push_back(processCameraPathObject(object));
+			processCameraPathObject(world, object);
 		}
 	}
 }
@@ -859,13 +834,7 @@ static void processObjects(const TmxMapLib::Map tmxMap, World& world,
 		std::vector<Path> cameraPaths;
 
 		for (const auto& object : objectGroup.GetObjects()) {
-			processObject(world, object, tmxMap, mapData, cameraBounds,
-						  cameraPaths);
-		}
-
-		if (cameraBounds.size() > 0 || cameraPaths.size() > 0) {
-			createCamera(world, objectGroup.GetName(), cameraBounds,
-						 cameraPaths);
+			processObject(world, object, tmxMap, mapData);
 		}
 	}
 }

@@ -7,7 +7,6 @@
 #include "vertex_data.hpp"
 #include "world.hpp"
 #include <glm/mat4x4.hpp>
-#include <iostream>
 
 namespace ScaleMail
 {
@@ -181,7 +180,11 @@ glm::vec2 AiSystem::calculateAvoidForce(std::vector<Obstacle>& obstacles,
 
 //	============================================================================
 void AiSystem::createComponent() {
-	mData.push_back({});
+	AiComponentData data = {};
+	data.arrivalRadius = 32.0f;
+	data.avoidEnabled = true;
+
+	mData.push_back(data);
 }
 
 //	============================================================================
@@ -251,6 +254,11 @@ void AiSystem::enable(bool enabled) {
 //	============================================================================
 AiComponent AiSystem::getComponent(const Entity& entity) const {
 	return makeComponent(this->getComponentIndexByEntity(entity));
+}
+
+//	============================================================================
+void AiSystem::setAvoid(const AiComponent& cmpnt, bool enabled) {
+	mData[cmpnt.index].avoidEnabled = enabled;
 }
 
 //	============================================================================
@@ -329,12 +337,22 @@ void AiSystem::update(World& world, double totalElapsedSeconds) {
 
 		//	Calculate seek forces
 		if (mData[index].seekEnabled) {
-			float speed = physicsSystem.getSpeed(physicsCmpnt);
+			float maxSpeed = physicsSystem.getMaxSpeed(physicsCmpnt);
 			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 			glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
 
-			glm::vec2 v =
-				normalizeVec2(mData[index].seekTarget - position) * speed;
+			const float arrivalRadius = mData[index].arrivalRadius;
+
+			glm::vec2 t = mData[index].seekTarget - position;
+
+			glm::vec2 v = normalizeVec2(t) * maxSpeed;
+
+			float dt = glm::length(t);
+
+			//	Slow down if within arrival radius
+			if (dt < arrivalRadius) {
+				v *= (dt / arrivalRadius);
+			}
 
 			//	Save force value for debugging
 			mData[index].seekForce = v - velocity;
@@ -343,9 +361,14 @@ void AiSystem::update(World& world, double totalElapsedSeconds) {
 		}
 	}
 
+	//	Calculate avoid forces
 	for (auto& p : mEntitiesByComponentIndices) {
 		const size_t index = p.first;
 		const Entity& entity = p.second;
+
+		if (!mData[index].avoidEnabled) {
+			continue;
+		}
 
 		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 		glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);

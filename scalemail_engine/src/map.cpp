@@ -6,12 +6,19 @@ namespace ScaleMail
 Map::Map(const int width, const int height, const int tileWidth,
 		 const int tileHeight, const MapModel mapModel) :
 	mWidth(width), mHeight(height), mTileWidth(tileWidth),
-	mTileHeight(tileHeight), mMapModel(mapModel) {
+	mTileHeight(tileHeight),
+	mBounds(0, 0, width * tileWidth, height * tileHeight),
+	mMapModel(mapModel) {
 }
 
 //  ============================================================================
 const std::vector<AmbientLight>& Map::getAmbientLights() const {
 	return mAmbientLights;
+}
+
+//  ============================================================================
+const Rectangle& Map::getBounds() const {
+	return mBounds;
 }
 
 //  ============================================================================

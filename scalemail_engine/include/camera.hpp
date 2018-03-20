@@ -25,6 +25,7 @@ public:
 	Rectangle getBounds() const;
 	glm::vec2 getPosition() const;
 	glm::mat4 getProjection() const;
+	Rectangle getRectangle() const;
 	glm::vec2 getSize() const;
 	glm::mat4 getTransform() const;
 	glm::mat4 getView() const;

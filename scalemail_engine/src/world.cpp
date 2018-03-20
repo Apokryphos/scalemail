@@ -140,6 +140,10 @@ void World::destroyEntity(Entity entity) {
 		mSystems->burySystem.removeComponent(entity);
 	}
 
+	if (mSystems->cameraSystem.hasComponent(entity)) {
+		mSystems->cameraSystem.removeComponent(entity);
+	}
+
 	if (mSystems->damageSystem.hasComponent(entity)) {
 		mSystems->damageSystem.removeComponent(entity);
 	}
@@ -392,13 +396,13 @@ void World::loadMap(const std::string& mapName) {
 
 //  ============================================================================
 void World::update(double totalElapsedSeconds, float elapsedSeconds) {
+	mSystems->cameraSystem.update(elapsedSeconds);
+
 	mSystems->aiSystem.update(*this, totalElapsedSeconds);
 
 	mSystems->bulletSystem.simulate(*this, elapsedSeconds);
 
 	mSystems->gunSystem.update(*this, elapsedSeconds);
-
-	mSystems->cameraSystem.update(elapsedSeconds);
 
 	//	Simulate collisions
 	mSystems->physicsSystem.simulate(elapsedSeconds);

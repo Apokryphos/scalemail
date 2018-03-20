@@ -19,7 +19,7 @@ namespace ScaleMail
 static void buildAlly(Entity entity, World& world) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	physicsSystem.setSpeed(physicsCmpnt, 16.0f);
+	physicsSystem.setMaxSpeed(physicsCmpnt, 16.0f);
 
 	int bulletIndex = world.getRandom().nextInt(0, 3);
 
@@ -35,7 +35,7 @@ static void buildAlly(Entity entity, World& world) {
 static void buildBat(Entity entity, World& world) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	physicsSystem.setSpeed(physicsCmpnt, 48.0f);
+	physicsSystem.setMaxSpeed(physicsCmpnt, 48.0f);
 
 	HealthSystem& healthSystem = world.getHealthSystem();
 	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
@@ -71,7 +71,7 @@ static void buildHealthPotion(Entity entity, World& world) {
 static void buildSkeleton(Entity entity, World& world) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	physicsSystem.setSpeed(physicsCmpnt, 32.0f);
+	physicsSystem.setMaxSpeed(physicsCmpnt, 32.0f);
 
 	HealthSystem& healthSystem = world.getHealthSystem();
 	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
@@ -83,7 +83,7 @@ static void buildSkeleton(Entity entity, World& world) {
 static void buildSkeletonWarrior(Entity entity, World& world) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	physicsSystem.setSpeed(physicsCmpnt, 32.0f);
+	physicsSystem.setMaxSpeed(physicsCmpnt, 32.0f);
 
 	HealthSystem& healthSystem = world.getHealthSystem();
 	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
@@ -103,7 +103,7 @@ static void buildSkeletonWarrior(Entity entity, World& world) {
 static void buildVampire(Entity entity, World& world) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-	physicsSystem.setSpeed(physicsCmpnt, 50.0f);
+	physicsSystem.setMaxSpeed(physicsCmpnt, 50.0f);
 
 	GunSystem& gunSystem = world.getGunSystem();
 	GunComponent gunCmpnt = gunSystem.getComponent(entity);
@@ -115,7 +115,7 @@ static void buildWisp(Entity entity, World& world) {
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 	physicsSystem.setIgnoreActorCollisions(physicsCmpnt, true);
-	physicsSystem.setSpeed(physicsCmpnt, 20.0f);
+	physicsSystem.setMaxSpeed(physicsCmpnt, 20.0f);
 
 	GunSystem& gunSystem = world.getGunSystem();
 	GunComponent gunCmpnt = gunSystem.getComponent(entity);

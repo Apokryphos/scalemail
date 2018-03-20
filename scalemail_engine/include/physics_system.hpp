@@ -71,9 +71,10 @@ public:
 	void setDirection(const PhysicsComponent& cmpnt, const glm::vec2 direction);
   	void setIgnoreActorCollisions(const PhysicsComponent& cmpnt,
 	  							  const bool ignore);
+	float getMaxSpeed(const PhysicsComponent& cmpnt) const;
+	void setMaxSpeed(const PhysicsComponent& cmpnt, const float maxSpeed);
   	void setPosition(const PhysicsComponent& cmpnt, const glm::vec2 position);
 	void setRadius(const PhysicsComponent& cmpnt, const float radius);
-	void setSpeed(const PhysicsComponent& cmpnt, const float speed);
 	void simulate(float elapsedSeconds);
 	void update();
 };

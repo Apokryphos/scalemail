@@ -76,7 +76,7 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 			PhysicsComponent physicsCmpnt =
 				physicsSystem.getComponent(entity);
 
-			physicsSystem.setSpeed(physicsCmpnt, LOOT_CHASE_SPEED);
+			physicsSystem.setMaxSpeed(physicsCmpnt, LOOT_CHASE_SPEED);
 
 			return AiNodeStatus::SUCCESS;
 		}
@@ -123,7 +123,7 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 			PhysicsComponent physicsCmpnt =
 				physicsSystem.getComponent(entity);
 
-			physicsSystem.setSpeed(physicsCmpnt, NORMAL_SPEED);
+			physicsSystem.setMaxSpeed(physicsCmpnt, NORMAL_SPEED);
 
 			return AiNodeStatus::SUCCESS;
 		}

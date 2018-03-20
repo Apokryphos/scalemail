@@ -166,15 +166,18 @@ void renderText(const GameWindow& gameWindow) {
 
 	mesh.vertexCount = glyphCount * 6;
 
+	const int windowWidth = gameWindow.getWidth();
+	const int windowHeight = gameWindow.getHeight();
+
 	glm::mat4 projection =
-		glm::ortho(0.0f, (float)gameWindow.width, (float)gameWindow.height, 0.0f,
+		glm::ortho(0.0f, (float)windowWidth, (float)windowHeight, 0.0f,
 				   0.0f, 1.0f);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 
 	setMeshVertexData(mesh, fontVertexData);
 
-	glViewport(0, 0, gameWindow.width, gameWindow.height);
+	glViewport(0, 0, windowWidth, windowHeight);
 
 	glUseProgram(quadShader.id);
 	glUniformMatrix4fv(quadShader.mvpLocation, 1, GL_FALSE, &projection[0][0]);

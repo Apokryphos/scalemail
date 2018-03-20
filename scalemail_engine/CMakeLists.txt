@@ -36,6 +36,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ai_nodes/wander_ai_node.cpp
     src/entity_types/actor.cpp
     src/entity_types/bullet.cpp
+    src/entity_types/camera.cpp
     src/entity_types/door.cpp
     src/entity_types/loot.cpp
     src/entity_types/prop.cpp
@@ -70,6 +71,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/font.cpp
     src/gl_util.cpp
     src/engine.cpp
+    src/game_window.cpp
     src/game_state.cpp
     src/game_state_manager.cpp
     src/gun_system.cpp

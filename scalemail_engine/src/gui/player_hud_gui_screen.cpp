@@ -76,8 +76,8 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 
 	glm::mat4 projection = glm::ortho(
 		0.0f,
-		(float)game.gameWindow.width,
-		(float)game.gameWindow.height,
+		(float)game.gameWindow.getWidth(),
+		(float)game.gameWindow.getHeight(),
 		0.0f,
 		-1.0f,
 		1.0f);

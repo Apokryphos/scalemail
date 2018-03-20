@@ -32,7 +32,8 @@ static void errorCallback(int error, const char* description) {
 }
 
 //  ============================================================================
-static void framebufferSizeCallback(GLFWwindow* window, int size, int height) {
+static void framebufferSizeCallback([[maybe_unused]]GLFWwindow* window,
+									int size, int height) {
 	std::cout << "Framebuffer resized to " << size << "x" << height << std::endl;
 }
 
@@ -82,16 +83,19 @@ static bool update(Game& game, World& world, GameState* gameState,
 }
 
 //  ============================================================================
-int startEngine(EngineStartOptions startOptions) {
+GLFWwindow* initializeGlfw(const EngineStartOptions& startOptions) {
 	glfwSetErrorCallback(errorCallback);
 
 	if (!glfwInit()) {
 		std::cerr << "GLFW failed to initialize." << std::endl;
-		return -1;
+		return nullptr;
 	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+
+	//	Hide window
+	glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 
@@ -107,6 +111,7 @@ int startEngine(EngineStartOptions startOptions) {
 		startOptions.screenHeight :
 		mode->height;
 
+	//	Hints to use current video mode settings
 	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
@@ -119,35 +124,14 @@ int startEngine(EngineStartOptions startOptions) {
 	if (!window) {
 		std::cerr << "GLFW failed to create window." << std::endl;
 		glfwTerminate();
-		return -1;
+		return nullptr;
 	}
 
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
-	glfwSetWindowSizeLimits(window, screenWidth, screenHeight,
-							screenWidth, screenHeight);
+	// glfwSetWindowSizeLimits(window, screenWidth, screenHeight,
+	// 						screenWidth, screenHeight);
 
-	int screenSize;
-	if (startOptions.fullscreen) {
-		screenSize = std::min(screenWidth, screenHeight);
-	} else {
-		int left = 0;
-		int top = 0;
-		int right = 0;
-		int bottom = 0;
-		glfwGetWindowFrameSize(window, &left, &top, &right, &bottom);
-
-		const int sh = screenWidth - left - right;
-		const int sv = screenHeight - top - bottom;
-		screenSize = std::min(sh, sv);
-	}
-
-	const float cz = screenSize / 256.0f;
-	const float cameraZoom = std::floor(cz);
-
-	capture.initialize(window);
-
-	initializeInput(window);
 
 	glfwMakeContextCurrent(window);
 
@@ -155,15 +139,20 @@ int startEngine(EngineStartOptions startOptions) {
 		std::cerr << "Glad failed to initialize." << std::endl;
 		glfwDestroyWindow(window);
 		glfwTerminate();
-		return -1;
+		return nullptr;
 	}
 
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
-	RenderCaps renderCaps = {};
-	RenderOptions renderOptions = {};
+	return window;
+}
 
+//  ============================================================================
+void initializeRenderConfig(GLFWwindow* window,
+							const EngineStartOptions& startOptions,
+							RenderCaps& renderCaps,
+							RenderOptions& renderOptions) {
 	const int majorVersion =
 		glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR);
 
@@ -190,19 +179,55 @@ int startEngine(EngineStartOptions startOptions) {
 
 		std::cout << "Using GLSL 120 shaders." << std::endl;
 	}
+}
 
-	loadCursor(window);
+//  ============================================================================
+float calculateCameraZoom(GameWindow& gameWindow) {
+	int screenSize;
+	if (gameWindow.getFullscreen()) {
+		screenSize = std::min(gameWindow.getWidth(), gameWindow.getHeight());
+	} else {
+		int left = 0;
+		int top = 0;
+		int right = 0;
+		int bottom = 0;
+		glfwGetWindowFrameSize(gameWindow.getGlfwWindow(), &left, &top, &right,
+							   &bottom);
+
+		const int sh = gameWindow.getWidth() - left - right;
+		const int sv = gameWindow.getHeight() - top - bottom;
+		screenSize = std::min(sh, sv);
+	}
+
+	const float cz = screenSize / 256.0f;
+	const float cameraZoom = std::floor(cz);
+
+	return cameraZoom;
+}
+
+//  ============================================================================
+int startEngine(EngineStartOptions startOptions) {
+	GLFWwindow* glfwWindow = initializeGlfw(startOptions);
+
+	if (glfwWindow == nullptr) {
+		return -1;
+	}
+
+	RenderCaps renderCaps = {};
+	RenderOptions renderOptions = {};
+	initializeRenderConfig(glfwWindow, startOptions, renderCaps, renderOptions);
 
 	AssetManager assetManager;
 	assetManager.initialize(renderCaps);
+
+	capture.initialize(glfwWindow);
+	initializeInput(glfwWindow);
+	loadCursor(glfwWindow);
 
 	initializeRender(assetManager);
 
 	World world;
 	world.initialize(assetManager);
-
-	CameraSystem& cameraSystem = world.getCameraSystem();
-	cameraSystem.setCameraDefaults(screenWidth, screenHeight, cameraZoom);
 
 	std::string mapName =
 		startOptions.mapName.empty() ? "map1" : startOptions.mapName;
@@ -213,28 +238,37 @@ int startEngine(EngineStartOptions startOptions) {
 	buildAmbientLights(world.getMap()->getAmbientLights());
 
 	Gui gui;
+	gui.initialize(assetManager);
 
 	Game game = {};
 	game.devOptions.enabled = true;
 	game.devOptions.stepCount = 1;
 	game.renderCaps = renderCaps;
 	game.renderOptions = renderOptions;
-	game.gameWindow.window = window;
 	game.gui = &gui;
 	game.speed = 1.0;
 	game.world = &world;
-	glfwSetWindowUserPointer(window, &game);
+	game.gameWindow.setGlfwWindow(glfwWindow);
+	glfwSetWindowUserPointer(glfwWindow, &game);
 
-	gui.initialize(assetManager);
+	CameraSystem& cameraSystem = world.getCameraSystem();
+	cameraSystem.setCameraDefaults(
+		game.gameWindow.getWidth(),
+		game.gameWindow.getHeight(),
+		calculateCameraZoom(game.gameWindow));
 
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
 
-	if (startOptions.skipIntro) {
-		gameStateManager.activateMainGameState();
-	} else {
+	if (!startOptions.skipIntro) {
 		gameStateManager.activateIntroGameState();
+	} else {
+		gameStateManager.activateMainGameState();
 	}
+
+	//	Center and show window
+	game.gameWindow.center();
+	glfwShowWindow(glfwWindow);
 
 	double totalElapsedSeconds = 0;
 	double lastSeconds = 0;
@@ -242,7 +276,7 @@ int startEngine(EngineStartOptions startOptions) {
 
 	double accumulated = 0;
 
-	while (!game.quit && !glfwWindowShouldClose(window)) {
+	while (!game.quit && !glfwWindowShouldClose(glfwWindow)) {
 		glfwPollEvents();
 
 		lastSeconds = seconds;
@@ -288,7 +322,7 @@ int startEngine(EngineStartOptions startOptions) {
 		}
 	}
 
-	glfwDestroyWindow(window);
+	glfwDestroyWindow(glfwWindow);
 	glfwTerminate();
 
 	return 0;

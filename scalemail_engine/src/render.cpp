@@ -4,6 +4,7 @@
 #include "asset_manager.hpp"
 #include "blend.hpp"
 #include "camera.hpp"
+#include "camera_system.hpp"
 #include "font.hpp"
 #include "game.hpp"
 #include "game_state.hpp"
@@ -19,6 +20,7 @@
 #include "sprite.hpp"
 #include "transition.hpp"
 #include "trigger_system.hpp"
+#include "vertex_data.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtx/transform2.hpp>
@@ -33,11 +35,17 @@ static Mesh quadMesh;
 static QuadShader colorQuadShader;
 static QuadShader particleShader;
 
+static Mesh visQuadMesh;
+static std::vector<float> visQuadVertexData;
+
 //	============================================================================
 void initializeRender(AssetManager& assetManager) {
 	quadMesh = assetManager.getQuadMesh();
 	colorQuadShader = assetManager.getColorQuadShader();
 	particleShader = assetManager.getParticleShader();
+
+	assetManager.initializeMesh(visQuadMesh,
+								VertexDefinition::POSITION2_COLOR4);
 
 	debugLineShader = assetManager.getLineShader();
 	assetManager.initializeMesh(
@@ -58,20 +66,27 @@ void initializeRender(AssetManager& assetManager) {
 	}
 }
 
+//  ============================================================================
+static void buildVisQuads(const std::vector<CameraVisibility>& visibility) {
+	visQuadVertexData.resize(0);
+
+	for (const auto& v : visibility) {
+		glm::vec2 position = glm::vec2(v.bounds.x, v.bounds.y);
+		glm::vec2 size = glm::vec2(v.bounds.width, v.bounds.height);
+
+		glm::vec4 color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f - v.alpha);
+
+		addQuadVertexData(visQuadVertexData, position, size, color);
+	}
+
+	setMeshVertexData(visQuadMesh, visQuadVertexData);
+}
+
 //	============================================================================
-void updateStencilBuffer(Camera& camera) {
-	Rectangle cameraBounds = camera.getBounds();
+void updateStencilBuffer(CameraSystem& cameraSystem, Camera& camera) {
+	const auto& vis = cameraSystem.getVisibility();
 
-	glm::mat4 quadWorld =
-		glm::translate(glm::vec3(
-			cameraBounds.x + cameraBounds.width * 0.5f,
-			cameraBounds.y + cameraBounds.height * 0.5f, 0.0f)) *
-		glm::scale(glm::vec3(
-			cameraBounds.width * 0.5f,
-			cameraBounds.height * 0.5f, 1.0f));
-
-	const glm::mat4 mvp =
-		camera.getProjection() * camera.getView() * quadWorld;
+	buildVisQuads(vis);
 
 	//	Prepare stencil buffer writes
 	glEnable(GL_STENCIL_TEST);
@@ -84,14 +99,57 @@ void updateStencilBuffer(Camera& camera) {
 
 	//	Draw camera bounds quad
 	glUseProgram(colorQuadShader.id);
-	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-	drawMesh(quadMesh);
+
+	for (const auto& v : vis) {
+		if (v.alpha <= 0.0f) {
+			continue;
+		}
+
+		Rectangle cameraBounds = v.bounds;
+
+		glm::mat4 quadWorld =
+			glm::translate(glm::vec3(
+				cameraBounds.x + cameraBounds.width * 0.5f,
+				cameraBounds.y + cameraBounds.height * 0.5f, 0.0f)) *
+			glm::scale(glm::vec3(
+				cameraBounds.width * 0.5f,
+				cameraBounds.height * 0.5f, 1.0f));
+
+		const glm::mat4 mvp =
+			camera.getProjection() * camera.getView() * quadWorld;
+
+		glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+
+		drawMesh(quadMesh);
+	}
 
 	//	Disable writes stencil buffer
 	glStencilFunc(GL_EQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glDepthMask(GL_TRUE);
+}
+
+//	============================================================================
+void renderVisibility(CameraSystem& cameraSystem, Camera& camera) {
+	const auto& vis = cameraSystem.getVisibility();
+
+	blendAlpha();
+
+	const glm::mat4 mvp =
+		camera.getProjection() * camera.getView();
+
+	//	Draw camera bounds quad
+	glUseProgram(colorQuadShader.id);
+	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+
+	for (const auto& v : vis) {
+		if (v.alpha <= 0.0f) {
+			continue;
+		}
+
+		drawMesh(visQuadMesh);
+	}
 }
 
 //	============================================================================
@@ -152,23 +210,19 @@ void render(Game& game, World& world, GameState& gameState,
 
 	Camera& camera = *game.camera;
 
-
 	GameWindow& gameWindow = game.gameWindow;
-	GLFWwindow* window = gameWindow.window;
 
 	if (game.renderCaps.fboSupported) {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	glfwGetFramebufferSize(window, &gameWindow.width, &gameWindow.height);
-
-	glViewport(0, 0, gameWindow.width, gameWindow.height);
+	glViewport(0, 0, gameWindow.getWidth(), gameWindow.getHeight());
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//	Don't use stencil buffer if the camera is in 3D
 	if (!game.devOptions.camera3d) {
-		updateStencilBuffer(camera);
+		updateStencilBuffer(world.getCameraSystem(), camera);
 	}
 
 	renderMap(*world.getMap(), camera, totalElapsedSeconds);
@@ -184,6 +238,8 @@ void render(Game& game, World& world, GameState& gameState,
 		renderLight(gameWindow, camera, world.getLightSystem());
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
+
+	renderVisibility(world.getCameraSystem(), camera);
 
 	renderTransition();
 
@@ -203,6 +259,6 @@ void render(Game& game, World& world, GameState& gameState,
 		renderText(gameWindow);
 	}
 
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(gameWindow.getGlfwWindow());
 }
 }

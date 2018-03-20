@@ -1,8 +1,12 @@
+#include "ai_system.hpp"
 #include "camera_system.hpp"
+#include "ease.hpp"
 #include "map.hpp"
+#include "math_util.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"
+#include <glm/gtx/norm.hpp>
 
 namespace ScaleMail
 {
@@ -16,6 +20,21 @@ CameraSystem::CameraSystem(World& world, EntityManager& entityManager,
 						   int maxComponents)
 : EntitySystem(entityManager, maxComponents), mWorld(world) {
 	mData.reserve(maxComponents);
+}
+
+//  ============================================================================
+void CameraSystem::addBounds(const Rectangle& bounds, bool visited) {
+	CameraVisibility visibility = {};
+	visibility.alphaDuration = 0.66f;
+	visibility.visited = visited;
+	visibility.bounds = bounds;
+
+	mVisibility.push_back(visibility);
+}
+
+//  ============================================================================
+void CameraSystem::addPath(const std::string& name, const Path& path) {
+	mPaths[name] = path;
 }
 
 //  ============================================================================
@@ -50,10 +69,23 @@ const Camera& CameraSystem::getCamera(const CameraComponent& cmpnt) const {
 }
 
 //  ============================================================================
+const std::vector<CameraVisibility> CameraSystem::getVisibility() const {
+	return mVisibility;
+}
+
+//  ============================================================================
 void CameraSystem::followEntity(const CameraComponent& cmpnt,
 								const Entity& targetEntity) {
 	mData[cmpnt.index].targetEntity = targetEntity;
 	this->setMode(cmpnt, CameraMode::FOLLOW_ENTITY);
+}
+
+//  ============================================================================
+void CameraSystem::initializeFixed(const CameraComponent& cmpnt) {
+	Entity cameraEntity = this->getEntityByComponentIndex(cmpnt.index);
+	CameraComponentData& data = mData[cmpnt.index];
+
+	this->updateFixed(cameraEntity, data);
 }
 
 //  ============================================================================
@@ -74,25 +106,24 @@ void CameraSystem::initializeFollowEntity(const CameraComponent& cmpnt) {
 	const glm::vec2 position =
 		physicsSystem.getPosition(targetPhysicsCmpnt);
 
-	const PhysicsComponent cameraPhysicsCmpnt =
+	const PhysicsComponent physicsCmpnt =
 		physicsSystem.getComponent(cameraEntity);
 
 	this->updateBounds(position, data);
 
-	physicsSystem.setPosition(cameraPhysicsCmpnt, position);
-
 	data.camera.setPosition(position);
+
+	physicsSystem.setPosition(physicsCmpnt, data.camera.getPosition());
+
+	//	Enable acceleration
+	physicsSystem.setAcceleration(physicsCmpnt, 2.0f);
 }
 
 //  ============================================================================
 void CameraSystem::initializeFollowPath(const CameraComponent& cmpnt) {
 	CameraComponentData& data = mData[cmpnt.index];
 
-	if (data.paths.size() == 0) {
-		return;
-	}
-
-	if (data.paths[0].points.size() < 2) {
+	if (data.path.points.size() < 2) {
 		return;
 	}
 
@@ -100,22 +131,28 @@ void CameraSystem::initializeFollowPath(const CameraComponent& cmpnt) {
 
 	PhysicsSystem& physicsSystem = mWorld.getPhysicsSystem();
 
-	const glm::vec2 start = data.paths[0].points[0];
+	//	Restrict path end camera position to bounds
+	const glm::vec2 end = data.path.points[1];
+	this->updateBounds(end, data);
+	data.camera.setPosition(end);
+	data.pathEnd = data.camera.getPosition();
 
-	const PhysicsComponent cameraPhysicsCmpnt =
+	//	Restrict path start camera position to bounds
+	const glm::vec2 start = data.path.points[0];
+	this->updateBounds(start, data);
+	data.camera.setPosition(start);
+	data.pathStart = data.camera.getPosition();
+
+	data.camera.setBounds(mWorld.getMap()->getBounds());
+
+	const PhysicsComponent physicsCmpnt =
 		physicsSystem.getComponent(cameraEntity);
 
-	this->updateBounds(start, data);
+	//	Set initial camera position
+	physicsSystem.setPosition(physicsCmpnt, data.pathStart);
 
-	data.camera.setPosition(start);
-
-	physicsSystem.setPosition(cameraPhysicsCmpnt, data.camera.getPosition());
-}
-
-//  ============================================================================
-void CameraSystem::setBounds(const CameraComponent& cmpnt,
-							 const std::vector<Rectangle>& bounds) {
-	mData[cmpnt.index].bounds = bounds;
+	//	Enable acceleration
+	physicsSystem.setAcceleration(physicsCmpnt, 2.0f);
 }
 
 //  ============================================================================
@@ -134,6 +171,7 @@ void CameraSystem::setMode(const CameraComponent& cmpnt,
 
 	switch (mode) {
 		case CameraMode::FIXED:
+			this->initializeFixed(cmpnt);
 			break;
 
 		case CameraMode::FOLLOW_ENTITY:
@@ -147,14 +185,17 @@ void CameraSystem::setMode(const CameraComponent& cmpnt,
 }
 
 //  ============================================================================
-void CameraSystem::setPaths(const CameraComponent& cmpnt,
-							const std::vector<Path>& paths) {
-	mData[cmpnt.index].paths = paths;
+void CameraSystem::setPath(const CameraComponent& cmpnt,
+						   const std::string& pathName) {
+	mData[cmpnt.index].path = mPaths[pathName];
 }
+
 
 //  ============================================================================
 void CameraSystem::update(float elapsedSeconds) {
-	World& world = mWorld;
+	for (auto& v : mVisibility) {
+		v.alphaDirection = -1.0f;
+	}
 
 	for (const auto& p : mEntitiesByComponentIndices) {
 		const size_t index = p.first;
@@ -164,112 +205,148 @@ void CameraSystem::update(float elapsedSeconds) {
 
 		switch (data.mode) {
 			case CameraMode::FIXED:
-				this->updateFixed(world, entity, data);
+				this->updateFixed(entity, data);
 				break;
 
 			case CameraMode::FOLLOW_ENTITY:
-				this->updateFollowEntity(world, entity, data);
+				this->updateFollowEntity(entity, data);
 				break;
 
 			case CameraMode::FOLLOW_PATH:
-				this->updateFollowPath(world, entity, data);
+				this->updateFollowPath(entity, data);
 				break;
 		}
+
+		this->updateVisibility(data.camera);
+	}
+
+	for (auto& v : mVisibility) {
+		v.alphaTicks = clamp(
+			v.alphaTicks + v.alphaDirection * elapsedSeconds,
+			0.0f,
+			v.alphaDuration);
+
+		v.alpha = easeOutCubic(
+			v.alphaTicks,
+			0.0f,
+			1.0f,
+			v.alphaDuration);
 	}
 }
 
 //  ============================================================================
 void CameraSystem::updateBounds(const glm::vec2& position,
 								CameraComponentData& data) {
-	const std::vector<Rectangle>& bounds = data.bounds;
-
-	if (bounds.size() == 0) {
+	if (mVisibility.size() == 0) {
 		return;
 	}
 
 	//	Find map camera bounds rectangle the camera is currently positioned in
-	auto findBounds = std::find_if(bounds.begin(), bounds.end(),
-		[position](const Rectangle& b) -> bool {
-			return b.contains(position);
+	const auto& find = std::find_if(mVisibility.begin(), mVisibility.end(),
+		[position](const auto& v) -> bool {
+			return v.bounds.contains(position);
 		}
 	);
 
-	if (findBounds != bounds.end()) {
-		//	Restrict camera to current map camera bounds rectangle
-		data.camera.setBounds(*findBounds);
+	if (find != mVisibility.end()) {
+		data.camera.setBounds((*find).bounds);
 	}
 }
 
 //  ============================================================================
-void CameraSystem::updateFixed(World& world, const Entity& cameraEntity,
+void CameraSystem::updateFixed(const Entity& cameraEntity,
 							   CameraComponentData& data) {
-	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsSystem& physicsSystem = mWorld.getPhysicsSystem();
 
-	const PhysicsComponent cameraPhysicsCmpnt =
+	const PhysicsComponent physicsCmpnt =
 		physicsSystem.getComponent(cameraEntity);
 
-	const glm::vec2 position = physicsSystem.getPosition(cameraPhysicsCmpnt);
+	const glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 
-	this->updateBounds(position, data);
+	data.camera.setBounds(mWorld.getMap()->getBounds());
+
+	data.camera.setPosition(position);
+
+	physicsSystem.setPosition(physicsCmpnt, position);
 }
 
 //  ============================================================================
-void CameraSystem::updateFollowEntity(World& world, const Entity& cameraEntity,
+void CameraSystem::updateFollowEntity(const Entity& cameraEntity,
 									  CameraComponentData& data) {
-	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsSystem& physicsSystem = mWorld.getPhysicsSystem();
 
 	if (!physicsSystem.hasComponent(data.targetEntity)) {
 		return;
 	}
 
+	//	Update camera bounds and position from last physics update
+	const PhysicsComponent physicsCmpnt =
+		physicsSystem.getComponent(cameraEntity);
+
+	const glm::vec2 position =
+		physicsSystem.getPosition(physicsCmpnt);
+
+	this->updateBounds(position, data);
+	data.camera.setPosition(position);
+
+	//	Seek target position
 	const PhysicsComponent targetPhysicsCmpnt =
 		physicsSystem.getComponent(data.targetEntity);
 
 	const glm::vec2 targetPosition =
 		physicsSystem.getPosition(targetPhysicsCmpnt);
 
-	const PhysicsComponent cameraPhysicsCmpnt =
-		physicsSystem.getComponent(cameraEntity);
-
-	const glm::vec2 position =
-		physicsSystem.getPosition(cameraPhysicsCmpnt);
-
-	this->updateBounds(position, data);
-
-	const glm::vec2 direction = normalize(targetPosition - position);
-
-	physicsSystem.setDirection(cameraPhysicsCmpnt, direction);
-
-	data.camera.setPosition(position);
+	AiSystem& aiSystem = mWorld.getAiSystem();
+	AiComponent aiCmpnt = aiSystem.getComponent(cameraEntity);
+	aiSystem.setSeek(aiCmpnt, true);
+	aiSystem.setSeekTarget(aiCmpnt, targetPosition);
 }
 
 //  ============================================================================
-void CameraSystem::updateFollowPath(World& world, const Entity& cameraEntity,
+void CameraSystem::updateFollowPath(const Entity& cameraEntity,
 									CameraComponentData& data) {
-	if (data.paths.size() == 0) {
+	if (data.path.points.size() < 2) {
 		return;
 	}
 
-	if (data.paths[0].points.size() < 2) {
-		return;
-	}
+	//	Update camera position from last physics update
+	PhysicsSystem& physicsSystem = mWorld.getPhysicsSystem();
 
-	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
-
-	const PhysicsComponent cameraPhysicsCmpnt =
+	const PhysicsComponent physicsCmpnt =
 		physicsSystem.getComponent(cameraEntity);
 
 	const glm::vec2 position =
-		physicsSystem.getPosition(cameraPhysicsCmpnt);
+		physicsSystem.getPosition(physicsCmpnt);
 
-	const glm::vec2 end = data.paths[0].points[1];
-
-	const glm::vec2 direction = normalize(end - position);
-
-	physicsSystem.setDirection(cameraPhysicsCmpnt, direction);
-
-	this->updateBounds(position, data);
+	data.camera.setBounds(mWorld.getMap()->getBounds());
 
 	data.camera.setPosition(position);
+
+	//	Seek path end position
+	AiSystem& aiSystem = mWorld.getAiSystem();
+	AiComponent aiCmpnt = aiSystem.getComponent(cameraEntity);
+	aiSystem.setSeek(aiCmpnt, true);
+	aiSystem.setSeekTarget(aiCmpnt, data.pathEnd);
+}
+
+//  ============================================================================
+void CameraSystem::updateVisibility(const Camera& camera) {
+	if (mVisibility.size() == 0) {
+		return;
+	}
+
+	Rectangle cameraRect = camera.getRectangle();
+
+	//	Find map camera bounds rectangle the camera is overlapping
+	for (auto& v : mVisibility) {
+		if (v.visited) {
+			if (v.bounds.intersects(cameraRect)) {
+			//	Make bounds visible
+				v.alphaDirection = 1.0f;
+			}
+		} else {
+			v.visited = v.bounds.contains(camera.getPosition());
+		}
+	}
 }
 }

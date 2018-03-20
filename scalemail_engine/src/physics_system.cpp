@@ -213,6 +213,11 @@ bool PhysicsSystem::getIgnoreActorCollisions(
 }
 
 //	============================================================================
+float PhysicsSystem::getMaxSpeed(const PhysicsComponent& cmpnt) const {
+	return mMaxSpeed[cmpnt.index];
+}
+
+//	============================================================================
 glm::vec2 PhysicsSystem::getPosition(const PhysicsComponent& cmpnt) const {
 	return mPosition[cmpnt.index];
 }
@@ -269,6 +274,12 @@ void PhysicsSystem::setIgnoreActorCollisions(const PhysicsComponent& cmpnt,
 }
 
 //	============================================================================
+void PhysicsSystem::setMaxSpeed(const PhysicsComponent& cmpnt,
+							 const float maxSpeed) {
+	mMaxSpeed[cmpnt.index] = maxSpeed;
+}
+
+//	============================================================================
 void PhysicsSystem::setPosition(const PhysicsComponent& cmpnt,
 								const glm::vec2 position) {
 	mPosition[cmpnt.index] = position;
@@ -278,12 +289,6 @@ void PhysicsSystem::setPosition(const PhysicsComponent& cmpnt,
 void PhysicsSystem::setRadius(const PhysicsComponent& cmpnt,
 							  const float radius) {
 	mRadius[cmpnt.index] = radius;
-}
-
-//	============================================================================
-void PhysicsSystem::setSpeed(const PhysicsComponent& cmpnt,
-							 const float speed) {
-	mMaxSpeed[cmpnt.index] = speed;
 }
 
 //	============================================================================
@@ -333,6 +338,11 @@ void PhysicsSystem::simulate(float elapsedSeconds) {
 		if (mAccelerationDuration[index] == 0.0f) {
 			mSpeed[index] = mMaxSpeed[index];
 			continue;
+		}
+
+		float force = glm::length2(mForce[index]);
+		if (force > 0.0f) {
+			mAcceleration[index] = 1.0f;
 		}
 
 		mAccelerationTicks[index] += mAcceleration[index] * elapsedSeconds;

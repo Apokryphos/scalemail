@@ -25,8 +25,10 @@ class AiSystem : public EntitySystem
 
 	struct AiComponentData
 	{
+		bool avoidEnabled;
 		bool seekEnabled;
 		bool wanderEnabled;
+		float arrivalRadius;
 		float wanderAngle;
 		glm::vec2 avoidForce;
 		glm::vec2 moveDirection;
@@ -63,6 +65,7 @@ public:
 	void drawDebug(std::vector<float>& lineVertexData);
 	void enable(bool enabled);
 	AiComponent getComponent(const Entity& entity) const;
+	void setAvoid(const AiComponent& cmpnt, bool enabled);
 	void setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction);
 	void setSeek(const AiComponent& cmpnt, bool enabled);
 	void setSeekTarget(const AiComponent& cmpnt, const glm::vec2& target);

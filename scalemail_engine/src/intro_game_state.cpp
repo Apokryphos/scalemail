@@ -4,6 +4,7 @@
 #include "camera_system.hpp"
 #include "door_system.hpp"
 #include "ease.hpp"
+#include "entity_types.hpp"
 #include "font.hpp"
 #include "game.hpp"
 #include "game_state_manager.hpp"
@@ -97,8 +98,10 @@ void IntroGameState::activate(Game& game) {
 	mDoorEntities = nameSystem.getEntitiesByName("introDoor");
 	mBuriedEntities = nameSystem.getEntitiesByName("Skeleton");
 
+	game.gameWindow.setCursorVisible(false);
+
 	//	Disable AI during camera pan
-	world.getAiSystem().enable(false);
+	// world.getAiSystem().enable(false);
 }
 
 //	============================================================================
@@ -106,8 +109,8 @@ void IntroGameState::draw(const Game& game, Camera& camera) {
 	const GameWindow& gameWindow = game.gameWindow;
 
 	const float textSize = NORMAL_FONT_SIZE * camera.getZoom();
-	const float centerX = gameWindow.width * 0.5f;
-	const float centerY = gameWindow.height * 0.5f - textSize;
+	const float centerX = gameWindow.getWidth() * 0.5f;
+	const float centerY = gameWindow.getHeight() * 0.5f - textSize;
 
 	if (!game.paused) {
 		drawCenterText(
@@ -119,7 +122,13 @@ void IntroGameState::draw(const Game& game, Camera& camera) {
 }
 
 //	============================================================================
-void IntroGameState::initialize([[maybe_unused]] Game& game) {
+void IntroGameState::initialize(Game& game) {
+	World& world = *game.world;
+
+	Entity introCamera = createCamera(world, "IntroCamera");
+	CameraSystem& cameraSystem = world.getCameraSystem();
+	CameraComponent cameraCmpnt = cameraSystem.getComponent(introCamera);
+	cameraSystem.setPath(cameraCmpnt, "IntroCameraPath");
 }
 
 //	============================================================================

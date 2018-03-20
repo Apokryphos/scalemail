@@ -46,6 +46,15 @@ glm::mat4 Camera::getProjection() const {
 }
 
 //  ============================================================================
+Rectangle Camera::getRectangle() const {
+	return Rectangle(
+		mPosition.x - (mWidth  / mZoom) / 2,
+		mPosition.y - (mHeight / mZoom) / 2,
+		mWidth,
+		mHeight);
+}
+
+//  ============================================================================
 glm::vec2 Camera::getSize() const {
 	return glm::vec2(mWidth, mHeight);
 }

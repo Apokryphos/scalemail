@@ -4,6 +4,7 @@
 #include "bury_system.hpp"
 #include "camera.hpp"
 #include "camera_system.hpp"
+#include "entity_types.hpp"
 #include "game.hpp"
 #include "game_window.hpp"
 #include "gl_headers.hpp"
@@ -31,7 +32,6 @@ void getPlayerCamera(World& world, Entity& cameraEntity, Camera*& camera) {
 
 	auto cameraEntities = nameSystem.getEntitiesByName("PlayerCamera");
 
-	//	Intro camera
 	if (cameraEntities.size() > 0) {
 		cameraEntity = cameraEntities[0];
 
@@ -90,6 +90,8 @@ void MainGameState::activate(Game& game) {
 	}
 
 	world.getAiSystem().enable(true);
+
+	game.gameWindow.setCursorVisible(true);
 }
 
 //	============================================================================
@@ -98,7 +100,9 @@ void MainGameState::draw([[maybe_unused]] const Game& game,
 }
 
 //	============================================================================
-void MainGameState::initialize([[maybe_unused]] Game& game) {
+void MainGameState::initialize(Game& game) {
+	World& world = *game.world;
+	createCamera(world, "PlayerCamera");
 }
 
 //	============================================================================

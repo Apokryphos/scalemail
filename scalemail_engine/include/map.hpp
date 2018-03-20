@@ -25,6 +25,7 @@ class Map
 	int mHeight;
 	int mTileWidth;
 	int mTileHeight;
+	Rectangle mBounds;
 	MapModel mMapModel;
 
 	std::vector<PlayerStart> mPlayerStarts;
@@ -36,6 +37,7 @@ public:
 	Map(const Map&) = delete;
 	Map& operator=(const Map&) = delete;
 	const std::vector<AmbientLight>& getAmbientLights() const;
+	const Rectangle& getBounds() const;
 	int getHeight() const;
 	std::vector<PlayerStart> getPlayerStarts() const;
 	int getTileHeight() const;

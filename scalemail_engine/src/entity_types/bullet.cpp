@@ -43,7 +43,7 @@ Entity createBullet(World& world, const Entity& sourceEntity,
 	physicsSystem.setPosition(physicsCmpnt, position + bulletOffset);
 	physicsSystem.setDirection(physicsCmpnt, bulletData.direction);
 	physicsSystem.setRadius(physicsCmpnt, 3.0f);
-	physicsSystem.setSpeed(physicsCmpnt, bulletData.speed);
+	physicsSystem.setMaxSpeed(physicsCmpnt, bulletData.speed);
 
 	PhysicsComponent sourcePhysicsCmpnt =
 		physicsSystem.getComponent(sourceEntity);

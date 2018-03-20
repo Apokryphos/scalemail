@@ -10,7 +10,6 @@
 #include "game_state_manager.hpp"
 #include "game_window.hpp"
 #include "intro_game_state.hpp"
-#include "map.hpp"
 #include "name_system.hpp"
 #include "physics_system.hpp"
 #include "transition.hpp"
@@ -20,6 +19,12 @@
 
 namespace ScaleMail
 {
+static const std::string INTRO_CAMERA_NAME = "IntroCamera";
+static const std::string INTRO_CAMERA_PATH_NAME = "IntroCameraPath";
+static const std::string INTRO_DOOR_NAME = "introDoor";
+static const std::string INTRO_SKELETON_NAME = "Skeleton";
+static const std::string INTRO_TITLE = "- SCALEMAIL -";
+
 const float STATE1_DURATION = 0.5f;
 const float STATE2_DURATION = 2.0f;
 const float STATE3_DURATION = 3.0f;
@@ -27,54 +32,67 @@ const float STATE4_DURATION = 15.0f;
 const float STATE5_DURATION = 1.0f;
 
 //	============================================================================
-void getIntroCamera(World& world, Entity& cameraEntity, Camera*& camera) {
-	camera = nullptr;
+static Camera* getIntroCamera(World& world) {
+	auto entities =  world.getNameSystem().getEntitiesByName(INTRO_CAMERA_NAME);
 
-	NameSystem& nameSystem = world.getNameSystem();
-
-	auto cameraEntities = nameSystem.getEntitiesByName("IntroCamera");
-
-	//	Intro camera
-	if (cameraEntities.size() > 0) {
-		cameraEntity = cameraEntities[0];
-
-		CameraSystem& cameraSystem = world.getCameraSystem();
-
-		const CameraComponent cameraCmpnt =
-			cameraSystem.getComponent(cameraEntity);
-
-		camera = &(cameraSystem.getCamera(cameraCmpnt));
+	if (entities.size() == 0) {
+		return nullptr;
 	}
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+
+	CameraComponent cameraCmpnt = cameraSystem.getComponent(entities[0]);
+
+	return &(cameraSystem.getCamera(cameraCmpnt));
 }
 
 //	============================================================================
 static void initializeIntroCameraPan(World& world) {
-	Camera* camera;
-	Entity cameraEntity;
-	getIntroCamera(world, cameraEntity, camera);
+	auto entities =  world.getNameSystem().getEntitiesByName(INTRO_CAMERA_NAME);
+
+	if (entities.size() == 0) {
+		return;
+	}
 
 	CameraSystem& cameraSystem = world.getCameraSystem();
 
-	CameraComponent cameraCmpnt =
-		cameraSystem.getComponent(cameraEntity);
+	CameraComponent cameraCmpnt = cameraSystem.getComponent(entities[0]);
 
+	//	Initialize camera position to path start
 	cameraSystem.setMode(cameraCmpnt, CameraMode::FOLLOW_PATH);
 
+	//	Change to fixed mode so camera remains stationary for now
 	cameraSystem.setMode(cameraCmpnt, CameraMode::FIXED);
 }
 
 //	============================================================================
 static void startIntroCameraPan(World& world) {
-	Camera* camera;
-	Entity cameraEntity;
-	getIntroCamera(world, cameraEntity, camera);
+	auto entities =  world.getNameSystem().getEntitiesByName(INTRO_CAMERA_NAME);
+
+	if (entities.size() == 0) {
+		return;
+	}
 
 	CameraSystem& cameraSystem = world.getCameraSystem();
 
-	CameraComponent cameraCmpnt =
-		cameraSystem.getComponent(cameraEntity);
+	CameraComponent cameraCmpnt = cameraSystem.getComponent(entities[0]);
 
 	cameraSystem.setMode(cameraCmpnt, CameraMode::FOLLOW_PATH);
+}
+
+//	============================================================================
+static void stopIntroCameraPan(World& world) {
+	auto entities =  world.getNameSystem().getEntitiesByName(INTRO_CAMERA_NAME);
+
+	if (entities.size() == 0) {
+		return;
+	}
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+
+	CameraComponent cameraCmpnt = cameraSystem.getComponent(entities[0]);
+
+	cameraSystem.setMode(cameraCmpnt, CameraMode::FIXED);
 }
 
 //	============================================================================
@@ -89,14 +107,12 @@ void IntroGameState::activate(Game& game) {
 
 	World& world = *game.world;
 
-	Camera* camera;
-	Entity cameraEntity;
-	getIntroCamera(world, cameraEntity, camera);
-	game.camera = camera;
+	//	Activate intro camera
+	game.camera = getIntroCamera(world);
 
 	NameSystem& nameSystem = world.getNameSystem();
-	mDoorEntities = nameSystem.getEntitiesByName("introDoor");
-	mBuriedEntities = nameSystem.getEntitiesByName("Skeleton");
+	mDoorEntities = nameSystem.getEntitiesByName(INTRO_DOOR_NAME);
+	mBuriedEntities = nameSystem.getEntitiesByName(INTRO_SKELETON_NAME);
 
 	game.gameWindow.setCursorVisible(false);
 
@@ -115,7 +131,7 @@ void IntroGameState::draw(const Game& game, Camera& camera) {
 	if (!game.paused) {
 		drawCenterText(
 			glm::vec2(centerX, centerY),
-			"- SCALEMAIL -",
+			INTRO_TITLE,
 			glm::vec4(1.0f, 1.0f, 1.0f, mTextAlpha),
 			textSize);
 	}
@@ -125,10 +141,10 @@ void IntroGameState::draw(const Game& game, Camera& camera) {
 void IntroGameState::initialize(Game& game) {
 	World& world = *game.world;
 
-	Entity introCamera = createCamera(world, "IntroCamera");
+	Entity introCamera = createCamera(world, INTRO_CAMERA_NAME);
 	CameraSystem& cameraSystem = world.getCameraSystem();
 	CameraComponent cameraCmpnt = cameraSystem.getComponent(introCamera);
-	cameraSystem.setPath(cameraCmpnt, "IntroCameraPath");
+	cameraSystem.setPath(cameraCmpnt, INTRO_CAMERA_PATH_NAME);
 }
 
 //	============================================================================
@@ -179,10 +195,7 @@ void IntroGameState::updateState(World& world, float elapsedSeconds) {
 
 		glm::vec2 position(0.0f);
 
-		Camera* camera;
-		Entity cameraEntity;
-		getIntroCamera(world, cameraEntity, camera);
-
+		Camera* camera = getIntroCamera(world);
 		if (camera != nullptr) {
 			position = camera->getPosition();
 		}
@@ -216,16 +229,7 @@ void IntroGameState::updateState(World& world, float elapsedSeconds) {
 
 		if (mIntroTicks >= STATE4_DURATION) {
 			mIntroTicks = 0;
-
-			if (camera != nullptr) {
-				CameraSystem& cameraSystem = world.getCameraSystem();
-
-				CameraComponent cameraCmpnt =
-					cameraSystem.getComponent(cameraEntity);
-
-				cameraSystem.setMode(cameraCmpnt, CameraMode::FIXED);
-			}
-
+			stopIntroCameraPan(world);
 			++mIntroState;
 		}
 		break;

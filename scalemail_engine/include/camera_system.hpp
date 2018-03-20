@@ -83,6 +83,7 @@ public:
 	Camera& getCamera(const CameraComponent& cmpnt);
 	const Camera& getCamera(const CameraComponent& cmpnt) const;
 	const std::vector<CameraVisibility> getVisibility() const;
+	void resizeCameras(const int width, const int  height, const float zoom);
 	void setCameraDefaults(const int width, const int  height, const float zoom);
 	void setMode(const CameraComponent& cmpnt, const CameraMode mode);
 	void setPath(const CameraComponent& cmpnt, const std::string& pathName);

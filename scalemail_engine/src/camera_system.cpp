@@ -156,6 +156,23 @@ void CameraSystem::initializeFollowPath(const CameraComponent& cmpnt) {
 }
 
 //  ============================================================================
+void CameraSystem::resizeCameras(const int width,
+								 const int height,
+								 const float zoom) {
+	this->setCameraDefaults(width, height, zoom);
+
+	for (const auto& p : mEntitiesByComponentIndices) {
+		const size_t index = p.first;
+		const Entity& entity = p.second;
+
+		CameraComponentData& data = mData[index];
+
+		data.camera.setSize(width, height);
+		data.camera.setZoom(zoom);
+	}
+}
+
+//  ============================================================================
 void CameraSystem::setCameraDefaults(const int width,
 									 const int height,
 									 const float zoom) {

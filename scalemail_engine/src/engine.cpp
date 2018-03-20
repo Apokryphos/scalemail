@@ -27,14 +27,55 @@ int captureSkipFrames = 0;
 ScreenCapture capture;
 
 //  ============================================================================
+float calculateCameraZoom(GameWindow& gameWindow) {
+	int screenSize;
+	if (gameWindow.getFullscreen()) {
+		screenSize = std::min(gameWindow.getWidth(), gameWindow.getHeight());
+	} else {
+		int left = 0;
+		int top = 0;
+		int right = 0;
+		int bottom = 0;
+		glfwGetWindowFrameSize(gameWindow.getGlfwWindow(), &left, &top, &right,
+							   &bottom);
+
+		const int sh = gameWindow.getWidth() - left - right;
+		const int sv = gameWindow.getHeight() - top - bottom;
+		screenSize = std::min(sh, sv);
+	}
+
+	const float cz = screenSize / 256.0f;
+	const float cameraZoom = std::floor(cz);
+
+	return cameraZoom;
+}
+
+//  ============================================================================
 static void errorCallback(int error, const char* description) {
 	std::cerr << "GL Error " << error << ": " << description << std::endl;
 }
 
 //  ============================================================================
 static void framebufferSizeCallback([[maybe_unused]]GLFWwindow* window,
-									int size, int height) {
-	std::cout << "Framebuffer resized to " << size << "x" << height << std::endl;
+									int width, int height) {
+	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
+
+	GameWindow& gameWindow = game->gameWindow;
+
+	gameWindow.resize();
+
+	World* world = game->world;
+
+	if (world != nullptr) {
+		CameraSystem& cameraSystem = world->getCameraSystem();
+
+		cameraSystem.resizeCameras(
+			gameWindow.getWidth(),
+			gameWindow.getHeight(),
+			calculateCameraZoom(gameWindow));
+	}
+
+	std::cout << "Framebuffer resized to " << width << "x" << height << std::endl;
 }
 
 //  ============================================================================
@@ -179,30 +220,6 @@ void initializeRenderConfig(GLFWwindow* window,
 
 		std::cout << "Using GLSL 120 shaders." << std::endl;
 	}
-}
-
-//  ============================================================================
-float calculateCameraZoom(GameWindow& gameWindow) {
-	int screenSize;
-	if (gameWindow.getFullscreen()) {
-		screenSize = std::min(gameWindow.getWidth(), gameWindow.getHeight());
-	} else {
-		int left = 0;
-		int top = 0;
-		int right = 0;
-		int bottom = 0;
-		glfwGetWindowFrameSize(gameWindow.getGlfwWindow(), &left, &top, &right,
-							   &bottom);
-
-		const int sh = gameWindow.getWidth() - left - right;
-		const int sv = gameWindow.getHeight() - top - bottom;
-		screenSize = std::min(sh, sv);
-	}
-
-	const float cz = screenSize / 256.0f;
-	const float cameraZoom = std::floor(cz);
-
-	return cameraZoom;
 }
 
 //  ============================================================================

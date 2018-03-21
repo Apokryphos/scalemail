@@ -858,7 +858,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Triggers">
-  <object id="239" name="Door Trigger" type="Trigger" x="368" y="1088" width="48" height="48">
+  <object id="239" name="Door Trigger" type="Trigger" x="368" y="1104" width="48" height="48">
    <properties>
     <property name="TargetName" value="introDoor"/>
    </properties>

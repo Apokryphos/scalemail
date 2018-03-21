@@ -13,6 +13,7 @@
 #include "main_game_state.hpp"
 #include "map.hpp"
 #include "player.hpp"
+#include "player_camera.hpp"
 #include "physics_system.hpp"
 #include "name_system.hpp"
 #include "rectangle.hpp"
@@ -25,26 +26,6 @@
 namespace ScaleMail
 {
 //	============================================================================
-void getPlayerCamera(World& world, Entity& cameraEntity, Camera*& camera) {
-	camera = nullptr;
-
-	NameSystem& nameSystem = world.getNameSystem();
-
-	auto cameraEntities = nameSystem.getEntitiesByName("PlayerCamera");
-
-	if (cameraEntities.size() > 0) {
-		cameraEntity = cameraEntities[0];
-
-		CameraSystem& cameraSystem = world.getCameraSystem();
-
-		const CameraComponent cameraCmpnt =
-			cameraSystem.getComponent(cameraEntity);
-
-		camera = &(cameraSystem.getCamera(cameraCmpnt));
-	}
-}
-
-//	============================================================================
 MainGameState::MainGameState(GameStateManager& gameStateManager) :
 	GameState(gameStateManager) {
 }
@@ -55,39 +36,9 @@ void MainGameState::activate(Game& game) {
 
 	game.cameraFollow = true;
 
-	Camera* camera = nullptr;
-	Entity cameraEntity;
-	getPlayerCamera(world, cameraEntity, camera);
-
-	CameraSystem& cameraSystem = world.getCameraSystem();
-
-	if (cameraSystem.hasComponent(cameraEntity)) {
-		game.camera = camera;
-
-		const CameraComponent cameraCmpnt =
-			cameraSystem.getComponent(cameraEntity);
-
-		Entity playerEntity = world.getPlayers()[0]->entity;
-
-		cameraSystem.followEntity(cameraCmpnt, playerEntity);
-	}
+	activatePlayerCamera(game);
 
 	game.gui->showPlayerHud(true);
-
-	//	Unearth skeletons
-	NameSystem& nameSystem = world.getNameSystem();
-	std::vector<Entity> buriedEntities = nameSystem.getEntitiesByName("Skeleton");
-
-	BurySystem& burySystem = world.getBurySystem();
-	for (const auto entity : buriedEntities) {
-		if (burySystem.hasComponent(entity)) {
-			BuryComponent buryCmpnt = burySystem.getComponent(entity);
-
-			if (burySystem.getBuryState(buryCmpnt) == BuryState::BURIED) {
-				world.getBurySystem().rise(buryCmpnt, false);
-			}
-		}
-	}
 
 	world.getAiSystem().enable(true);
 
@@ -100,9 +51,7 @@ void MainGameState::draw([[maybe_unused]] const Game& game,
 }
 
 //	============================================================================
-void MainGameState::initialize(Game& game) {
-	World& world = *game.world;
-	createCamera(world, "PlayerCamera");
+void MainGameState::initialize([[maybe_unused]] Game& game) {
 }
 
 //	============================================================================

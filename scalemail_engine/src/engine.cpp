@@ -277,11 +277,7 @@ int startEngine(EngineStartOptions startOptions) {
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
 
-	if (!startOptions.skipIntro) {
-		gameStateManager.activateIntroGameState();
-	} else {
-		gameStateManager.activateMainGameState();
-	}
+	gameStateManager.activateIntroGameState(startOptions.skipIntro);
 
 	//	Center and show window
 	game.gameWindow.center();

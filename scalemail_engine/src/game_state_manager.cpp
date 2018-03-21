@@ -10,9 +10,9 @@ GameStateManager::GameStateManager() : mIntroGameState(*this),
 }
 
 //	============================================================================
-void GameStateManager::activateIntroGameState() {
+void GameStateManager::activateIntroGameState(bool skipIntro) {
 	mActiveGameState = &mIntroGameState;
-	mIntroGameState.activate(*mGame);
+	mIntroGameState.activate(*mGame, skipIntro);
 	std::cout << "Intro game state activated." << std::endl;
 }
 

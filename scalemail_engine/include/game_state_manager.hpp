@@ -21,7 +21,7 @@ public:
 	GameStateManager();
 	GameStateManager(const GameStateManager&) = delete;
 	GameStateManager& operator=(const GameStateManager&) = delete;
-	void activateIntroGameState();
+	void activateIntroGameState(bool skipIntro);
 	void activateMainGameState();
 	GameState* getActiveGameState();
 	void initialize(Game& game);

@@ -10,8 +10,10 @@
 #include "game_state_manager.hpp"
 #include "game_window.hpp"
 #include "intro_game_state.hpp"
+#include "map.hpp"
 #include "name_system.hpp"
 #include "physics_system.hpp"
+#include "player_camera.hpp"
 #include "transition.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
@@ -30,6 +32,27 @@ const float STATE2_DURATION = 2.0f;
 const float STATE3_DURATION = 3.0f;
 const float STATE4_DURATION = 15.0f;
 const float STATE5_DURATION = 1.0f;
+const float STATE5_SKIP_DURATION = 4.0f;
+
+//	============================================================================
+static bool closeDoors(World& world, std::vector<Entity>& entities,
+					   const glm::vec2& cameraPosition) {
+	bool closed = false;
+
+	for (const auto entity : entities) {
+		PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+		glm::vec2 doorPosition = physicsSystem.getPosition(physicsCmpnt);
+
+		if (cameraPosition.y >= doorPosition.y) {
+			closed = true;
+			DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
+			world.getDoorSystem().setOpen(doorCmpnt, false);
+		}
+	}
+
+	return closed;
+}
 
 //	============================================================================
 static Camera* getIntroCamera(World& world) {
@@ -66,6 +89,25 @@ static void initializeIntroCameraPan(World& world) {
 }
 
 //	============================================================================
+static void raiseSkeletons(World& world, std::vector<Entity>& entities) {
+	if (entities.size() == 0) {
+		return;
+	}
+
+		//	Unearth skeletons
+	BurySystem& burySystem = world.getBurySystem();
+	for (const auto entity : entities) {
+		if (burySystem.hasComponent(entity)) {
+			BuryComponent buryCmpnt = burySystem.getComponent(entity);
+
+			if (burySystem.getBuryState(buryCmpnt) == BuryState::BURIED) {
+				world.getBurySystem().rise(buryCmpnt, false);
+			}
+		}
+	}
+}
+
+//	============================================================================
 static void startIntroCameraPan(World& world) {
 	auto entities =  world.getNameSystem().getEntitiesByName(INTRO_CAMERA_NAME);
 
@@ -97,18 +139,13 @@ static void stopIntroCameraPan(World& world) {
 
 //	============================================================================
 IntroGameState::IntroGameState(GameStateManager& gameStateManager) :
-	GameState(gameStateManager), mDoorsClosed(false), mIntroState(0),
-	mIntroTicks(0.0f), mTextAlpha(0.0f) {
+	GameState(gameStateManager), mSkipIntro(false), mDoorsClosed(false),
+	mIntroState(0),	mIntroTicks(0.0f), mTextAlpha(0.0f) {
 }
 
 //	============================================================================
 void IntroGameState::activate(Game& game) {
-	setTransitionState(TransitionState::FADED_OUT);
-
 	World& world = *game.world;
-
-	//	Activate intro camera
-	game.camera = getIntroCamera(world);
 
 	NameSystem& nameSystem = world.getNameSystem();
 	mDoorEntities = nameSystem.getEntitiesByName(INTRO_DOOR_NAME);
@@ -116,8 +153,33 @@ void IntroGameState::activate(Game& game) {
 
 	game.gameWindow.setCursorVisible(false);
 
+	if (!mSkipIntro) {
+		setTransitionState(TransitionState::FADED_OUT);
+
+		//	Activate intro camera
+		game.camera = getIntroCamera(world);
+	} else {
+		mIntroState = 4;
+
+		const glm::vec2 mapBottom(
+			0,
+			world.getMap()->getHeight() * world.getMap()->getTileHeight());
+
+		closeDoors(world, mDoorEntities, mapBottom);
+		raiseSkeletons(world, mBuriedEntities);
+
+		//	Activate player camera
+		activatePlayerCamera(game);
+	}
+
 	//	Disable AI during camera pan
 	// world.getAiSystem().enable(false);
+}
+
+//	============================================================================
+void IntroGameState::activate(Game& game, bool skipIntro) {
+	mSkipIntro = skipIntro;
+	this->activate(game);
 }
 
 //	============================================================================
@@ -145,6 +207,8 @@ void IntroGameState::initialize(Game& game) {
 	CameraSystem& cameraSystem = world.getCameraSystem();
 	CameraComponent cameraCmpnt = cameraSystem.getComponent(introCamera);
 	cameraSystem.setPath(cameraCmpnt, INTRO_CAMERA_PATH_NAME);
+
+	createPlayerCamera(world);
 }
 
 //	============================================================================
@@ -193,37 +257,19 @@ void IntroGameState::updateState(World& world, float elapsedSeconds) {
 		mIntroTicks += elapsedSeconds;
 		mTextAlpha = 1 - easeOutCubic(mIntroTicks, 0, 1, STATE2_DURATION);
 
-		glm::vec2 position(0.0f);
+		glm::vec2 cameraPosition(0.0f);
 
 		Camera* camera = getIntroCamera(world);
 		if (camera != nullptr) {
-			position = camera->getPosition();
+			cameraPosition = camera->getPosition();
 		}
 
 		//	Close doors as camera Y position passes them
 		if (!mDoorsClosed) {
-			for (const auto entity : mDoorEntities) {
-				PhysicsSystem& physicsSystem = world.getPhysicsSystem();
-				PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
-				glm::vec2 doorPosition = physicsSystem.getPosition(physicsCmpnt);
-
-				if (position.y >= doorPosition.y) {
-					mDoorsClosed = true;
-					DoorComponent doorCmpnt = world.getDoorSystem().getComponent(entity);
-					world.getDoorSystem().setOpen(doorCmpnt, false);
-				}
-			}
+			mDoorsClosed = closeDoors(world, mDoorEntities, cameraPosition);
 
 			if (mDoorsClosed) {
-				//	Unearth skeletons
-				for (const auto entity : mBuriedEntities) {
-					BurySystem& burySystem = world.getBurySystem();
-
-					if (burySystem.hasComponent(entity)) {
-						BuryComponent buryCmpnt = burySystem.getComponent(entity);
-						world.getBurySystem().rise(buryCmpnt, false);
-					}
-				}
+				raiseSkeletons(world, mBuriedEntities);
 			}
 		}
 
@@ -237,8 +283,11 @@ void IntroGameState::updateState(World& world, float elapsedSeconds) {
 
 	//  Pause before activating next game state
 	case 4:
+		const float duration =
+			mSkipIntro ? STATE5_SKIP_DURATION : STATE5_DURATION;
+
 		mIntroTicks += elapsedSeconds;
-		if (mIntroTicks >= STATE5_DURATION) {
+		if (mIntroTicks >= duration) {
 			mIntroTicks = 0;
 			++mIntroState;
 			this->getGameStateManager().activateMainGameState();

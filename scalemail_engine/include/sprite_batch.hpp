@@ -14,16 +14,16 @@ class Tileset;
 class SpriteBatch
 {
 	struct Batch {
-		size_t IndexOffset         = 0;
-		size_t VertexElementOffset = 0;
+		size_t indexOffset         = 0;
+		size_t vertexElementOffset = 0;
 		//	Used to keep track of current index buffer index
-		unsigned short              VertexOffset      = 0;
-		int                         QuadCount         = 0;
-		GLuint                      TextureId         = 0;
-		size_t                      IndexElementCount = 0;
-		std::vector<unsigned short> IndexData;
-		size_t                      VertexElementCount = 0;
-		std::vector<GLfloat>        VertexData;
+		unsigned short              vertexOffset      = 0;
+		int                         quadCount         = 0;
+		GLuint                      textureId         = 0;
+		size_t                      indexElementCount = 0;
+		std::vector<unsigned short> indexData;
+		size_t                      vertexElementCount = 0;
+		std::vector<GLfloat>        vertexData;
 	};
 
 	const int InitialVboSizeInSprites = 500;
@@ -49,12 +49,12 @@ class SpriteBatch
 	std::unordered_map<bool, std::unordered_map<unsigned int, int>>	mTextureIdCounts;
 
 	inline void clearBatch(Batch& batch) {
-		batch.QuadCount           = 0;
-		batch.IndexOffset         = 0;
-		batch.VertexOffset        = 0;
-		batch.VertexElementOffset = 0;
-		batch.IndexElementCount   = 0;
-		batch.VertexElementCount  = 0;
+		batch.quadCount           = 0;
+		batch.indexOffset         = 0;
+		batch.vertexOffset        = 0;
+		batch.vertexElementOffset = 0;
+		batch.indexElementCount   = 0;
+		batch.vertexElementCount  = 0;
 	}
 
 	void renderBatches(std::unordered_map<GLuint, Batch> batches, bool alpha);

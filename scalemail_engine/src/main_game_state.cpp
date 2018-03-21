@@ -1,13 +1,8 @@
 #include "gui/gui.hpp"
 #include "ai_system.hpp"
-#include "ambient_light.hpp"
-#include "bury_system.hpp"
 #include "camera.hpp"
-#include "camera_system.hpp"
-#include "entity_types.hpp"
 #include "game.hpp"
 #include "game_window.hpp"
-#include "gl_headers.hpp"
 #include "gun_system.hpp"
 #include "health_system.hpp"
 #include "main_game_state.hpp"
@@ -15,12 +10,9 @@
 #include "player.hpp"
 #include "player_camera.hpp"
 #include "physics_system.hpp"
-#include "name_system.hpp"
-#include "rectangle.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
-#include <algorithm>
 #include <vector>
 
 namespace ScaleMail

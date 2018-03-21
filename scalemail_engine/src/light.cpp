@@ -61,8 +61,8 @@ void initializeLight(AssetManager& assetManager) {
 
 	quadMesh = assetManager.getQuadMesh();
 
-	lightSpriteBatch.initialize(assetManager);
-	glowSpriteBatch.initialize(assetManager);
+	lightSpriteBatch.initialize("Light", assetManager);
+	glowSpriteBatch.initialize("Glow", assetManager);
 
 	lightTexture = assetManager.loadTexture("light");
 

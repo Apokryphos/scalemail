@@ -3,6 +3,7 @@
 #include "gl_headers.hpp"
 #include "sprite_shader.hpp"
 #include <glm/fwd.hpp>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -13,6 +14,12 @@ class Tileset;
 
 class SpriteBatch
 {
+	static const int InitialSpriteCount = 500;
+	static const int VertexElementCount      = 9;
+	static const int QuadVertexCount         = 4;
+	static const int QuadIndexCount          = 6;
+	static const int QuadVertexElementCount  = QuadVertexCount * VertexElementCount;
+
 	struct Batch {
 		size_t indexOffset         = 0;
 		size_t vertexElementOffset = 0;
@@ -24,15 +31,16 @@ class SpriteBatch
 		std::vector<unsigned short> indexData;
 		size_t                      vertexElementCount = 0;
 		std::vector<GLfloat>        vertexData;
+
+		Batch()
+		: indexData(InitialSpriteCount * QuadIndexCount),
+		  vertexData(InitialSpriteCount * QuadVertexElementCount) {
+		}
 	};
 
-	const int InitialVboSizeInSprites = 500;
-	const int VertexElementCount      = 9;
-	const int QuadVertexCount         = 4;
-	const int QuadIndexCount          = 6;
-	const int QuadVertexElementCount  = QuadVertexCount * VertexElementCount;
-
 	float mAlpha = 1.0f;
+
+	std::string mName;
 
 	SpriteShader mShader;
 	GLuint   mVao;
@@ -58,6 +66,7 @@ class SpriteBatch
 	}
 
 	void renderBatches(std::unordered_map<GLuint, Batch> batches, bool alpha);
+	void resizeBatchData(Batch& batch, size_t quadCount);
 
 public:
 	SpriteBatch();
@@ -93,7 +102,8 @@ public:
 		const glm::vec2& size, bool alpha);
 
 	void end();
-	void initialize(AssetManager& assetManager);
+	void initialize(const std::string& spriteBatchName,
+					AssetManager& assetManager);
 	void setAlpha(float alpha);
 	void render(const glm::mat4& transform);
 };

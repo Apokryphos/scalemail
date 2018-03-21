@@ -84,26 +84,7 @@ void SpriteBatch::buildQuadVertexData(
 	//	Assign texture ID in case batch was created
 	batch.textureId = textureId;
 
-	//	Increase vertex and index buffers to size of largest batch
-	batch.vertexElementCount += quadCount * QuadVertexElementCount;
-	if (batch.vertexElementCount > mVertexBufferSizeInElements) {
-		mVertexBufferSizeInElements = batch.vertexElementCount;
-	}
-
-	batch.indexElementCount += quadCount * QuadIndexCount;
-	if (batch.indexElementCount > mIndexBufferSizeInElements) {
-		mIndexBufferSizeInElements = batch.indexElementCount;
-	}
-
-	if (batch.vertexElementCount > batch.vertexData.size()) {
-		std::cout << "SpriteBatch resized vertex data." << std::endl;
-		batch.vertexData.resize(batch.vertexElementCount * 2);
-	}
-
-	if (batch.indexElementCount > batch.indexData.size()) {
-		std::cout << "SpriteBatch resized index data." << std::endl;
-		batch.indexData.resize(batch.indexElementCount * 2);
-	}
+	this->resizeBatchData(batch, quadCount);
 
 	//	Build vertex data
 	for (int s = 0; s < quadCount; s++) {
@@ -203,32 +184,12 @@ void SpriteBatch::buildTileVertexData(
 	const glm::vec2& uv1, const glm::vec2& uv2,	bool alpha) {
 	Batch& batch = alpha ? mAlphaBatchByTexture[textureId]
 						 : mBatchByTexture[textureId];
-
 	++batch.quadCount;
 
 	//	Assign texture ID in case batch was created
 	batch.textureId = textureId;
 
-	//	Increase vertex and index buffers to size of largest batch
-	batch.vertexElementCount += QuadVertexElementCount;
-	if (batch.vertexElementCount > mVertexBufferSizeInElements) {
-		mVertexBufferSizeInElements = batch.vertexElementCount;
-	}
-
-	batch.indexElementCount += QuadIndexCount;
-	if (batch.indexElementCount > mIndexBufferSizeInElements) {
-		mIndexBufferSizeInElements = batch.indexElementCount;
-	}
-
-	if (batch.vertexElementCount > batch.vertexData.size()) {
-		std::cout <<  "SpriteBatch resized vertex data." << std::endl;
-		batch.vertexData.resize(batch.vertexElementCount * 2);
-	}
-
-	if (batch.indexElementCount > batch.indexData.size()) {
-		std::cout << "SpriteBatch resized index data." << std::endl;
-		batch.indexData.resize(batch.indexElementCount * 2);
-	}
+	this->resizeBatchData(batch, 1);
 
 	std::vector<float>&          vertexData = batch.vertexData;
 	std::vector<unsigned short>& indexData  = batch.indexData;
@@ -336,26 +297,7 @@ void SpriteBatch::buildSpriteVertexData(
 			//	Assign texture ID in case batch was created
 			batch.textureId = p.first;
 
-			//	Increase vertex and index buffers to size of largest batch
-			batch.vertexElementCount += p.second * QuadVertexElementCount;
-			if (batch.vertexElementCount > mVertexBufferSizeInElements) {
-				mVertexBufferSizeInElements = batch.vertexElementCount;
-			}
-
-			batch.indexElementCount += p.second * QuadIndexCount;
-			if (batch.indexElementCount > mIndexBufferSizeInElements) {
-				mIndexBufferSizeInElements = batch.indexElementCount;
-			}
-
-			if (batch.vertexElementCount > batch.vertexData.size()) {
-				std::cout << "SpriteBatch resized vertex data." << std::endl;
-				batch.vertexData.resize(batch.vertexElementCount * 2);
-			}
-
-			if (batch.indexElementCount > batch.indexData.size()) {
-				std::cout << "SpriteBatch resized index data." << std::endl;
-				batch.indexData.resize(batch.indexElementCount * 2);
-			}
+			this->resizeBatchData(batch, p.second);
 		}
 	}
 
@@ -445,7 +387,10 @@ void SpriteBatch::buildSpriteVertexData(
 void SpriteBatch::end() {}
 
 //	===========================================================================
-void SpriteBatch::initialize(AssetManager& assetManager) {
+void SpriteBatch::initialize(const std::string& spriteBatchName,
+							 AssetManager& assetManager) {
+	mName = spriteBatchName;
+
 	const GLsizei stride =
 		static_cast<GLsizei>(VertexElementCount * sizeof(GLfloat));
 
@@ -470,7 +415,7 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 	glBufferData(
 		GL_ELEMENT_ARRAY_BUFFER,
 		static_cast<GLsizeiptr>(
-			InitialVboSizeInSprites * QuadIndexCount *
+			InitialSpriteCount * QuadIndexCount *
 			sizeof(unsigned short)),
 		NULL,
 		GL_STREAM_DRAW);
@@ -479,7 +424,7 @@ void SpriteBatch::initialize(AssetManager& assetManager) {
 	glBufferData(
 		GL_ARRAY_BUFFER,
 		static_cast<GLsizeiptr>(
-			InitialVboSizeInSprites * QuadVertexElementCount *
+			InitialSpriteCount * QuadVertexElementCount *
 			sizeof(GLfloat)),
 		NULL,
 		GL_STREAM_DRAW);
@@ -584,6 +529,45 @@ void SpriteBatch::renderBatches(
 	if (alpha) {
 		//	Disable alpha blending
 		glDisable(GL_BLEND);
+	}
+}
+
+//	===========================================================================
+void SpriteBatch::resizeBatchData(Batch& batch, size_t quadCount) {
+	//	Increase vertex buffer to size of largest batch
+	batch.vertexElementCount += quadCount * QuadVertexElementCount;
+	if (batch.vertexElementCount > mVertexBufferSizeInElements) {
+		mVertexBufferSizeInElements = batch.vertexElementCount;
+	}
+
+	//	Increase index buffer to size of largest batch
+	batch.indexElementCount += quadCount * QuadIndexCount;
+	if (batch.indexElementCount > mIndexBufferSizeInElements) {
+		mIndexBufferSizeInElements = batch.indexElementCount;
+	}
+
+	const size_t vertexDataSize = batch.vertexData.size();
+	if (batch.vertexElementCount > vertexDataSize) {
+		//	Only display message if resize will reallocate
+		if (vertexDataSize > batch.vertexData.capacity()) {
+			std::cout
+				<< "SpriteBatch '" << mName
+				<< "' allocated vertex data." << std::endl;
+		}
+
+		batch.vertexData.resize(batch.vertexElementCount * 2);
+	}
+
+	const size_t indexDataSize = batch.indexData.size();
+	if (batch.indexElementCount > indexDataSize) {
+		//	Only display message if resize will reallocate
+		if (vertexDataSize > batch.vertexData.capacity()) {
+			std::cout
+				<< "SpriteBatch '" << mName
+				<< "' allocated index data." << std::endl;
+		}
+
+		batch.indexData.resize(batch.indexElementCount * 2);
 	}
 }
 

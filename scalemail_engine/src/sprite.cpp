@@ -81,7 +81,7 @@ void initializeSprites(AssetManager& assetManager) {
 	assetManager.loadTexture("actors_mask");
 	assetManager.loadTexture("items_mask");
 
-	spriteBatch.initialize(assetManager);
+	spriteBatch.initialize("Sprite", assetManager);
 }
 
 //  ============================================================================

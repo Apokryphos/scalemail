@@ -1,6 +1,7 @@
 #include "ai/ai_behavior.hpp"
 #include "ai_system.hpp"
 #include "gl_headers.hpp"
+#include "camera_system.hpp"
 #include "physics_system.hpp"
 #include "random.hpp"
 #include "vector_util.hpp"
@@ -283,128 +284,146 @@ void AiSystem::setWander(const AiComponent& cmpnt, bool enabled) {
 
 //	============================================================================
 void AiSystem::update(World& world, double totalElapsedSeconds) {
-	if (!mEnabled) {
-		return;
-	}
-
-	//	Update AI behaviors
-	size_t count = mData.size();
-	for (size_t index = 0; index < count; ++index) {
-		for (auto& behavior : mData[index].behaviors) {
-			//	AI nodes don't update every frame so use the total elapsed time
-			behavior.get()->think(world, totalElapsedSeconds);
-		}
-	}
-
 	Random& random = world.getRandom();
+	CameraSystem& cameraSystem = world.getCameraSystem();
 	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
 
 	for (auto& p : mEntitiesByComponentIndices) {
 		const size_t index = p.first;
 		const Entity& entity = p.second;
 
-		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+		//	Update cameras only if AI is disabled
+		if (mEnabled || cameraSystem.hasComponent(entity)) {
+			PhysicsComponent physicsCmpnt =
+				physicsSystem.getComponent(entity);
 
-		//	Calculate wander forces
-		if (mData[index].wanderEnabled) {
-			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
-			glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
+			this->updateBehaviors(index, world, totalElapsedSeconds);
 
-			const float WANDER_CIRCLE_DISTANCE = 4.0f;
+			//	Calculate wander forces
+			this->updateWander(index, physicsCmpnt, physicsSystem, random);
 
-			glm::vec2 circleCenter =
-				normalizeVec2(position + velocity) * WANDER_CIRCLE_DISTANCE;
+			//	Calculate seek forces
+			this->updateSeek(index, physicsCmpnt, physicsSystem);
 
-			const float WANDER_ANGLE_CHANGE = glm::radians(15.0f);
-
-			mData[index].wanderAngle += random.nextFloat(
-				-WANDER_ANGLE_CHANGE * 0.5f,
-				 WANDER_ANGLE_CHANGE * 0.5f);
-
-			const float WANDER_CIRCLE_RADIUS = 8.0f;
-
-			//	Pick random direction
-			glm::vec2 displacement =
-				rotateVec2(
-					glm::vec2(WANDER_CIRCLE_RADIUS, 0.0f),
-					mData[index].wanderAngle);
-
-			//	Save force value for debugging
-			mData[index].wanderForce = circleCenter + displacement;
-
-			physicsSystem.addForce(physicsCmpnt, mData[index].wanderForce);
-		}
-
-		//	Calculate seek forces
-		if (mData[index].seekEnabled) {
-			float maxSpeed = physicsSystem.getMaxSpeed(physicsCmpnt);
-			glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
-			glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
-
-			const float arrivalRadius = mData[index].arrivalRadius;
-
-			glm::vec2 t = mData[index].seekTarget - position;
-
-			glm::vec2 v = normalizeVec2(t) * maxSpeed;
-
-			float dt = glm::length(t);
-
-			//	Slow down if within arrival radius
-			if (dt < arrivalRadius) {
-				v *= (dt / arrivalRadius);
-			}
-
-			//	Save force value for debugging
-			mData[index].seekForce = v - velocity;
-
-			physicsSystem.addForce(physicsCmpnt, mData[index].seekForce);
+			//	Calculate avoid forces
+			this->updateAvoid(index, physicsCmpnt, physicsSystem, random);
 		}
 	}
+}
 
-	//	Calculate avoid forces
-	for (auto& p : mEntitiesByComponentIndices) {
-		const size_t index = p.first;
-		const Entity& entity = p.second;
+//	============================================================================
+void AiSystem::updateAvoid(size_t cmpntIndex,
+						  const PhysicsComponent& physicsCmpnt,
+						  PhysicsSystem& physicsSystem, Random& random) {
+	if (!mData[cmpntIndex].avoidEnabled) {
+		return;
+	}
 
-		if (!mData[index].avoidEnabled) {
-			continue;
-		}
+	glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+	glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
 
-		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	//	Save position for debugging
+	mData[cmpntIndex].position = position;
+
+	bool ignoreActorObstacles =
+		physicsSystem.getIgnoreActorCollisions(physicsCmpnt);
+
+	//	Avoid obstacles
+	glm::vec2 actorObstacleAvoid = ignoreActorObstacles ?
+		glm::vec2(0.0f) :
+		this->calculateAvoidForce(mStaticActorObstacles, position, velocity);
+
+	glm::vec2 staticObstacleAvoid =
+		this->calculateAvoidForce(mStaticObstacles, position, velocity);
+
+	glm::vec2 avoid = actorObstacleAvoid + staticObstacleAvoid;
+
+	bool collision = glm::length2(avoid) != 0.0f;
+
+	if (collision) {
+		mData[cmpntIndex].moveDirection =
+			rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
+	}
+
+	//	Save force value for debugging
+	mData[cmpntIndex].avoidForce = avoid;
+
+	//	Set forces
+	physicsSystem.addForce(physicsCmpnt, avoid);
+
+	//	Set movement direction
+	physicsSystem.setDirection(physicsCmpnt, mData[cmpntIndex].moveDirection);
+}
+
+//	============================================================================
+void AiSystem::updateBehaviors(size_t cmpntIndex, World& world,
+							   double totalElapsedSeconds) {
+	for (auto& behavior : mData[cmpntIndex].behaviors) {
+		//	AI nodes don't update every frame so use the total elapsed time
+		behavior.get()->think(world, totalElapsedSeconds);
+	}
+}
+
+//	============================================================================
+void AiSystem::updateSeek(size_t cmpntIndex,
+						  const PhysicsComponent& physicsCmpnt,
+						  PhysicsSystem& physicsSystem) {
+	if (mData[cmpntIndex].seekEnabled) {
+		float maxSpeed = physicsSystem.getMaxSpeed(physicsCmpnt);
 		glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 		glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
 
-		//	Save position for debugging
-		mData[index].position = position;
+		const float arrivalRadius = mData[cmpntIndex].arrivalRadius;
 
-		bool ignoreActorObstacles =
-			physicsSystem.getIgnoreActorCollisions(physicsCmpnt);
+		glm::vec2 t = mData[cmpntIndex].seekTarget - position;
 
-		//	Avoid obstacles
-		glm::vec2 actorObstacleAvoid = ignoreActorObstacles ?
-			glm::vec2(0.0f) :
-			this->calculateAvoidForce(mStaticActorObstacles, position, velocity);
+		glm::vec2 v = normalizeVec2(t) * maxSpeed;
 
-		glm::vec2 staticObstacleAvoid =
-			this->calculateAvoidForce(mStaticObstacles, position, velocity);
+		float dt = glm::length(t);
 
-		glm::vec2 avoid = actorObstacleAvoid + staticObstacleAvoid;
-
-		bool collision = glm::length2(avoid) != 0.0f;
-
-		if (collision) {
-			mData[index].moveDirection =
-				rotateVec2(glm::vec2(1.0f, 0.0f), random.nextFloat(0.0f, TWO_PI));
+		//	Slow down if within arrival radius
+		if (dt < arrivalRadius) {
+			v *= (dt / arrivalRadius);
 		}
 
 		//	Save force value for debugging
-		mData[index].avoidForce = avoid;
+		mData[cmpntIndex].seekForce = v - velocity;
 
-		//	Set forces
-		physicsSystem.addForce(physicsCmpnt, avoid);
+		physicsSystem.addForce(physicsCmpnt, mData[cmpntIndex].seekForce);
+	}
+}
 
-		//	Set movement direction
-		physicsSystem.setDirection(physicsCmpnt, mData[index].moveDirection);
+//	============================================================================
+void AiSystem::updateWander(const size_t cmpntIndex,
+							const PhysicsComponent& physicsCmpnt,
+							PhysicsSystem& physicsSystem, Random& random) {
+	if (mData[cmpntIndex].wanderEnabled) {
+		glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+		glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
+
+		const float WANDER_CIRCLE_DISTANCE = 4.0f;
+
+		glm::vec2 circleCenter =
+			normalizeVec2(position + velocity) * WANDER_CIRCLE_DISTANCE;
+
+		const float WANDER_ANGLE_CHANGE = glm::radians(15.0f);
+
+		mData[cmpntIndex].wanderAngle += random.nextFloat(
+			-WANDER_ANGLE_CHANGE * 0.5f,
+				WANDER_ANGLE_CHANGE * 0.5f);
+
+		const float WANDER_CIRCLE_RADIUS = 8.0f;
+
+		//	Pick random direction
+		glm::vec2 displacement =
+			rotateVec2(
+				glm::vec2(WANDER_CIRCLE_RADIUS, 0.0f),
+				mData[cmpntIndex].wanderAngle);
+
+		//	Save force value for debugging
+		mData[cmpntIndex].wanderForce = circleCenter + displacement;
+
+		physicsSystem.addForce(physicsCmpnt, mData[cmpntIndex].wanderForce);
 	}
 }
 }

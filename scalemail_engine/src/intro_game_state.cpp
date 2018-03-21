@@ -32,7 +32,7 @@ const float STATE2_DURATION = 2.0f;
 const float STATE3_DURATION = 3.0f;
 const float STATE4_DURATION = 15.0f;
 const float STATE5_DURATION = 1.0f;
-const float STATE5_SKIP_DURATION = 4.0f;
+const float STATE5_SKIP_DURATION = 5.0f;
 
 //	============================================================================
 static bool closeDoors(World& world, std::vector<Entity>& entities,
@@ -159,8 +159,10 @@ void IntroGameState::activate(Game& game) {
 		//	Activate intro camera
 		game.camera = getIntroCamera(world);
 	} else {
+		//	Set state to last state
 		mIntroState = 4;
 
+		//	Use bottom of map as camera position for triggering intro entities
 		const glm::vec2 mapBottom(
 			0,
 			world.getMap()->getHeight() * world.getMap()->getTileHeight());
@@ -173,7 +175,7 @@ void IntroGameState::activate(Game& game) {
 	}
 
 	//	Disable AI during camera pan
-	// world.getAiSystem().enable(false);
+	world.getAiSystem().enable(false);
 }
 
 //	============================================================================
@@ -283,6 +285,7 @@ void IntroGameState::updateState(World& world, float elapsedSeconds) {
 
 	//  Pause before activating next game state
 	case 4:
+		//	Use extended duration if the intro is being skipped
 		const float duration =
 			mSkipIntro ? STATE5_SKIP_DURATION : STATE5_DURATION;
 

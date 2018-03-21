@@ -277,7 +277,11 @@ int startEngine(EngineStartOptions startOptions) {
 	GameStateManager gameStateManager;
 	gameStateManager.initialize(game);
 
-	gameStateManager.activateIntroGameState(startOptions.skipIntro);
+	if (mapName == "map1") {
+		gameStateManager.activateIntroGameState(startOptions.skipIntro);
+	} else {
+		gameStateManager.activateMainGameState();
+	}
 
 	//	Center and show window
 	game.gameWindow.center();

@@ -8,6 +8,9 @@
 namespace ScaleMail
 {
 class AiBehavior;
+class PhysicsSystem;
+struct PhysicsComponent;
+class Random;
 class World;
 
 struct AiComponent {
@@ -53,6 +56,17 @@ class AiSystem : public EntitySystem
 								  glm::vec2 position, glm::vec2 velocity);
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
+	void updateAvoid(const size_t cmpntIndex,
+					  const PhysicsComponent& physicsCmpnt,
+					  PhysicsSystem& physicsSystem, Random& random);
+	void updateBehaviors(const size_t cmpntIndex, World& world,
+						 double totalElapsedSeconds);
+	void updateSeek(const size_t cmpntIndex,
+					  const PhysicsComponent& physicsCmpnt,
+					  PhysicsSystem& physicsSystem);
+	void updateWander(const size_t cmpntIndex,
+					  const PhysicsComponent& physicsCmpnt,
+					  PhysicsSystem& physicsSystem, Random& random);
 
 public:
 	AiSystem(EntityManager& entityManager, int maxComponents = 1000);

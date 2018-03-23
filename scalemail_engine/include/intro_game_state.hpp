@@ -25,7 +25,7 @@ public:
 	IntroGameState(GameStateManager& gameStateManager);
 	virtual void activate(Game& game) override;
 	void activate(Game& game, bool skipIntro);
-	virtual void draw(const Game& game, Camera& camera) override;
+	virtual void draw(const Game& game) override;
 	virtual void initialize(Game& game) override;
 	virtual void update(Game& game, float elapsedSeconds) override;
 };

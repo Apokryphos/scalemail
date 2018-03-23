@@ -38,8 +38,7 @@ void MainGameState::activate(Game& game) {
 }
 
 //	============================================================================
-void MainGameState::draw([[maybe_unused]] const Game& game,
-						 [[maybe_unused]] Camera& camera) {
+void MainGameState::draw([[maybe_unused]] const Game& game) {
 }
 
 //	============================================================================

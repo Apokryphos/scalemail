@@ -248,7 +248,7 @@ void render(Game& game, World& world, GameState& gameState,
 
 	glDisable(GL_STENCIL_TEST);
 
-	gameState.draw(game, camera);
+	gameState.draw(game);
 
 	//	Draw GUI
 	if (!game.devOptions.enabled || !game.devOptions.hideGui) {

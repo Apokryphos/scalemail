@@ -9,7 +9,7 @@ class MainGameState : public GameState
 public:
 	MainGameState(GameStateManager& gameStateManager);
 	virtual void activate(Game& game);
-	virtual void draw(const Game& gameWindow, Camera& camera) override;
+	virtual void draw(const Game& gameWindow) override;
 	virtual void initialize(Game& game);
 	virtual void update(Game& game, float elapsedSeconds) override;
 };

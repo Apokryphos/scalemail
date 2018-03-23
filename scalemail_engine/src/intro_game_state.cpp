@@ -185,10 +185,10 @@ void IntroGameState::activate(Game& game, bool skipIntro) {
 }
 
 //	============================================================================
-void IntroGameState::draw(const Game& game, Camera& camera) {
+void IntroGameState::draw(const Game& game) {
 	const GameWindow& gameWindow = game.gameWindow;
 
-	const float textSize = NORMAL_FONT_SIZE * camera.getZoom();
+	const float textSize = NORMAL_FONT_SIZE * game.camera->getZoom();
 	const float centerX = gameWindow.getWidth() * 0.5f;
 	const float centerY = gameWindow.getHeight() * 0.5f - textSize;
 

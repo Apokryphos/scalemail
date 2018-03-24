@@ -161,10 +161,8 @@ void CameraSystem::resizeCameras(const int width,
 								 const float zoom) {
 	this->setCameraDefaults(width, height, zoom);
 
-	for (const auto& p : mEntitiesByComponentIndices) {
-		const size_t index = p.first;
-		const Entity& entity = p.second;
-
+	const size_t count = mData.size();
+	for (size_t index = 0; index < count; ++index) {
 		CameraComponentData& data = mData[index];
 
 		data.camera.setSize(width, height);

@@ -1,6 +1,5 @@
 #include "gui/player_hud_gui_screen.hpp"
 #include "asset_manager.hpp"
-#include "camera.hpp"
 #include "game.hpp"
 #include "health_system.hpp"
 #include "player.hpp"

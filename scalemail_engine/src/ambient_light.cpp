@@ -1,11 +1,7 @@
 #include "ambient_light.hpp"
 #include "asset_manager.hpp"
-#include "camera.hpp"
 #include "mesh.hpp"
-#include "render_options.hpp"
 #include "vertex_data.hpp"
-#include "world.hpp"
-#include <glm/vec4.hpp>
 #include <vector>
 
 namespace ScaleMail

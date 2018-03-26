@@ -56,8 +56,7 @@ static void errorCallback(int error, const char* description) {
 }
 
 //  ============================================================================
-static void framebufferSizeCallback([[maybe_unused]]GLFWwindow* window,
-									int width, int height) {
+static void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
 	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
 
 	GameWindow& gameWindow = game->gameWindow;

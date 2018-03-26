@@ -15,7 +15,7 @@ CooldownAiNode::CooldownAiNode(Entity& entity, AiTree& parentTree,
 }
 
 //	============================================================================
-AiNodeStatus CooldownAiNode::execute([[maybe_unused]]World& world) {
+AiNodeStatus CooldownAiNode::execute(World& world) {
 	const AiTree& aiTree = this->getParentTree();
 
 	//	Calculate elapsed seconds since this node won't be executed every frame

@@ -1,5 +1,10 @@
 cmake_minimum_required (VERSION 3.10)
 
+# Earcut
+add_library(earcut_hpp ${CMAKE_CURRENT_SOURCE_DIR}/earcut.hpp/include/mapbox/earcut.hpp)
+set_target_properties(earcut_hpp PROPERTIES LINKER_LANGUAGE CXX)
+target_include_directories(earcut_hpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/earcut.hpp/include)
+
 # GLAD
 add_library(glad ${CMAKE_CURRENT_SOURCE_DIR}/glad/src/glad.c)
 target_include_directories(glad PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/glad/include)

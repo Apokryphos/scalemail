@@ -15,6 +15,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ai_behaviors/bat_ai.cpp
     src/ai/ai_behaviors/blob_ai.cpp
     src/ai/ai_behaviors/skeleton_ai.cpp
+    src/ai/ai_behaviors/skeleton_king_ai.cpp
     src/ai/ai_behaviors/skeleton_warrior_ai.cpp
     src/ai/ai_behaviors/vampire_ai.cpp
     src/ai/ai_behaviors/wisp_ai.cpp

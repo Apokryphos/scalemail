@@ -12,6 +12,7 @@
 #include "string_util.hpp"
 #include "world.hpp"
 #include <glm/glm.hpp>
+#include <iostream>
 
 namespace ScaleMail
 {
@@ -77,6 +78,26 @@ static void buildSkeleton(Entity entity, World& world) {
 	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
 	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
 	healthGauge.setMax(30.0f);
+}
+
+//  ============================================================================
+static void buildSkeletonKing(Entity entity, World& world) {
+	PhysicsSystem& physicsSystem = world.getPhysicsSystem();
+	PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+	physicsSystem.setMaxSpeed(physicsCmpnt, 40.0f);
+
+	HealthSystem& healthSystem = world.getHealthSystem();
+	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
+	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
+	healthGauge.setMax(500.0f);
+
+	GunSystem& gunSystem = world.getGunSystem();
+	GunComponent gunCmpnt = gunSystem.getComponent(entity);
+	gunSystem.setBulletImpactTilesetId(gunCmpnt, getBulletImpactTilesetId(4));
+	gunSystem.setBulletTilesetId(gunCmpnt, getBulletTilesetId(4));
+	gunSystem.setBulletLightColor(gunCmpnt, getBulletLightColor(4));
+	gunSystem.setBulletRotateOffset(gunCmpnt, glm::radians(135.0f));
+	gunSystem.setCooldownDuration(gunCmpnt, 1.5f);
 }
 
 //  ============================================================================
@@ -170,6 +191,8 @@ void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 		buildBlob(entity, world);
 	} else if (prefabName == "skeleton") {
 		buildSkeleton(entity, world);
+	} else if (prefabName == "skeleton_king") {
+		buildSkeletonKing(entity, world);
 	} else if (prefabName == "skeleton_warrior") {
 		buildSkeletonWarrior(entity, world);
 	} else if (prefabName == "vampire") {
@@ -178,6 +201,8 @@ void PrefabFactory::buildPrefab(Entity entity, std::string prefabName,
 		buildWisp(entity, world);
 	} else if (prefabName == "health_potion") {
 		buildHealthPotion(entity, world);
+	} else {
+		std::cout << "Unknown prefab '" << prefabName << "'." << std::endl;
 	}
 }
 }

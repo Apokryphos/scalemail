@@ -1,5 +1,6 @@
 #pragma once
 
+#include "polygon.hpp"
 #include <glm/vec4.hpp>
 #include <vector>
 
@@ -10,7 +11,7 @@ struct AssetManager;
 struct AmbientLight
 {
 	glm::vec4 color;
-	glm::vec4 rect;
+	Polygon polygon;
 };
 
 void buildAmbientLights(const std::vector<AmbientLight>& lights);

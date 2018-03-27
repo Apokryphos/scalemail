@@ -478,16 +478,42 @@ static void processActorCollisionObject(World& world,
 
 //  ============================================================================
 static void processAmbientLightObject(const TmxMapLib::Object& object,
+									  const Polygon& polygon,
 									  MapData& mapData) {
+	glm::vec4 color =
+		hexToVec4(object.GetPropertySet().GetValue("Color", "#FFFFFF"));
+
+	mapData.ambientLights.push_back({color, polygon});
+}
+
+//  ============================================================================
+static void processAmbientLightRectangleObject(const TmxMapLib::Object& object,
+											   MapData& mapData) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 	const float width = object.GetWidth();
 	const float height = object.GetHeight();
+	glm::vec4 rect = glm::vec4(x, y, width, height);
 
-	glm::vec4 color =
-		hexToVec4(object.GetPropertySet().GetValue("Color", "#FFFFFF"));
+	Polygon polygon(rect);
 
-	mapData.ambientLights.push_back({color, glm::vec4(x, y, width, height)});
+	processAmbientLightObject(object, polygon, mapData);
+}
+
+//  ============================================================================
+static void processAmbientLightPolygonObject(const TmxMapLib::Object& object,
+											 MapData& mapData) {
+	const float x = object.GetX();
+	const float y = object.GetY();
+
+	std::vector<glm::vec2> points;
+	for (const auto& p : object.GetPoints()) {
+		points.emplace_back(x + p.X, y + p.Y);
+	}
+
+	Polygon polygon(points);
+
+	processAmbientLightObject(object, polygon, mapData);
 }
 
 //  ============================================================================
@@ -813,7 +839,7 @@ static void processObject(World& world,
 		} else if (type == "actorcollision") {
 			processActorCollisionObject(world, object);
 		} else if (type == "ambientlight") {
-			processAmbientLightObject(object, mapData);
+			processAmbientLightRectangleObject(object, mapData);
 		} else if (type == "camerabounds") {
 			processCameraBoundsObject(world, object);
 		} else if (type == "trigger") {
@@ -822,6 +848,10 @@ static void processObject(World& world,
 	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Polyline) {
 		if (type == "camerapath") {
 			processCameraPathObject(world, object);
+		}
+	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Polygon) {
+		if (type == "ambientlight") {
+			processAmbientLightPolygonObject(object, mapData);
 		}
 	}
 }

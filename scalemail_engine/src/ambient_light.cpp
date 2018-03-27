@@ -20,10 +20,19 @@ void buildAmbientLights(const std::vector<AmbientLight>& lights) {
 	ambientLightVertexData.resize(0);
 
 	for (const auto& light : lights) {
-		glm::vec2 position = glm::vec2(light.rect.x, light.rect.y);
-		glm::vec2 size = glm::vec2(light.rect.z, light.rect.w);
+		const auto& indices = light.polygon.getIndices();
+		const auto& points = light.polygon.getPoints();
 
-		addQuadVertexData(ambientLightVertexData, position, size, light.color);
+		for (const auto& n : indices) {
+			const auto& point = points[n];
+
+			ambientLightVertexData.emplace_back(point.x);
+			ambientLightVertexData.emplace_back(point.y);
+			ambientLightVertexData.emplace_back(light.color.r);
+			ambientLightVertexData.emplace_back(light.color.g);
+			ambientLightVertexData.emplace_back(light.color.b);
+			ambientLightVertexData.emplace_back(light.color.a);
+		}
 	}
 
 	setMeshVertexData(ambientLightMesh, ambientLightVertexData);

@@ -860,25 +860,33 @@
  <tile id="140">
   <properties>
    <property name="ActorIndex" type="int" value="19"/>
+   <property name="Ai" value="skeleton_king"/>
    <property name="Facing" value="east"/>
+   <property name="Prefab" value="skeleton_king"/>
   </properties>
  </tile>
  <tile id="141">
   <properties>
    <property name="ActorIndex" type="int" value="19"/>
+   <property name="Ai" value="skeleton_king"/>
    <property name="Facing" value="south"/>
+   <property name="Prefab" value="skeleton_king"/>
   </properties>
  </tile>
  <tile id="142">
   <properties>
    <property name="ActorIndex" type="int" value="19"/>
+   <property name="Ai" value="skeleton_king"/>
    <property name="Facing" value="north"/>
+   <property name="Prefab" value="skeleton_king"/>
   </properties>
  </tile>
  <tile id="143">
   <properties>
    <property name="ActorIndex" type="int" value="19"/>
+   <property name="Ai" value="skeleton_king"/>
    <property name="Facing" value="west"/>
+   <property name="Prefab" value="skeleton_king"/>
   </properties>
  </tile>
  <tile id="144">
@@ -972,25 +980,33 @@
  <tile id="156">
   <properties>
    <property name="ActorIndex" type="int" value="19"/>
+   <property name="Ai" value="skeleton_king"/>
    <property name="Facing" value="east"/>
+   <property name="Prefab" value="skeleton_king"/>
   </properties>
  </tile>
  <tile id="157">
   <properties>
    <property name="ActorIndex" type="int" value="19"/>
+   <property name="Ai" value="skeleton_king"/>
    <property name="Facing" value="south"/>
+   <property name="Prefab" value="skeleton_king"/>
   </properties>
  </tile>
  <tile id="158">
   <properties>
    <property name="ActorIndex" type="int" value="19"/>
+   <property name="Ai" value="skeleton_king"/>
    <property name="Facing" value="north"/>
+   <property name="Prefab" value="skeleton_king"/>
   </properties>
  </tile>
  <tile id="159">
   <properties>
    <property name="ActorIndex" type="int" value="19"/>
+   <property name="Ai" value="skeleton_king"/>
    <property name="Facing" value="west"/>
+   <property name="Prefab" value="skeleton_king"/>
   </properties>
  </tile>
  <tile id="160">

@@ -66,7 +66,7 @@ struct Rectangle
 		return y;
 	}
 
-	bool intersects(const Rectangle& rect) {
+	bool intersects(const Rectangle& rect) const {
 		return
 			x          <= rect.x + rect.width &&
 			x + width  >= rect.x &&

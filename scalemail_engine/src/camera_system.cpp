@@ -23,7 +23,7 @@ CameraSystem::CameraSystem(World& world, EntityManager& entityManager,
 }
 
 //  ============================================================================
-void CameraSystem::addBounds(const Rectangle& bounds, bool visited) {
+void CameraSystem::addBounds(const Bounds& bounds, bool visited) {
 	CameraVisibility visibility = {};
 	visibility.alphaDuration = 0.66f;
 	visibility.visited = visited;
@@ -256,7 +256,7 @@ void CameraSystem::updateBounds(const glm::vec2& position,
 		return;
 	}
 
-	//	Find map camera bounds rectangle the camera is currently positioned in
+	//	Find map camera bounds the camera is currently positioned in
 	const auto& find = std::find_if(mVisibility.begin(), mVisibility.end(),
 		[position](const auto& v) -> bool {
 			return v.bounds.contains(position);
@@ -264,7 +264,7 @@ void CameraSystem::updateBounds(const glm::vec2& position,
 	);
 
 	if (find != mVisibility.end()) {
-		data.camera.setBounds((*find).bounds);
+		data.camera.setBounds((*find).bounds.getRectangle());
 	}
 }
 
@@ -350,13 +350,13 @@ void CameraSystem::updateVisibility(const Camera& camera) {
 		return;
 	}
 
-	Rectangle cameraRect = camera.getRectangle();
-
 	//	Find map camera bounds rectangle the camera is overlapping
 	for (auto& v : mVisibility) {
 		if (v.visited) {
-			if (v.bounds.intersects(cameraRect)) {
-			//	Make bounds visible
+			const Rectangle& boundsRect = v.bounds.getRectangle();
+
+			if (boundsRect.intersects(camera.getRectangle())) {
+				//	Make bounds visible
 				v.alphaDirection = 1.0f;
 			}
 		} else {

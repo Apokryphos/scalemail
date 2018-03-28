@@ -487,21 +487,20 @@ static void processAmbientLightObject(const TmxMapLib::Object& object,
 }
 
 //  ============================================================================
-static void processAmbientLightRectangleObject(const TmxMapLib::Object& object,
+static void processAmbientLightRectangle(const TmxMapLib::Object& object,
 											   MapData& mapData) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 	const float width = object.GetWidth();
 	const float height = object.GetHeight();
-	glm::vec4 rect = glm::vec4(x, y, width, height);
 
-	Polygon polygon(rect);
+	Polygon polygon(x, y, width, height);
 
 	processAmbientLightObject(object, polygon, mapData);
 }
 
 //  ============================================================================
-static void processAmbientLightPolygonObject(const TmxMapLib::Object& object,
+static void processAmbientLightPolygon(const TmxMapLib::Object& object,
 											 MapData& mapData) {
 	const float x = object.GetX();
 	const float y = object.GetY();
@@ -518,16 +517,37 @@ static void processAmbientLightPolygonObject(const TmxMapLib::Object& object,
 
 //  ============================================================================
 static void processCameraBoundsObject(World& world,
+									  const Polygon& polygon,
 									  const TmxMapLib::Object& object) {
+	const bool visited = object.GetPropertySet().GetBoolValue("Visited", false);
+
+	CameraSystem& cameraSystem = world.getCameraSystem();
+	cameraSystem.addBounds(Bounds(polygon), visited);
+}
+
+//  ============================================================================
+static void processCameraBoundsRectangle(World& world,
+										 const TmxMapLib::Object& object) {
 	const float x = object.GetX();
 	const float y = object.GetY();
 	const float width = object.GetWidth();
 	const float height = object.GetHeight();
 
-	const bool visited = object.GetPropertySet().GetBoolValue("Visited", false);
+	processCameraBoundsObject(world, Polygon(x, y, width, height), object);
+}
 
-	CameraSystem& cameraSystem = world.getCameraSystem();
-	cameraSystem.addBounds(Rectangle(x, y, width, height), visited);
+//  ============================================================================
+static void processCameraBoundsPolygon(World& world,
+									   const TmxMapLib::Object& object) {
+	const float x = object.GetX();
+	const float y = object.GetY();
+
+	std::vector<glm::vec2> points;
+	for (const auto& p : object.GetPoints()) {
+		points.emplace_back(x + p.X, y + p.Y);
+	}
+
+	processCameraBoundsObject(world, Polygon(points), object);
 }
 
 //  ============================================================================
@@ -839,9 +859,9 @@ static void processObject(World& world,
 		} else if (type == "actorcollision") {
 			processActorCollisionObject(world, object);
 		} else if (type == "ambientlight") {
-			processAmbientLightRectangleObject(object, mapData);
+			processAmbientLightRectangle(object, mapData);
 		} else if (type == "camerabounds") {
-			processCameraBoundsObject(world, object);
+			processCameraBoundsRectangle(world, object);
 		} else if (type == "trigger") {
 			processTriggerObject(world, object);
 		}
@@ -851,7 +871,9 @@ static void processObject(World& world,
 		}
 	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Polygon) {
 		if (type == "ambientlight") {
-			processAmbientLightPolygonObject(object, mapData);
+			processAmbientLightPolygon(object, mapData);
+		} else if (type == "camerabounds") {
+			processCameraBoundsPolygon(world, object);
 		}
 	}
 }

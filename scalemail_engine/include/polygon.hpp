@@ -12,7 +12,8 @@ class Polygon
 	std::vector<glm::vec2> mPoints;
 
 public:
-	Polygon(const glm::vec4& rect);
+	Polygon(const float x, const float y, const float width,
+			const float height);
 	Polygon(const std::vector<glm::vec2>& points);
 	const std::vector<uint16_t>& getIndices() const;
 	const std::vector<glm::vec2>& getPoints() const;

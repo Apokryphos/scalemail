@@ -27,18 +27,8 @@ namespace ScaleMail
 using N = uint16_t;
 
 //	============================================================================
-Polygon::Polygon(const std::vector<glm::vec2>& points) {
-	this->initialize(points);
-}
-
-
-//	============================================================================
-Polygon::Polygon(const glm::vec4& rect) {
-	const float x = rect.x;
-	const float y = rect.y;
-	const float width = rect.z;
-	const float height = rect.w;
-
+Polygon::Polygon(const float x, const float y, const float width,
+				 const float height) {
 	std::vector<glm::vec2> points = {
 		{ x,         y },
 		{ x,         y + height},
@@ -48,6 +38,11 @@ Polygon::Polygon(const glm::vec4& rect) {
 		{ x + width, y},
 	};
 
+	this->initialize(points);
+}
+
+//	============================================================================
+Polygon::Polygon(const std::vector<glm::vec2>& points) {
 	this->initialize(points);
 }
 

@@ -52,6 +52,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ambient_light.cpp
     src/asset_manager.cpp
     src/blend.cpp
+    src/bounds.cpp
     src/bullet_system.cpp
     src/bullet_util.cpp
     src/bury_system.cpp

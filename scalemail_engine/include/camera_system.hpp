@@ -1,5 +1,6 @@
 #pragma once
 
+#include "bounds.hpp"
 #include "camera.hpp"
 #include "entity_system.hpp"
 #include "path.hpp"
@@ -25,7 +26,7 @@ struct CameraVisibility
 	float alphaDirection;
 	float alphaDuration;
 	float alphaTicks;
-	Rectangle bounds;
+	Bounds bounds;
 };
 
 enum class CameraMode
@@ -76,7 +77,7 @@ protected:
 
 public:
 	CameraSystem(World& world, EntityManager& entityManager, int maxComponents = 10000);
-	void addBounds(const Rectangle& bounds, bool visited);
+	void addBounds(const Bounds& bounds, bool visited);
 	void addPath(const std::string& name, const Path& path);
 	void followEntity(const CameraComponent& cmpnt, const Entity& targetEntity);
 	CameraComponent getComponent(const Entity& entity) const;

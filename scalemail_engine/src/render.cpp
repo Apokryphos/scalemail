@@ -38,6 +38,9 @@ static QuadShader particleShader;
 static Mesh visQuadMesh;
 static std::vector<float> visQuadVertexData;
 
+static Mesh stencilQuadMesh;
+static std::vector<float> stencilQuadVertexData;
+
 //	============================================================================
 void initializeRender(AssetManager& assetManager) {
 	quadMesh = assetManager.getQuadMesh();
@@ -45,6 +48,9 @@ void initializeRender(AssetManager& assetManager) {
 	particleShader = assetManager.getParticleShader();
 
 	assetManager.initializeMesh(visQuadMesh,
+								VertexDefinition::POSITION2_COLOR4);
+
+	assetManager.initializeMesh(stencilQuadMesh,
 								VertexDefinition::POSITION2_COLOR4);
 
 	debugLineShader = assetManager.getLineShader();
@@ -67,27 +73,50 @@ void initializeRender(AssetManager& assetManager) {
 }
 
 //  ============================================================================
-static void buildVisQuads(const std::vector<CameraVisibility>& visibility) {
+static void buildVisMesh(const std::vector<CameraVisibility>& visibility) {
+	stencilQuadVertexData.resize(0);
 	visQuadVertexData.resize(0);
 
 	for (const auto& v : visibility) {
-		glm::vec2 position = glm::vec2(v.bounds.x, v.bounds.y);
-		glm::vec2 size = glm::vec2(v.bounds.width, v.bounds.height);
+		const Polygon& polygon = v.bounds.getPolygon();
 
-		glm::vec4 color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f - v.alpha);
+		const auto& indices = polygon.getIndices();
+		const auto& points = polygon.getPoints();
 
-		addQuadVertexData(visQuadVertexData, position, size, color);
+		if (v.alpha > 0.0f) {
+			for (const auto& n : indices) {
+				const auto& point = points[n];
+
+				stencilQuadVertexData.emplace_back(point.x);
+				stencilQuadVertexData.emplace_back(point.y);
+				stencilQuadVertexData.emplace_back(1.0f);
+				stencilQuadVertexData.emplace_back(1.0f);
+				stencilQuadVertexData.emplace_back(1.0f);
+				stencilQuadVertexData.emplace_back(1.0f);
+			}
+		}
+
+		//	Visibility quads are black so reverse alpha value
+		const float alpha = 1.0f - v.alpha;
+
+		for (const auto& n : indices) {
+			const auto& point = points[n];
+
+			visQuadVertexData.emplace_back(point.x);
+			visQuadVertexData.emplace_back(point.y);
+			visQuadVertexData.emplace_back(0.0f);
+			visQuadVertexData.emplace_back(0.0f);
+			visQuadVertexData.emplace_back(0.0f);
+			visQuadVertexData.emplace_back(alpha);
+		}
 	}
 
+	setMeshVertexData(stencilQuadMesh, stencilQuadVertexData);
 	setMeshVertexData(visQuadMesh, visQuadVertexData);
 }
 
 //	============================================================================
-void updateStencilBuffer(CameraSystem& cameraSystem, Camera& camera) {
-	const auto& vis = cameraSystem.getVisibility();
-
-	buildVisQuads(vis);
-
+void updateStencilBuffer(Camera& camera) {
 	//	Prepare stencil buffer writes
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -97,31 +126,11 @@ void updateStencilBuffer(CameraSystem& cameraSystem, Camera& camera) {
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
-	//	Draw camera bounds quad
+	const glm::mat4 mvp = camera.getProjection() * camera.getView();
+
 	glUseProgram(colorQuadShader.id);
-
-	for (const auto& v : vis) {
-		if (v.alpha <= 0.0f) {
-			continue;
-		}
-
-		Rectangle cameraBounds = v.bounds;
-
-		glm::mat4 quadWorld =
-			glm::translate(glm::vec3(
-				cameraBounds.x + cameraBounds.width * 0.5f,
-				cameraBounds.y + cameraBounds.height * 0.5f, 0.0f)) *
-			glm::scale(glm::vec3(
-				cameraBounds.width * 0.5f,
-				cameraBounds.height * 0.5f, 1.0f));
-
-		const glm::mat4 mvp =
-			camera.getProjection() * camera.getView() * quadWorld;
-
-		glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-
-		drawMesh(quadMesh);
-	}
+	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+	drawMesh(stencilQuadMesh);
 
 	//	Disable writes stencil buffer
 	glStencilFunc(GL_EQUAL, 1, 0xFF);
@@ -136,20 +145,12 @@ void renderVisibility(CameraSystem& cameraSystem, Camera& camera) {
 
 	blendAlpha();
 
-	const glm::mat4 mvp =
-		camera.getProjection() * camera.getView();
+	const glm::mat4 mvp = camera.getProjection() * camera.getView();
 
 	//	Draw camera bounds quad
 	glUseProgram(colorQuadShader.id);
 	glUniformMatrix4fv(colorQuadShader.mvpLocation, 1, GL_FALSE, &mvp[0][0]);
-
-	for (const auto& v : vis) {
-		if (v.alpha <= 0.0f) {
-			continue;
-		}
-
-		drawMesh(visQuadMesh);
-	}
+	drawMesh(visQuadMesh);
 }
 
 //	============================================================================
@@ -210,6 +211,10 @@ void render(Game& game, World& world, GameState& gameState,
 
 	Camera& camera = *game.camera;
 
+	//	Build visibility and stencil buffer meshes
+	const auto& vis = world.getCameraSystem().getVisibility();
+	buildVisMesh(vis);
+
 	GameWindow& gameWindow = game.gameWindow;
 
 	if (game.renderCaps.fboSupported) {
@@ -222,7 +227,7 @@ void render(Game& game, World& world, GameState& gameState,
 
 	//	Don't use stencil buffer if the camera is in 3D
 	if (!game.devOptions.camera3d) {
-		updateStencilBuffer(world.getCameraSystem(), camera);
+		updateStencilBuffer(camera);
 	}
 
 	renderMap(*world.getMap(), camera, totalElapsedSeconds);

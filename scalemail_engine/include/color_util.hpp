@@ -64,7 +64,9 @@ inline static glm::vec4 rgbToHsl(const glm::vec4& rgb) {
 	float vMax = std::max(std::max(r, g), b);
 	float d = vMax - vMin;
 
-	float hue, sat, light;
+	float hue = 0;
+	float sat = 0;
+	float light = 0;
 
 	light = (vMax + vMin)/ 2.0f;
 

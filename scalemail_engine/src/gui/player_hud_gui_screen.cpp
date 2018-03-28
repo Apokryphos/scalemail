@@ -1,5 +1,6 @@
 #include "gui/player_hud_gui_screen.hpp"
 #include "asset_manager.hpp"
+#include "camera.hpp"
 #include "game.hpp"
 #include "health_system.hpp"
 #include "player.hpp"
@@ -73,6 +74,10 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 	World& world = *game.world;
 
+	Camera* camera = game.camera;
+
+	const float scale = std::min(camera->getZoom(), 3.0f);
+
 	glm::mat4 projection = glm::ortho(
 		0.0f,
 		(float)game.gameWindow.getWidth(),
@@ -91,7 +96,6 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 			HealthComponent healthCmpnt = healthSystem.getComponent(player->entity);
 			HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
 
-			const float scale = 3.0f;
 			glm::vec2 position = glm::vec2(4.0f, 4.0f);
 
 			spriteBatch.begin();

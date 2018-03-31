@@ -86,7 +86,9 @@ void LootSystem::simulate(World& world, [[maybe_unused]]float elapsedSeconds) {
 			InventoryComponent inventoryCmpnt =
 				mInventorySystem->getComponent(mTargetEntity[index]);
 
-			mInventorySystem->addItem(inventoryCmpnt, mItem[index]);
+			if (mInventorySystem->addItem(inventoryCmpnt, mItem[index])) {
+				removeEntities.push_back(p.second);
+			}
 
 			// if (mItem[index].heal > 0.0f) {
 			// 	HealthSystem& healthSystem = world.getHealthSystem();
@@ -101,8 +103,6 @@ void LootSystem::simulate(World& world, [[maybe_unused]]float elapsedSeconds) {
 			// 		healthGauge.add(mItem[index].heal);
 			// 	}
 			// }
-
-			removeEntities.push_back(p.second);
 		}
 	}
 

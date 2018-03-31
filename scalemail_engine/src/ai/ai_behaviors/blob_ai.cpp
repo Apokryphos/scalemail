@@ -22,7 +22,6 @@
 
 namespace ScaleMail
 {
-static const int MAX_ITEM_CARRY = 3;
 static const float MAX_LOOT_RANGE = 256.0f;
 static const float NORMAL_SPEED = 16.0f;
 static const float LOOT_CHASE_SPEED = 64.0f;
@@ -44,10 +43,10 @@ BlobAi::BlobAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 			InventoryComponent inventoryCmpnt =
 				inventorySystem.getComponent(entity);
 
-			const int itemCount = inventorySystem.getItemCount(inventoryCmpnt);
+			const bool isFull = inventorySystem.isFull(inventoryCmpnt);
 
 			return
-				itemCount < MAX_ITEM_CARRY ?
+				!isFull ?
 				AiNodeStatus::SUCCESS :
 				AiNodeStatus::FAILURE;
 		}

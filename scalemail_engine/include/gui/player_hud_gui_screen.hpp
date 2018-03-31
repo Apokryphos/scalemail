@@ -8,6 +8,7 @@ namespace ScaleMail
 class PlayerHudGuiScreen : public GuiScreen
 {
 	Tileset mGuiTileset;
+	Tileset mItemTileset;
 
 protected:
 	virtual void draw(Game& game, SpriteBatch& spriteBatch) override;

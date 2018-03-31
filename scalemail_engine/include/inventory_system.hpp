@@ -13,6 +13,7 @@ struct InventoryComponent {
 
 struct InventoryComponentData
 {
+	int carryCapacity;
 	std::vector<Item> items;
 };
 
@@ -26,8 +27,10 @@ class InventorySystem : public EntitySystem
 public:
 	InventorySystem(EntityManager& entityManager, int maxComponents = 1000);
 	InventoryComponent getComponent(const Entity& entity) const;
-	void addItem(const InventoryComponent& cmpnt, struct Item& item);
+	bool addItem(const InventoryComponent& cmpnt, struct Item& item);
+	int getCarryCapacity(const InventoryComponent& cmpnt) const;
 	int getItemCount(const InventoryComponent& cmpnt) const;
-	std::vector<Item> getItems(const InventoryComponent& cmpnt) const;
+	const std::vector<Item>& getItems(const InventoryComponent& cmpnt) const;
+	int isFull(const InventoryComponent& cmpnt) const;
 };
 }

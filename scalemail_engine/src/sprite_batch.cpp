@@ -175,7 +175,7 @@ void SpriteBatch::buildTileVertexData(
 	tileset.getTileUv(tilesetId, uv1, uv2);
 
 	this->buildTileVertexData(
-		tileset.texture.id, position, size, uv1, uv2, alpha);
+		tileset.getTexture().id, position, size, uv1, uv2, alpha);
 }
 
 //	===========================================================================

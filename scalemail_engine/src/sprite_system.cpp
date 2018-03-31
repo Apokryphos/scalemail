@@ -313,7 +313,7 @@ void SpriteSystem::setTileset(
 
 	Texture maskTexture = mAssetManager->loadTexture(textureName + "_mask");
 
-	data.textureId = tileset.texture.id;
+	data.textureId = tileset.getTexture().id;
 	data.maskTextureId = maskTexture.id;
 	data.tileset = tileset;
 

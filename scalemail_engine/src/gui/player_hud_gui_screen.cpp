@@ -3,6 +3,8 @@
 #include "camera.hpp"
 #include "game.hpp"
 #include "health_system.hpp"
+#include "inventory_system.hpp"
+#include "item.hpp"
 #include "player.hpp"
 #include "sprite_batch.hpp"
 #include "world.hpp"
@@ -11,6 +13,9 @@
 
 namespace ScaleMail
 {
+const int ITEM_SLOT_INDEX = 96;
+const int ITEM_SLOT_EMPTY_INDEX = 112;
+
 //  ============================================================================
 static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 							glm::vec2 position, const float scale,
@@ -36,7 +41,8 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 
 	glm::vec2 size = glm::vec2(48.0f * healthPercent, 16.0f);
 
-	glm::vec2 tileSize = glm::vec2(16.0f, 16.0f);
+	const glm::vec2 tileSize =
+		glm::vec2(guiTileset.getTileWidth(), guiTileset.getTileHeight());
 
 	//	Draw three tiles for the bottom layer
 	spriteBatch.buildTileVertexData(
@@ -62,12 +68,84 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 
 	//	Draw the filled layer
 	spriteBatch.buildTileVertexData(
-		guiTileset.texture.id,
+		guiTileset.getTexture().id,
 		position * scale,
 		size * scale,
 		uv1,
 		uv2,
 		false);
+}
+
+//  ============================================================================
+static void drawItemSlot(SpriteBatch& spriteBatch, Tileset guiTileset,
+						 glm::vec2 position, const float scale, bool empty) {
+	const glm::vec2 tileSize =
+		glm::vec2(guiTileset.getTileWidth(), guiTileset.getTileHeight());
+
+	glm::vec2 uv1;
+	glm::vec2 uv2;
+
+	const int tilesetId = empty ? ITEM_SLOT_EMPTY_INDEX : ITEM_SLOT_INDEX;
+
+	guiTileset.getTileUv(tilesetId, uv1, uv2);
+
+	spriteBatch.buildTileVertexData(
+		guiTileset.getTexture().id,
+		position * scale,
+		tileSize * scale,
+		uv1,
+		uv2,
+		false);
+}
+
+//  ============================================================================
+static void drawItemSlot(SpriteBatch& spriteBatch, Tileset guiTileset,
+						 glm::vec2 position, const float scale,
+						 const Item& item, const Tileset& itemTileset) {
+	//	Draw slot
+	drawItemSlot(spriteBatch, guiTileset, position, scale, false);
+
+	const glm::vec2 itemTileSize =
+		glm::vec2(itemTileset.getTileWidth(), itemTileset.getTileHeight());
+
+	glm::vec2 uv1;
+	glm::vec2 uv2;
+
+	//	Draw item
+	itemTileset.getTileUv(item.tilesetId, uv1, uv2);
+
+	spriteBatch.buildTileVertexData(
+		itemTileset.getTexture().id,
+		position * scale,
+		itemTileSize * scale,
+		uv1,
+		uv2,
+		true);
+}
+
+//	============================================================================
+static void drawItemSlots(SpriteBatch& spriteBatch, Tileset guiTileset,
+						 glm::vec2 position, const float scale,
+						 const std::vector<Item>& items,
+						 const int carryCapacity,
+						 const Tileset& itemTileset) {
+	const float xOffset = itemTileset.getTileWidth() + 2;
+
+	//	Draw slot for each item
+	for (const auto& item : items) {
+		drawItemSlot(spriteBatch, guiTileset, position, scale, item,
+					 itemTileset);
+
+		position.x += xOffset;
+	}
+
+	//	Draw remaining empty slots
+	const int itemCount = items.size();
+	for (int n = itemCount; n < carryCapacity; ++n) {
+		drawItemSlot(spriteBatch, guiTileset, position, scale, true);
+
+		position.x += xOffset;
+	}
 }
 
 //	============================================================================
@@ -92,23 +170,44 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 		Player* player = players[0];
 		HealthSystem& healthSystem = world.getHealthSystem();
 
+		spriteBatch.begin();
+
 		if (healthSystem.hasComponent(player->entity)) {
 			HealthComponent healthCmpnt = healthSystem.getComponent(player->entity);
 			HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
 
 			glm::vec2 position = glm::vec2(4.0f, 4.0f);
 
-			spriteBatch.begin();
 			drawHealthGauge(spriteBatch, mGuiTileset, position, scale,
 							healthGauge.getValue(), healthGauge.getMax());
-			spriteBatch.render(projection);
-			spriteBatch.end();
 		}
+
+		InventorySystem& inventorySystem = world.getInventorySystem();
+
+		if (inventorySystem.hasComponent(player->entity)) {
+			InventoryComponent inventoryCmpnt =
+				inventorySystem.getComponent(player->entity);
+
+			glm::vec2 position = glm::vec2(4.0f, 22.0f);
+
+			const std::vector<Item>& items =
+				inventorySystem.getItems(inventoryCmpnt);
+
+			const int carryCapacity =
+				inventorySystem.getCarryCapacity(inventoryCmpnt);
+
+			drawItemSlots(spriteBatch, mGuiTileset, position, scale, items,
+						  carryCapacity, mItemTileset);
+		}
+
+		spriteBatch.render(projection);
+		spriteBatch.end();
 	}
 }
 
 //	============================================================================
 void PlayerHudGuiScreen::initialize(AssetManager& assetManager) {
 	mGuiTileset = assetManager.getTileset("gui");
+	mItemTileset = assetManager.getTileset("items");
 }
 }

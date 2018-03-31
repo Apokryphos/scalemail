@@ -303,7 +303,7 @@ static MapMesh& getMapMesh(TileData& tileData,
 			mapMesh.alpha == tileData.alpha &&
 			mapMesh.animated == tileData.animated &&
 			mapMesh.scroll == tileData.scroll &&
-			mapMesh.textureId == tileset.texture.id;
+			mapMesh.textureId == tileset.getTexture().id;
 	});
 
 	if (itr != mapMeshes.end()) {
@@ -315,7 +315,7 @@ static MapMesh& getMapMesh(TileData& tileData,
 	mapMesh.animated = tileData.animated;
 	mapMesh.frame = frame;
 	mapMesh.scroll = tileData.scroll;
-	mapMesh.textureId = tileset.texture.id;
+	mapMesh.textureId = tileset.getTexture().id;
 
 	mapMeshes.push_back(mapMesh);
 

@@ -19,10 +19,10 @@ Entity createLoot(World& world, const glm::vec2& position,
 				  const std::string& name, const std::string& prefab) {
 	Entity entity = world.createEntity();
 
-	Item item = {};
-	item.name = name;
-	item.prefab = prefab;
-	item.tilesetId = tilesetId;
+	std::shared_ptr<Item> item = std::make_shared<Item>();
+	item->name = name;
+	item->prefab = prefab;
+	item->tilesetId = tilesetId;
 
 	LootSystem& lootSystem = world.getLootSystem();
 	lootSystem.addComponent(entity);

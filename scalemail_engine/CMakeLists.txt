@@ -80,6 +80,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/health_gauge.cpp
     src/health_system.cpp
     src/input.cpp
+    src/input_device.cpp
     src/intro_game_state.cpp
     src/inventory_system.cpp
     src/layer.cpp

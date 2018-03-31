@@ -6,6 +6,8 @@ namespace ScaleMail
 {
 struct InputState
 {
+	static const int USE_ITEM_COUNT = 3;
+
 	bool fire;
 	glm::vec2 aimPosition;
 	bool moveLeft;
@@ -17,5 +19,6 @@ struct InputState
 	bool left;
 	bool right;
 	bool up;
+	bool useItem[USE_ITEM_COUNT];
 };
 }

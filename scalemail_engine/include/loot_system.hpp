@@ -1,13 +1,14 @@
 #pragma once
 
 #include "entity_system.hpp"
-#include "item.hpp"
+#include <memory>
 #include <vector>
 
 namespace ScaleMail
 {
 struct EntityCollision;
 struct InventorySystem;
+class Item;
 class World;
 
 struct LootComponent {
@@ -19,7 +20,7 @@ class LootSystem : public EntitySystem
 {
 	std::vector<float> mLootable;
 	std::vector<Entity> mTargetEntity;
-	std::vector<Item> mItem;
+	std::vector<std::shared_ptr<Item>> mItem;
 
 	InventorySystem* mInventorySystem;
 
@@ -31,7 +32,7 @@ public:
 	LootComponent getComponent(const Entity& entity) const;
 	void initialize(InventorySystem& inventorySystem);
 	void onEntityCollision(EntityCollision& collision);
-	void setItem(const LootComponent& cmpnt, struct Item& item);
+	void setItem(const LootComponent& cmpnt, std::shared_ptr<Item> item);
 	void simulate(World& world, float elapsedSeconds);
 };
 }

@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "gl_headers.hpp"
+#include "input_device.hpp"
 #include "input_state.hpp"
 #include "player.hpp"
 #include "transition.hpp"
@@ -9,25 +10,11 @@
 
 namespace ScaleMail
 {
-struct InputDevice
-{
-	InputState inputState;
-};
-
 InputDevice keyboard;
 
 //  ============================================================================
-InputState getKeyboardInputState() {
-	return keyboard.inputState;
-}
-
-//  ============================================================================
-static void updatePlayerInputState(World& world) {
-	//  Set first player to keyboard input state
-	auto players = world.getPlayers();
-	if (players.size() > 0) {
-		players[0]->inputState = keyboard.inputState;
-	}
+InputDevice& getKeyboardInputDevice() {
+	return keyboard;
 }
 
 //  ============================================================================
@@ -36,13 +23,25 @@ static void keyCallback(GLFWwindow* window, int key,
 						[[maybe_unused]] int mods) {
 	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
 
-	InputState& inputState = keyboard.inputState;
+	InputState& inputState = keyboard.getInputState();
 
 	//  Single keypress
 	if (action == GLFW_PRESS) {
 		switch (key) {
 			case GLFW_KEY_ESCAPE:
 				game->quit = true;
+				break;
+
+			case GLFW_KEY_1:
+				inputState.useItem[0] = true;
+				break;
+
+			case GLFW_KEY_2:
+				inputState.useItem[1] = true;
+				break;
+
+			case GLFW_KEY_3:
+				inputState.useItem[2] = true;
 				break;
 
 			case GLFW_KEY_F1:
@@ -149,7 +148,6 @@ static void keyCallback(GLFWwindow* window, int key,
 	}
 
 	bool value = !(action == GLFW_RELEASE);
-
 	switch (key) {
 		case GLFW_KEY_DOWN:
 			inputState.moveDown = value;
@@ -167,8 +165,6 @@ static void keyCallback(GLFWwindow* window, int key,
 			inputState.moveUp = value;
 			break;
 	}
-
-	updatePlayerInputState(*game->world);
 }
 
 //  ============================================================================
@@ -178,7 +174,7 @@ static void mouseButtonCallback(GLFWwindow* window, int button, int action,
 
 	World* world = game->world;
 
-	InputState& inputState = keyboard.inputState;
+	InputState& inputState = keyboard.getInputState();
 
 	if (world == nullptr) {
 		inputState.fire = false;
@@ -192,16 +188,13 @@ static void mouseButtonCallback(GLFWwindow* window, int button, int action,
 			inputState.fire = false;
 		}
 	}
-
-	updatePlayerInputState(*world);
 }
 
 //  ============================================================================
-static void mousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
+static void mousePositionCallback([[maybe_unused]]GLFWwindow* window,
+								  double xpos, double ypos) {
 	//	Update aim reticle position
-	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
-	keyboard.inputState.aimPosition = glm::vec2(xpos, ypos);
-	updatePlayerInputState(*game->world);
+	keyboard.getInputState().aimPosition = glm::vec2(xpos, ypos);
 }
 
 //  ============================================================================

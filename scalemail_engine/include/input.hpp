@@ -1,11 +1,11 @@
 #pragma once
 
-#include "input_state.hpp"
-
 struct GLFWwindow;
 
 namespace ScaleMail
 {
-InputState getKeyboardInputState();
+class InputDevice;
+
+InputDevice& getKeyboardInputDevice();
 void initializeInput(GLFWwindow* window);
 }

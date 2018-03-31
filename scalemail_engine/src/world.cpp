@@ -15,6 +15,7 @@
 #include "facing_system.hpp"
 #include "gun_system.hpp"
 #include "health_system.hpp"
+#include "input.hpp"
 #include "inventory_system.hpp"
 #include "light_system.hpp"
 #include "loot_system.hpp"
@@ -61,7 +62,7 @@ public:
 		facingSystem(entityManager),
 		gunSystem(entityManager),
 		healthSystem(entityManager),
-		inventorySystem(entityManager),
+		inventorySystem(world, entityManager),
 		lightSystem(entityManager),
 		lootSystem(entityManager),
 		nameSystem(entityManager),
@@ -104,6 +105,9 @@ World::World() : mImpl(std::make_unique<WorldImpl>()),
 	mImpl->players.emplace_back("Player2");
 	mImpl->players.emplace_back("Player3");
 	mImpl->players.emplace_back("Player4");
+
+	//	Assign keyboard to first player
+	mImpl->players[0].inputDevice = &getKeyboardInputDevice();
 
 	mSystems->physicsSystem.addEntityCollisionCallback(
 		std::bind(&BulletSystem::onEntityCollision, &mSystems->bulletSystem,

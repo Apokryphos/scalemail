@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entity.hpp"
-#include "input_state.hpp"
+#include "input_device.hpp"
 #include <string>
 
 namespace ScaleMail
@@ -9,8 +9,7 @@ namespace ScaleMail
 class Player
 {
 public:
-	Player(std::string name) : name(name) {
-		inputState = {};
+	Player(std::string name) : inputDevice(nullptr), name(name) {
 	}
 
 	Player(const Player&) = delete;
@@ -18,19 +17,19 @@ public:
 
 	Player(Player&& rhs) :
 		entity(std::move(rhs.entity)),
-		inputState(std::move(rhs.inputState)),
+		inputDevice(std::move(rhs.inputDevice)),
 		name(std::move(rhs.name)) {
 	}
 
 	Player& operator=(Player&& rhs) {
 		entity = std::move(rhs.entity);
-		inputState = std::move(rhs.inputState);
+		inputDevice = std::move(rhs.inputDevice);
 		name = std::move(rhs.name);
 		return *this;
 	}
 
 	Entity entity;
-	InputState inputState;
+	InputDevice* inputDevice;
 	std::string name;
 };
 }

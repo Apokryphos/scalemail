@@ -9,6 +9,7 @@
 #include "game_state_manager.hpp"
 #include "gl_headers.hpp"
 #include "input.hpp"
+#include "input_device.hpp"
 #include "input_state.hpp"
 #include "map.hpp"
 #include "map_render.hpp"
@@ -79,7 +80,7 @@ static void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
 
 //  ============================================================================
 static void screenCapture() {
-	InputState inputState = getKeyboardInputState();
+	InputState& inputState = getKeyboardInputDevice().getInputState();
 
 	if (inputState.capture) {
 		capture.startCapture();

@@ -1,6 +1,7 @@
 #include "entity_types.hpp"
 #include "health_system.hpp"
 #include "inventory_system.hpp"
+#include "item.hpp"
 #include "math_util.hpp"
 #include "physics_system.hpp"
 #include "vector_util.hpp"
@@ -28,21 +29,21 @@ static void dropLoot(World& world, const Entity& entity) {
 
 	const glm::vec2 size(16.0f);
 
-	std::vector<Item> items = inventorySystem.getItems(inventoryCmpnt);
+	auto& items = inventorySystem.getItems(inventoryCmpnt);
 
 	const unsigned int itemCount = items.size();
 	const float radius = 16.0f;
 
 	for (unsigned int n = 0; n < itemCount; ++n) {
-		Item& item = items[n];
+		auto& item = items[n];
 
 		glm::vec2 itemPosition(
 			position.x + radius * std::cos(n * TWO_PI / itemCount),
 			position.y + radius * std::sin(n * TWO_PI / itemCount)
 		);
 
-		createLoot(world, itemPosition, size, item.tilesetId, item.name,
-				   item.prefab);
+		createLoot(world, itemPosition, size, item->tilesetId, item->name,
+				   item->prefab);
 	}
 }
 

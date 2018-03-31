@@ -1,5 +1,8 @@
+#include "health_system.hpp"
 #include "inventory_system.hpp"
+#include "item.hpp"
 #include "vector_util.hpp"
+#include "world.hpp"
 
 namespace ScaleMail
 {
@@ -9,15 +12,38 @@ static InventoryComponent makeComponent(const int index) {
 }
 
 //	============================================================================
-InventorySystem::InventorySystem(EntityManager& entityManager, int maxComponents)
-	: EntitySystem(entityManager, maxComponents) {
+InventorySystem::InventorySystem(World& world, EntityManager& entityManager,
+								 int maxComponents)
+	: EntitySystem(entityManager, maxComponents), mWorld(world) {
 	mData.reserve(maxComponents);
+}
+
+//	============================================================================
+bool InventorySystem::addItem(const InventoryComponent& cmpnt,
+							  std::shared_ptr<Item> item) {
+	if (item == nullptr) {
+		return false;
+	}
+
+	auto& slots = mData[cmpnt.index].itemSlots;
+	const size_t slotCount = slots.size();
+
+	//	Find an empty item slot
+	for (size_t n = 0; n < slotCount; ++n) {
+		if (slots[n] == nullptr) {
+			slots[n] = item;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //	============================================================================
 void InventorySystem::createComponent() {
 	InventoryComponentData data = {};
 	data.carryCapacity = 3;
+	data.itemSlots.resize(data.carryCapacity);
 
 	mData.emplace_back(data);
 }
@@ -33,42 +59,67 @@ InventoryComponent InventorySystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
-bool InventorySystem::addItem(const InventoryComponent& cmpnt,
-							  struct Item& item) {
-	InventoryComponentData& data = mData[cmpnt.index];
-
-	const size_t itemCount = data.items.size();
-
-	if (data.carryCapacity > 0 &&
-		itemCount < static_cast<size_t>(data.carryCapacity)) {
-		mData[cmpnt.index].items.push_back(item);
-		return true;
-	}
-
-	return false;
-}
-
-//	============================================================================
 int InventorySystem::getCarryCapacity(const InventoryComponent& cmpnt) const {
 	return mData[cmpnt.index].carryCapacity;
 }
 
 //	============================================================================
 int InventorySystem::getItemCount(const InventoryComponent& cmpnt) const {
-	return mData[cmpnt.index].items.size();
+	const auto& slots = mData[cmpnt.index].itemSlots;
+	const size_t slotCount = slots.size();
+	size_t itemCount = 0;
+
+	for (size_t n = 0; n < slotCount; ++n) {
+		if (slots[n] != nullptr) {
+			++itemCount;
+		}
+	}
+
+	return itemCount;
 }
 
 //	============================================================================
-const std::vector<Item>& InventorySystem::getItems(
+const std::vector<std::shared_ptr<Item>>& InventorySystem::getItems(
 	const InventoryComponent& cmpnt) const {
-	return mData[cmpnt.index].items;
+	return mData[cmpnt.index].itemSlots;
 }
 
 //	============================================================================
 int InventorySystem::isFull(const InventoryComponent& cmpnt) const {
-	const InventoryComponentData& data = mData[cmpnt.index];
-	return
-		data.carryCapacity <= 0 ||
-		(data.items.size() >= static_cast<size_t>(data.carryCapacity));
+	return this->getItemCount(cmpnt) >= mData[cmpnt.index].carryCapacity;
+}
+
+//	============================================================================
+bool InventorySystem::useItem(const InventoryComponent& cmpnt,
+							  std::shared_ptr<Item> item) {
+	if (item == nullptr) {
+		return false;
+	}
+
+	auto& slots = mData[cmpnt.index].itemSlots;
+
+	//	Ensure item exists in inventory
+	auto find = std::find(slots.begin(), slots.end(), item);
+	if (find == slots.end()) {
+		return false;
+	}
+
+	Entity entity = this->getEntityByComponentIndex(cmpnt.index);
+
+	//	Heal using item
+	HealthSystem& healthSystem = mWorld.getHealthSystem();
+	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
+	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
+	healthGauge.add(item->heal);
+
+	//	Set item slot to null
+	const size_t slotCount = slots.size();
+	for (size_t n = 0; n < slotCount; ++n) {
+		if (slots[n] == item) {
+			slots[n] = nullptr;
+		}
+	}
+
+	return true;
 }
 }

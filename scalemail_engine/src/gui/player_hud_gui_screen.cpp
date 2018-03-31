@@ -78,41 +78,39 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 
 //  ============================================================================
 static void drawItemSlot(SpriteBatch& spriteBatch, Tileset guiTileset,
-						 glm::vec2 position, const float scale, bool empty) {
-	const glm::vec2 tileSize =
+						 glm::vec2 position, const float scale,
+						 const Item* item, const Tileset& itemTileset) {
+	//	Draw slot
+	const glm::vec2 guiTileSize =
 		glm::vec2(guiTileset.getTileWidth(), guiTileset.getTileHeight());
 
 	glm::vec2 uv1;
 	glm::vec2 uv2;
 
-	const int tilesetId = empty ? ITEM_SLOT_EMPTY_INDEX : ITEM_SLOT_INDEX;
+	const int slotTilesetId =
+		item == nullptr ?
+		ITEM_SLOT_EMPTY_INDEX :
+		ITEM_SLOT_INDEX;
 
-	guiTileset.getTileUv(tilesetId, uv1, uv2);
+	guiTileset.getTileUv(slotTilesetId, uv1, uv2);
 
 	spriteBatch.buildTileVertexData(
 		guiTileset.getTexture().id,
 		position * scale,
-		tileSize * scale,
+		guiTileSize * scale,
 		uv1,
 		uv2,
 		false);
-}
 
-//  ============================================================================
-static void drawItemSlot(SpriteBatch& spriteBatch, Tileset guiTileset,
-						 glm::vec2 position, const float scale,
-						 const Item& item, const Tileset& itemTileset) {
-	//	Draw slot
-	drawItemSlot(spriteBatch, guiTileset, position, scale, false);
+	if (item == nullptr) {
+		return;
+	}
 
+	//	Draw item
 	const glm::vec2 itemTileSize =
 		glm::vec2(itemTileset.getTileWidth(), itemTileset.getTileHeight());
 
-	glm::vec2 uv1;
-	glm::vec2 uv2;
-
-	//	Draw item
-	itemTileset.getTileUv(item.tilesetId, uv1, uv2);
+	itemTileset.getTileUv(item->tilesetId, uv1, uv2);
 
 	spriteBatch.buildTileVertexData(
 		itemTileset.getTexture().id,
@@ -126,24 +124,14 @@ static void drawItemSlot(SpriteBatch& spriteBatch, Tileset guiTileset,
 //	============================================================================
 static void drawItemSlots(SpriteBatch& spriteBatch, Tileset guiTileset,
 						 glm::vec2 position, const float scale,
-						 const std::vector<Item>& items,
-						 const int carryCapacity,
+						 const std::vector<std::shared_ptr<Item>>& items,
 						 const Tileset& itemTileset) {
 	const float xOffset = itemTileset.getTileWidth() + 2;
 
 	//	Draw slot for each item
 	for (const auto& item : items) {
-		drawItemSlot(spriteBatch, guiTileset, position, scale, item,
+		drawItemSlot(spriteBatch, guiTileset, position, scale, item.get(),
 					 itemTileset);
-
-		position.x += xOffset;
-	}
-
-	//	Draw remaining empty slots
-	const int itemCount = items.size();
-	for (int n = itemCount; n < carryCapacity; ++n) {
-		drawItemSlot(spriteBatch, guiTileset, position, scale, true);
-
 		position.x += xOffset;
 	}
 }
@@ -190,14 +178,10 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 
 			glm::vec2 position = glm::vec2(4.0f, 22.0f);
 
-			const std::vector<Item>& items =
-				inventorySystem.getItems(inventoryCmpnt);
-
-			const int carryCapacity =
-				inventorySystem.getCarryCapacity(inventoryCmpnt);
+			const auto& items = inventorySystem.getItems(inventoryCmpnt);
 
 			drawItemSlots(spriteBatch, mGuiTileset, position, scale, items,
-						  carryCapacity, mItemTileset);
+						  mItemTileset);
 		}
 
 		spriteBatch.render(projection);

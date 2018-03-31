@@ -2,6 +2,7 @@
 #include "gun_system.hpp"
 #include "health_system.hpp"
 #include "inventory_system.hpp"
+#include "item.hpp"
 #include "light_system.hpp"
 #include "loot_system.hpp"
 #include "particle_system.hpp"
@@ -59,9 +60,9 @@ static void buildHealthPotion(Entity entity, World& world) {
 	SpriteComponent spriteCmpnt = spriteSystem.getComponent(entity);
 	int tilesetId = spriteSystem.getTilesetId(spriteCmpnt);
 
-	Item item = {};
-	item.heal = 50.0f;
-	item.tilesetId = tilesetId;
+	std::shared_ptr<Item> item = std::make_shared<Item>();
+	item->heal = 50.0f;
+	item->tilesetId = tilesetId;
 
 	LootSystem& lootSystem = world.getLootSystem();
 	LootComponent lootCmpnt = lootSystem.getComponent(entity);

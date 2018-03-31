@@ -1,6 +1,7 @@
 #include "entity_collision.hpp"
 #include "health_system.hpp"
 #include "inventory_system.hpp"
+#include "item.hpp"
 #include "loot_system.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"
@@ -71,7 +72,7 @@ void LootSystem::onEntityCollision(EntityCollision& collision) {
 }
 
 //	============================================================================
-void LootSystem::setItem(const LootComponent& cmpnt, struct Item& item) {
+void LootSystem::setItem(const LootComponent& cmpnt, std::shared_ptr<Item> item) {
 	mItem[cmpnt.index] = item;
 }
 
@@ -89,20 +90,6 @@ void LootSystem::simulate(World& world, [[maybe_unused]]float elapsedSeconds) {
 			if (mInventorySystem->addItem(inventoryCmpnt, mItem[index])) {
 				removeEntities.push_back(p.second);
 			}
-
-			// if (mItem[index].heal > 0.0f) {
-			// 	HealthSystem& healthSystem = world.getHealthSystem();
-
-			// 	if (healthSystem.hasComponent(mTargetEntity[index])) {
-			// 		HealthComponent healthCmpnt =
-			// 			healthSystem.getComponent(mTargetEntity[index]);
-
-			// 		HealthGauge& healthGauge =
-			// 			healthSystem.getHealthGauge(healthCmpnt);
-
-			// 		healthGauge.add(mItem[index].heal);
-			// 	}
-			// }
 		}
 	}
 

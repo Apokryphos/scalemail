@@ -5,6 +5,7 @@
 #include "game_window.hpp"
 #include "gun_system.hpp"
 #include "health_system.hpp"
+#include "inventory_system.hpp"
 #include "main_game_state.hpp"
 #include "map.hpp"
 #include "player.hpp"
@@ -53,6 +54,12 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 	std::vector<Player*> players = world.getPlayers();
 
 	for (const auto player : players) {
+		if (player->inputDevice == nullptr) {
+			continue;
+		}
+
+		InputState& inputState = player->inputDevice->getInputState();
+
 		HealthSystem& healthSystem = world.getHealthSystem();
 		HealthComponent healthCmpnt = healthSystem.getComponent(player->entity);
 		HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
@@ -63,7 +70,6 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 		glm::vec2 gunTarget;
 
 		if (!healthGauge.isEmpty()) {
-			InputState& inputState = player->inputState;
 
 			//	Update direction
 			moveX =
@@ -95,6 +101,23 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 
 		gunSystem.setTarget(gunCmpnt, gunTarget);
 		gunSystem.setFire(gunCmpnt, fire);
+
+		//	Use items
+		InventorySystem& inventorySystem = world.getInventorySystem();
+
+		InventoryComponent inventoryCmpnt =
+			inventorySystem.getComponent(player->entity);
+
+		auto& items = inventorySystem.getItems(inventoryCmpnt);
+
+		for (size_t n = 0; n < InputState::USE_ITEM_COUNT; ++n) {
+			if (inputState.useItem[n] && n < items.size()) {
+				std::shared_ptr<Item> item = items[n];
+				inventorySystem.useItem(inventoryCmpnt, item);
+			}
+
+			inputState.useItem[n] = false;
+		}
 	}
 }
 }

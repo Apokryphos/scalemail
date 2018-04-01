@@ -38,17 +38,18 @@ class SpriteBatch
 		}
 	};
 
-	float mAlpha = 1.0f;
+	float mAlpha;
+	float mTileZ;
 
 	std::string mName;
 
 	SpriteShader mShader;
 	GLuint   mVao;
 
-	size_t mIndexBufferSizeInElements = 0;
+	size_t mIndexBufferSizeInElements;
 	GLuint mIndexBuffer;
 
-	size_t mVertexBufferSizeInElements = 0;
+	size_t mVertexBufferSizeInElements;
 	GLuint mVertexBuffer;
 
 	std::unordered_map<GLuint, Batch> mBatchByTexture;

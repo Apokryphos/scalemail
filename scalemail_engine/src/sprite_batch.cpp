@@ -52,10 +52,15 @@ static void enableVertexAttributes(const GLsizei stride) {
 }
 
 //	===========================================================================
-SpriteBatch::SpriteBatch() {}
+SpriteBatch::SpriteBatch() : mAlpha(1.0f), mTileZ(0.0f),
+							 mIndexBufferSizeInElements(0),
+							 mVertexBufferSizeInElements(0) {
+}
 
 //	===========================================================================
 void SpriteBatch::begin() {
+	mTileZ = 0.0f;
+
 	//	Reset texture ID counts
 	mTextureIdCounts.clear();
 
@@ -206,7 +211,7 @@ void SpriteBatch::buildTileVertexData(
 	//	Position
 	vertexData[v++] = position.x + size.x * quadA.x;
 	vertexData[v++] = position.y + size.y * quadA.y;
-	vertexData[v++] = 0.0f;
+	vertexData[v++] = mTileZ;
 	//	Color
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
@@ -219,7 +224,7 @@ void SpriteBatch::buildTileVertexData(
 	//	Position
 	vertexData[v++] = position.x + size.x * quadB.x;
 	vertexData[v++] = position.y + size.y * quadB.y;
-	vertexData[v++] = 0.0f;
+	vertexData[v++] = mTileZ;
 	//	Color
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
@@ -232,7 +237,7 @@ void SpriteBatch::buildTileVertexData(
 	//	Position
 	vertexData[v++] = position.x + size.x * quadC.x;
 	vertexData[v++] = position.y + size.y * quadC.y;
-	vertexData[v++] = 0.0f;
+	vertexData[v++] = mTileZ;
 	//	Color
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
@@ -245,7 +250,7 @@ void SpriteBatch::buildTileVertexData(
 	//	Position
 	vertexData[v++] = position.x + size.x * quadD.x;
 	vertexData[v++] = position.y + size.y * quadD.y;
-	vertexData[v++] = 0.0f;
+	vertexData[v++] = mTileZ;
 	//	Color
 	vertexData[v++] = 1.0f;
 	vertexData[v++] = 1.0f;
@@ -262,6 +267,9 @@ void SpriteBatch::buildTileVertexData(
 	indexData[e++] = vertex + 2;
 	indexData[e++] = vertex + 3;
 	vertex += 4;
+
+	//	Increase tile Z so tiles are drawn in order
+	mTileZ += 0.001f;
 }
 
 //	===========================================================================
@@ -384,7 +392,9 @@ void SpriteBatch::buildSpriteVertexData(
 }
 
 //	===========================================================================
-void SpriteBatch::end() {}
+void SpriteBatch::end() {
+	mTileZ = 0.0f;
+}
 
 //	===========================================================================
 void SpriteBatch::initialize(const std::string& spriteBatchName,
@@ -491,7 +501,7 @@ void SpriteBatch::render(const glm::mat4& transform) {
 //	===========================================================================
 void SpriteBatch::renderBatches(
 	std::unordered_map<GLuint, Batch> batches, bool alpha) {
-	if (alpha) {
+	if (alpha || mAlpha < 1.0f) {
 		//	Enable alpha blending
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

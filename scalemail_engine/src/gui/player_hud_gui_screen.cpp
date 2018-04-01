@@ -13,8 +13,9 @@
 
 namespace ScaleMail
 {
-const int ITEM_SLOT_INDEX = 96;
-const int ITEM_SLOT_EMPTY_INDEX = 112;
+static const int ITEM_SLOT_INDEX = 96;
+static const int ITEM_SLOT_EMPTY_INDEX = 112;
+static const float PADDING = 1.0f;
 
 //  ============================================================================
 static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
@@ -22,9 +23,11 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 							float healthValue, float healthMax) {
 	const float healthPercent = healthValue / healthMax;
 
+	const float tileWidth = guiTileset.getTileWidth();
+
 	//	Positions for second and third tile for bottom (empty) layer
-	glm::vec2 position2 = position + glm::vec2(16.0f, 0.0f);
-	glm::vec2 position3 = position2 + glm::vec2(16.0f, 0.0f);
+	const glm::vec2 position2 = position + glm::vec2(tileWidth * scale, 0.0f);
+	const glm::vec2 position3 = position2 + glm::vec2(tileWidth * scale, 0.0f);
 
 	//	Gauge image is three tiles in width (16x48 pixels)
 	glm::vec2 uv1;
@@ -39,7 +42,9 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 	//	Scale end U by health percentage
 	uv2.x *= healthPercent;
 
-	glm::vec2 size = glm::vec2(48.0f * healthPercent, 16.0f);
+	//	Size of filled layer
+	const glm::vec2 filledSize =
+		glm::vec2(tileWidth * 3.0f * healthPercent, tileWidth);
 
 	const glm::vec2 tileSize =
 		glm::vec2(guiTileset.getTileWidth(), guiTileset.getTileHeight());
@@ -48,29 +53,29 @@ static void drawHealthGauge(SpriteBatch& spriteBatch, Tileset guiTileset,
 	spriteBatch.buildTileVertexData(
 		guiTileset,
 		160,
-		position * scale,
+		position,
 		tileSize * scale,
 		false);
 
 	spriteBatch.buildTileVertexData(
 		guiTileset,
 		161,
-		position2 * scale,
+		position2,
 		tileSize * scale,
 		false);
 
 	spriteBatch.buildTileVertexData(
 		guiTileset,
 		162,
-		position3 * scale,
+		position3,
 		tileSize * scale,
 		false);
 
 	//	Draw the filled layer
 	spriteBatch.buildTileVertexData(
 		guiTileset.getTexture().id,
-		position * scale,
-		size * scale,
+		position,
+		filledSize * scale,
 		uv1,
 		uv2,
 		false);
@@ -96,7 +101,7 @@ static void drawItemSlot(SpriteBatch& spriteBatch, Tileset guiTileset,
 
 	spriteBatch.buildTileVertexData(
 		guiTileset.getTexture().id,
-		position * scale,
+		position,
 		guiTileSize * scale,
 		uv1,
 		uv2,
@@ -114,7 +119,7 @@ static void drawItemSlot(SpriteBatch& spriteBatch, Tileset guiTileset,
 
 	spriteBatch.buildTileVertexData(
 		itemTileset.getTexture().id,
-		position * scale,
+		position,
 		itemTileSize * scale,
 		uv1,
 		uv2,
@@ -126,12 +131,13 @@ static void drawItemSlots(SpriteBatch& spriteBatch, Tileset guiTileset,
 						 glm::vec2 position, const float scale,
 						 const std::vector<std::shared_ptr<Item>>& items,
 						 const Tileset& itemTileset) {
-	const float xOffset = itemTileset.getTileWidth() + 2;
+	const float xOffset = (itemTileset.getTileWidth() + PADDING) * scale;
 
 	//	Draw slot for each item
 	for (const auto& item : items) {
 		drawItemSlot(spriteBatch, guiTileset, position, scale, item.get(),
 					 itemTileset);
+
 		position.x += xOffset;
 	}
 }
@@ -140,43 +146,79 @@ static void drawItemSlots(SpriteBatch& spriteBatch, Tileset guiTileset,
 void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 	World& world = *game.world;
 
-	Camera* camera = game.camera;
+	const Camera* camera = game.camera;
 
 	const float scale = std::min(camera->getZoom(), 3.0f);
 
-	glm::mat4 projection = glm::ortho(
+	const float screenWidth = (float)game.gameWindow.getWidth();
+	const float screenHeight = (float)game.gameWindow.getHeight();
+
+	const glm::mat4 projection = glm::ortho(
 		0.0f,
-		(float)game.gameWindow.getWidth(),
-		(float)game.gameWindow.getHeight(),
+		screenWidth,
+		screenHeight,
 		0.0f,
 		-1.0f,
 		1.0f);
 
-	std::vector<Player*> players = world.getPlayers();
+	const float tileWidth = mGuiTileset.getTileWidth();
+	const float tileHeight = mGuiTileset.getTileHeight();
+	const float padding = PADDING * scale;
 
-	if (players.size() > 0) {
-		Player* player = players[0];
-		HealthSystem& healthSystem = world.getHealthSystem();
+	const glm::vec2 positions[4] = {
+		//	Top left
+		{ padding, padding },
+		//	Top right
+		{ screenWidth - (tileWidth * 3.0f * scale) - padding,
+		  padding },
+		//	Bottom left
+		{ padding,
+		  screenHeight - (tileHeight * 2.0f * scale) - padding},
+		//	Bottom right
+		{ screenWidth - (tileWidth * 3.0f * scale) - padding,
+		  screenHeight - (tileHeight * 2.0f * scale) - padding },
+	};
+
+	const std::vector<Player*> players = world.getPlayers();
+
+	assert(players.size() <= 4);
+
+	int p = 0;
+	for (Player* player : players) {
+		const HealthSystem& healthSystem = world.getHealthSystem();
 
 		spriteBatch.begin();
 
+		//	Draw health gauge
 		if (healthSystem.hasComponent(player->entity)) {
-			HealthComponent healthCmpnt = healthSystem.getComponent(player->entity);
-			HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
+			const HealthComponent healthCmpnt =
+				healthSystem.getComponent(player->entity);
 
-			glm::vec2 position = glm::vec2(4.0f, 4.0f);
+			const HealthGauge& healthGauge =
+				healthSystem.getHealthGauge(healthCmpnt);
+
+			const glm::vec2 position = positions[p];
 
 			drawHealthGauge(spriteBatch, mGuiTileset, position, scale,
 							healthGauge.getValue(), healthGauge.getMax());
 		}
 
-		InventorySystem& inventorySystem = world.getInventorySystem();
+		//	Draw item slots
+		const InventorySystem& inventorySystem = world.getInventorySystem();
 
 		if (inventorySystem.hasComponent(player->entity)) {
-			InventoryComponent inventoryCmpnt =
+			const InventoryComponent inventoryCmpnt =
 				inventorySystem.getComponent(player->entity);
 
-			glm::vec2 position = glm::vec2(4.0f, 22.0f);
+			glm::vec2 position = positions[p];
+
+			//	Adjust Y component so item slots are below health gauge
+			position.y += (tileHeight * scale);
+
+			//	Adjust X component of item slots on right side
+			if (p == 1 || p == 3) {
+				position.x -= padding * 2.0f;
+			}
 
 			const auto& items = inventorySystem.getItems(inventoryCmpnt);
 
@@ -186,6 +228,8 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 
 		spriteBatch.render(projection);
 		spriteBatch.end();
+
+		++p;
 	}
 }
 

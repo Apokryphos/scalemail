@@ -27,6 +27,8 @@ Entity createDoor(World& world, const glm::vec2& position,
 				  const int childClosedTilesetId, const bool open,
 				  const std::string& name);
 
+Entity createHealFx(World& world, const glm::vec2& position);
+
 Entity createLoot(World& world, const glm::vec2& position,
 				  const glm::vec2& size, const int tilesetId,
 				  const std::string& name, const std::string& prefab);

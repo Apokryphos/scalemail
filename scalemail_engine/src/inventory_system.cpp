@@ -1,6 +1,8 @@
 #include "health_system.hpp"
+#include "entity_types.hpp"
 #include "inventory_system.hpp"
 #include "item.hpp"
+#include "physics_system.hpp"
 #include "vector_util.hpp"
 #include "world.hpp"
 
@@ -107,10 +109,19 @@ bool InventorySystem::useItem(const InventoryComponent& cmpnt,
 	Entity entity = this->getEntityByComponentIndex(cmpnt.index);
 
 	//	Heal using item
-	HealthSystem& healthSystem = mWorld.getHealthSystem();
-	HealthComponent healthCmpnt = healthSystem.getComponent(entity);
-	HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
-	healthGauge.add(item->heal);
+	if (item->heal > 0.0f) {
+		HealthSystem& healthSystem = mWorld.getHealthSystem();
+		HealthComponent healthCmpnt = healthSystem.getComponent(entity);
+		HealthGauge& healthGauge = healthSystem.getHealthGauge(healthCmpnt);
+		healthGauge.add(item->heal);
+
+		PhysicsSystem& physicsSystem = mWorld.getPhysicsSystem();
+		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
+		const glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+
+		//	Spawn healing effects
+		createHealFx(mWorld, position);
+	}
 
 	//	Set item slot to null
 	const size_t slotCount = slots.size();

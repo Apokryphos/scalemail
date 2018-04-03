@@ -39,6 +39,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/entity_types/bullet.cpp
     src/entity_types/camera.cpp
     src/entity_types/door.cpp
+    src/entity_types/heal_fx.cpp
     src/entity_types/loot.cpp
     src/entity_types/prop.cpp
     src/entity_types/torch.cpp

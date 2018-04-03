@@ -7,7 +7,7 @@ namespace ScaleMail
 {
 //	============================================================================
 void Gui::draw(Game& game) {
-	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 
 	mPauseGuiScreen.drawScreen(game, mSpriteBatch);
 

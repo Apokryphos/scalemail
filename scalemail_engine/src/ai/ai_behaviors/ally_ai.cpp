@@ -5,6 +5,7 @@
 #include "ai/ai_nodes/random_move_direction_ai_node.hpp"
 #include "ai/ai_nodes/selector_ai_node.hpp"
 #include "ai/ai_nodes/sequence_ai_node.hpp"
+#include "ai/ai_nodes/stop_firing_ai_node.hpp"
 #include "ai/ai_nodes/target_attacker_ai_node.hpp"
 #include "ai/ai_nodes/target_range_ai_node.hpp"
 #include "ai/ai_nodes/wander_ai_node.hpp"
@@ -57,10 +58,14 @@ AllyAi::AllyAi(Entity entity) : AiBehavior(entity), mAiTree(entity) {
 	targetFoes->setRange(MIN_VILLAIN_RANGE);
 	targetFoes->setTargetTeamAlignment(TeamAlignment::FOE);
 
+	//	Stop firing
+	auto stopFiring = std::make_shared<StopFiringAiNode>(entity, mAiTree);
+
 	auto targetSelector = std::make_shared<SelectorAiNode>(entity, mAiTree);
 	targetSelector->addChildNode(hasTarget);
 	targetSelector->addChildNode(targetAttacker);
 	targetSelector->addChildNode(targetFoes);
+	targetSelector->addChildNode(stopFiring);
 
 	//	Fire at target
 	auto fireAtTarget = std::make_shared<FireAtTargetAiNode>(entity, mAiTree);

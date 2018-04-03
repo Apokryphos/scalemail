@@ -31,6 +31,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ai_nodes/seek_target_ai_node.cpp
     src/ai/ai_nodes/selector_ai_node.cpp
     src/ai/ai_nodes/sequence_ai_node.cpp
+    src/ai/ai_nodes/stop_firing_ai_node.cpp
     src/ai/ai_nodes/success_ai_node.cpp
     src/ai/ai_nodes/target_attacker_ai_node.cpp
     src/ai/ai_nodes/target_range_ai_node.cpp

@@ -58,6 +58,14 @@ void LootSystem::onEntityCollision(EntityCollision& collision) {
 		return;
 	}
 
+	InventoryComponent inventoryCmpnt =
+		mInventorySystem->getComponent(collision.sourceEntity);
+
+	//	Check if inventory is full
+	if (mInventorySystem->isFull(inventoryCmpnt)) {
+		return;
+	}
+
 	if (this->hasComponent(collision.targetEntity)) {
 		LootComponent lootCmpnt = this->getComponent(collision.targetEntity);
 
@@ -89,6 +97,10 @@ void LootSystem::simulate(World& world, [[maybe_unused]]float elapsedSeconds) {
 
 			if (mInventorySystem->addItem(inventoryCmpnt, mItem[index])) {
 				removeEntities.push_back(p.second);
+			} else {
+				//	Make item lootable again if adding it to inventory
+				//	failed.
+				mLootable[index] = true;
 			}
 		}
 	}

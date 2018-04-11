@@ -82,7 +82,7 @@ static const glm::vec2 gQuadVertices[] =
 //  ============================================================================
 static void buryEntity(const TmxMapLib::Object& object, const Entity& entity,
 					   World& world) {
-	if (object.GetPropertySet().GetBoolValue("Buried", false)) {
+	if (object.getPropertySet().getBoolValue("Buried", false)) {
 		buryEntity(entity, world.getBurySystem(), true,
 			world.getRandom().nextFloat(4.0f, 5.0f), true);
 	}
@@ -91,7 +91,7 @@ static void buryEntity(const TmxMapLib::Object& object, const Entity& entity,
 //  ============================================================================
 //	Get the tileset image source name without the path and extension
 static std::string getTilesetImageName(const TmxMapLib::Tileset& tileset) {
-	std::string filename = tileset.GetImage().GetSource();
+	std::string filename = tileset.getImage().getSource();
 
 	const size_t lastSlashIndex = filename.find_last_of("\\/");
 	if (std::string::npos != lastSlashIndex) {
@@ -128,10 +128,10 @@ static const TilesetData& getTilesetData(
 //	Returns a TilesetData for a TmxMapLib Tileset
 static const TilesetData getTilesetData(const TmxMapLib::Tileset& tileset) {
 	TilesetData tilesetData = {};
-	tilesetData.firstGid = tileset.GetFirstGid();
-	tilesetData.tileCount = tileset.GetTileCount();
-	tilesetData.tileWidth = tileset.GetTileWidth();
-	tilesetData.tileHeight = tileset.GetTileHeight();
+	tilesetData.firstGid = tileset.getFirstGid();
+	tilesetData.tileCount = tileset.getTileCount();
+	tilesetData.tileWidth = tileset.getTileWidth();
+	tilesetData.tileHeight = tileset.getTileHeight();
 	tilesetData.textureName = getTilesetImageName(tileset);
 	return tilesetData;
 }
@@ -139,25 +139,25 @@ static const TilesetData getTilesetData(const TmxMapLib::Tileset& tileset) {
 //  ============================================================================
 static glm::vec2 getTileObjectPosition(const TmxMapLib::Object& object) {
 	return glm::vec2(
-		object.GetX() + object.GetWidth() * 0.5f,
-		object.GetY() - object.GetHeight() * 0.5f);
+		object.getX() + object.getWidth() * 0.5f,
+		object.getY() - object.getHeight() * 0.5f);
 }
 
 //  ============================================================================
 static bool getTilesetAnimation(const TmxMapLib::Map& tmxMap, const int gid,
 								int& nextFrameGid) {
-	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
+	const TmxMapLib::Tileset* tileset = tmxMap.getTilesetByGid(gid);
 
 	const TmxMapLib::TilesetTile* tilesetTile =
-		tileset->GetTile(gid - tileset->GetFirstGid());
+		tileset->getTile(gid - tileset->getFirstGid());
 
 	if (tilesetTile) {
-		const TmxMapLib::Animation& animation = tilesetTile->GetAnimation();
+		const TmxMapLib::Animation& animation = tilesetTile->getAnimation();
 
-		if(animation.GetFrameCount() > 0) {
-			int nextFrameId = animation.GetFrame(1).GetTileId();
+		if(animation.getFrameCount() > 0) {
+			int nextFrameId = animation.getFrame(1).getTileId();
 
-			nextFrameGid = nextFrameId + tileset->GetFirstGid();
+			nextFrameGid = nextFrameId + tileset->getFirstGid();
 
 			return true;
 		}
@@ -169,19 +169,19 @@ static bool getTilesetAnimation(const TmxMapLib::Map& tmxMap, const int gid,
 //  ============================================================================
 static void loadTileDataProperties(TileData& tileData,
 								   const TmxMapLib::TilesetTile& tilesetTile) {
-	const TmxMapLib::PropertySet& propertySet = tilesetTile.GetPropertySet();
+	const TmxMapLib::PropertySet& propertySet = tilesetTile.getPropertySet();
 
 	tileData.alpha =
-		propertySet.GetBoolValue("AlphaTest", false);
+		propertySet.getBoolValue("AlphaTest", false);
 
 	tileData.wallFace =
-		propertySet.GetBoolValue("WallFace", false);
+		propertySet.getBoolValue("WallFace", false);
 
 	tileData.wallTop =
-		propertySet.GetBoolValue("WallTop", false);
+		propertySet.getBoolValue("WallTop", false);
 
-	if (propertySet.HasProperty("AliasTileset") ||
-		propertySet.HasProperty("AliasTilesetId")) {
+	if (propertySet.hasProperty("AliasTileset") ||
+		propertySet.hasProperty("AliasTilesetId")) {
 		throw std::runtime_error("AliasTileset and AliasTilesetId properties are deprecated.");
 	}
 }
@@ -189,43 +189,43 @@ static void loadTileDataProperties(TileData& tileData,
 //  ============================================================================
 static TileData loadTileData(const TmxMapLib::Map& tmxMap,
 							 const TmxMapLib::Tile& tile) {
-	int gid = tile.GetGid();
+	int gid = tile.getGid();
 
 	TileData tileData = {};
 	tileData.gid = gid;
-	tileData.x = tile.GetX();
-	tileData.y = tile.GetY();
-	tileData.flipHorz = tile.GetFlipHorizontally();
-	tileData.flipVert = tile.GetFlipVertically();
-	tileData.flipDiag = tile.GetFlipDiagonally();
+	tileData.x = tile.getX();
+	tileData.y = tile.getY();
+	tileData.flipHorz = tile.getFlipHorizontally();
+	tileData.flipVert = tile.getFlipVertically();
+	tileData.flipDiag = tile.getFlipDiagonally();
 
 	//	Load properties from tileset tile
-	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
+	const TmxMapLib::Tileset* tileset = tmxMap.getTilesetByGid(gid);
 
 	//	Set initial animation
 	tileData.nextFrameGid = tileData.gid;
 	tileData.animated = getTilesetAnimation(tmxMap, gid, tileData.nextFrameGid);
 
 	const TmxMapLib::TilesetTile* tilesetTile =
-		tileset->GetTile(tileData.gid - tileset->GetFirstGid());
+		tileset->getTile(tileData.gid - tileset->getFirstGid());
 
 	//	Return early if there's no matching tileset tile
 	if (tilesetTile == nullptr) {
 		return tileData;
 	}
 
-	const TmxMapLib::PropertySet& propertySet = tilesetTile->GetPropertySet();
+	const TmxMapLib::PropertySet& propertySet = tilesetTile->getPropertySet();
 
 	//	Is this an odd/even tile (like a checkerboard)?
 	const bool odd = (tileData.x + tileData.y) % 2;
 
 	//	Set tileset ID to alternate odd/even ID if it is specified
-	if (odd && propertySet.HasProperty("OddTilesetId")) {
-		gid = propertySet.GetIntValue("OddTilesetId", gid);
-		gid += tileset->GetFirstGid();
-	} else if (!odd && propertySet.HasProperty("EvenTilesetId")) {
-		gid = propertySet.GetIntValue("EvenTilesetId", gid);
-		gid += tileset->GetFirstGid();
+	if (odd && propertySet.hasProperty("OddTilesetId")) {
+		gid = propertySet.getIntValue("OddTilesetId", gid);
+		gid += tileset->getFirstGid();
+	} else if (!odd && propertySet.hasProperty("EvenTilesetId")) {
+		gid = propertySet.getIntValue("EvenTilesetId", gid);
+		gid += tileset->getFirstGid();
 	}
 
 	//	Update to actual tileset ID
@@ -237,7 +237,7 @@ static TileData loadTileData(const TmxMapLib::Map& tmxMap,
 
 	//	Get the actual tileset tile to use for properties
 	const TmxMapLib::TilesetTile* finalTilesetTile =
-		tileset->GetTile(gid - tileset->GetFirstGid());
+		tileset->getTile(gid - tileset->getFirstGid());
 
 	if (finalTilesetTile != nullptr) {
 		loadTileDataProperties(tileData, *finalTilesetTile);
@@ -248,13 +248,13 @@ static TileData loadTileData(const TmxMapLib::Map& tmxMap,
 
 //  ============================================================================
 static float getDecal(const TmxMapLib::Map& tmxMap, const int gid) {
-	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(gid);
+	const TmxMapLib::Tileset* tileset = tmxMap.getTilesetByGid(gid);
 
 	const TmxMapLib::TilesetTile* tilesetTile =
-		tileset->GetTile(gid - tileset->GetFirstGid());
+		tileset->getTile(gid - tileset->getFirstGid());
 
 	if (tilesetTile) {
-		return tilesetTile->GetPropertySet().GetBoolValue("Decal", false);
+		return tilesetTile->getPropertySet().getBoolValue("Decal", false);
 	}
 
 	return false;
@@ -410,20 +410,20 @@ static void buildMapMeshes(MapData& mapData, AssetManager& assetManager,
 static void processVillainObject(World& world,
 								 const TmxMapLib::Object& object,
 								 const TmxMapLib::Map& tmxMap) {
-	auto const tile = object.GetTile();
+	auto const tile = object.getTile();
 
-	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
+	const TmxMapLib::Tileset* tileset = tmxMap.getTilesetByGid(tile->getGid());
 
 	if (tileset == nullptr) {
 		std::cout << "Invalid actor object in TMX map: no matching tileset." << std::endl;
 		return;
 	}
 
-	const int tilesetId = tile->GetGid() - tileset->GetFirstGid();
+	const int tilesetId = tile->getGid() - tileset->getFirstGid();
 
-	const TmxMapLib::TilesetTile* tilesetTile = tileset->GetTile(tilesetId);
+	const TmxMapLib::TilesetTile* tilesetTile = tileset->getTile(tilesetId);
 
-	const TmxMapLib::PropertySet& propertySet = tilesetTile->GetPropertySet();
+	const TmxMapLib::PropertySet& propertySet = tilesetTile->getPropertySet();
 
 	if (tilesetTile == nullptr) {
 		std::cout << "Invalid actor object in TMX map: no matching tileset tile." << std::endl;
@@ -431,33 +431,33 @@ static void processVillainObject(World& world,
 	}
 
 	const TmxMapLib::Property* actorIndexProperty =
-		tilesetTile->GetPropertySet().GetProperty("ActorIndex");
+		tilesetTile->getPropertySet().getProperty("ActorIndex");
 
 	if (actorIndexProperty == nullptr) {
 		std::cout << "Invalid actor object in TMX map: no tileset tile with ActorIndex property." << std::endl;
 		return;
 	}
 
-	int actorIndex = actorIndexProperty->GetIntValue(0);
+	int actorIndex = actorIndexProperty->getIntValue(0);
 
 	const TmxMapLib::Property* facingProperty =
-		tilesetTile->GetPropertySet().GetProperty("Facing");
+		tilesetTile->getPropertySet().getProperty("Facing");
 
 	Direction facing = Direction::SOUTH;
 
 	if (facingProperty != nullptr) {
-		const std::string value = facingProperty->GetValue();
+		const std::string value = facingProperty->getValue();
 		facing = stringToDirection(value);
 	}
 
-	const std::string aiName = toLowercase(propertySet.GetValue("Ai", ""));
-	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
+	const std::string aiName = toLowercase(propertySet.getValue("Ai", ""));
+	const std::string prefabName = toLowercase(propertySet.getValue("Prefab", ""));
 
 	const glm::vec2 position = getTileObjectPosition(object);
-	const glm::vec2 size(object.GetWidth(), object.GetHeight());
+	const glm::vec2 size(object.getWidth(), object.getHeight());
 
 	Entity entity = createVillainActor(world, position, size, actorIndex,
-									   facing, object.GetName(), prefabName,
+									   facing, object.getName(), prefabName,
 									   aiName);
 
 	buryEntity(object, entity, world);
@@ -466,10 +466,10 @@ static void processVillainObject(World& world,
 //  ============================================================================
 static void processActorCollisionObject(World& world,
 										const TmxMapLib::Object& object) {
-	const float x = object.GetX();
-	const float y = object.GetY();
-	const float width = object.GetWidth();
-	const float height = object.GetHeight();
+	const float x = object.getX();
+	const float y = object.getY();
+	const float width = object.getWidth();
+	const float height = object.getHeight();
 
 	world.getPhysicsSystem().addStaticActorObstacle(x, y, width, height);
 
@@ -481,7 +481,7 @@ static void processAmbientLightObject(const TmxMapLib::Object& object,
 									  const Polygon& polygon,
 									  MapData& mapData) {
 	glm::vec4 color =
-		hexToVec4(object.GetPropertySet().GetValue("Color", "#FFFFFF"));
+		hexToVec4(object.getPropertySet().getValue("Color", "#FFFFFF"));
 
 	mapData.ambientLights.push_back({color, polygon});
 }
@@ -489,10 +489,10 @@ static void processAmbientLightObject(const TmxMapLib::Object& object,
 //  ============================================================================
 static void processAmbientLightRectangle(const TmxMapLib::Object& object,
 											   MapData& mapData) {
-	const float x = object.GetX();
-	const float y = object.GetY();
-	const float width = object.GetWidth();
-	const float height = object.GetHeight();
+	const float x = object.getX();
+	const float y = object.getY();
+	const float width = object.getWidth();
+	const float height = object.getHeight();
 
 	Polygon polygon(x, y, width, height);
 
@@ -502,12 +502,12 @@ static void processAmbientLightRectangle(const TmxMapLib::Object& object,
 //  ============================================================================
 static void processAmbientLightPolygon(const TmxMapLib::Object& object,
 											 MapData& mapData) {
-	const float x = object.GetX();
-	const float y = object.GetY();
+	const float x = object.getX();
+	const float y = object.getY();
 
 	std::vector<glm::vec2> points;
-	for (const auto& p : object.GetPoints()) {
-		points.emplace_back(x + p.X, y + p.Y);
+	for (const auto& p : object.getPoints()) {
+		points.emplace_back(x + p.x, y + p.y);
 	}
 
 	Polygon polygon(points);
@@ -519,7 +519,7 @@ static void processAmbientLightPolygon(const TmxMapLib::Object& object,
 static void processCameraBoundsObject(World& world,
 									  const Polygon& polygon,
 									  const TmxMapLib::Object& object) {
-	const bool visited = object.GetPropertySet().GetBoolValue("Visited", false);
+	const bool visited = object.getPropertySet().getBoolValue("Visited", false);
 
 	CameraSystem& cameraSystem = world.getCameraSystem();
 	cameraSystem.addBounds(Bounds(polygon), visited);
@@ -528,10 +528,10 @@ static void processCameraBoundsObject(World& world,
 //  ============================================================================
 static void processCameraBoundsRectangle(World& world,
 										 const TmxMapLib::Object& object) {
-	const float x = object.GetX();
-	const float y = object.GetY();
-	const float width = object.GetWidth();
-	const float height = object.GetHeight();
+	const float x = object.getX();
+	const float y = object.getY();
+	const float width = object.getWidth();
+	const float height = object.getHeight();
 
 	processCameraBoundsObject(world, Polygon(x, y, width, height), object);
 }
@@ -539,12 +539,12 @@ static void processCameraBoundsRectangle(World& world,
 //  ============================================================================
 static void processCameraBoundsPolygon(World& world,
 									   const TmxMapLib::Object& object) {
-	const float x = object.GetX();
-	const float y = object.GetY();
+	const float x = object.getX();
+	const float y = object.getY();
 
 	std::vector<glm::vec2> points;
-	for (const auto& p : object.GetPoints()) {
-		points.emplace_back(x + p.X, y + p.Y);
+	for (const auto& p : object.getPoints()) {
+		points.emplace_back(x + p.x, y + p.y);
 	}
 
 	processCameraBoundsObject(world, Polygon(points), object);
@@ -553,26 +553,26 @@ static void processCameraBoundsPolygon(World& world,
 //  ============================================================================
 static void processCameraPathObject(World& world,
 									const TmxMapLib::Object& object) {
-	const float x = object.GetX();
-	const float y = object.GetY();
+	const float x = object.getX();
+	const float y = object.getY();
 
 	Path path = {};
 
-	for (const auto& point : object.GetPoints()) {
-		path.points.push_back(glm::vec2(x + point.X, y + point.Y));
+	for (const auto& point : object.getPoints()) {
+		path.points.push_back(glm::vec2(x + point.x, y + point.y));
 	}
 
 	CameraSystem& cameraSystem = world.getCameraSystem();
-	cameraSystem.addPath(object.GetName(), path);
+	cameraSystem.addPath(object.getName(), path);
 }
 
 //  ============================================================================
 static void processCollisionObject(World& world,
 							  	   const TmxMapLib::Object& object) {
-	const float x = object.GetX();
-	const float y = object.GetY();
-	const float width = object.GetWidth();
-	const float height = object.GetHeight();
+	const float x = object.getX();
+	const float y = object.getY();
+	const float width = object.getWidth();
+	const float height = object.getHeight();
 
 	world.getPhysicsSystem().addStaticObstacle(x, y, width, height);
 
@@ -585,28 +585,28 @@ static void processDoorObject(World& world,
 							  const TmxMapLib::Map& tmxMap) {
 	const glm::vec2 position = getTileObjectPosition(object);
 
-	const TmxMapLib::Tile* tile = object.GetTile();
+	const TmxMapLib::Tile* tile = object.getTile();
 
-	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
+	const TmxMapLib::Tileset* tileset = tmxMap.getTilesetByGid(tile->getGid());
 
-	const int tilesetId = tile->GetGid() - tileset->GetFirstGid();
+	const int tilesetId = tile->getGid() - tileset->getFirstGid();
 
 	const TmxMapLib::TilesetTile* tilesetTile =
-		tileset->GetTile(tilesetId);
+		tileset->getTile(tilesetId);
 
 	bool open = false;
 
 	if (tilesetTile != nullptr) {
-		open = tilesetTile->GetPropertySet().GetBoolValue("DoorOpen", false);
+		open = tilesetTile->getPropertySet().getBoolValue("DoorOpen", false);
 
 		int openTilesetId = tilesetId;
 		int closedTilesetId = tilesetId;
 
 		if (open) {
-			closedTilesetId = tilesetTile->GetPropertySet().GetIntValue(
+			closedTilesetId = tilesetTile->getPropertySet().getIntValue(
 				"DoorClosedId", tilesetId);
 		} else {
-			openTilesetId = tilesetTile->GetPropertySet().GetIntValue(
+			openTilesetId = tilesetTile->getPropertySet().getIntValue(
 				"DoorOpenId", tilesetId);
 		}
 
@@ -618,13 +618,13 @@ static void processDoorObject(World& world,
 			return;
 		}
 
-		if (tilesetTile->GetPropertySet().GetBoolValue("DoorChild", false)) {
+		if (tilesetTile->getPropertySet().getBoolValue("DoorChild", false)) {
 			createDoor(world, position, openTilesetId, closedTilesetId,
 					   openTilesetId + 1, closedTilesetId + 1, open,
-					   object.GetName());
+					   object.getName());
 		} else {
 			createDoor(world, position, openTilesetId, closedTilesetId,
-					   open, object.GetName());
+					   open, object.getName());
 		}
 
 	} else {
@@ -636,33 +636,33 @@ static void processDoorObject(World& world,
 static void processItemObject(World& world,
 							   const TmxMapLib::Object& object,
 							   const TmxMapLib::Map& tmxMap) {
-	auto const tile = object.GetTile();
+	auto const tile = object.getTile();
 
-	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
+	const TmxMapLib::Tileset* tileset = tmxMap.getTilesetByGid(tile->getGid());
 
 	if (tileset == nullptr) {
 		std::cout << "Invalid item object in TMX map: no matching tileset." << std::endl;
 		return;
 	}
 
-	const int tilesetId = tile->GetGid() - tileset->GetFirstGid();
+	const int tilesetId = tile->getGid() - tileset->getFirstGid();
 
-	const TmxMapLib::TilesetTile* tilesetTile = tileset->GetTile(tilesetId);
+	const TmxMapLib::TilesetTile* tilesetTile = tileset->getTile(tilesetId);
 
-	const TmxMapLib::PropertySet& propertySet = tilesetTile->GetPropertySet();
+	const TmxMapLib::PropertySet& propertySet = tilesetTile->getPropertySet();
 
 	if (tilesetTile == nullptr) {
 		std::cout << "Invalid item object in TMX map: no matching tileset tile." << std::endl;
 		return;
 	}
 
-	const std::string prefabName = toLowercase(propertySet.GetValue("Prefab", ""));
+	const std::string prefabName = toLowercase(propertySet.getValue("Prefab", ""));
 
-	const glm::vec2 size(object.GetWidth(), object.GetHeight());
+	const glm::vec2 size(object.getWidth(), object.getHeight());
 
 	const glm::vec2 position = getTileObjectPosition(object);
 
-	const std::string name = object.GetName();
+	const std::string name = object.getName();
 
 	Entity entity =
 		createLoot(world, position, size, tilesetId, name, prefabName);
@@ -675,19 +675,19 @@ static void processLightObject(World& world,
 							   const TmxMapLib::Object& object) {
 	//  Scale light size by constant...lights are too small
 	glm::vec2 lightSize =
-		glm::vec2(object.GetWidth(), object.GetHeight()) * 2.5f;
+		glm::vec2(object.getWidth(), object.getHeight()) * 2.5f;
 
-	const auto& propertySet = object.GetPropertySet();
+	const auto& propertySet = object.getPropertySet();
 
-	std::string hex = propertySet.GetValue("LightColor", "#FFFFFFFF");
+	std::string hex = propertySet.getValue("LightColor", "#FFFFFFFF");
 	glm::vec4 lightColor = hexToVec4(hex);
 
-	float lightPulse = propertySet.GetFloatValue("LightPulse", 0);
+	float lightPulse = propertySet.getFloatValue("LightPulse", 0);
 
-	float lightPulseSize = propertySet.GetFloatValue("LightPulseSize", 0);
+	float lightPulseSize = propertySet.getFloatValue("LightPulseSize", 0);
 
-	const float x = object.GetX() + object.GetWidth() * 0.5f;
-	const float y = object.GetY() + object.GetHeight() * 0.5f;
+	const float x = object.getX() + object.getWidth() * 0.5f;
+	const float y = object.getY() + object.getHeight() * 0.5f;
 
 	Entity entity = world.createEntity();
 
@@ -710,20 +710,20 @@ static void processLightObject(World& world,
 static void processMiscObject(World& world,
 							  const TmxMapLib::Object& object,
 							  const TmxMapLib::Map& tmxMap) {
-	auto const tile = object.GetTile();
+	auto const tile = object.getTile();
 
-	const int gid = tile->GetGid();
+	const int gid = tile->getGid();
 
-	const auto& tileset = tmxMap.GetTilesetByGid(gid);
+	const auto& tileset = tmxMap.getTilesetByGid(gid);
 
-	const int tilesetId = gid - tileset->GetFirstGid();
+	const int tilesetId = gid - tileset->getFirstGid();
 
 	bool decal = getDecal(tmxMap, gid);
 
 	int nextFrameGid = gid;
 	getTilesetAnimation(tmxMap, gid, nextFrameGid);
 
-	const int nextFrameTilesetId = nextFrameGid - tileset->GetFirstGid();
+	const int nextFrameTilesetId = nextFrameGid - tileset->getFirstGid();
 
 	const glm::vec2 position = getTileObjectPosition(object);
 
@@ -734,18 +734,18 @@ static void processMiscObject(World& world,
 static bool processPlayerStartObject(const TmxMapLib::Object& object,
 									 const TmxMapLib::Map& tmxMap,
 									 PlayerStart& playerStart) {
-	auto const tile = object.GetTile();
+	auto const tile = object.getTile();
 
-	const TmxMapLib::Tileset* tileset = tmxMap.GetTilesetByGid(tile->GetGid());
+	const TmxMapLib::Tileset* tileset = tmxMap.getTilesetByGid(tile->getGid());
 
 	if (tileset == nullptr) {
 		std::cout << "Invalid player start object in TMX map: no matching tileset." << std::endl;
 		return false;
 	}
 
-	int tilesetId = tile->GetGid() - tileset->GetFirstGid();
+	int tilesetId = tile->getGid() - tileset->getFirstGid();
 
-	const TmxMapLib::TilesetTile* tilesetTile = tileset->GetTile(tilesetId);
+	const TmxMapLib::TilesetTile* tilesetTile = tileset->getTile(tilesetId);
 
 	if (tilesetTile == nullptr) {
 		std::cout << "Invalid player start object in TMX map: no matching tileset tile." << std::endl;
@@ -753,26 +753,26 @@ static bool processPlayerStartObject(const TmxMapLib::Object& object,
 	}
 
 	const TmxMapLib::Property* actorIndexProperty =
-		tilesetTile->GetPropertySet().GetProperty("ActorIndex");
+		tilesetTile->getPropertySet().getProperty("ActorIndex");
 
 	if (actorIndexProperty == nullptr) {
 		std::cout << "Invalid player start object in TMX map: no tileset tile with ActorIndex property." << std::endl;
 		return false;
 	}
 
-	int actorIndex = actorIndexProperty->GetIntValue(0);
+	int actorIndex = actorIndexProperty->getIntValue(0);
 
 	const TmxMapLib::Property* facingProperty =
-		tilesetTile->GetPropertySet().GetProperty("Facing");
+		tilesetTile->getPropertySet().getProperty("Facing");
 
 	Direction facing = Direction::SOUTH;
 
 	if (facingProperty != nullptr) {
-		const std::string value = facingProperty->GetValue();
+		const std::string value = facingProperty->getValue();
 		facing = stringToDirection(value);
 	}
 
-	playerStart.position = glm::vec2(object.GetX(), object.GetY());
+	playerStart.position = glm::vec2(object.getX(), object.getY());
 	playerStart.actorIndex = actorIndex;
 	playerStart.facing = facing;
 	return true;
@@ -782,18 +782,18 @@ static bool processPlayerStartObject(const TmxMapLib::Object& object,
 static void processTorchObject(World& world,
 							   const TmxMapLib::Object& object,
 							   const TmxMapLib::Map& tmxMap) {
-	const auto tile = object.GetTile();
+	const auto tile = object.getTile();
 
-	const int gid = tile->GetGid();
+	const int gid = tile->getGid();
 
-	const auto tileset = tmxMap.GetTilesetByGid(gid);
+	const auto tileset = tmxMap.getTilesetByGid(gid);
 
-	const int tilesetId = gid - tileset->GetFirstGid();
+	const int tilesetId = gid - tileset->getFirstGid();
 
 	int nextFrameGid = gid;
 	getTilesetAnimation(tmxMap, gid, nextFrameGid);
 
-	const int nextFrameTilesetId = nextFrameGid - tileset->GetFirstGid();
+	const int nextFrameTilesetId = nextFrameGid - tileset->getFirstGid();
 
 	const glm::vec2 position = getTileObjectPosition(object);
 
@@ -803,16 +803,16 @@ static void processTorchObject(World& world,
 //  ============================================================================
 static void processTriggerObject(World& world,
 								 const TmxMapLib::Object& object) {
-	if (!object.GetPropertySet().HasProperty("TargetName")) {
+	if (!object.getPropertySet().hasProperty("TargetName")) {
 		std::cout << "Trigger object is missing TargetName property." << std::endl;
 		return;
 	}
 
-	const glm::vec2 position(object.GetX(), object.GetY());
-	const glm::vec2 size(object.GetWidth(), object.GetHeight());
+	const glm::vec2 position(object.getX(), object.getY());
+	const glm::vec2 size(object.getWidth(), object.getHeight());
 
 	const std::string targetName =
-		object.GetPropertySet().GetValue("TargetName", "");
+		object.getPropertySet().getValue("TargetName", "");
 
 	createTrigger(world, position, size, targetName);
 }
@@ -822,9 +822,9 @@ static void processObject(World& world,
 						  const TmxMapLib::Object& object,
 						  const TmxMapLib::Map& tmxMap,
 						  MapData& mapData) {
-	const std::string type = toLowercase(object.GetType());
+	const std::string type = toLowercase(object.getType());
 
-	if (object.GetObjectType() == TmxMapLib::ObjectType::Ellipse) {
+	if (object.getObjectType() == TmxMapLib::ObjectType::Ellipse) {
 		if (type == "light") {
 			processLightObject(world, object);
 		} else {
@@ -832,8 +832,8 @@ static void processObject(World& world,
 		}
 	}
 
-	if (object.GetObjectType() == TmxMapLib::ObjectType::Tile) {
-		if (object.GetTile() == nullptr) {
+	if (object.getObjectType() == TmxMapLib::ObjectType::Tile) {
+		if (object.getTile() == nullptr) {
 			std::cout << "Map object is not a tile object." << std::endl;
 		}
 
@@ -853,7 +853,7 @@ static void processObject(World& world,
 		} else {
 			processMiscObject(world, object, tmxMap);
 		}
-	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Basic) {
+	} else if (object.getObjectType() == TmxMapLib::ObjectType::Basic) {
 		if (type == "collision") {
 			processCollisionObject(world, object);
 		} else if (type == "actorcollision") {
@@ -865,11 +865,11 @@ static void processObject(World& world,
 		} else if (type == "trigger") {
 			processTriggerObject(world, object);
 		}
-	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Polyline) {
+	} else if (object.getObjectType() == TmxMapLib::ObjectType::Polyline) {
 		if (type == "camerapath") {
 			processCameraPathObject(world, object);
 		}
-	} else if (object.GetObjectType() == TmxMapLib::ObjectType::Polygon) {
+	} else if (object.getObjectType() == TmxMapLib::ObjectType::Polygon) {
 		if (type == "ambientlight") {
 			processAmbientLightPolygon(object, mapData);
 		} else if (type == "camerabounds") {
@@ -881,11 +881,11 @@ static void processObject(World& world,
 //  ============================================================================
 static void processObjects(const TmxMapLib::Map tmxMap, World& world,
 						   MapData& mapData) {
-	for (const auto& objectGroup : tmxMap.GetObjectGroups()) {
+	for (const auto& objectGroup : tmxMap.getObjectGroups()) {
 		std::vector<Rectangle> cameraBounds;
 		std::vector<Path> cameraPaths;
 
-		for (const auto& object : objectGroup.GetObjects()) {
+		for (const auto& object : objectGroup.getObjects()) {
 			processObject(world, object, tmxMap, mapData);
 		}
 	}
@@ -898,30 +898,30 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world,
 
 	TmxMapLib::Map tmxMap = TmxMapLib::Map(filename);
 
-	initializeLayers(tmxMap.GetHeight() * tmxMap.GetTileHeight());
+	initializeLayers(tmxMap.getHeight() * tmxMap.getTileHeight());
 
 	MapData mapData;
 
-	for (const auto& tileset : tmxMap.GetTilesets()) {
+	for (const auto& tileset : tmxMap.getTilesets()) {
 		TilesetData tilesetData = getTilesetData(tileset);
 		mapData.tilesets.push_back(tilesetData);
 	}
 
 	int layerIndex = 0;
-	for (const auto& tileLayer : tmxMap.GetTileLayers()) {
+	for (const auto& tileLayer : tmxMap.getTileLayers()) {
 		TileLayerData tileLayerData;
 
 		tileLayerData.layerZ =
-			tileLayer.GetPropertySet().GetIntValue("LayerZ", layerIndex);
+			tileLayer.getPropertySet().getIntValue("LayerZ", layerIndex);
 
 		tileLayerData.scroll =
-			tileLayer.GetPropertySet().GetBoolValue("LayerScroll", false);
+			tileLayer.getPropertySet().getBoolValue("LayerScroll", false);
 
-		for (int tileY = 0; tileY < tileLayer.GetHeight(); ++tileY) {
-			for (int tileX = 0; tileX < tileLayer.GetWidth(); ++tileX) {
-				const TmxMapLib::Tile* tile = tileLayer.GetTile(tileX, tileY);
+		for (int tileY = 0; tileY < tileLayer.getHeight(); ++tileY) {
+			for (int tileX = 0; tileX < tileLayer.getWidth(); ++tileX) {
+				const TmxMapLib::Tile* tile = tileLayer.getTile(tileX, tileY);
 
-				if (tile->GetGid() == 0) {
+				if (tile->getGid() == 0) {
 					continue;
 				}
 
@@ -947,8 +947,8 @@ std::shared_ptr<Map> loadMap(const std::string filename, World& world,
 
 	std::shared_ptr<Map> map =
 		std::make_shared<Map>(
-			tmxMap.GetWidth(), tmxMap.GetHeight(),
-			tmxMap.GetTileWidth(), tmxMap.GetTileHeight(),
+			tmxMap.getWidth(), tmxMap.getHeight(),
+			tmxMap.getTileWidth(), tmxMap.getTileHeight(),
 			mapModel);
 
 	map->setAmbientLights(mapData.ambientLights);

@@ -387,6 +387,7 @@ void World::loadMap(const std::string& mapName) {
 			"Player" + (p + 1));
 
 		mImpl->players[p].entity = entity;
+		mImpl->players[p].actorIndex = playerStart.actorIndex;
 
 		//	HACK: Add ally AI to other players for testing
 		if (p > 0) {

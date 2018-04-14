@@ -165,9 +165,10 @@ void renderDebug(Game& game, Camera& camera) {
 			world.getPhysicsSystem().drawDebug(debugLineVertexData);
 		}
 
-		if (game.devOptions.drawAi) {
-			world.getAiSystem().drawDebug(debugLineVertexData);
-		}
+		world.getAiSystem().drawDebug(
+			game.devOptions.drawAiForces,
+			game.devOptions.drawAiObstacles,
+			debugLineVertexData);
 
 		if (game.devOptions.drawTriggers) {
 			world.getTriggerSystem().drawDebug(debugLineVertexData);

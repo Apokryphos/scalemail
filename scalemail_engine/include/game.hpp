@@ -14,7 +14,8 @@ class World;
 struct DevOptions
 {
 	bool camera3d;
-	bool drawAi;
+	bool drawAiForces;
+	bool drawAiObstacles;
 	bool drawCollision;
 	bool drawTriggers;
 	bool enabled;

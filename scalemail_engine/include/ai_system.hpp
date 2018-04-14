@@ -56,6 +56,8 @@ class AiSystem : public EntitySystem
 								  glm::vec2 position, glm::vec2 velocity);
 	virtual void createComponent() override;
 	virtual void destroyComponent(int index) override;
+	void drawDebugForces(std::vector<float>& lineVertexData);
+	void drawDebugObstacles(std::vector<float>& lineVertexData);
 	void updateAvoid(const size_t cmpntIndex,
 					  const PhysicsComponent& physicsCmpnt,
 					  PhysicsSystem& physicsSystem, Random& random);
@@ -76,7 +78,8 @@ public:
 					 	   const float height);
 	void addBehavior(const AiComponent& cmpnt,
 					 std::shared_ptr<AiBehavior> behavior);
-	void drawDebug(std::vector<float>& lineVertexData);
+	void drawDebug(const bool drawForces, const bool drawObstacles,
+				   std::vector<float>& lineVertexData);
 	void enable(bool enabled);
 	AiComponent getComponent(const Entity& entity) const;
 	void setAvoid(const AiComponent& cmpnt, bool enabled);

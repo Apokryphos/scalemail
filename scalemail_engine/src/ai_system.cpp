@@ -189,7 +189,36 @@ void AiSystem::createComponent() {
 }
 
 //	============================================================================
-void AiSystem::drawDebug(std::vector<float>& lineVertexData) {
+void AiSystem::drawDebug(const bool drawForces, const bool drawObstacles,
+						 std::vector<float>& lineVertexData) {
+	if (drawObstacles) {
+		this->drawDebugObstacles(lineVertexData);
+	}
+
+	if (drawForces) {
+		this->drawDebugForces(lineVertexData);
+	}
+}
+
+//	============================================================================
+void AiSystem::drawDebugForces(std::vector<float>& lineVertexData) {
+	const glm::vec4 avoidColor(1.0f, 0.0f, 0.0f, 1.f);
+	const glm::vec4 moveColor(0.0f, 1.0f, 0.0f, 1.0f);
+	const glm::vec4 seekColor(0.0f, 0.0f, 1.0f, 1.0f);
+	const glm::vec4 wanderColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	for (size_t n = 0; n < mData.size(); ++n) {
+		const AiComponentData& data = mData[n];
+
+		addLineVertexData(lineVertexData, data.position, data.avoidForce, avoidColor);
+		addLineVertexData(lineVertexData, data.position, data.moveDirection, moveColor);
+		addLineVertexData(lineVertexData, data.position, data.seekForce, seekColor);
+		addLineVertexData(lineVertexData, data.position, data.wanderForce, wanderColor);
+	}
+}
+
+//	============================================================================
+void AiSystem::drawDebugObstacles(std::vector<float>& lineVertexData) {
 	const int lineCount = 16;
 	const glm::vec4 actorObstacleColor = glm::vec4(0.25f, 0.75f, 1.0f, 1.0f);
 	const glm::vec4 staticObstacleColor = glm::vec4(1.0f, 0.75f, 0.25f, 1.0f);
@@ -225,20 +254,6 @@ void AiSystem::drawDebug(std::vector<float>& lineVertexData) {
 			obstacle.position,
 			obstacle.radius * OBSTACLE_SCALE,
 			obstacleScaledColor);
-	}
-
-	const glm::vec4 avoidColor(1.0f, 0.0f, 0.0f, 1.f);
-	const glm::vec4 moveColor(0.0f, 1.0f, 0.0f, 1.0f);
-	const glm::vec4 seekColor(0.0f, 0.0f, 1.0f, 1.0f);
-	const glm::vec4 wanderColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	for (size_t n = 0; n < mData.size(); ++n) {
-		const AiComponentData& data = mData[n];
-
-		addLineVertexData(lineVertexData, data.position, data.avoidForce, avoidColor);
-		addLineVertexData(lineVertexData, data.position, data.moveDirection, moveColor);
-		addLineVertexData(lineVertexData, data.position, data.seekForce, seekColor);
-		addLineVertexData(lineVertexData, data.position, data.wanderForce, wanderColor);
 	}
 }
 

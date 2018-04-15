@@ -60,9 +60,10 @@ SpriteShader AssetManager::getSpriteShader() {
 }
 
 //  ============================================================================
-Tileset AssetManager::getTileset(const std::string textureName) {
+Tileset AssetManager::getTileset(const std::string textureName,
+								 const int tileWidth, const int tileHeight) {
 	Texture texture = this->loadTexture(textureName);
-	return Tileset(texture, 16, 16);
+	return Tileset(texture, tileWidth, tileHeight);
 }
 
 //  ============================================================================

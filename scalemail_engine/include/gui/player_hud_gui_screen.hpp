@@ -9,6 +9,7 @@ class PlayerHudGuiScreen : public GuiScreen
 {
 	Tileset mGuiTileset;
 	Tileset mItemTileset;
+	Tileset mPortraitTileset;
 
 protected:
 	virtual void draw(Game& game, SpriteBatch& spriteBatch) override;

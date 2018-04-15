@@ -142,6 +142,30 @@ static void drawItemSlots(SpriteBatch& spriteBatch, Tileset guiTileset,
 	}
 }
 
+//  ============================================================================
+static void drawPortrait(SpriteBatch& spriteBatch, Tileset portraitTileset,
+						 glm::vec2 position, const float scale,
+						 const int actorIndex) {
+	//	Draw slot
+	const glm::vec2 tileSize =
+		glm::vec2(portraitTileset.getTileWidth(), portraitTileset.getTileHeight());
+
+	glm::vec2 uv1;
+	glm::vec2 uv2;
+
+	const int tilesetId = actorIndex * 10;
+
+	portraitTileset.getTileUv(tilesetId, uv1, uv2);
+
+	spriteBatch.buildTileVertexData(
+		portraitTileset.getTexture().id,
+		position,
+		tileSize * scale,
+		uv1,
+		uv2,
+		false);
+}
+
 //	============================================================================
 void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 	World& world = *game.world;
@@ -163,20 +187,34 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 
 	const float tileWidth = mGuiTileset.getTileWidth();
 	const float tileHeight = mGuiTileset.getTileHeight();
+
 	const float padding = PADDING * scale;
+	const float itemSlotsWidth = tileWidth * 3.0f * scale;
+	const float portraitWidth = mPortraitTileset.getTileWidth() * scale;
 
 	const glm::vec2 positions[4] = {
 		//	Top left
 		{ padding, padding },
 		//	Top right
-		{ screenWidth - (tileWidth * 3.0f * scale) - padding,
+		{ screenWidth - portraitWidth - padding,
 		  padding },
 		//	Bottom left
 		{ padding,
-		  screenHeight - (tileHeight * 2.0f * scale) - padding},
+		  screenHeight  - (tileHeight * 2.0f * scale) - padding},
 		//	Bottom right
-		{ screenWidth - (tileWidth * 3.0f * scale) - padding,
+		{ screenWidth - portraitWidth - padding,
 		  screenHeight - (tileHeight * 2.0f * scale) - padding },
+	};
+
+	const glm::vec2 offsets[4] = {
+		//	Top left
+		{ portraitWidth, 0.0f },
+		//	Top right
+		{ -itemSlotsWidth, 0.0f },
+		//	Bottom left
+		{ portraitWidth, 0.0f },
+		//	Bottom right
+		{ -itemSlotsWidth, 0.0f },
 	};
 
 	const std::vector<Player*> players = world.getPlayers();
@@ -189,6 +227,11 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 
 		spriteBatch.begin();
 
+		//	Draw portrait
+		drawPortrait(spriteBatch, mPortraitTileset,
+					 positions[p], scale,
+					 player->actorIndex);
+
 		//	Draw health gauge
 		if (healthSystem.hasComponent(player->entity)) {
 			const HealthComponent healthCmpnt =
@@ -197,7 +240,7 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 			const HealthGauge& healthGauge =
 				healthSystem.getHealthGauge(healthCmpnt);
 
-			const glm::vec2 position = positions[p];
+			const glm::vec2 position = positions[p] + offsets[p];
 
 			drawHealthGauge(spriteBatch, mGuiTileset, position, scale,
 							healthGauge.getValue(), healthGauge.getMax());
@@ -210,7 +253,7 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 			const InventoryComponent inventoryCmpnt =
 				inventorySystem.getComponent(player->entity);
 
-			glm::vec2 position = positions[p];
+			glm::vec2 position = positions[p] + offsets[p];
 
 			//	Adjust Y component so item slots are below health gauge
 			position.y += (tileHeight * scale);
@@ -237,5 +280,6 @@ void PlayerHudGuiScreen::draw(Game& game, SpriteBatch& spriteBatch) {
 void PlayerHudGuiScreen::initialize(AssetManager& assetManager) {
 	mGuiTileset = assetManager.getTileset("gui");
 	mItemTileset = assetManager.getTileset("items");
+	mPortraitTileset= assetManager.getTileset("portraits", 32, 32);
 }
 }

@@ -51,7 +51,8 @@ public:
 	QuadShader getParticleShader();
 	const RenderCaps& getRenderCaps() const;
 	SpriteShader getSpriteShader();
-	Tileset getTileset(const std::string textureName);
+	Tileset getTileset(const std::string textureName, const int tileWidth = 16,
+					   const int tileHeight = 16);
 	TileShader getTileShader();
 	Texture getTextureById(const int textureId);
 	void initialize(const RenderCaps& renderCaps);

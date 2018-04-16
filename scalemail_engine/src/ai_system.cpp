@@ -384,17 +384,17 @@ void AiSystem::updateSeek(size_t cmpntIndex,
 						  const PhysicsComponent& physicsCmpnt,
 						  PhysicsSystem& physicsSystem) {
 	if (mData[cmpntIndex].seekEnabled) {
-		float maxSpeed = physicsSystem.getMaxSpeed(physicsCmpnt);
-		glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
-		glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
+		const float maxSpeed = physicsSystem.getMaxSpeed(physicsCmpnt);
+		const glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
+		const glm::vec2 velocity = physicsSystem.getVelocity(physicsCmpnt);
 
 		const float arrivalRadius = mData[cmpntIndex].arrivalRadius;
 
-		glm::vec2 t = mData[cmpntIndex].seekTarget - position;
+		const glm::vec2 t = mData[cmpntIndex].seekTarget - position;
+
+		const float dt = glm::length(t);
 
 		glm::vec2 v = normalizeVec2(t) * maxSpeed;
-
-		float dt = glm::length(t);
 
 		//	Slow down if within arrival radius
 		if (dt < arrivalRadius) {

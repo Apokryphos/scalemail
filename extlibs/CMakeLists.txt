@@ -21,7 +21,9 @@ add_subdirectory(glm)
 
 # ImGui
 add_library(imgui
-    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_demo.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_draw.cpp)
 target_include_directories(imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
 
 # LodePNG

@@ -384,7 +384,7 @@ void World::loadMap(const std::string& mapName) {
 			playerStart.position,
 			playerStart.actorIndex,
 			playerStart.facing,
-			"Player" + (p + 1));
+			"Player" + std::to_string(p + 1));
 
 		mImpl->players[p].entity = entity;
 		mImpl->players[p].actorIndex = playerStart.actorIndex;

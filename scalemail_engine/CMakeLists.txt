@@ -124,7 +124,7 @@ set(SCALEMAIL_ENGINE_SOURCE
 add_library(${PROJECT_NAME} ${SCALEMAIL_ENGINE_SOURCE} ${SCALEMAIL_ENGINE_SOURCE})
 include_directories(include)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_link_libraries(${PROJECT_NAME} earcut_hpp glad glfw glm lodepng TmxMapLib)
+target_link_libraries(${PROJECT_NAME} earcut_hpp glad glfw glm imgui lodepng TmxMapLib)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLM_ENABLE_EXPERIMENTAL)
 target_compile_definitions(${PROJECT_NAME} PRIVATE _USE_MATH_DEFINES)

@@ -13,10 +13,11 @@ Install the following into extlibs directory:
 + [glad](https://github.com/Dav1dde/glad)
 + [GLFW](https://github.com/glfw/glfw)
 + [GLM](https://github.com/g-truc/glm)
++ [Dear ImGui](https://github.com/ocornut/imgui)
 + [LodePNG](https://github.com/lvandeve/lodepng)
 + [TmxMapLib](https://github.com/Apokryphos/TmxMapLib)
 
-Use directory names that match case of projects (earcut.hpp, glad, glfw, glm, lodepng, TmxMapLib).
+Use directory names that match case of projects (earcut.hpp, glad, glfw, glm, imgui, lodepng, TmxMapLib).
 
 Use the [glad webservice](http://glad.dav1d.de/) to generate source for glad.
 

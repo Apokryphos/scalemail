@@ -21,6 +21,8 @@ enum class BuryState
 	RISING,
 };
 
+std::string buryStateToString(BuryState buryState);
+
 struct BuryComponent {
 	BuryComponent(const int index) { this->index = index; }
 	int index;

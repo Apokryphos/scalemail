@@ -14,6 +14,7 @@ class BulletSystem;
 class BurySystem;
 class CameraSystem;
 class DamageSystem;
+class DebugSystem;
 class DoorSystem;
 class ExpireSystem;
 class FacingSystem;
@@ -60,6 +61,7 @@ public:
 	BurySystem& getBurySystem();
 	CameraSystem& getCameraSystem();
 	DamageSystem& getDamageSystem();
+	DebugSystem& getDebugSystem();
 	DoorSystem& getDoorSystem();
 	ExpireSystem& getExpireSystem();
 	FacingSystem& getFacingSystem();

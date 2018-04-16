@@ -1,5 +1,6 @@
 #include "ai/ai_behavior.hpp"
 #include "ai_system.hpp"
+#include "dev/debug_system.hpp"
 #include "bullet_util.hpp"
 #include "damage_system.hpp"
 #include "entity_util.hpp"
@@ -45,6 +46,8 @@ Entity createActor(World& world, const glm::vec2& position,
 	physicsSystem.setPosition(physicsCmpnt, position);
 	physicsSystem.setCollisionGroup(physicsCmpnt, CollisionGroup::ACTOR);
 	physicsSystem.setRadius(physicsCmpnt, size.x * 0.25f);
+
+	world.getDebugSystem().addComponent(entity);
 
 	world.getFacingSystem().addComponent(entity);
 

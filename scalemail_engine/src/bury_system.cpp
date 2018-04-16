@@ -13,6 +13,22 @@ namespace ScaleMail
 static const glm::vec4 WHITE_COLOR(1.0f);
 
 //	============================================================================
+std::string buryStateToString(BuryState buryState) {
+	switch (buryState) {
+		case BuryState::NORMAL:
+			return "NORMAL";
+		case BuryState::BURYING:
+			return "BURYING";
+		case BuryState::BURIED:
+			return "BURIED";
+		case BuryState::RISING:
+			return "RISING";
+		default:
+			return "?";
+	}
+}
+
+//	============================================================================
 static BuryComponent makeComponent(const int index) {
 	return BuryComponent(index);
 }

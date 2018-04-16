@@ -11,33 +11,47 @@ namespace ScaleMail
 static const std::string PLAYER_CAMERA_NAME = "PlayerCamera";
 
 //	============================================================================
-void activatePlayerCamera(Game& game) {
-	World& world = *(game.world);
-
+static Entity getPlayerCameraEntity(World& world) {
 	auto entities =
 		world.getNameSystem().getEntitiesByName(PLAYER_CAMERA_NAME);
 
 	if (entities.size() == 0) {
-		return;
+		return {};
 	}
 
-	Entity entity = entities[0];
+	return entities[0];
+}
+
+//	============================================================================
+void setPlayerCameraFollowEntity(Entity entity, Game& game, bool activateCamera) {
+	World& world = *(game.world);
+
+	Entity cameraEntity = getPlayerCameraEntity(world);
 
 	CameraSystem& cameraSystem = world.getCameraSystem();
 
-	if (!cameraSystem.hasComponent(entity)) {
+	if (!cameraSystem.hasComponent(cameraEntity)) {
 		return;
 	}
 
 	const CameraComponent cameraCmpnt =
-		cameraSystem.getComponent(entity);
+		cameraSystem.getComponent(cameraEntity);
+
+	cameraSystem.followEntity(cameraCmpnt, entity);
+
+	if (activateCamera) {
+		//	Set camera as active camera
+		game.camera = &(cameraSystem.getCamera(cameraCmpnt));
+	}
+}
+
+//	============================================================================
+void activatePlayerCamera(Game& game) {
+	World& world = *(game.world);
 
 	Entity playerEntity = world.getPlayers()[0]->entity;
 
-	cameraSystem.followEntity(cameraCmpnt, playerEntity);
-
-	//	Set camera as active camera
-	game.camera = &(cameraSystem.getCamera(cameraCmpnt));
+	setPlayerCameraFollowEntity(playerEntity, game, true);
 }
 
 //	============================================================================

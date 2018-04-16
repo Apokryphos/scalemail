@@ -1,5 +1,6 @@
 #include "ai/ai_behavior_factory.hpp"
 #include "ai_system.hpp"
+#include "dev/debug_system.hpp"
 #include "asset_manager.hpp"
 #include "bullet_system.hpp"
 #include "bullet_util.hpp"
@@ -57,6 +58,7 @@ public:
 		burySystem(entityManager),
 		cameraSystem(world, entityManager),
 		damageSystem(entityManager),
+		debugSystem(entityManager),
 		doorSystem(entityManager),
 		expireSystem(entityManager),
 		facingSystem(entityManager),
@@ -80,6 +82,7 @@ public:
 	BurySystem burySystem;
 	CameraSystem cameraSystem;
 	DamageSystem damageSystem;
+	DebugSystem debugSystem;
 	DoorSystem doorSystem;
 	ExpireSystem expireSystem;
 	FacingSystem facingSystem;
@@ -150,6 +153,10 @@ void World::destroyEntity(Entity entity) {
 
 	if (mSystems->damageSystem.hasComponent(entity)) {
 		mSystems->damageSystem.removeComponent(entity);
+	}
+
+	if (mSystems->debugSystem.hasComponent(entity)) {
+		mSystems->debugSystem.removeComponent(entity);
 	}
 
 	if (mSystems->doorSystem.hasComponent(entity)) {
@@ -243,6 +250,11 @@ CameraSystem& World::getCameraSystem() {
 //  ============================================================================
 DamageSystem& World::getDamageSystem() {
 	return mSystems->damageSystem;
+}
+
+//  ============================================================================
+DebugSystem& World::getDebugSystem() {
+	return mSystems->debugSystem;
 }
 
 //  ============================================================================

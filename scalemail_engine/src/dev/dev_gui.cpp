@@ -1,10 +1,12 @@
 #include "dev/dev_gui.hpp"
 #include "dev/debug_system.hpp"
+#include "dev/particle_editor.hpp"
 #include "bury_system.hpp"
 #include "entity.hpp"
 #include "game.hpp"
 #include "health_system.hpp"
 #include "name_system.hpp"
+#include "particle_system.hpp"
 #include "physics_system.hpp"
 #include "player.hpp"
 #include "player_camera.hpp"
@@ -65,6 +67,8 @@ static void drawEntity(Entity entity, Game& game) {
 	if (ImGui::Button("Focus")) {
 		setPlayerCameraFollowEntity(entity, game);
 	}
+
+	drawParticleEditor(game, entity);
 
 	ImGui::EndGroup();
 }

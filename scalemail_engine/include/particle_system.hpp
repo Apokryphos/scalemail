@@ -79,6 +79,7 @@ public:
 	ParticleSystem(EntityManager& entityManager, int maxComponents = 10000);
 	void buildVertexData();
 	ParticleComponent getComponent(const Entity& entity) const;
+	const ParticleComponentData& getData(const ParticleComponent& cmpnt) const;
 	Mesh& getMesh();
 	void initialize(const AssetManager& assetManager, Random& random);
 	void setData(const ParticleComponent& cmpnt, const ParticleComponentData& data);

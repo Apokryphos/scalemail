@@ -1,3 +1,4 @@
+#include "dev/debug_system.hpp"
 #include "entity_types.hpp"
 #include "light_system.hpp"
 #include "particle_system.hpp"
@@ -16,6 +17,8 @@ Entity createTorch(World& world, const glm::vec2& position,
 				  const int frame1TilesetId, int frame2TilesetId) {
 	Entity entity =
 		createProp(world, position, frame1TilesetId, frame2TilesetId, false);
+
+	world.getDebugSystem().addComponent(entity);
 
 	LightSystem& lightSystem = world.getLightSystem();
 	lightSystem.addComponent(entity);

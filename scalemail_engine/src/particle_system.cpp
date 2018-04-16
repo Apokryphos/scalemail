@@ -127,6 +127,12 @@ void ParticleSystem::destroyComponent(int index) {
 }
 
 //	============================================================================
+const ParticleComponentData& ParticleSystem::getData(
+	const ParticleComponent& cmpnt) const {
+	return mData[cmpnt.index];
+}
+
+//	============================================================================
 ParticleComponent ParticleSystem::getComponent(const Entity& entity) const {
 	return makeComponent(this->getComponentIndexByEntity(entity));
 }

@@ -36,6 +36,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ai_nodes/target_attacker_ai_node.cpp
     src/ai/ai_nodes/target_range_ai_node.cpp
     src/ai/ai_nodes/wander_ai_node.cpp
+    src/dev/dev_gui.cpp
     src/entity_types/actor.cpp
     src/entity_types/bullet.cpp
     src/entity_types/camera.cpp
@@ -47,6 +48,8 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/entity_types/trigger.cpp
     src/gui/gui.cpp
     src/gui/gui_screen.cpp
+    src/gui/imgui.cpp
+    src/gui/imgui_glfw.cpp
     src/gui/pause_gui_screen.cpp
     src/gui/player_hud_gui_screen.cpp
     src/ai_system.cpp

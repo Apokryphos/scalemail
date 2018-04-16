@@ -8,6 +8,8 @@
 #include "game.hpp"
 #include "game_state_manager.hpp"
 #include "gl_headers.hpp"
+#include "gui/imgui.hpp"
+#include "gui/imgui_glfw.hpp"
 #include "input.hpp"
 #include "input_device.hpp"
 #include "input_state.hpp"
@@ -76,6 +78,50 @@ static void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
 	}
 
 	std::cout << "Framebuffer resized to " << width << "x" << height << std::endl;
+}
+
+//  ============================================================================
+static void keyCallback(GLFWwindow* window, int key, int scancode, int action,
+						int mods) {
+	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
+
+	DevGui& devGui = game->devGui;
+
+	bool inputConsumed = false;
+
+	if (devGui.getVisible()) {
+		imGuiKeyCallback(window, key, scancode, action, mods);
+		inputConsumed = devGui.getKeyboardInputConsumed();
+	}
+
+	if (!inputConsumed) {
+		inputKeyCallback(window, key, scancode, action, mods);
+	}
+}
+
+//  ============================================================================
+static void mouseButtonCallback(GLFWwindow* window, int button, int action,
+								int mods) {
+	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
+
+	DevGui& devGui = game->devGui;
+
+	bool inputConsumed = false;
+
+	if (devGui.getVisible()) {
+		imGuiMouseButtonCallback(window, button, action, mods);
+		inputConsumed = devGui.getMouseInputConsumed();
+	}
+
+	if (!inputConsumed) {
+		inputMouseButtonCallback(window, button, action, mods);
+	}
+}
+
+//  ============================================================================
+static void initializeInputCallbacks(GLFWwindow* window) {
+	glfwSetMouseButtonCallback(window, mouseButtonCallback);
+	glfwSetKeyCallback(window, keyCallback);
 }
 
 //  ============================================================================
@@ -243,6 +289,8 @@ int startEngine(EngineStartOptions startOptions) {
 
 	initializeRender(assetManager);
 
+	initializeImgui(glfwWindow, assetManager);
+
 	World world;
 	world.initialize(assetManager);
 
@@ -282,6 +330,8 @@ int startEngine(EngineStartOptions startOptions) {
 	} else {
 		gameStateManager.activateMainGameState();
 	}
+
+	initializeInputCallbacks(glfwWindow);
 
 	//	Center and show window
 	game.gameWindow.center();
@@ -338,6 +388,8 @@ int startEngine(EngineStartOptions startOptions) {
 			screenCapture();
 		}
 	}
+
+	shutdownImGui();
 
 	glfwDestroyWindow(glfwWindow);
 	glfwTerminate();

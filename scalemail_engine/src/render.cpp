@@ -1,4 +1,5 @@
 #include "gui/gui.hpp"
+#include "gui/imgui.hpp"
 #include "ai_system.hpp"
 #include "ambient_light.hpp"
 #include "asset_manager.hpp"
@@ -263,6 +264,13 @@ void render(Game& game, World& world, GameState& gameState,
 		}
 
 		renderText(gameWindow);
+	}
+
+	//	Draw development GUI
+	if (game.devOptions.enabled) {
+		imGuiBeginFrame();
+		game.devGui.draw(game);
+		imGuiEndFrame(gameWindow);
 	}
 
 	glfwSwapBuffers(gameWindow.getGlfwWindow());

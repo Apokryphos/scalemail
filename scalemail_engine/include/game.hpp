@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dev/dev_gui.hpp"
 #include "game_window.hpp"
 #include "render_caps.hpp"
 #include "render_options.hpp"
@@ -37,6 +38,8 @@ struct Game
 	DevOptions devOptions;
 	RenderCaps renderCaps;
 	RenderOptions renderOptions;
+
+	DevGui devGui;
 
 	Camera* camera;
 	GameWindow gameWindow;

@@ -2,6 +2,7 @@
 
 #include "gl_headers.hpp"
 #include "fade_shader.hpp"
+#include "imgui_shader.hpp"
 #include "quad_shader.hpp"
 #include "line_shader.hpp"
 #include "mesh.hpp"
@@ -31,6 +32,7 @@ class AssetManager
 	LineShader mLineShader;
 	SpriteShader mSpriteShader;
 	TileShader mTileShader;
+	ImGuiShader mImGuiShader;
 
 	std::string mShaderPath;
 
@@ -45,6 +47,7 @@ public:
 	AssetManager& operator=(const AssetManager&) = delete;
 	QuadShader getColorQuadShader();
 	FadeShader getFadeShader();
+	ImGuiShader getImGuiShader();
 	Mesh getQuadMesh();
 	QuadShader getQuadShader();
 	LineShader getLineShader();

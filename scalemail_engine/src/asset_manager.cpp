@@ -30,6 +30,11 @@ FadeShader AssetManager::getFadeShader() {
 }
 
 //  ============================================================================
+ImGuiShader AssetManager::getImGuiShader() {
+	return mImGuiShader;
+}
+
+//  ============================================================================
 Mesh AssetManager::getQuadMesh() {
 	return mQuadMesh;
 }
@@ -111,31 +116,50 @@ void AssetManager::initialize(const RenderCaps& renderCaps) {
 							  renderCaps.vaoSupported);
 	setMeshVertexData(mQuadMesh, QUAD_VERTEX_DATA);
 
+	//	Color quad shader
 	this->loadShader(mColorQuadShader.id, "color");
 	mColorQuadShader.mvpLocation =
 		glGetUniformLocation(mColorQuadShader.id, "MVP");
 
+	//	Fade shader
 	this->loadShader(mFadeShader.id, "fade");
 	mFadeShader.fadeColorLocation =
 		glGetUniformLocation(mFadeShader.id, "fadeColor");
 	mFadeShader.fadeProgressLocation =
 		glGetUniformLocation(mFadeShader.id, "fadeProgress");
 
+	//	ImGui shader
+	this->loadShader(mImGuiShader.id, "imgui");
+	mImGuiShader.projectionLocation =
+		glGetUniformLocation(mImGuiShader.id, "ProjMtx");
+	mImGuiShader.textureLocation =
+		glGetUniformLocation(mImGuiShader.id, "Texture");
+	mImGuiShader.colorLocation =
+		glGetAttribLocation(mImGuiShader.id, "Color");
+	mImGuiShader.positionLocation =
+		glGetAttribLocation(mImGuiShader.id, "Position");
+	mImGuiShader.uvLocation =
+		glGetAttribLocation(mImGuiShader.id, "UV");
+
 	this->loadShader(mQuadShader.id, "flat");
 	mQuadShader.mvpLocation = glGetUniformLocation(mQuadShader.id, "MVP");
 
+	//	Line shader
 	this->loadShader(mLineShader.id, "line");
 	mLineShader.mvpLocation = glGetUniformLocation(mLineShader.id, "MVP");
 
+	//	Particle shader
 	this->loadShader(mParticleShader.id, "particle");
 	mParticleShader.mvpLocation =
 		glGetUniformLocation(mParticleShader.id, "MVP");
 
+	//	Sprite shader
 	this->loadShader(mSpriteShader.id, "sprite");
 	mSpriteShader.mvpLocation = glGetUniformLocation(mSpriteShader.id, "MVP");
 	mSpriteShader.alphaLocation =
 		glGetUniformLocation(mSpriteShader.id, "alpha");
 
+	//	Tile shader
 	this->loadShader(mTileShader.id, "tile");
 	mTileShader.mvpLocation = glGetUniformLocation(mTileShader.id, "MVP");
 	mTileShader.timeLocation = glGetUniformLocation(mTileShader.id, "time");

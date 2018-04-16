@@ -18,9 +18,9 @@ InputDevice& getKeyboardInputDevice() {
 }
 
 //  ============================================================================
-static void keyCallback(GLFWwindow* window, int key,
-						[[maybe_unused]] int scancode, int action,
-						[[maybe_unused]] int mods) {
+void inputKeyCallback(GLFWwindow* window, int key,
+					  [[maybe_unused]] int scancode, int action,
+					  [[maybe_unused]] int mods) {
 	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
 
 	InputState& inputState = keyboard.getInputState();
@@ -101,6 +101,7 @@ static void keyCallback(GLFWwindow* window, int key,
 
 			case GLFW_KEY_D:
 				game->devOptions.enabled = !game->devOptions.enabled;
+				game->devGui.setVisible(game->devOptions.enabled);
 				std::cout << "Development mode "
 						  << (game->devOptions.enabled ?
 							  "enabled." :
@@ -177,8 +178,8 @@ static void keyCallback(GLFWwindow* window, int key,
 }
 
 //  ============================================================================
-static void mouseButtonCallback(GLFWwindow* window, int button, int action,
-								[[maybe_unused]] int mods) {
+void inputMouseButtonCallback(GLFWwindow* window, int button, int action,
+							  [[maybe_unused]] int mods) {
 	Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
 
 	World* world = game->world;
@@ -208,8 +209,8 @@ static void mousePositionCallback([[maybe_unused]]GLFWwindow* window,
 
 //  ============================================================================
 void initializeInput(GLFWwindow* window) {
-	glfwSetKeyCallback(window, keyCallback);
-	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 	glfwSetCursorPosCallback(window, mousePositionCallback);
+
+	//	Other callbacks are chained elsewhere to support development GUI (ImGui).
 }
 }

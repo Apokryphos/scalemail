@@ -1,5 +1,6 @@
 #include "dev/dev_gui.hpp"
 #include "dev/debug_system.hpp"
+#include "dev/gun_editor.hpp"
 #include "dev/light_editor.hpp"
 #include "dev/particle_editor.hpp"
 #include "bury_system.hpp"
@@ -78,7 +79,8 @@ static void drawEntity(Entity entity, Game& game) {
 	}
 
 	drawParticleEditor(game, entity);
-	drawLightEditor(game, entity);
+	drawLightComponentEditorWindow(world.getLightSystem(), entity);
+	drawGunComponentEditorWindow(world.getGunSystem(), entity);
 
 	ImGui::EndGroup();
 }

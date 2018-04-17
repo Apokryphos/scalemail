@@ -38,6 +38,8 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/ai/ai_nodes/wander_ai_node.cpp
     src/dev/debug_system.cpp
     src/dev/dev_gui.cpp
+    src/dev/bullet_editor.cpp
+    src/dev/gun_editor.cpp
     src/dev/light_editor.cpp
     src/dev/particle_editor.cpp
     src/entity_types/actor.cpp

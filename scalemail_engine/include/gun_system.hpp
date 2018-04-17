@@ -37,7 +37,10 @@ class GunSystem : public EntitySystem
 public:
 	GunSystem(EntityManager& entityManager, int maxComponents = 1000);
 	GunComponent getComponent(const Entity& entity) const;
+	BulletData getBulletData(const GunComponent& cmpnt) const;
+	LightData getLightData(const GunComponent& cmpnt) const;
 	void setBulletDamage(const GunComponent& cmpnt, float damage);
+	void setBulletData(const GunComponent& cmpnt, const BulletData& bulletData);
 	void setBulletImpactTilesetId(const GunComponent& cmpnt, int tilesetId);
 	void setBulletLightColor(const GunComponent& cmpnt,
 							 const glm::vec4 lightColor);
@@ -46,6 +49,7 @@ public:
 	void setBulletTilesetId(const GunComponent& cmpnt, int tilesetId);
 	void setCooldownDuration(const GunComponent& cmpnt, float duration);
   	void setFire(const GunComponent& cmpnt, const bool fire);
+	void setLightData(const GunComponent& cmpnt, const LightData& lightData);
   	void setPosition(const GunComponent& cmpnt, const glm::vec2 position);
   	void setTarget(const GunComponent& cmpnt, const glm::vec2 target);
 	void update(World& world, float elapsedSeconds);

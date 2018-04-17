@@ -17,23 +17,20 @@ static LightData makeDefaultLight() {
 }
 
 //  ============================================================================
-void drawLightEditor(Game& game, const Entity& entity) {
-	World& world = *game.world;
+void drawLightDataEditor(LightData& data) {
+	ImGui::SliderFloat2("Size", &data.size[0], 0, 512.0f);
+	ImGui::SliderFloat("Pulse", &data.pulse, 0.0f, 100.0f);
+	ImGui::SliderFloat("Pulse Size", &data.pulseSize, 0.0f, 100.0f);
+	ImGui::SliderFloat2("Glow Size", &data.glowSize[0], 0.0f, 100.0f);
+	ImGui::ColorEdit4("Color", &data.color[0]);
+}
 
-	ImGui::Begin("Light Editor");
-
-	LightSystem& lightSystem = world.getLightSystem();
+//  ============================================================================
+void drawLightComponentEditor(LightSystem& lightSystem, const Entity& entity) {
 	if (lightSystem.hasComponent(entity)) {
 		LightComponent lightCmpnt = lightSystem.getComponent(entity);
-
 		LightData data = lightSystem.getLightData(lightCmpnt);
-
-		ImGui::SliderFloat2("Size", &data.size[0], 0, 512.0f);
-		ImGui::SliderFloat("Pulse", &data.pulse, 0.0f, 100.0f);
-		ImGui::SliderFloat("Pulse Size", &data.pulseSize, 0.0f, 100.0f);
-		ImGui::SliderFloat2("Glow Size", &data.glowSize[0], 0.0f, 100.0f);
-		ImGui::ColorEdit4("Color", &data.color[0]);
-
+		drawLightDataEditor(data);
 		lightSystem.setLightData(lightCmpnt, data);
 	} else {
 		if (ImGui::Button("Add Component")) {
@@ -42,7 +39,12 @@ void drawLightEditor(Game& game, const Entity& entity) {
 			lightSystem.setLightData(lightCmpnt, makeDefaultLight());
 		}
 	}
+}
 
+//  ============================================================================
+void drawLightComponentEditorWindow(LightSystem& lightSystem, const Entity& entity) {
+	ImGui::Begin("Light Editor");
+	drawLightComponentEditor(lightSystem, entity);
 	ImGui::End();
 }
 }

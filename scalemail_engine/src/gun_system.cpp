@@ -53,9 +53,25 @@ GunComponent GunSystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
+BulletData GunSystem::getBulletData(const GunComponent& cmpnt) const {
+	return mBulletData[cmpnt.index];
+}
+
+//	============================================================================
+LightData GunSystem::getLightData(const GunComponent& cmpnt) const {
+	return mLightData[cmpnt.index];
+}
+
+//	============================================================================
 void GunSystem::setBulletDamage(const GunComponent& cmpnt,
 										 float damage) {
 	mBulletData[cmpnt.index].damage = damage;
+}
+
+//	============================================================================
+void GunSystem::setBulletData(const GunComponent& cmpnt,
+						 const BulletData& bulletData) {
+	mBulletData[cmpnt.index] = bulletData;
 }
 
 //	============================================================================
@@ -93,6 +109,12 @@ void GunSystem::setCooldownDuration(const GunComponent& cmpnt, float duration) {
 //	============================================================================
 void GunSystem::setFire(const GunComponent& cmpnt, const bool fire) {
 	mGunData[cmpnt.index].fire = fire;
+}
+
+//	============================================================================
+void GunSystem::setLightData(const GunComponent& cmpnt,
+							 const LightData& lightData) {
+	mLightData[cmpnt.index] = lightData;
 }
 
 //	============================================================================

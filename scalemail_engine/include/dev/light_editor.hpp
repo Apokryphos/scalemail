@@ -4,6 +4,10 @@ namespace ScaleMail
 {
 class Entity;
 class Game;
+struct LightData;
+class LightSystem;
 
-void drawLightEditor(Game& game, const Entity& entity);
+void drawLightDataEditor(LightData& data);
+void drawLightComponentEditor(LightSystem& lightSystem, const Entity& entity);
+void drawLightComponentEditorWindow(LightSystem& lightSystem, const Entity& entity);
 }

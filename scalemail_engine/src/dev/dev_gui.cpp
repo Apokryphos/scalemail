@@ -1,5 +1,6 @@
 #include "dev/dev_gui.hpp"
 #include "dev/debug_system.hpp"
+#include "dev/entity_list_box.hpp"
 #include "dev/gun_editor.hpp"
 #include "dev/light_editor.hpp"
 #include "dev/particle_editor.hpp"
@@ -18,25 +19,13 @@
 
 namespace ScaleMail
 {
-struct EntityInfo
-{
-	Entity entity;
-	std::string idString;
-};
-
 //  ============================================================================
-static bool debugDataVectorGetter(void* data, int n, const char** out_text) {
-	const auto& v = *static_cast<std::vector<DebugComponentData>*>(data);
-	*out_text = v[n].idString.c_str();
-	return true;
-}
-
-//  ============================================================================
-static void drawEntityEditors(Entity entity, Game& game) {
+static void drawEntityDebugWindow(Game& game, const Entity& entity) {
 	World& world = *game.world;
 
+	ImGui::Begin("Entity Debug");
+	ImGui::SameLine();
 	ImGui::BeginGroup();
-
 	ImGui::Text("ID: %d", entity.id);
 
 	NameSystem& nameSystem = world.getNameSystem();
@@ -78,63 +67,28 @@ static void drawEntityEditors(Entity entity, Game& game) {
 		setPlayerCameraFollowEntity(entity, game);
 	}
 
+	ImGui::EndGroup();
+	ImGui::End();
+}
+
+//  ============================================================================
+static void drawEntityEditorWindows(Game& game, const Entity& entity) {
+	World& world = *game.world;
+
 	drawParticleComponentEditorWindow(world.getParticleSystem(), entity);
 	drawLightComponentEditorWindow(world.getLightSystem(), entity);
 	drawGunComponentEditorWindow(world.getGunSystem(), entity);
-
-	ImGui::EndGroup();
 }
 
 //  ============================================================================
 static void updateEntitySelections(DebugSystem& debugSystem,
 								   const Entity& selectedEntity) {
-	debugSystem.clearSelected();
-
 	if (!debugSystem.hasComponent(selectedEntity)) {
 		return;
 	}
 
 	const DebugComponent debugCmpnt = debugSystem.getComponent(selectedEntity);
 	debugSystem.setSelected(debugCmpnt, true);
-}
-
-//  ============================================================================
-static void drawEntityDebug(Game& game) {
-	World& world = *game.world;
-
-	DebugSystem& debugSystem = world.getDebugSystem();
-
-	const std::vector<Player*> players = world.getPlayers();
-
-	//	ImGui requires non-const void pointer so cast const away...
-	auto& debugComponentData =
-		const_cast<std::vector<DebugComponentData>&>(
-			debugSystem.getComponentData());
-
-	static int listbox_item_current = 1;
-
-	ImGui::Begin("Entity Debug");
-
-	ImGui::Text("Entities:");
-
-	//	Listbox of entities with debug components
-	ImGui::PushItemWidth(100);
-	ImGui::ListBox(
-		"",
-		&listbox_item_current,
-		debugDataVectorGetter,
-		static_cast<void*>(&debugComponentData),
-		debugComponentData.size());
-	ImGui::PopItemWidth();
-
-	//	Debug info for selected entity
-	ImGui::SameLine();
-	const auto& entityInfo = debugComponentData[listbox_item_current];
-	drawEntityEditors(entityInfo.entity, game);
-	ImGui::End();
-
-	//	Update entity selections
-	updateEntitySelections(debugSystem, entityInfo.entity);
 }
 
 //  ============================================================================
@@ -159,7 +113,35 @@ void DevGui::draw(Game& game) {
 	ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
 	ImGui::End();
 
-	drawEntityDebug(game);
+	this->drawEntityDebugWindows(game);
+}
+
+//  ============================================================================
+void DevGui::drawEntityDebugWindows(Game& game) {
+	World& world = *game.world;
+
+	DebugSystem& debugSystem = world.getDebugSystem();
+
+	debugSystem.clearSelected();
+
+	//	ImGui requires non-const void pointer so cast const away...
+	auto& debugComponentData =
+		const_cast<std::vector<DebugComponentData>&>(
+			debugSystem.getComponentData());
+
+	mEntityListBox.setEntities(debugComponentData);
+
+	ImGui::Begin("Entity Debug");
+	ImGui::Text("Entities:");
+	mEntityListBox.draw();
+	ImGui::End();
+
+	if (mEntityListBox.hasSelectedEntity()) {
+		Entity selectedEntity = mEntityListBox.getSelectedEntity();
+		drawEntityDebugWindow(game, selectedEntity);
+		drawEntityEditorWindows(game, selectedEntity);
+		updateEntitySelections(debugSystem, selectedEntity);
+	}
 }
 
 //  ============================================================================

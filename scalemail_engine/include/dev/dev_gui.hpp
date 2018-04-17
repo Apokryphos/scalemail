@@ -1,5 +1,7 @@
 #pragma once
 
+#include "entity_list_box.hpp"
+
 namespace ScaleMail
 {
 struct Game;
@@ -7,6 +9,9 @@ struct Game;
 class DevGui
 {
 	bool mVisible;
+	EntityListBox mEntityListBox;
+
+	void drawEntityDebugWindows(Game& game);
 
 public:
 	DevGui();

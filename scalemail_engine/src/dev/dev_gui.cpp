@@ -124,7 +124,7 @@ void DevGui::drawEntityDebugWindows(Game& game) {
 
 	debugSystem.clearSelected();
 
-	mEntityListBox.setEntities(debugSystem.getComponentData());
+	mEntityListBox.populate(debugSystem.getComponentData());
 
 	ImGui::Begin("Entity Debug");
 	ImGui::Text("Entities:");

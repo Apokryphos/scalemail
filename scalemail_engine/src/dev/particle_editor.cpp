@@ -7,8 +7,8 @@
 namespace ScaleMail
 {
 //  ============================================================================
-static ParticleComponentData makeDefaultEmitter() {
-	ParticleComponentData emitter = {};
+static ParticleEmitterData makeDefaultEmitter() {
+	ParticleEmitterData emitter = {};
 	emitter.life = 1.6f;
 	emitter.decay = 1.0f;
 	emitter.duration = 1.0f;
@@ -35,7 +35,7 @@ void drawParticleEditor(Game& game, const Entity& entity) {
 	if (particleSystem.hasComponent(entity)) {
 		ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
 
-		ParticleComponentData data = particleSystem.getData(particleCmpnt);
+		ParticleEmitterData data = particleSystem.getData(particleCmpnt);
 
 		ImGui::SliderFloat("Life", &data.life, 0.0f, 100.0f);
 		ImGui::SliderFloat("Decay", &data.decay, 0.0f, 100.0f);

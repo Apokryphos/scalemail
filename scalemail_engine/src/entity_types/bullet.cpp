@@ -22,7 +22,7 @@ static void addBulletParticleEmitter(World& world, const Entity& entity,
 	particleSystem.addComponent(entity);
 	ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
 
-	ParticleComponentData emitter = {};
+	ParticleEmitterData emitter = {};
 	emitter.life = 0.6f;
 	emitter.decay = 1.0f;
 	emitter.duration = 1.0f;
@@ -164,7 +164,7 @@ void destroyBullet(World& world, const Entity& entity) {
 		particleSystem.addComponent(fxEntity);
 		ParticleComponent particleCmpnt = particleSystem.getComponent(fxEntity);
 
-		ParticleComponentData emitter = {};
+		ParticleEmitterData emitter = {};
 		emitter.life = 0.125f;
 		emitter.decay = 1.0f;
 		emitter.duration = 1.0f;

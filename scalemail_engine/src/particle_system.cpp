@@ -127,7 +127,7 @@ void ParticleSystem::destroyComponent(int index) {
 }
 
 //	============================================================================
-const ParticleComponentData& ParticleSystem::getData(
+const ParticleEmitterData& ParticleSystem::getData(
 	const ParticleComponent& cmpnt) const {
 	return mData[cmpnt.index];
 }
@@ -154,7 +154,7 @@ void ParticleSystem::initialize(const AssetManager& assetManager,
 
 //	============================================================================
 void ParticleSystem::setData(const ParticleComponent& cmpnt,
-							 const ParticleComponentData& data) {
+							 const ParticleEmitterData& data) {
 	mData[cmpnt.index] = data;
 }
 
@@ -208,7 +208,7 @@ void ParticleSystem::update(PhysicsSystem& physicsSystem, float elapsedSeconds) 
 	//	Update emitters
 	const size_t emitterCount = mData.size();
 	for (size_t index = 0; index < emitterCount; ++index) {
-		ParticleComponentData& data = mData[index];
+		ParticleEmitterData& data = mData[index];
 
 		if (data.delay > 0.0f) {
 			data.delay -= elapsedSeconds;

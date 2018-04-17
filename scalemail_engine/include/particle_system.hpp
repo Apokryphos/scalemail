@@ -21,7 +21,7 @@ struct ParticleComponent {
 };
 
 //	Particle emitters
-struct ParticleComponentData {
+struct ParticleEmitterData {
 	int emitCount;
 	float life;
 	float decay;
@@ -45,7 +45,7 @@ class ParticleSystem : public EntitySystem
 {
 private:
 	//	Emitters
-	std::vector<ParticleComponentData> mData;
+	std::vector<ParticleEmitterData> mData;
 
 	//	Particles
 	std::vector<float> mLife;
@@ -79,10 +79,10 @@ public:
 	ParticleSystem(EntityManager& entityManager, int maxComponents = 10000);
 	void buildVertexData();
 	ParticleComponent getComponent(const Entity& entity) const;
-	const ParticleComponentData& getData(const ParticleComponent& cmpnt) const;
+	const ParticleEmitterData& getData(const ParticleComponent& cmpnt) const;
 	Mesh& getMesh();
 	void initialize(const AssetManager& assetManager, Random& random);
-	void setData(const ParticleComponent& cmpnt, const ParticleComponentData& data);
+	void setData(const ParticleComponent& cmpnt, const ParticleEmitterData& data);
 	void update(PhysicsSystem& physicsSystem, float elapsedSeconds);
 };
 }

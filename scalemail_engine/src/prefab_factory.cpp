@@ -161,7 +161,7 @@ static void buildWisp(Entity entity, World& world) {
 
 	ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
 
-	ParticleComponentData emitter = {};
+	ParticleEmitterData emitter = {};
 	emitter.life = 1.6f;
 	emitter.decay = 1.0f;
 	emitter.duration = 1.0f;

@@ -37,7 +37,7 @@ Entity createTorch(World& world, const glm::vec2& position,
 
 	ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
 
-	ParticleComponentData emitter = {};
+	ParticleEmitterData emitter = {};
 	emitter.life = 1.6f;
 	emitter.decay = 1.0f;
 	emitter.duration = 1.0f;

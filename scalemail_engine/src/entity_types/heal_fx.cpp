@@ -50,7 +50,7 @@ Entity createHealFx(World& world, const glm::vec2& position) {
 
 	lightColor.a = 0.5f;
 
-	ParticleComponentData emitter = {};
+	ParticleEmitterData emitter = {};
 	emitter.life = 2.9f;
 	emitter.decay = 1.0f;
 	emitter.duration = duration;

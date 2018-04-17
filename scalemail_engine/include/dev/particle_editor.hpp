@@ -3,7 +3,12 @@
 namespace ScaleMail
 {
 class Entity;
-class Game;
+struct ParticleEmitterData;
+class ParticleSystem;
 
-void drawParticleEditor(Game& game, const Entity& entity);
+void drawParticleEmitterDataEditor(ParticleEmitterData& data);
+void drawParticleComponentEditor(ParticleSystem& particleSystem,
+								 const Entity& entity);
+void drawParticleComponentEditorWindow(ParticleSystem& particleSystem,
+									   const Entity& entity);
 }

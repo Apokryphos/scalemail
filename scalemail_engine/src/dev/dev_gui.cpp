@@ -78,7 +78,7 @@ static void drawEntity(Entity entity, Game& game) {
 		setPlayerCameraFollowEntity(entity, game);
 	}
 
-	drawParticleEditor(game, entity);
+	drawParticleComponentEditorWindow(world.getParticleSystem(), entity);
 	drawLightComponentEditorWindow(world.getLightSystem(), entity);
 	drawGunComponentEditorWindow(world.getGunSystem(), entity);
 

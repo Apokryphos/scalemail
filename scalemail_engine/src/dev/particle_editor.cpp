@@ -26,54 +26,53 @@ static ParticleEmitterData makeDefaultEmitter() {
 }
 
 //  ============================================================================
-void drawParticleEditor(Game& game, const Entity& entity) {
-	World& world = *game.world;
+void drawParticleEmitterDataEditor(ParticleEmitterData& data) {
+	ImGui::SliderFloat("Life", &data.life, 0.0f, 100.0f);
+	ImGui::SliderFloat("Decay", &data.decay, 0.0f, 100.0f);
+	ImGui::SliderFloat("Duration", &data.duration, 0.0f, 100.0f);
+	ImGui::SliderInt("Emit Count", &data.emitCount, 0, 100);
+	ImGui::SliderFloat("Interval", &data.interval, 0.0f, 100.0f);
 
-	ImGui::Begin("Particle Editor");
+	//	Only allow editing of X and Y components
+	ImGui::SliderFloat2(
+		"Direction",
+		&data.direction[0],
+		-1.0f,
+		1.0f);
 
-	ParticleSystem& particleSystem = world.getParticleSystem();
+	ImGui::DragFloatRange2(
+		"Size",
+		&data.minSize,
+		&data.maxSize,
+		0.25f,
+		0.0f,
+		100.0f,
+		"Min: %.1f",
+		"Max: %.1f");
+
+	ImGui::DragFloatRange2(
+		"Speed",
+		&data.minSpeed,
+		&data.maxSpeed,
+		0.25f,
+		0.0f,
+		100.0f,
+		"Min: %.1f",
+		"Max: %.1f");
+
+	ImGui::SliderFloat("Spread", &data.spread, 0.0f, TWO_PI);
+	ImGui::SliderFloat("Width", &data.width, 0.0f, 100.0f);
+	ImGui::ColorEdit4("Color", &data.color[0]);
+}
+
+//  ============================================================================
+void drawParticleComponentEditor(ParticleSystem& particleSystem,
+								 const Entity& entity) {
 	if (particleSystem.hasComponent(entity)) {
 		ParticleComponent particleCmpnt = particleSystem.getComponent(entity);
 
 		ParticleEmitterData data = particleSystem.getData(particleCmpnt);
-
-		ImGui::SliderFloat("Life", &data.life, 0.0f, 100.0f);
-		ImGui::SliderFloat("Decay", &data.decay, 0.0f, 100.0f);
-		ImGui::SliderFloat("Duration", &data.duration, 0.0f, 100.0f);
-		ImGui::SliderInt("Emit Count", &data.emitCount, 0, 100);
-		ImGui::SliderFloat("Interval", &data.interval, 0.0f, 100.0f);
-
-		//	Only allow editing of X and Y components
-		ImGui::SliderFloat2(
-			"Direction",
-			&data.direction[0],
-			-1.0f,
-			1.0f);
-
-		ImGui::DragFloatRange2(
-			"Size",
-			&data.minSize,
-			&data.maxSize,
-			0.25f,
-			0.0f,
-			100.0f,
-			"Min: %.1f",
-			"Max: %.1f");
-
-		ImGui::DragFloatRange2(
-			"Speed",
-			&data.minSpeed,
-			&data.maxSpeed,
-			0.25f,
-			0.0f,
-			100.0f,
-			"Min: %.1f",
-			"Max: %.1f");
-
-		ImGui::SliderFloat("Spread", &data.spread, 0.0f, TWO_PI);
-		ImGui::SliderFloat("Width", &data.width, 0.0f, 100.0f);
-		ImGui::ColorEdit4("Color", &data.color[0]);
-
+		drawParticleEmitterDataEditor(data);
 		particleSystem.setData(particleCmpnt, data);
 	} else {
 		if (ImGui::Button("Add Component")) {
@@ -82,7 +81,13 @@ void drawParticleEditor(Game& game, const Entity& entity) {
 			particleSystem.setData(particleCmpnt, makeDefaultEmitter());
 		}
 	}
+}
 
+//  ============================================================================
+void drawParticleComponentEditorWindow(ParticleSystem& particleSystem,
+									   const Entity& entity) {
+	ImGui::Begin("Particle Editor");
+	drawParticleComponentEditor(particleSystem, entity);
 	ImGui::End();
 }
 }

@@ -32,7 +32,7 @@ static bool debugDataVectorGetter(void* data, int n, const char** out_text) {
 }
 
 //  ============================================================================
-static void drawEntity(Entity entity, Game& game) {
+static void drawEntityEditors(Entity entity, Game& game) {
 	World& world = *game.world;
 
 	ImGui::BeginGroup();
@@ -86,15 +86,30 @@ static void drawEntity(Entity entity, Game& game) {
 }
 
 //  ============================================================================
-static void drawPlayerEntityDebug(Game& game) {
+static void updateEntitySelections(DebugSystem& debugSystem,
+								   const Entity& selectedEntity) {
+	debugSystem.clearSelected();
+
+	if (!debugSystem.hasComponent(selectedEntity)) {
+		return;
+	}
+
+	const DebugComponent debugCmpnt = debugSystem.getComponent(selectedEntity);
+	debugSystem.setSelected(debugCmpnt, true);
+}
+
+//  ============================================================================
+static void drawEntityDebug(Game& game) {
 	World& world = *game.world;
+
+	DebugSystem& debugSystem = world.getDebugSystem();
 
 	const std::vector<Player*> players = world.getPlayers();
 
 	//	ImGui requires non-const void pointer so cast const away...
 	auto& debugComponentData =
 		const_cast<std::vector<DebugComponentData>&>(
-			world.getDebugSystem().getComponentData());
+			debugSystem.getComponentData());
 
 	static int listbox_item_current = 1;
 
@@ -115,9 +130,11 @@ static void drawPlayerEntityDebug(Game& game) {
 	//	Debug info for selected entity
 	ImGui::SameLine();
 	const auto& entityInfo = debugComponentData[listbox_item_current];
-	drawEntity(entityInfo.entity, game);
-
+	drawEntityEditors(entityInfo.entity, game);
 	ImGui::End();
+
+	//	Update entity selections
+	updateEntitySelections(debugSystem, entityInfo.entity);
 }
 
 //  ============================================================================
@@ -142,7 +159,7 @@ void DevGui::draw(Game& game) {
 	ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
 	ImGui::End();
 
-	drawPlayerEntityDebug(game);
+	drawEntityDebug(game);
 }
 
 //  ============================================================================

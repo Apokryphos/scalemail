@@ -1,3 +1,4 @@
+#include "dev/debug_system.hpp"
 #include "gui/gui.hpp"
 #include "gui/imgui.hpp"
 #include "ai_system.hpp"
@@ -173,6 +174,10 @@ void renderDebug(Game& game, Camera& camera) {
 
 		if (game.devOptions.drawTriggers) {
 			world.getTriggerSystem().drawDebug(debugLineVertexData);
+		}
+
+		if (game.devGui.getVisible()) {
+			world.getDebugSystem().drawDebug(debugLineVertexData);
 		}
 
 		if (debugLineVertexData.size() > 0) {

@@ -58,7 +58,7 @@ public:
 		burySystem(entityManager),
 		cameraSystem(world, entityManager),
 		damageSystem(entityManager),
-		debugSystem(entityManager),
+		debugSystem(world, entityManager),
 		doorSystem(entityManager),
 		expireSystem(entityManager),
 		facingSystem(entityManager),

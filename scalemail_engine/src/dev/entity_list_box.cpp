@@ -4,9 +4,9 @@
 namespace ScaleMail
 {
 //  ============================================================================
-static bool debugDataVectorGetter(void* data, int n, const char** out_text) {
-	const auto& v = *static_cast<std::vector<DebugComponentData>*>(data);
-	*out_text = v[n].idString.c_str();
+bool EntityListBox::listItemVectorGetter(void* data, int n, const char** out_text) {
+	const auto& v = *static_cast<std::vector<EntityListBox::ListItem>*>(data);
+	*out_text = v[n].data->idString.c_str();
 	return true;
 }
 
@@ -20,9 +20,9 @@ void EntityListBox::draw() {
 	ImGui::ListBox(
 		"",
 		&mSelectedIndex,
-		debugDataVectorGetter,
-		static_cast<void*>(&mEntities),
-		mEntities.size());
+		listItemVectorGetter,
+		static_cast<void*>(&mListItems),
+		mListItems.size());
 	ImGui::PopItemWidth();
 }
 
@@ -32,36 +32,62 @@ Entity EntityListBox::getSelectedEntity() const {
 		throw std::runtime_error("No entity selected.");
 	}
 
-	return mEntities[mSelectedIndex].entity;
+	return mListItems[mSelectedIndex].data->entity;
 }
 
 //  ============================================================================
 bool EntityListBox::hasSelectedEntity() const {
-	return mSelectedIndex >= 0 && mSelectedIndex < mEntities.size();
+	return mSelectedIndex >= 0 && mSelectedIndex < mListItems.size();
 }
 
 //  ============================================================================
-void EntityListBox::setEntities(std::vector<DebugComponentData>& entities) {
-	//	Update selected index when the entities vector changes.
-	//	Needed since entity systems swap remove components.
-	if (mSelectedIndex != -1) {
-		const Entity selectedEntity = mEntities[mSelectedIndex].entity;
+void EntityListBox::populate(const std::vector<DebugComponentData>& debugCmpntData) {
+	//	ImGui requires non-const void pointer so cast const away...
+	auto& debugData = const_cast<std::vector<DebugComponentData>&>(debugCmpntData);
 
+	unsigned lastSelectedEntityId = 0;
+	if (mSelectedIndex != -1) {
+		//	Save selected entity ID for later comparison
+		lastSelectedEntityId = mListItems[mSelectedIndex].entityId;
+	}
+
+	mListItems.clear();
+	mListItems.reserve(debugData.size());
+
+	for (auto& data : debugData) {
+		ListItem listItem = {};
+		listItem.data = &data;
+		listItem.entityId = data.entity.id;
+
+		mListItems.push_back(listItem);
+	}
+
+	std::sort(
+		mListItems.begin(),
+		mListItems.end(),
+		[](auto& a, auto& b) {
+			return a.entityId < b.entityId;
+		}
+	);
+
+	//	Update selected index
+	if (mSelectedIndex != -1) {
 		bool found = false;
 
-		for (int e = 0; e < entities.size(); ++e) {
-			if (entities[e].entity.id == selectedEntity.id) {
+		const size_t count = mListItems.size();
+		for (size_t e = 0; e < count; ++e) {
+			//	Use saved entity ID for compare in case component was removed
+			if (mListItems[e].entityId == lastSelectedEntityId) {
 				mSelectedIndex = e;
 				found = true;
 				break;
 			}
 		}
 
+		//	Clear listbox selection if selected entity no longer exists
 		if (!found) {
 			mSelectedIndex = -1;
 		}
 	}
-
-	mEntities = entities;
 }
 }

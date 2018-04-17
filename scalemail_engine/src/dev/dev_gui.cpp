@@ -124,12 +124,7 @@ void DevGui::drawEntityDebugWindows(Game& game) {
 
 	debugSystem.clearSelected();
 
-	//	ImGui requires non-const void pointer so cast const away...
-	auto& debugComponentData =
-		const_cast<std::vector<DebugComponentData>&>(
-			debugSystem.getComponentData());
-
-	mEntityListBox.setEntities(debugComponentData);
+	mEntityListBox.setEntities(debugSystem.getComponentData());
 
 	ImGui::Begin("Entity Debug");
 	ImGui::Text("Entities:");

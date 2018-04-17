@@ -1,4 +1,5 @@
 #include "asset_manager.hpp"
+#include "light_data.hpp"
 #include "light_system.hpp"
 #include "physics_system.hpp"
 #include "sprite_batch.hpp"
@@ -82,6 +83,18 @@ LightComponent LightSystem::getComponent(const Entity& entity) const {
 }
 
 //	============================================================================
+LightData LightSystem::getLightData(const LightComponent& cmpnt) const {
+	LightData lightData = {};
+	lightData.pulse = mPulse[cmpnt.index];
+	lightData.pulseSize = mPulseSize[cmpnt.index];
+	lightData.glowSize = mGlowSize[cmpnt.index];
+	lightData.size = mSize[cmpnt.index];
+	lightData.color = mColor[cmpnt.index];
+
+	return lightData;
+}
+
+//	============================================================================
 void LightSystem::initialize(AssetManager& assetManager) {
 	mLightTexture = assetManager.loadTexture("light");
 }
@@ -101,6 +114,16 @@ void LightSystem::setGlowSize(const LightComponent& cmpnt,
 	} else {
 		mGlowScale[cmpnt.index] = 1.0f;
 	}
+}
+
+//	============================================================================
+void LightSystem::setLightData(const LightComponent& cmpnt,
+							   const LightData& lightData) {
+	mPulse[cmpnt.index] = lightData.pulse;
+	mPulseSize[cmpnt.index] = lightData.pulseSize;
+	mGlowSize[cmpnt.index] = lightData.glowSize;
+	mSize[cmpnt.index] = lightData.size;
+	mColor[cmpnt.index] = lightData.color;
 }
 
 //	============================================================================

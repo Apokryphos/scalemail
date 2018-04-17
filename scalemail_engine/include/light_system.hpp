@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity_system.hpp"
+#include "light_data.hpp"
 #include "texture.hpp"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -42,9 +43,11 @@ public:
 	void buildVertexData(SpriteBatch& spriteBatch);
 	LightComponent getComponent(const Entity& entity) const;
 	glm::vec4 getColor(const LightComponent& cmpnt);
+	LightData getLightData(const LightComponent& cmpnt) const;
 	void initialize(AssetManager& assetManager);
 	void setColor(const LightComponent& cmpnt, const glm::vec4 color);
 	void setGlowSize(const LightComponent& cmpnt, const glm::vec2 glowSize);
+	void setLightData(const LightComponent& cmpnt, const LightData& lightData);
 	void setOffset(const LightComponent& cmpnt, const glm::vec2 offset);
 	void setPulse(const LightComponent& cmpnt, const float pulse);
 	void setPulseSize(const LightComponent& cmpnt, const float pulseSize);

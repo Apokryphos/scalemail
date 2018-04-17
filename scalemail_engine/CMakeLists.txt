@@ -118,6 +118,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/sprite_system.cpp
     src/string_util.cpp
     src/team_system.cpp
+    src/team_util.cpp
     src/texture.cpp
     src/tileset.cpp
     src/transition.cpp

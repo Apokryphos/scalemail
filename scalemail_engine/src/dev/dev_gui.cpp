@@ -8,6 +8,8 @@
 #include "health_system.hpp"
 #include "name_system.hpp"
 #include "physics_system.hpp"
+#include "team_system.hpp"
+#include "team_util.hpp"
 #include "player.hpp"
 #include "player_camera.hpp"
 #include "world.hpp"
@@ -48,6 +50,13 @@ static void drawEntity(Entity entity, Game& game) {
 		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 		glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
 		ImGui::Text("Position: %.2f, %.2f", position.x, position.y);
+	}
+
+	TeamSystem& teamSystem = world.getTeamSystem();
+	if (teamSystem.hasComponent(entity)) {
+		TeamComponent teamCmpnt = teamSystem.getComponent(entity);
+		const Team team = teamSystem.getTeam(teamCmpnt);
+		ImGui::Text("Team: %s", teamToString(team).c_str());
 	}
 
 	HealthSystem& healthSystem = world.getHealthSystem();

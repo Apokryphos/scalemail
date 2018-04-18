@@ -5,6 +5,7 @@
 #include "dev/gun_editor.hpp"
 #include "dev/light_editor.hpp"
 #include "dev/particle_editor.hpp"
+#include "gui/imgui_ext.hpp"
 #include "bury_system.hpp"
 #include "entity.hpp"
 #include "game.hpp"
@@ -40,7 +41,7 @@ static void drawEntityDebugWindow(Game& game, const Entity& entity) {
 	if (physicsSystem.hasComponent(entity)) {
 		PhysicsComponent physicsCmpnt = physicsSystem.getComponent(entity);
 		glm::vec2 position = physicsSystem.getPosition(physicsCmpnt);
-		ImGui::Text("Position: %.2f, %.2f", position.x, position.y);
+		ImGui::Value("Position", position);
 	}
 
 	TeamSystem& teamSystem = world.getTeamSystem();

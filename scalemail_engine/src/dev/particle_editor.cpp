@@ -74,6 +74,10 @@ void drawParticleComponentEditor(ParticleSystem& particleSystem,
 		ParticleEmitterData data = particleSystem.getData(particleCmpnt);
 		drawParticleEmitterDataEditor(data);
 		particleSystem.setData(particleCmpnt, data);
+
+		if (ImGui::Button("Remove Component")) {
+			particleSystem.removeComponent(entity);
+		}
 	} else {
 		if (ImGui::Button("Add Component")) {
 			particleSystem.addComponent(entity);

@@ -97,10 +97,12 @@ void MainGameState::update(Game& game, [[maybe_unused]] float elapsedSeconds) {
 
 		//	Update gun
 		GunSystem& gunSystem = world.getGunSystem();
-		GunComponent gunCmpnt = gunSystem.getComponent(player->entity);
+		if (gunSystem.hasComponent(player->entity)) {
+			GunComponent gunCmpnt = gunSystem.getComponent(player->entity);
 
-		gunSystem.setTarget(gunCmpnt, gunTarget);
-		gunSystem.setFire(gunCmpnt, fire);
+			gunSystem.setTarget(gunCmpnt, gunTarget);
+			gunSystem.setFire(gunCmpnt, fire);
+		}
 
 		//	Use items
 		InventorySystem& inventorySystem = world.getInventorySystem();

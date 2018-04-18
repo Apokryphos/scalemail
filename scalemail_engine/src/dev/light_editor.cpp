@@ -32,6 +32,10 @@ void drawLightComponentEditor(LightSystem& lightSystem, const Entity& entity) {
 		LightData data = lightSystem.getLightData(lightCmpnt);
 		drawLightDataEditor(data);
 		lightSystem.setLightData(lightCmpnt, data);
+
+		if (ImGui::Button("Remove Component")) {
+			lightSystem.removeComponent(entity);
+		}
 	} else {
 		if (ImGui::Button("Add Component")) {
 			lightSystem.addComponent(entity);

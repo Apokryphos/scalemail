@@ -33,6 +33,10 @@ void drawAiComponentEditor(AiSystem& aiSystem, const Entity& entity) {
 		drawAiDataEditor(data);
 		aiSystem.setAiData(aiCmpnt, data);
 
+		if (ImGui::Button("Remove Component")) {
+			aiSystem.removeComponent(entity);
+		}
+
 		ImGui::Separator();
 
 		AiDebugData debugData = aiSystem.getAiDebugData(aiCmpnt);

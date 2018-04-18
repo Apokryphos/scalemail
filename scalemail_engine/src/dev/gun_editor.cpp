@@ -37,6 +37,10 @@ void drawGunComponentEditor(GunSystem& gunSystem, const Entity& entity) {
 			drawLightDataEditor(lightData);
 			gunSystem.setLightData(gunCmpnt, lightData);
 		}
+
+		if (ImGui::Button("Remove Component")) {
+			gunSystem.removeComponent(entity);
+		}
 	} else {
 		if (ImGui::Button("Add Component")) {
 			gunSystem.addComponent(entity);

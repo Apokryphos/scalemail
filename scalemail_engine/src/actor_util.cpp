@@ -1,6 +1,7 @@
 #include "entity.hpp"
 #include "entity_util.hpp"
 #include "bury_system.hpp"
+#include "gun_system.hpp"
 #include "health_system.hpp"
 #include "physics_system.hpp"
 #include "world.hpp"
@@ -16,6 +17,11 @@ bool actorCanFire(const Entity& entity, World& world) {
 
 	//	Must not be buried
 	if (entityIsBuried(entity, world.getBurySystem())) {
+		return false;
+	}
+
+	//	Must have a gun component
+	if (!world.getGunSystem().hasComponent(entity)) {
 		return false;
 	}
 

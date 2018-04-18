@@ -2,7 +2,7 @@
 
 namespace ScaleMail
 {
-class Entity;
+struct Entity;
 class Game;
 struct LightData;
 class LightSystem;

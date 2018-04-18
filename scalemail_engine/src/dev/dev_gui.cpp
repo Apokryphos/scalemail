@@ -1,3 +1,4 @@
+#include "dev/ai_editor.hpp"
 #include "dev/dev_gui.hpp"
 #include "dev/debug_system.hpp"
 #include "dev/entity_list_box.hpp"
@@ -75,9 +76,10 @@ static void drawEntityDebugWindow(Game& game, const Entity& entity) {
 static void drawEntityEditorWindows(Game& game, const Entity& entity) {
 	World& world = *game.world;
 
-	drawParticleComponentEditorWindow(world.getParticleSystem(), entity);
-	drawLightComponentEditorWindow(world.getLightSystem(), entity);
+	drawAiComponentEditorWindow(world.getAiSystem(), entity);
 	drawGunComponentEditorWindow(world.getGunSystem(), entity);
+	drawLightComponentEditorWindow(world.getLightSystem(), entity);
+	drawParticleComponentEditorWindow(world.getParticleSystem(), entity);
 }
 
 //  ============================================================================

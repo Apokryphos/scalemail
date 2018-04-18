@@ -2,7 +2,7 @@
 
 namespace ScaleMail
 {
-class Entity;
+struct Entity;
 struct ParticleEmitterData;
 class ParticleSystem;
 

@@ -18,6 +18,24 @@ struct AiComponent {
 	int index;
 };
 
+struct AiData
+{
+	bool avoidEnabled;
+	bool seekEnabled;
+	bool wanderEnabled;
+	float arrivalRadius;
+};
+
+struct AiDebugData
+{
+	float wanderAngle;
+	glm::vec2 avoidForce;
+	glm::vec2 moveDirection;
+	glm::vec2 seekForce;
+	glm::vec2 seekTarget;
+	glm::vec2 wanderForce;
+};
+
 class AiSystem : public EntitySystem
 {
 	struct Obstacle
@@ -81,7 +99,10 @@ public:
 	void drawDebug(const bool drawForces, const bool drawObstacles,
 				   std::vector<float>& lineVertexData);
 	void enable(bool enabled);
+	AiData getAiData(const AiComponent& cmpnt) const;
+	AiDebugData getAiDebugData(const AiComponent& cmpnt) const;
 	AiComponent getComponent(const Entity& entity) const;
+	void setAiData(const AiComponent& cmpnt, const AiData& aiData);
 	void setAvoid(const AiComponent& cmpnt, bool enabled);
 	void setMoveDirection(const AiComponent& cmpnt, glm::vec2 direction);
 	void setSeek(const AiComponent& cmpnt, bool enabled);

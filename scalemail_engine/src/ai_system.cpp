@@ -268,8 +268,45 @@ void AiSystem::enable(bool enabled) {
 }
 
 //	============================================================================
+AiData AiSystem::getAiData(const AiComponent& cmpnt) const {
+	const AiComponentData& data = mData[cmpnt.index];
+
+	AiData aiData = {};
+	aiData.avoidEnabled = data.avoidEnabled;
+	aiData.seekEnabled = data.seekEnabled;
+	aiData.wanderEnabled = data.wanderEnabled;
+	aiData.arrivalRadius = data.arrivalRadius;
+
+	return aiData;
+}
+
+//	============================================================================
+AiDebugData AiSystem::getAiDebugData(const AiComponent& cmpnt) const {
+	const AiComponentData& data = mData[cmpnt.index];
+
+	AiDebugData debugData = {};
+	debugData.wanderAngle = data.wanderAngle;
+	debugData.avoidForce = data.avoidForce;
+	debugData.moveDirection = data.moveDirection;
+	debugData.seekForce = data.seekForce;
+	debugData.seekTarget = data.seekTarget;
+	debugData.wanderForce = data.wanderForce;
+
+	return debugData;
+}
+
+//	============================================================================
 AiComponent AiSystem::getComponent(const Entity& entity) const {
 	return makeComponent(this->getComponentIndexByEntity(entity));
+}
+
+//	============================================================================
+void AiSystem::setAiData(const AiComponent& cmpnt, const AiData& aiData) {
+	AiComponentData& data = mData[cmpnt.index];
+	data.avoidEnabled = aiData.avoidEnabled;
+	data.seekEnabled = aiData.seekEnabled;
+	data.wanderEnabled = aiData.wanderEnabled;
+	data.arrivalRadius = aiData.arrivalRadius;
 }
 
 //	============================================================================

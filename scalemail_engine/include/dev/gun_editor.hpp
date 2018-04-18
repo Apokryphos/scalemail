@@ -2,7 +2,7 @@
 
 namespace ScaleMail
 {
-class Entity;
+struct Entity;
 class GunSystem;
 
 void drawGunComponentEditor(GunSystem& gunSystem, const Entity& entity);

@@ -17,6 +17,24 @@ struct PhysicsComponent {
 	int index;
 };
 
+struct PhysicsData
+{
+	bool ignoreActorCollisions;
+	CollisionGroup collisionGroup;
+	float acceleration;
+	float radius;
+	float maxSpeed;
+	glm::vec2 direction;
+	glm::vec2 position;
+};
+
+struct PhysicsDebugData
+{
+	float speed;
+	glm::vec2 velocity;
+	glm::vec2 force;
+};
+
 class PhysicsSystem : public EntitySystem
 {
 	std::vector<bool> mIgnoreActorCollisions;
@@ -61,6 +79,8 @@ public:
 	std::vector<TriggerCollision> getEntityIntersections(
 		const std::vector<Trigger>& triggers) const;
 	bool getIgnoreActorCollisions(const PhysicsComponent& cmpnt) const;
+	PhysicsData getPhysicsData(const PhysicsComponent& cmpnt) const;
+	PhysicsDebugData getPhysicsDebugData(const PhysicsComponent& cmpnt) const;
 	glm::vec2 getPosition(const PhysicsComponent& cmpnt) const;
 	float getRadius(const PhysicsComponent& cmpnt) const;
 	float getSpeed(const PhysicsComponent& cmpnt) const;
@@ -73,6 +93,7 @@ public:
 	  							  const bool ignore);
 	float getMaxSpeed(const PhysicsComponent& cmpnt) const;
 	void setMaxSpeed(const PhysicsComponent& cmpnt, const float maxSpeed);
+	void setPhysicsData(const PhysicsComponent& cmpnt, const PhysicsData& data);
   	void setPosition(const PhysicsComponent& cmpnt, const glm::vec2 position);
 	void setRadius(const PhysicsComponent& cmpnt, const float radius);
 	void simulate(float elapsedSeconds);

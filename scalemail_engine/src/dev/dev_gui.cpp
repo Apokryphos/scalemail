@@ -5,6 +5,7 @@
 #include "dev/gun_editor.hpp"
 #include "dev/light_editor.hpp"
 #include "dev/particle_editor.hpp"
+#include "dev/physics_editor.hpp"
 #include "gui/imgui_ext.hpp"
 #include "bury_system.hpp"
 #include "entity.hpp"
@@ -81,6 +82,7 @@ static void drawEntityEditorWindows(Game& game, const Entity& entity) {
 	drawGunComponentEditorWindow(world.getGunSystem(), entity);
 	drawLightComponentEditorWindow(world.getLightSystem(), entity);
 	drawParticleComponentEditorWindow(world.getParticleSystem(), entity);
+	drawPhysicsComponentEditorWindow(world.getPhysicsSystem(), entity);
 }
 
 //  ============================================================================

@@ -217,6 +217,29 @@ float PhysicsSystem::getMaxSpeed(const PhysicsComponent& cmpnt) const {
 }
 
 //	============================================================================
+PhysicsData PhysicsSystem::getPhysicsData(const PhysicsComponent& cmpnt) const {
+	PhysicsData data = {};
+	data.ignoreActorCollisions = mIgnoreActorCollisions[cmpnt.index];
+	data.collisionGroup = mGroup[cmpnt.index];
+	data.acceleration = mAcceleration[cmpnt.index];
+	data.radius = mRadius[cmpnt.index];
+	data.maxSpeed = mMaxSpeed[cmpnt.index];
+	data.direction = mDirection[cmpnt.index];
+	data.position = mPosition[cmpnt.index];
+	return data;
+}
+
+//	============================================================================
+PhysicsDebugData PhysicsSystem::getPhysicsDebugData(
+	const PhysicsComponent& cmpnt) const {
+	PhysicsDebugData data = {};
+	data.speed = mSpeed[cmpnt.index];
+	data.velocity = mVelocity[cmpnt.index];
+	data.force = mForce[cmpnt.index];
+	return data;
+}
+
+//	============================================================================
 glm::vec2 PhysicsSystem::getPosition(const PhysicsComponent& cmpnt) const {
 	return mPosition[cmpnt.index];
 }
@@ -276,6 +299,18 @@ void PhysicsSystem::setIgnoreActorCollisions(const PhysicsComponent& cmpnt,
 void PhysicsSystem::setMaxSpeed(const PhysicsComponent& cmpnt,
 							 const float maxSpeed) {
 	mMaxSpeed[cmpnt.index] = maxSpeed;
+}
+
+//	============================================================================
+void PhysicsSystem::setPhysicsData(const PhysicsComponent& cmpnt,
+								   const PhysicsData& data) {
+	mIgnoreActorCollisions[cmpnt.index] = data.ignoreActorCollisions;
+	mGroup[cmpnt.index] = data.collisionGroup;
+	mAcceleration[cmpnt.index] = data.acceleration;
+	mRadius[cmpnt.index] = data.radius;
+	mMaxSpeed[cmpnt.index] = data.maxSpeed;
+	mDirection[cmpnt.index] = data.direction;
+	mPosition[cmpnt.index] = data.position;
 }
 
 //	============================================================================

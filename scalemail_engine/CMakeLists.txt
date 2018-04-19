@@ -44,6 +44,7 @@ set(SCALEMAIL_ENGINE_SOURCE
     src/dev/gun_editor.cpp
     src/dev/light_editor.cpp
     src/dev/particle_editor.cpp
+    src/dev/physics_editor.cpp
     src/entity_types/actor.cpp
     src/entity_types/bullet.cpp
     src/entity_types/camera.cpp

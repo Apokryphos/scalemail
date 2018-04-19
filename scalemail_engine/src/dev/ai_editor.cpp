@@ -1,7 +1,5 @@
 #include "gui/imgui_ext.hpp"
-#include "game.hpp"
 #include "ai_system.hpp"
-#include "world.hpp"
 #include <imgui.h>
 
 namespace ScaleMail

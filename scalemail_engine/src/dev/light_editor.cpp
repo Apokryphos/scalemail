@@ -1,8 +1,5 @@
-#include "game.hpp"
-#include "math_util.hpp"
 #include "light_data.hpp"
 #include "light_system.hpp"
-#include "world.hpp"
 #include <imgui.h>
 
 namespace ScaleMail

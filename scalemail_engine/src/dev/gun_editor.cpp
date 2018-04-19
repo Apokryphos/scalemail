@@ -1,10 +1,8 @@
 #include "dev/bullet_editor.hpp"
 #include "dev/light_editor.hpp"
-#include "game.hpp"
 #include "bullet_data.hpp"
 #include "bullet_util.hpp"
 #include "gun_system.hpp"
-#include "world.hpp"
 #include <imgui.h>
 
 namespace ScaleMail

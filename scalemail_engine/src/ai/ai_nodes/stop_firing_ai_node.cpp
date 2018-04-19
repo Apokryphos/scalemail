@@ -14,9 +14,10 @@ AiNodeStatus StopFiringAiNode::execute(World& world) {
 	Entity entity = this->getEntity();
 
 	GunSystem& gunSystem = world.getGunSystem();
-	GunComponent gunCmpnt = gunSystem.getComponent(entity);
-
-	gunSystem.setFire(gunCmpnt, false);
+	if (gunSystem.hasComponent(entity)) {
+		GunComponent gunCmpnt = gunSystem.getComponent(entity);
+		gunSystem.setFire(gunCmpnt, false);
+	}
 
 	return AiNodeStatus::SUCCESS;
 }

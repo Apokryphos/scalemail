@@ -772,7 +772,7 @@ static bool processPlayerStartObject(const TmxMapLib::Object& object,
 		facing = stringToDirection(value);
 	}
 
-	playerStart.position = glm::vec2(object.getX(), object.getY());
+	playerStart.position = getTileObjectPosition(object);
 	playerStart.actorIndex = actorIndex;
 	playerStart.facing = facing;
 	return true;
